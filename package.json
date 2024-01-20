@@ -1,0 +1,7 @@
+{
+  "name": "haohao",
+  "packageManager": "yarn@4.0.2",
+  "devDependencies": {
+    "@moonrepo/cli": "^1.19.3"
+  }
+}

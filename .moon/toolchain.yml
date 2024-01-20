@@ -1,0 +1,8 @@
+# Enable Rust
+rust: {}
+
+node:
+  version: '21.6'
+  packageManager: 'yarn'
+  yarn:
+    version: '4.0.2'
