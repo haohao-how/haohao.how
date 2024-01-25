@@ -1,7 +1,13 @@
 {
   "name": "haohao",
   "packageManager": "yarn@4.0.2",
+  "workspaces": [
+    "apps/*"
+  ],
   "devDependencies": {
     "@moonrepo/cli": "^1.19.3"
+  },
+  "engines": {
+    "node": "~21.6"
   }
 }
