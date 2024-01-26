@@ -971,9 +971,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"button@workspace:apps/button":
+"button@workspace:apps/frontend":
   version: 0.0.0-use.local
-  resolution: "button@workspace:apps/button"
+  resolution: "button@workspace:apps/frontend"
   dependencies:
     "@sveltejs/adapter-auto": "npm:^3.0.0"
     "@sveltejs/kit": "npm:^2.0.0"
