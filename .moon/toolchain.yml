@@ -2,7 +2,12 @@
 rust: {}
 
 node:
-  version: '21.6'
-  packageManager: 'yarn'
+  version: "21.6"
+  packageManager: "yarn"
   yarn:
-    version: '4.0.2'
+    version: "4.0.2"
+
+typescript:
+  routeOutDirToCache: true
+  syncProjectReferences: true
+  syncProjectReferencesToPaths: true
