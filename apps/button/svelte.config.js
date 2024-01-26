@@ -29,7 +29,3 @@ export default /** @satisfies {import('@sveltejs/kit').Config} */ ({
     },
   },
 });
-
-/** @type {number} */
-const x = "";
-x;
