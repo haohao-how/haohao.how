@@ -1,73 +1,73 @@
 tasks:
   build:
     command:
-    - yarn
-    - vite
-    - build
+      - yarn
+      - vite
+      - build
     platform: node
   preview:
     command:
-    - yarn
-    - vite
-    - preview
+      - yarn
+      - vite
+      - preview
     deps:
-    - ~:build
+      - ~:build
     platform: node
   check:
     command:
-    - yarn
-    - svelte-check
-    - --tsconfig
-    - ./tsconfig.json
+      - yarn
+      - svelte-check
+      - --tsconfig
+      - ./tsconfig.json
     deps:
-    - ~:check-dep1
+      - ~:check-dep1
     platform: node
   check-dep1:
     command:
-    - svelte-kit
-    - sync
+      - svelte-kit
+      - sync
     platform: node
   check-watch:
     command:
-    - svelte-check
-    - --tsconfig
-    - ./tsconfig.json
-    - --watch
+      - svelte-check
+      - --tsconfig
+      - ./tsconfig.json
+      - --watch
     deps:
-    - ~:check-watch-dep1
+      - ~:check-watch-dep1
     local: true
     platform: node
   check-watch-dep1:
     command:
-    - svelte-kit
-    - sync
+      - svelte-kit
+      - sync
     platform: node
   dev:
     command:
-    - yarn
-    - vite
-    - dev
+      - yarn
+      - vite
+      - dev
     local: true
     platform: node
   format:
     command:
-    - yarn
-    - prettier
-    - --write
-    - .
+      - yarn
+      - prettier
+      - --write
+      - .
     platform: node
   lint:
     command:
-    - yarn
-    - eslint
-    - .
+      - yarn
+      - eslint
+      - .
     deps:
-    - ~:lint-dep1
+      - ~:lint-dep1
     platform: node
   lint-dep1:
     command:
-    - yarn
-    - prettier
-    - --check
-    - .
+      - yarn
+      - prettier
+      - --check
+      - .
     platform: node
