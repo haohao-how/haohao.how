@@ -12,6 +12,7 @@ tasks:
       - preview
     deps:
       - ~:build
+    local: true
     platform: node
   check:
     command:
