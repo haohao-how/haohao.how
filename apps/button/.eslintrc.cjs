@@ -1,5 +1,5 @@
 module.exports = /** @satisfies { import("eslint").Linter.Config } */ ({
-  root: 111,
+  root: true,
   extends: [
     "eslint:recommended",
     "plugin:@typescript-eslint/recommended",

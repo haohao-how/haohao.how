@@ -14,7 +14,16 @@ export default /** @satisfies {import('@sveltejs/kit').Config} */ ({
 
     typescript: {
       config(x) {
-        x.include.push("../.*.cjs", "../.*.js", "../.*.cts", "../.*.ts");
+        x.include.push(
+          "../*.cjs",
+          "../*.js",
+          "../*.cts",
+          "../*.ts",
+          "../.*.cjs",
+          "../.*.js",
+          "../.*.cts",
+          "../.*.ts",
+        );
         return x;
       },
     },
