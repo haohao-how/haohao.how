@@ -6,6 +6,8 @@ env:
 
 fileGroups:
   sources:
+    - "api/src/**/*"
+    - "api/Cargo.toml"
     - "crates/*/src/**/*"
     - "crates/*/Cargo.toml"
     - "Cargo.toml"

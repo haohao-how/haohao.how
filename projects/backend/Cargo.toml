@@ -2,6 +2,6 @@
 resolver = "2"
 
 members = [
-    "crates/adder",
-    "crates/api",
+    "adder",
+    "api",
 ]

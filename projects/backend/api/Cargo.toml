@@ -17,3 +17,7 @@ serde_derive = "1.0.188"
 rand = "0.8.5"
 url = "2.4.1"
 vercel_runtime = "1.1.0"
+
+[[bin]]
+name = "simple"
+path = "src/simple.rs"
