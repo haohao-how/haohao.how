@@ -971,9 +971,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"button@workspace:apps/frontend":
+"button@workspace:projects/frontend":
   version: 0.0.0-use.local
-  resolution: "button@workspace:apps/frontend"
+  resolution: "button@workspace:projects/frontend"
   dependencies:
     "@sveltejs/adapter-auto": "npm:^3.0.0"
     "@sveltejs/kit": "npm:^2.0.0"
@@ -1745,9 +1745,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"haohao@workspace:.":
+"haohaohow@workspace:.":
   version: 0.0.0-use.local
-  resolution: "haohao@workspace:."
+  resolution: "haohaohow@workspace:."
   dependencies:
     "@moonrepo/cli": "npm:^1.19.3"
   languageName: unknown

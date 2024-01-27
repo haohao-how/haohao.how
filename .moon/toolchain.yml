@@ -2,6 +2,8 @@ rust:
   version: "1.75.0"
   bins:
     - "cargo-make"
+    - "cargo-fmt"
+    - "cargo-clippy"
     - "cargo-nextest"
   syncToolchainConfig: true
 

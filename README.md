@@ -1,3 +1,3 @@
-# haohao
+# haohaohow
 
-[![CI](https://github.com/bradleyayers/haohao/actions/workflows/ci.yml/badge.svg)](https://github.com/bradleyayers/haohao/actions/workflows/ci.yml)
+[![CI](https://github.com/bradleyayers/haohaohow/actions/workflows/ci.yml/badge.svg)](https://github.com/bradleyayers/haohaohow/actions/workflows/ci.yml)
