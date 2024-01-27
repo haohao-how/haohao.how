@@ -1,5 +1,9 @@
-# Enable Rust
-rust: {}
+rust:
+  version: "1.75.0"
+  bins:
+    - "cargo-make"
+    - "cargo-nextest"
+  syncToolchainConfig: true
 
 node:
   version: "21.6"
