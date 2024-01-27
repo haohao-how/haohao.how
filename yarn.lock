@@ -785,6 +785,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@vercel/analytics@npm:^1.1.2":
+  version: 1.1.2
+  resolution: "@vercel/analytics@npm:1.1.2"
+  dependencies:
+    server-only: "npm:^0.0.1"
+  checksum: 01d2d4b9a178d33b913ea94a872ca3d0fd98ba951fc4002d2f5e722a367af0188c81a42a133de472125279dcb5b8eb7cf953682e2b0bf34ebdb0563ba890553e
+  languageName: node
+  linkType: hard
+
 "abbrev@npm:^2.0.0":
   version: 2.0.0
   resolution: "abbrev@npm:2.0.0"
@@ -981,6 +990,7 @@ __metadata:
     "@types/eslint": "npm:8.56.0"
     "@typescript-eslint/eslint-plugin": "npm:^6.0.0"
     "@typescript-eslint/parser": "npm:^6.0.0"
+    "@vercel/analytics": "npm:^1.1.2"
     eslint: "npm:^8.56.0"
     eslint-config-prettier: "npm:^9.1.0"
     eslint-plugin-svelte: "npm:^2.36.0-next.4"
@@ -2697,6 +2707,13 @@ __metadata:
   bin:
     semver: bin/semver.js
   checksum: 5160b06975a38b11c1ab55950cb5b8a23db78df88275d3d8a42ccf1f29e55112ac995b3a26a522c36e3b5f76b0445f1eef70d696b8c7862a2b4303d7b0e7609e
+  languageName: node
+  linkType: hard
+
+"server-only@npm:^0.0.1":
+  version: 0.0.1
+  resolution: "server-only@npm:0.0.1"
+  checksum: 4704f0ef85da0be981af6d4ed8e739d39bcfd265b9c246a684060acda5642d0fdc6daffc2308e71e2682c5f508090978802eae0a77623c9b90a49f9ae68048d6
   languageName: node
   linkType: hard
 
