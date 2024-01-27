@@ -2,7 +2,7 @@
   "name": "haohao",
   "packageManager": "yarn@4.0.2",
   "workspaces": [
-    "apps/*"
+    "projects/*"
   ],
   "devDependencies": {
     "@moonrepo/cli": "^1.19.3"
