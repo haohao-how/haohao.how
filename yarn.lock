@@ -788,6 +788,21 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@sentry/svelte@patch:@sentry/svelte@npm%3A7.98.0#~/.yarn/patches/@sentry-svelte-npm-7.98.0-3cd6521606.patch":
+  version: 7.98.0
+  resolution: "@sentry/svelte@patch:@sentry/svelte@npm%3A7.98.0#~/.yarn/patches/@sentry-svelte-npm-7.98.0-3cd6521606.patch::version=7.98.0&hash=cf310d"
+  dependencies:
+    "@sentry/browser": "npm:7.98.0"
+    "@sentry/core": "npm:7.98.0"
+    "@sentry/types": "npm:7.98.0"
+    "@sentry/utils": "npm:7.98.0"
+    magic-string: "npm:^0.30.0"
+  peerDependencies:
+    svelte: 3.x || 4.x
+  checksum: e6ed2980355664d1914f7707fceafd46d03d04eb632d33909c4052852700809795d619f11cacc996080e9a38507838c600b6968a25d9d576f7130ec47af9437b
+  languageName: node
+  linkType: hard
+
 "@sentry/sveltekit@npm:^7.98.0":
   version: 7.98.0
   resolution: "@sentry/sveltekit@npm:7.98.0"

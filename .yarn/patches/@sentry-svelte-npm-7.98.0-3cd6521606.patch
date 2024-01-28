@@ -1,0 +1,130 @@
+diff --git a/cjs/performance.js b/cjs/performance.js
+index 8526862e1e6faf6be63dd36276443c5107f8c6c4..ff0e9213bdfea6d32cd2589a6416bb7f872bfd54 100644
+--- a/cjs/performance.js
++++ b/cjs/performance.js
+@@ -1,14 +1,11 @@
+-Object.defineProperty(exports, '__esModule', { value: true });
++Object.defineProperty(exports, "__esModule", { value: true });
+ 
+-const browser = require('@sentry/browser');
+-const svelte = require('svelte');
+-const internal = require('svelte/internal');
+-const core = require('@sentry/core');
+-const constants = require('./constants.js');
++const browser = require("@sentry/browser");
++const svelte = require("svelte");
++const core = require("@sentry/core");
++const constants = require("./constants.js");
+ 
+-const defaultTrackComponentOptions
+-
+- = {
++const defaultTrackComponentOptions = {
+   trackInit: true,
+   trackUpdates: true,
+ };
+@@ -32,7 +29,9 @@ function trackComponent(options) {
+ 
+   // current_component.ctor.name is likely to give us the component's name automatically
+   // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+-  const componentName = `<${customComponentName || internal.current_component.constructor.name || constants.DEFAULT_COMPONENT_NAME}>`;
++  const componentName = `<${
++    customComponentName || constants.DEFAULT_COMPONENT_NAME
++  }>`;
+ 
+   let initSpan = undefined;
+   if (mergedOptions.trackInit) {
+@@ -49,7 +48,7 @@ function recordInitSpan(transaction, componentName) {
+   const initSpan = transaction.startChild({
+     op: constants.UI_SVELTE_INIT,
+     description: componentName,
+-    origin: 'auto.ui.svelte',
++    origin: "auto.ui.svelte",
+   });
+ 
+   svelte.onMount(() => {
+@@ -72,13 +71,17 @@ function recordUpdateSpans(componentName, initSpan) {
+     // If we are initializing the component when the update span is started, we start it as child
+     // of the init span. Else, we start it as a child of the transaction.
+     const parentSpan =
+-      initSpan && initSpan.isRecording() && core.getRootSpan(initSpan) === transaction ? initSpan : transaction;
++      initSpan &&
++      initSpan.isRecording() &&
++      core.getRootSpan(initSpan) === transaction
++        ? initSpan
++        : transaction;
+ 
+     // eslint-disable-next-line deprecation/deprecation
+     updateSpan = parentSpan.startChild({
+       op: constants.UI_SVELTE_UPDATE,
+       description: componentName,
+-      origin: 'auto.ui.svelte',
++      origin: "auto.ui.svelte",
+     });
+   });
+ 
+diff --git a/esm/performance.js b/esm/performance.js
+index 94246f3a88d69dfb8ad88232d309787346f9fb1c..d0ddbbb1832dc4a3ad36d2634edc3c3e35857bff 100644
+--- a/esm/performance.js
++++ b/esm/performance.js
+@@ -1,12 +1,13 @@
+-import { getCurrentScope } from '@sentry/browser';
+-import { onMount, beforeUpdate, afterUpdate } from 'svelte';
+-import { current_component } from 'svelte/internal';
+-import { getRootSpan } from '@sentry/core';
+-import { DEFAULT_COMPONENT_NAME, UI_SVELTE_INIT, UI_SVELTE_UPDATE } from './constants.js';
+-
+-const defaultTrackComponentOptions
+-
+- = {
++import { getCurrentScope } from "@sentry/browser";
++import { onMount, beforeUpdate, afterUpdate } from "svelte";
++import { getRootSpan } from "@sentry/core";
++import {
++  DEFAULT_COMPONENT_NAME,
++  UI_SVELTE_INIT,
++  UI_SVELTE_UPDATE,
++} from "./constants.js";
++
++const defaultTrackComponentOptions = {
+   trackInit: true,
+   trackUpdates: true,
+ };
+@@ -30,7 +31,7 @@ function trackComponent(options) {
+ 
+   // current_component.ctor.name is likely to give us the component's name automatically
+   // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+-  const componentName = `<${customComponentName || current_component.constructor.name || DEFAULT_COMPONENT_NAME}>`;
++  const componentName = `<${customComponentName || DEFAULT_COMPONENT_NAME}>`;
+ 
+   let initSpan = undefined;
+   if (mergedOptions.trackInit) {
+@@ -47,7 +48,7 @@ function recordInitSpan(transaction, componentName) {
+   const initSpan = transaction.startChild({
+     op: UI_SVELTE_INIT,
+     description: componentName,
+-    origin: 'auto.ui.svelte',
++    origin: "auto.ui.svelte",
+   });
+ 
+   onMount(() => {
+@@ -70,13 +71,17 @@ function recordUpdateSpans(componentName, initSpan) {
+     // If we are initializing the component when the update span is started, we start it as child
+     // of the init span. Else, we start it as a child of the transaction.
+     const parentSpan =
+-      initSpan && initSpan.isRecording() && getRootSpan(initSpan) === transaction ? initSpan : transaction;
++      initSpan &&
++      initSpan.isRecording() &&
++      getRootSpan(initSpan) === transaction
++        ? initSpan
++        : transaction;
+ 
+     // eslint-disable-next-line deprecation/deprecation
+     updateSpan = parentSpan.startChild({
+       op: UI_SVELTE_UPDATE,
+       description: componentName,
+-      origin: 'auto.ui.svelte',
++      origin: "auto.ui.svelte",
+     });
+   });
+ 

@@ -5,6 +5,8 @@ import { defineConfig } from "vite";
 export default defineConfig({
   plugins: [
     sentrySvelteKit({
+      autoInstrument: false,
+      autoUploadSourceMaps: process.env.VERCEL != null,
       sourceMapsUploadOptions: {
         org: "haohaohow",
         project: "javascript-sveltekit",
