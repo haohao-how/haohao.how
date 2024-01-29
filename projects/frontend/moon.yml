@@ -72,3 +72,17 @@ tasks:
       - --check
       - .
     platform: node
+  storybook:
+    command:
+      - "yarn"
+      - "storybook"
+      - "dev"
+      - "-p"
+      - "6006"
+    platform: node
+  storybook-build:
+    command:
+      - "yarn"
+      - "storybook"
+      - "build"
+    platform: node
