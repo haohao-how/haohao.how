@@ -1,6 +1,6 @@
 <script lang="ts">
-  import './page.css';
-  import Header from './Header.svelte';
+  import "./page.css";
+  import Header from "./Header.svelte";
 
   let user: { name: string } | null = null;
 </script>
@@ -8,9 +8,9 @@
 <article>
   <Header
     {user}
-    on:login={() => (user = { name: 'Jane Doe' })}
+    on:login={() => (user = { name: "Jane Doe" })}
     on:logout={() => (user = null)}
-    on:createAccount={() => (user = { name: 'Jane Doe' })}
+    on:createAccount={() => (user = { name: "Jane Doe" })}
   />
 
   <section class="storybook-page">

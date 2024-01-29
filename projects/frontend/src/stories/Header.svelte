@@ -1,21 +1,21 @@
 <script lang="ts">
-  import './header.css';
-  import Button from './Button.svelte';
+  import "./header.css";
+  import Button from "./Button.svelte";
 
-  import { createEventDispatcher } from 'svelte';
+  import { createEventDispatcher } from "svelte";
 
   export let user: { name: string } | null = null;
 
   const dispatch = createEventDispatcher();
 
   function onLogin(event: MouseEvent) {
-    dispatch('login', event);
+    dispatch("login", event);
   }
   function onLogout(event: MouseEvent) {
-    dispatch('logout', event);
+    dispatch("logout", event);
   }
   function onCreateAccount(event: MouseEvent) {
-    dispatch('createAccount', event);
+    dispatch("createAccount", event);
   }
 </script>
 

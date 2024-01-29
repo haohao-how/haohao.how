@@ -79,10 +79,12 @@ tasks:
       - "dev"
       - "-p"
       - "6006"
+    local: true
     platform: node
   storybook-build:
     command:
       - "yarn"
       - "storybook"
       - "build"
+    local: true
     platform: node
