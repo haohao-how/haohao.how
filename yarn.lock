@@ -4560,6 +4560,7 @@ __metadata:
     "@typescript-eslint/parser": "npm:^6.0.0"
     "@vercel/analytics": "npm:^1.1.2"
     "@vercel/speed-insights": "npm:^1.0.8"
+    chromatic: "npm:^10.6.1"
     eslint: "npm:^8.56.0"
     eslint-config-prettier: "npm:^9.1.0"
     eslint-plugin-storybook: "npm:^0.6.15"
@@ -4721,6 +4722,25 @@ __metadata:
   version: 2.0.0
   resolution: "chownr@npm:2.0.0"
   checksum: 594754e1303672171cc04e50f6c398ae16128eb134a88f801bf5354fd96f205320f23536a045d9abd8b51024a149696e51231565891d4efdab8846021ecf88e6
+  languageName: node
+  linkType: hard
+
+"chromatic@npm:^10.6.1":
+  version: 10.6.1
+  resolution: "chromatic@npm:10.6.1"
+  peerDependencies:
+    chromatic-cypress: ^0.4.0 || ^1.0.0
+    chromatic-playwright: ^0.4.0 || ^1.0.0
+  peerDependenciesMeta:
+    chromatic-cypress:
+      optional: true
+    chromatic-playwright:
+      optional: true
+  bin:
+    chroma: dist/bin.js
+    chromatic: dist/bin.js
+    chromatic-cli: dist/bin.js
+  checksum: 5215b8267265437c1f9f27370162422a4187799f768906d9959da1ba8ada12cbbd554e46914201c745a6bb6c2a52835af9cc8bd9634cdd5df23127b08844dc97
   languageName: node
   linkType: hard
 
