@@ -83,8 +83,8 @@ tasks:
     platform: node
   storybook-build:
     command:
-      - "yarn"
       - "storybook"
       - "build"
-    local: true
+      - "-o"
+      - "storybook-static"
     platform: node
