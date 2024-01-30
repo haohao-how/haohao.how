@@ -85,6 +85,13 @@ tasks:
     command:
       - "storybook"
       - "build"
-      - "-o"
-      - "storybook-static"
+      - "--output-dir=storybook-static"
+    platform: node
+  chromatic:
+    command:
+      - "chromatic"
+      - "--storybook-build-dir=storybook-static"
+      - "--exit-zero-on-changes"
+    deps:
+      - "storybook-build"
     platform: node

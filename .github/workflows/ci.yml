@@ -1,16 +1,18 @@
-name: 'CI'
+name: "CI"
 on:
   push:
     branches:
-      - 'main'
+      - "main"
   pull_request:
 jobs:
   ci:
-    name: 'CI'
-    runs-on: 'ubuntu-latest'
+    name: "CI"
+    runs-on: "ubuntu-latest"
     steps:
-      - uses: 'actions/checkout@v4'
+      - uses: "actions/checkout@v4"
         with:
           fetch-depth: 0
-      - uses: 'moonrepo/setup-toolchain@v0'
-      - run: 'moon ci'
+      - uses: "moonrepo/setup-toolchain@v0"
+      - run: "moon ci"
+        env:
+          CHROMATIC_PROJECT_TOKEN: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
