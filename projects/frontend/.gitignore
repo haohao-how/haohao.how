@@ -1,6 +1,7 @@
 /build
 /.svelte-kit
 /package
+/storybook-static
 .env
 .env.*
 !.env.example
