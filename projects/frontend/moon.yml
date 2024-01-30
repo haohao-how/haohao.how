@@ -81,3 +81,17 @@ tasks:
     deps:
       - storybook-build
     platform: node
+  generate:
+    command:
+      - "drizzle-kit"
+      - "generate:pg"
+    local: true
+    platform: node
+  migrate:
+    command:
+      - "node"
+      - "--no-warnings=ExperimentalWarning"
+      - "--loader=ts-node/esm"
+      - "./src/bin/migrate.ts"
+    local: true
+    platform: node
