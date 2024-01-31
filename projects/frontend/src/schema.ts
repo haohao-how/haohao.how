@@ -1,11 +1,9 @@
-import { serial, text, timestamp, pgTable } from "drizzle-orm/pg-core";
+import { bigint, pgTable, timestamp, uuid } from "drizzle-orm/pg-core";
 
-export const user = pgTable("user", {
-  id: serial("id"),
-  name: text("name"),
-  email: text("email"),
-  password: text("password"),
-  role: text("role").$type<"admin" | "customer">(),
-  createdAt: timestamp("created_at"),
-  updatedAt: timestamp("updated_at"),
+export const clickCount = pgTable("clickCount", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  sessionId: uuid("sessionId"),
+  clickCount: bigint("clickCount", { mode: "number" }).notNull().default(0),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().notNull(),
 });
