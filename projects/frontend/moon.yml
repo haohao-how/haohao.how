@@ -1,29 +1,26 @@
 tasks:
   build:
     command:
-      - yarn
       - vite
       - build
     platform: node
   preview:
     command:
-      - yarn
       - vite
       - preview
     deps:
       - ~:build
     local: true
     platform: node
-  check:
+  svelte-check:
     command:
-      - yarn
       - svelte-check
       - --tsconfig
       - ./tsconfig.json
     deps:
-      - ~:check-dep1
+      - ~:svelte-kit-sync
     platform: node
-  check-dep1:
+  svelte-kit-sync:
     command:
       - svelte-kit
       - sync
@@ -35,63 +32,52 @@ tasks:
       - ./tsconfig.json
       - --watch
     deps:
-      - ~:check-watch-dep1
+      - ~:svelte-kit-sync
     local: true
-    platform: node
-  check-watch-dep1:
-    command:
-      - svelte-kit
-      - sync
     platform: node
   dev:
     command:
-      - yarn
       - vite
       - dev
     local: true
     platform: node
-  format:
+  prettier:
     command:
-      - yarn
       - prettier
       - --write
       - .
     platform: node
   lint:
     command:
-      - yarn
       - eslint
       - .
     deps:
-      - ~:lint-dep1
+      - ~:prettier-check
     platform: node
-  lint-dep1:
+  prettier-check:
     command:
-      - yarn
       - prettier
       - --check
       - .
     platform: node
   storybook:
     command:
-      - "yarn"
-      - "storybook"
-      - "dev"
-      - "-p"
-      - "6006"
+      - storybook
+      - dev
+      - --port=6006
     local: true
     platform: node
   storybook-build:
     command:
-      - "storybook"
-      - "build"
-      - "--output-dir=storybook-static"
+      - storybook
+      - build
+      - --output-dir=storybook-static
     platform: node
   chromatic:
     command:
-      - "chromatic"
-      - "--storybook-build-dir=storybook-static"
-      - "--exit-zero-on-changes"
+      - chromatic
+      - --storybook-build-dir=storybook-static
+      - --exit-zero-on-changes
     deps:
-      - "storybook-build"
+      - storybook-build
     platform: node
