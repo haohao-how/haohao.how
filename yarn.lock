@@ -4655,6 +4655,7 @@ __metadata:
     drizzle-orm: "npm:^0.29.3"
     eslint: "npm:^8.56.0"
     eslint-config-prettier: "npm:^9.1.0"
+    eslint-plugin-drizzle: "npm:^0.2.3"
     eslint-plugin-storybook: "npm:^0.6.15"
     eslint-plugin-svelte: "npm:^2.36.0-next.4"
     postgres: "npm:^3.4.3"
@@ -6020,6 +6021,15 @@ __metadata:
   bin:
     eslint-config-prettier: bin/cli.js
   checksum: 6d332694b36bc9ac6fdb18d3ca2f6ac42afa2ad61f0493e89226950a7091e38981b66bac2b47ba39d15b73fff2cd32c78b850a9cf9eed9ca9a96bfb2f3a2f10d
+  languageName: node
+  linkType: hard
+
+"eslint-plugin-drizzle@npm:^0.2.3":
+  version: 0.2.3
+  resolution: "eslint-plugin-drizzle@npm:0.2.3"
+  peerDependencies:
+    eslint: ">=8.0.0"
+  checksum: e747b712e74049034e747d6825400cf2122d2b53da46bdf64f3b221da13410d84f53ca050515d9174ae65e287803ae2a48403a3492bb664a8fa65ec9540f658a
   languageName: node
   linkType: hard
 
