@@ -1,0 +1,11 @@
+{
+  "recommendations": [
+    "editorconfig.editorconfig",
+    "dbaeumer.vscode-eslint",
+    "tamasfe.even-better-toml",
+    "esbenp.prettier-vscode",
+    "stkb.rewrap",
+    "rust-lang.rust-analyzer",
+    "svelte.svelte-vscode"
+  ]
+}
