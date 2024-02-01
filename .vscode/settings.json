@@ -1,4 +1,0 @@
-{
-  "typescript.tsdk": "node_modules/typescript/lib",
-  "rust-analyzer.linkedProjects": ["projects/backend/Cargo.toml"]
-}
