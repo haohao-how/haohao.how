@@ -1,5 +1,6 @@
 import type { StorybookConfig } from "@storybook/sveltekit";
-
+import turbosnap from "vite-plugin-turbosnap";
+import { mergeConfig } from "vite";
 import { join, dirname } from "path";
 
 /**
@@ -22,6 +23,21 @@ const config: StorybookConfig = {
   },
   docs: {
     autodocs: "tag",
+  },
+  // Copied from https://github.com/IanVS/vite-plugin-turbosnap docs
+  async viteFinal(config, { configType }) {
+    return mergeConfig(config, {
+      plugins:
+        configType === "PRODUCTION"
+          ? [
+              turbosnap({
+                // This should be the base path of your storybook. In monorepos,
+                // you may only need process.cwd().
+                rootDir: config.root ?? process.cwd(),
+              }),
+            ]
+          : [],
+    });
   },
 };
 export default config;

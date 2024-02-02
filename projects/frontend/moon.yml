@@ -1,3 +1,10 @@
+fileGroups:
+  frontend:
+    - "src/**/*"
+    - "static/**/*"
+    - ".*"
+    - "*.*"
+
 tasks:
   build:
     command:
@@ -65,6 +72,8 @@ tasks:
       - storybook
       - dev
       - --port=6006
+    inputs:
+      - "@group(frontend)"
     local: true
     platform: node
   storybook-build:
@@ -72,12 +81,20 @@ tasks:
       - storybook
       - build
       - --output-dir=storybook-static
+    inputs:
+      - "@group(frontend)"
+    outputs:
+      - "storybook-static/"
     platform: node
   chromatic:
     command:
       - chromatic
       - --storybook-build-dir=storybook-static
       - --exit-zero-on-changes
+    inputs:
+      - "storybook-static/**/*"
+      - "*.*"
+      - "$CHROMATIC_PROJECT_TOKEN"
     deps:
       - storybook-build
     platform: node
