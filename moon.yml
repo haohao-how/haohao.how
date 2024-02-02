@@ -1,0 +1,8 @@
+tasks:
+  prettier:
+    command:
+      - prettier
+      - "!./projects/**/*"
+      - --write
+      - .
+    platform: node
