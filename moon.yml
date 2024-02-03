@@ -6,3 +6,8 @@ tasks:
       - --write
       - .
     platform: node
+  doctor:
+    command:
+      - doctor
+      - .
+    platform: node

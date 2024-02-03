@@ -40,6 +40,8 @@
     "vite-plugin-turbosnap": "^1.0.3"
   },
   "dependencies": {
+    "$app": "link:./nope",
+    "$lib": "link:./nope",
     "@rive-app/canvas": "^2.9.3",
     "@sentry/sveltekit": "^7.98.0",
     "@vercel/analytics": "^1.1.2",
