@@ -107,8 +107,16 @@ tasks:
   migrate:
     command:
       - "node"
-      - "--no-warnings=ExperimentalWarning"
-      - "--loader=ts-node/esm"
       - "./src/bin/migrate.ts"
+    options:
+      cache: false
+      envFile: .env.local
+    local: true
+    platform: node
+    env:
+      NODE_OPTIONS: "--no-warnings=ExperimentalWarning --loader=ts-node/esm"
+  vercel:
+    command:
+      - vercel
     local: true
     platform: node
