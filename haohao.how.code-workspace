@@ -12,5 +12,11 @@
     "svelte.enable-ts-plugin": true,
     "typescript.tsdk": "node_modules/typescript/lib",
     "rust-analyzer.linkedProjects": ["projects/backend/Cargo.toml"],
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.codeActionsOnSave": {
+      "source.formatDocument": true,
+      "source.fixAll.eslint": true,
+      "source.organizeImports": false,
+    },
   },
 }
