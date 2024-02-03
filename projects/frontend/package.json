@@ -41,6 +41,7 @@
   "dependencies": {
     "@sentry/sveltekit": "^7.98.0",
     "@vercel/analytics": "^1.1.2",
+    "@vercel/postgres": "^0.7.2",
     "@vercel/speed-insights": "^1.0.8",
     "drizzle-orm": "^0.29.3",
     "postgres": "^3.4.3"

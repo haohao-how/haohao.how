@@ -9,13 +9,15 @@ jobs:
   migrate:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
+      - uses: "actions/checkout@v4"
+        with:
+          fetch-depth: 0
+      - uses: "moonrepo/setup-toolchain@v0"
       - name: Fetch Vercel secrets
-        run: moon run frontend:vercel -- pull env --environment=production .env.local
+        run: moon run frontend:vercel -- env pull --environment=production .env.local
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID_WWW }}
       - name: Run Drizzle migrations
         run: moon run frontend:migrate
