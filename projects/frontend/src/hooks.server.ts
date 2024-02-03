@@ -1,6 +1,6 @@
-import { sequence } from "@sveltejs/kit/hooks";
-import { handleErrorWithSentry, sentryHandle } from "@sentry/sveltekit";
 import * as Sentry from "@sentry/sveltekit";
+import { handleErrorWithSentry, sentryHandle } from "@sentry/sveltekit";
+import { sequence } from "@sveltejs/kit/hooks";
 
 Sentry.init({
   dsn: "https://88e3787d84756d748f01113cc6a01fde@o4506645802909696.ingest.sentry.io/4506645804679168",
