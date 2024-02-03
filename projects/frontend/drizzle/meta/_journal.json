@@ -29,6 +29,13 @@
       "when": 1706693622096,
       "tag": "0003_charming_blacklash",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "5",
+      "when": 1706924250346,
+      "tag": "0004_mighty_nextwave",
+      "breakpoints": true
     }
   ]
 }
