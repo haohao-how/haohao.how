@@ -5,6 +5,11 @@
     },
   ],
   "settings": {
+    "[svelte]": {
+      "editor.defaultFormatter": "svelte.svelte-vscode",
+    },
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "svelte.enable-ts-plugin": true,
     "typescript.tsdk": "node_modules/typescript/lib",
     "rust-analyzer.linkedProjects": ["projects/backend/Cargo.toml"],
   },
