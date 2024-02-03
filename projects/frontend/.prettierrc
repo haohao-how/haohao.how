@@ -1,7 +1,7 @@
 {
   "trailingComma": "all",
   "printWidth": 100,
-  "plugins": ["prettier-plugin-svelte"],
+  "plugins": ["prettier-plugin-organize-imports", "prettier-plugin-svelte"],
   "overrides": [
     {
       "files": "*.svelte",
@@ -9,5 +9,6 @@
         "parser": "svelte"
       }
     }
-  ]
+  ],
+  "organizeImportsSkipDestructiveCodeActions": true
 }
