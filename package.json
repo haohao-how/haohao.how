@@ -5,7 +5,8 @@
     "projects/*"
   ],
   "devDependencies": {
-    "@moonrepo/cli": "^1.19.3"
+    "@moonrepo/cli": "^1.19.3",
+    "@yarnpkg/doctor": "^4.0.1"
   },
   "engines": {
     "node": "~21.6"
