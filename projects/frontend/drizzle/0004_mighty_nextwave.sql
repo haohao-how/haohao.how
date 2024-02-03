@@ -1,0 +1,1 @@
+ALTER TABLE "clickCount" ADD COLUMN "ipAddress" "inet";
