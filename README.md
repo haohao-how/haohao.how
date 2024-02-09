@@ -2,29 +2,22 @@
 
 [![CI](https://github.com/bradleyayers/haohaohow/actions/workflows/ci.yml/badge.svg)](https://github.com/bradleyayers/haohaohow/actions/workflows/ci.yml)
 
-# Setup
+## Setup
 
-- Install `proto`
+Install [proto](https://moonrepo.dev/proto):
 
 ```sh
-$ curl -fsSL https://moonrepo.dev/install/proto.sh | bash
+curl -fsSL https://moonrepo.dev/install/proto.sh | bash
 ```
 
-- Install `node`
+Install other tools used in the workspace:
 
 ```sh
-$ proto install node 21
+proto use
 ```
 
-- Install `moon`
+## Running scripts with moon
 
 ```sh
-$ proto tool add moon "source:https://raw.githubusercontent.com/moonrepo/moon/master/proto-plugin.toml"
-$ proto install moon
-```
-
-# Running scripts with moon
-
-```sh
-$ moon frontend:build
+moon frontend:build
 ```
