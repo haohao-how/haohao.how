@@ -5,6 +5,9 @@
     },
   ],
   "settings": {
+    "[git-commit]": {
+      "editor.rulers": [80],
+    },
     "[svelte]": {
       "editor.defaultFormatter": "svelte.svelte-vscode",
     },
@@ -12,7 +15,6 @@
     "svelte.enable-ts-plugin": true,
     "typescript.tsdk": "node_modules/typescript/lib",
     "rust-analyzer.linkedProjects": ["projects/backend/Cargo.toml"],
-    "editor.defaultFormatter": "esbenp.prettier-vscode",
     "editor.codeActionsOnSave": {
       "source.formatDocument": "explicit",
       "source.fixAll.eslint": "explicit",
