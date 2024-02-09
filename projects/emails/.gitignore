@@ -1,0 +1,5 @@
+/out
+/.react-email
+.env
+.env.*
+!.env.example
