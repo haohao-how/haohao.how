@@ -19,85 +19,15 @@ tasks:
       - ~:build
     local: true
     platform: node
-  svelte-check:
-    command:
-      - svelte-check
-      - --tsconfig
-      - ./tsconfig.json
-    deps:
-      - ~:svelte-kit-sync
-    platform: node
-  svelte-kit-sync:
-    command:
-      - svelte-kit
-      - sync
-    platform: node
-  check-watch:
-    command:
-      - svelte-check
-      - --tsconfig
-      - ./tsconfig.json
-      - --watch
-    deps:
-      - ~:svelte-kit-sync
-    local: true
-    platform: node
   dev:
     command:
       - vite
       - dev
     local: true
     platform: node
-  prettier:
-    command:
-      - prettier
-      - --write
-      - .
-    platform: node
-  lint:
-    command:
-      - eslint
-      - .
-    deps:
-      - ~:prettier-check
-    platform: node
-  prettier-check:
-    command:
-      - prettier
-      - --check
-      - .
-    platform: node
-  storybook:
-    command:
-      - storybook
-      - dev
-      - --port=6006
-    inputs:
-      - "@group(frontend)"
-    local: true
-    platform: node
   storybook-build:
-    command:
-      - storybook
-      - build
-      - --output-dir=storybook-static
     inputs:
       - "@group(frontend)"
-    outputs:
-      - "storybook-static/"
-    platform: node
-  chromatic:
-    command:
-      - chromatic
-      - --storybook-build-dir=storybook-static
-      - --exit-zero-on-changes
-    inputs:
-      - "storybook-static/**/*"
-      - "*.*"
-      - "$CHROMATIC_PROJECT_TOKEN"
-    deps:
-      - storybook-build
-    platform: node
   generate:
     command:
       - "drizzle-kit"
@@ -120,3 +50,8 @@ tasks:
       - vercel
     local: true
     platform: node
+
+tags:
+  - chromatic
+  - eslint
+  - sveltekit

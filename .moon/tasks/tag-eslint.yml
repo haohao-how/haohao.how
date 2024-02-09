@@ -1,0 +1,6 @@
+tasks:
+  lint:
+    command:
+      - eslint
+      - .
+    platform: node
