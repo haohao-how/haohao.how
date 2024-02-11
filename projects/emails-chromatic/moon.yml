@@ -1,0 +1,9 @@
+tasks:
+  storybook-build:
+    inputs:
+      - "src/**/*"
+
+tags:
+  - chromatic
+  - eslint
+  - sveltekit

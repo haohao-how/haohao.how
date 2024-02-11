@@ -14,5 +14,4 @@ node:
     version: "4.0.2"
 
 typescript:
-  routeOutDirToCache: true
   syncProjectReferences: false

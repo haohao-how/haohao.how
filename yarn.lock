@@ -11,9 +11,21 @@ __metadata:
   languageName: node
   linkType: soft
 
+"$app@link:./nope::locator=emails-chromatic%40workspace%3Aprojects%2Femails-chromatic":
+  version: 0.0.0-use.local
+  resolution: "$app@link:./nope::locator=emails-chromatic%40workspace%3Aprojects%2Femails-chromatic"
+  languageName: node
+  linkType: soft
+
 "$lib@link:./nope::locator=button%40workspace%3Aprojects%2Ffrontend":
   version: 0.0.0-use.local
   resolution: "$lib@link:./nope::locator=button%40workspace%3Aprojects%2Ffrontend"
+  languageName: node
+  linkType: soft
+
+"$lib@link:./nope::locator=emails-chromatic%40workspace%3Aprojects%2Femails-chromatic":
+  version: 0.0.0-use.local
+  resolution: "$lib@link:./nope::locator=emails-chromatic%40workspace%3Aprojects%2Femails-chromatic"
   languageName: node
   linkType: soft
 
@@ -3385,7 +3397,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@react-email/render@npm:0.0.12":
+"@react-email/render@npm:0.0.12, @react-email/render@npm:^0.0.12":
   version: 0.0.12
   resolution: "@react-email/render@npm:0.0.12"
   dependencies:
@@ -8920,7 +8932,48 @@ __metadata:
   languageName: node
   linkType: hard
 
-"emails@workspace:projects/emails":
+"emails-chromatic@workspace:projects/emails-chromatic":
+  version: 0.0.0-use.local
+  resolution: "emails-chromatic@workspace:projects/emails-chromatic"
+  dependencies:
+    $app: "link:./nope"
+    $lib: "link:./nope"
+    "@react-email/render": "npm:^0.0.12"
+    "@storybook/addon-essentials": "npm:^8.0.0-alpha.17"
+    "@storybook/addon-interactions": "npm:^8.0.0-alpha.17"
+    "@storybook/addon-links": "npm:^8.0.0-alpha.17"
+    "@storybook/blocks": "npm:^8.0.0-alpha.17"
+    "@storybook/svelte": "npm:^8.0.0-alpha.17"
+    "@storybook/sveltekit": "npm:^8.0.0-alpha.17"
+    "@storybook/test": "npm:^8.0.0-alpha.17"
+    "@sveltejs/adapter-auto": "npm:^3.0.0"
+    "@sveltejs/kit": "npm:^2.0.0"
+    "@sveltejs/vite-plugin-svelte": "npm:^3.0.0"
+    "@types/eslint": "npm:8.56.0"
+    "@types/node": "npm:^20.11.16"
+    "@typescript-eslint/eslint-plugin": "npm:^6.0.0"
+    "@typescript-eslint/parser": "npm:^6.0.0"
+    chromatic: "npm:^10.7.1"
+    emails: "workspace:*"
+    eslint: "npm:^8.56.0"
+    eslint-config-prettier: "npm:^9.1.0"
+    eslint-plugin-drizzle: "npm:^0.2.3"
+    eslint-plugin-storybook: "npm:^0.6.15"
+    eslint-plugin-svelte: "npm:^2.36.0-next.4"
+    prettier: "npm:^3.1.1"
+    prettier-plugin-organize-imports: "npm:^3.2.4"
+    prettier-plugin-svelte: "npm:^3.1.2"
+    svelte: "npm:^5.0.0-next.1"
+    svelte-check: "npm:^3.6.0"
+    ts-node: "npm:^10.9.2"
+    tslib: "npm:^2.4.1"
+    typescript: "npm:^5.0.0"
+    vite: "npm:^5.0.3"
+    vite-plugin-turbosnap: "npm:^1.0.3"
+  languageName: unknown
+  linkType: soft
+
+"emails@workspace:*, emails@workspace:projects/emails":
   version: 0.0.0-use.local
   resolution: "emails@workspace:projects/emails"
   dependencies:
@@ -8928,6 +8981,7 @@ __metadata:
     "@types/react": "npm:^18"
     react: "npm:^18.2.0"
     react-email: "npm:^2.0.0"
+    typescript: "npm:^5.3.3"
   languageName: unknown
   linkType: soft
 
@@ -16426,7 +16480,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@npm:^5.0.0, typescript@npm:^5.0.3":
+"typescript@npm:^5.0.0, typescript@npm:^5.0.3, typescript@npm:^5.3.3":
   version: 5.3.3
   resolution: "typescript@npm:5.3.3"
   bin:
@@ -16466,7 +16520,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@patch:typescript@npm%3A^5.0.0#optional!builtin<compat/typescript>, typescript@patch:typescript@npm%3A^5.0.3#optional!builtin<compat/typescript>":
+"typescript@patch:typescript@npm%3A^5.0.0#optional!builtin<compat/typescript>, typescript@patch:typescript@npm%3A^5.0.3#optional!builtin<compat/typescript>, typescript@patch:typescript@npm%3A^5.3.3#optional!builtin<compat/typescript>":
   version: 5.3.3
   resolution: "typescript@patch:typescript@npm%3A5.3.3#optional!builtin<compat/typescript>::version=5.3.3&hash=e012d7"
   bin:

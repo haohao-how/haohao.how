@@ -1,6 +1,6 @@
 fileGroups:
   emails:
-    - "emails/**/*"
+    - "src/emails/**/*"
     - "*.json"
 
 tasks:
@@ -8,16 +8,28 @@ tasks:
     command:
       - email
       - dev
+      - --dir=src/emails
     platform: node
     local: true
   build:
     command:
+      - tsc
+    inputs:
+      - "@group(emails)"
+    outputs:
+      - "dist/"
+    platform: node
+  build-app:
+    command:
       - email
       - build
+      - --dir=src/emails
+    outputs:
+      - ".react-email/"
     inputs:
       - "@group(emails)"
     platform: node
-  start:
+  start-app:
     command:
       - email
       - start
