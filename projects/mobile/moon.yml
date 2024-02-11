@@ -1,0 +1,30 @@
+tasks:
+  dev:
+    command:
+      - expo
+      - start
+    platform: node
+    local: true
+  dev-android:
+    extends: dev
+    args:
+      - --android
+  dev-ios:
+    extends: dev
+    args:
+      - --ios
+  dev-web:
+    extends: dev
+    args:
+      - --web
+  export:
+    command:
+      - expo
+      - export
+    platform: node
+    inputs:
+      - "assets/**/*"
+      - "src/**/*"
+      - "*.json"
+    outputs:
+      - "dist/"
