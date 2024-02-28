@@ -1,5 +1,6 @@
 /out
 /.react-email
+/dist
 .env
 .env.*
 !.env.example
