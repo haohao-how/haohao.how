@@ -21,3 +21,10 @@ proto use
 ```sh
 moon frontend:build
 ```
+
+# Cookbook
+
+## Upgrading Yarn
+
+Inside `toolchain.yml` edit `node.yarn.version` and update the version. Run
+`moon sync projects` to apply the change.
