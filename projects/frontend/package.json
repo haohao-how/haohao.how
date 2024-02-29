@@ -35,7 +35,7 @@
     "ts-node": "^10.9.2",
     "tslib": "^2.4.1",
     "typescript": "^5.0.0",
-    "vercel": "^33.4.1",
+    "vercel": "^33.5.3",
     "vite": "^5.0.3",
     "vite-plugin-turbosnap": "^1.0.3"
   },

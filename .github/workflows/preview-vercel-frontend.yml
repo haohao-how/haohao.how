@@ -1,0 +1,25 @@
+name: Preview Vercel (frontend)
+
+env:
+  VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+  VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID_FRONTEND }}
+
+on:
+  push:
+    branches-ignore:
+      - "main"
+
+jobs:
+  Deploy-Preview:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: "actions/checkout@v4"
+        with:
+          fetch-depth: 0
+      - uses: "moonrepo/setup-toolchain@v0"
+      - name: Fetch Vercel secrets
+        run: moon run mobile:vercel -- pull --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
+      - name: Build Project Artifacts
+        run: moon run mobile:vercel -- build --token=${{ secrets.VERCEL_TOKEN }}
+      - name: Deploy Project Artifacts to Vercel
+        run: moon run mobile:vercel -- deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }}

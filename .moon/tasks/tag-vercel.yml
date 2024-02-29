@@ -1,0 +1,6 @@
+tasks:
+  vercel:
+    command:
+      - vercel
+    local: true
+    platform: node

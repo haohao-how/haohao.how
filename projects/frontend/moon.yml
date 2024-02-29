@@ -45,13 +45,9 @@ tasks:
     platform: node
     env:
       NODE_OPTIONS: "--no-warnings=ExperimentalWarning --loader=ts-node/esm"
-  vercel:
-    command:
-      - vercel
-    local: true
-    platform: node
 
 tags:
   - chromatic
   - eslint
   - sveltekit
+  - vercel
