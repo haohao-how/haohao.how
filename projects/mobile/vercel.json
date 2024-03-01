@@ -1,0 +1,12 @@
+{
+  "buildCommand": "moon run export -- -p web",
+  "outputDirectory": "dist",
+  "devCommand": "moon run dev-web",
+  "cleanUrls": true,
+  "rewrites": [
+    {
+      "source": "/:path*",
+      "destination": "/"
+    }
+  ]
+}

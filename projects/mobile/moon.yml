@@ -28,3 +28,6 @@ tasks:
       - "*.json"
     outputs:
       - "dist/"
+
+tags:
+  - vercel
