@@ -14,7 +14,8 @@
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
-    "@types/react-dom": "~18.0.10"
+    "@types/react-dom": "~18.0.10",
+    "prettier": "^3.2.5"
   },
   "private": true
 }

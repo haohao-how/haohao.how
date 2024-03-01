@@ -30,4 +30,5 @@ tasks:
       - "dist/"
 
 tags:
+  - prettier
   - vercel

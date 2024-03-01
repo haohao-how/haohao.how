@@ -8,6 +8,7 @@
     "react-email": "^2.0.0"
   },
   "devDependencies": {
-    "@types/react": "^18"
+    "@types/react": "^18",
+    "prettier": "^3.2.5"
   }
 }
