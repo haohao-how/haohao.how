@@ -5,7 +5,8 @@
     "projects/*"
   ],
   "devDependencies": {
-    "@yarnpkg/doctor": "^4.0.1"
+    "@yarnpkg/doctor": "^4.0.1",
+    "prettier": "^3.2.5"
   },
   "engines": {
     "node": "~21.6"
