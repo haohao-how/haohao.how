@@ -9,7 +9,7 @@ export default defineConfig({
       autoUploadSourceMaps: process.env.VERCEL != null,
       sourceMapsUploadOptions: {
         org: "haohaohow",
-        project: "frontend",
+        project: "sveltekit",
       },
     }),
     sveltekit(),

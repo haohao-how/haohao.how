@@ -5,15 +5,15 @@ __metadata:
   version: 8
   cacheKey: 10c0
 
-"$app@link:./nope::locator=button%40workspace%3Aprojects%2Ffrontend":
+"$app@link:./nope::locator=button%40workspace%3Aprojects%2Fsveltekit":
   version: 0.0.0-use.local
-  resolution: "$app@link:./nope::locator=button%40workspace%3Aprojects%2Ffrontend"
+  resolution: "$app@link:./nope::locator=button%40workspace%3Aprojects%2Fsveltekit"
   languageName: node
   linkType: soft
 
-"$lib@link:./nope::locator=button%40workspace%3Aprojects%2Ffrontend":
+"$lib@link:./nope::locator=button%40workspace%3Aprojects%2Fsveltekit":
   version: 0.0.0-use.local
-  resolution: "$lib@link:./nope::locator=button%40workspace%3Aprojects%2Ffrontend"
+  resolution: "$lib@link:./nope::locator=button%40workspace%3Aprojects%2Fsveltekit"
   languageName: node
   linkType: soft
 
@@ -8959,9 +8959,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"button@workspace:projects/frontend":
+"button@workspace:projects/sveltekit":
   version: 0.0.0-use.local
-  resolution: "button@workspace:projects/frontend"
+  resolution: "button@workspace:projects/sveltekit"
   dependencies:
     $app: "link:./nope"
     $lib: "link:./nope"
