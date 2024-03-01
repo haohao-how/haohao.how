@@ -1,5 +1,5 @@
 {
-  "name": "mobile",
+  "name": "frontend",
   "version": "1.0.0",
   "main": "./src/AppEntry.js",
   "dependencies": {
