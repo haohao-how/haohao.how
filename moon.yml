@@ -1,13 +1,15 @@
 tasks:
+  prettier-check:
+    args:
+      - "'!./projects/**/*'"
   prettier:
-    command:
-      - prettier
-      - "!./projects/**/*"
-      - --write
-      - .
-    platform: node
+    args:
+      - "'!./projects/**/*'"
   doctor:
     command:
       - doctor
       - .
     platform: node
+
+tags:
+  - prettier

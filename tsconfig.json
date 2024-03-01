@@ -1,5 +1,5 @@
 {
   "compilerOptions": {
-    "outDir": ".moon/cache/types",
-  },
+    "outDir": ".moon/cache/types"
+  }
 }
