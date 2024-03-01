@@ -25,3 +25,6 @@ tasks:
       - build
     platform: node
     local: true
+
+tags:
+  - prettier

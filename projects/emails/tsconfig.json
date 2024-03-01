@@ -17,8 +17,8 @@
     "sourceMap": true,
     "strict": true,
     "target": "esnext",
-    "verbatimModuleSyntax": true,
+    "verbatimModuleSyntax": true
   },
   "include": ["**/*.tsx", "**/*.ts"],
-  "exclude": ["node_modules/**"],
+  "exclude": ["node_modules/**"]
 }

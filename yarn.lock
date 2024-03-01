@@ -7587,6 +7587,7 @@ __metadata:
   dependencies:
     "@react-email/components": "npm:^0.0.14"
     "@types/react": "npm:^18"
+    prettier: "npm:^3.2.5"
     react: "npm:^18.2.0"
     react-email: "npm:^2.0.0"
   languageName: unknown
@@ -8693,6 +8694,7 @@ __metadata:
     "@types/react-dom": "npm:~18.0.10"
     expo: "npm:50.0.8"
     expo-status-bar: "npm:~1.11.1"
+    prettier: "npm:^3.2.5"
     react: "npm:18.2.0"
     react-dom: "npm:^18.2.0"
     react-native: "npm:0.73.4"
