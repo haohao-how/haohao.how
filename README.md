@@ -19,7 +19,7 @@ proto use
 ## Running scripts with moon
 
 ```sh
-moon frontend:build
+moon frontend:dev
 ```
 
 # Cookbook

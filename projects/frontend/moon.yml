@@ -1,53 +1,33 @@
-fileGroups:
-  frontend:
-    - "src/**/*"
-    - "static/**/*"
-    - ".*"
-    - "*.*"
-
 tasks:
-  build:
-    command:
-      - vite
-      - build
-    platform: node
-  preview:
-    command:
-      - vite
-      - preview
-    deps:
-      - ~:build
-    local: true
-    platform: node
   dev:
     command:
-      - vite
-      - dev
-    local: true
+      - expo
+      - start
     platform: node
-  storybook-build:
+    local: true
+  dev-android:
+    extends: dev
+    args:
+      - --android
+  dev-ios:
+    extends: dev
+    args:
+      - --ios
+  dev-web:
+    extends: dev
+    args:
+      - --web
+  export:
+    command:
+      - expo
+      - export
+    platform: node
     inputs:
-      - "@group(frontend)"
-  generate:
-    command:
-      - "drizzle-kit"
-      - "generate:pg"
-    local: true
-    platform: node
-  migrate:
-    command:
-      - "node"
-      - "./src/bin/migrate.ts"
-    options:
-      cache: false
-      envFile: .env.local
-    local: true
-    platform: node
-    env:
-      NODE_OPTIONS: "--no-warnings=ExperimentalWarning --loader=ts-node/esm"
+      - "assets/**/*"
+      - "src/**/*"
+      - "*.json"
+    outputs:
+      - "dist/"
 
 tags:
-  - chromatic
-  - eslint
-  - sveltekit
   - vercel
