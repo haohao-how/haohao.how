@@ -1,12 +1,3 @@
-rust:
-  version: "1.75.0"
-  bins:
-    - "cargo-nextest"
-  components:
-    - "rustfmt"
-    - "clippy"
-  syncToolchainConfig: true
-
 node:
   version: "21.6"
   packageManager: "yarn"
