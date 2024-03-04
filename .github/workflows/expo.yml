@@ -1,0 +1,22 @@
+name: update
+on:
+  push:
+    branches:
+      - "main"
+      - "releases/**"
+
+jobs:
+  update:
+    name: EAS Update
+    runs-on: ubuntu-latest
+    steps:
+      - uses: "actions/checkout@v4"
+        with:
+          fetch-depth: 0
+
+      - uses: "moonrepo/setup-toolchain@v0"
+
+      - name: Publish update
+        run: moon run frontend:eas -- update --auto
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
