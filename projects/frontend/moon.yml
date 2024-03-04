@@ -17,6 +17,10 @@ tasks:
     extends: dev
     args:
       - --web
+  eas:
+    command:
+      - eas
+    local: true
   export:
     command:
       - expo
