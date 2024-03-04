@@ -11,6 +11,14 @@ on:
           - ios
           - android
           - all
+      profile:
+        description: "Profile"
+        required: true
+        default: "preview"
+        type: choice
+        options:
+          - preview
+          - production
   push:
     branches:
       - "main"
@@ -32,6 +40,6 @@ jobs:
         uses: "moonrepo/setup-toolchain@v0"
 
       - name: 🚀 Build app
-        run: moon run frontend:eas -- build --platform=${{ inputs.platform }} --non-interactive
+        run: moon run frontend:eas -- build --profile=${{ inputs.profile }} --platform=${{ inputs.platform }} --non-interactive
         env:
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
