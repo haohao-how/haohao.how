@@ -1,6 +1,16 @@
 name: Expo EAS Build
 on:
   workflow_dispatch:
+    inputs:
+      platform:
+        description: "Platform"
+        required: true
+        default: "ios"
+        type: choice
+        options:
+          - ios
+          - android
+          - all
   push:
     branches:
       - "main"
@@ -22,6 +32,6 @@ jobs:
         uses: "moonrepo/setup-toolchain@v0"
 
       - name: 🚀 Build app
-        run: moon run frontend:eas -- build --non-interactive
+        run: moon run frontend:eas -- build --platform=${{ inputs.platform }} --non-interactive
         env:
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
