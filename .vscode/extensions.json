@@ -1,10 +1,11 @@
 {
   "recommendations": [
-    "editorconfig.editorconfig",
     "dbaeumer.vscode-eslint",
-    "tamasfe.even-better-toml",
+    "editorconfig.editorconfig",
     "esbenp.prettier-vscode",
+    "expo.vscode-expo-tools",
     "stkb.rewrap",
-    "svelte.svelte-vscode"
+    "svelte.svelte-vscode",
+    "tamasfe.even-better-toml"
   ]
 }
