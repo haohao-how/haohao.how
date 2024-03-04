@@ -19,7 +19,9 @@ tasks:
       - --web
   eas:
     command:
-      - eas
+      - npx
+      - "--yes"
+      - eas-cli
     local: true
   export:
     command:

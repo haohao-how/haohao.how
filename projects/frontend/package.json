@@ -16,7 +16,6 @@
   "devDependencies": {
     "@babel/core": "^7.20.0",
     "@types/react-dom": "~18.0.10",
-    "eas-cli": "^7.3.0",
     "prettier": "^3.2.5"
   },
   "private": true
