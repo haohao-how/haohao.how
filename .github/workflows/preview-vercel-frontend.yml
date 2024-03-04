@@ -13,13 +13,19 @@ jobs:
   Deploy-Preview:
     runs-on: ubuntu-latest
     steps:
-      - uses: "actions/checkout@v4"
+      - name: 🏗 Setup repo
+        uses: "actions/checkout@v4"
         with:
           fetch-depth: 0
-      - uses: "moonrepo/setup-toolchain@v0"
-      - name: Fetch Vercel secrets
+
+      - name: 📦 Install dependencies
+        uses: "moonrepo/setup-toolchain@v0"
+
+      - name: 🔑 Fetch Vercel secrets
         run: moon run frontend:vercel -- pull --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
-      - name: Build Project Artifacts
+
+      - name: 🚀 Build Project Artifacts
         run: moon run frontend:vercel -- build --token=${{ secrets.VERCEL_TOKEN }}
-      - name: Deploy Project Artifacts to Vercel
+
+      - name: 🚀 Deploy Project Artifacts to Vercel
         run: moon run frontend:vercel -- deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }}
