@@ -19,12 +19,6 @@ on:
         options:
           - preview
           - production
-  push:
-    branches:
-      - "main"
-      - "releases/**"
-    paths:
-      - "projects/frontend/app.json"
 
 jobs:
   update:
