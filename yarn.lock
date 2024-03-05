@@ -8331,6 +8331,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"expo-insights@npm:~0.6.1":
+  version: 0.6.1
+  resolution: "expo-insights@npm:0.6.1"
+  dependencies:
+    expo-eas-client: "npm:~0.11.0"
+  peerDependencies:
+    expo: "*"
+  checksum: 10c0/97ec606006bc9b9da6b1cafc62e80bd9164a4058236a1b2eaa2760d43e4089409fe96408d98465e57cc2b9ad21afe13b2bc8cce1b2a9e30af37e2cfc8a9369e3
+  languageName: node
+  linkType: hard
+
 "expo-json-utils@npm:~0.12.0":
   version: 0.12.3
   resolution: "expo-json-utils@npm:0.12.3"
@@ -8758,6 +8769,7 @@ __metadata:
     "@expo/metro-runtime": "npm:^3.1.3"
     "@types/react-dom": "npm:~18.0.10"
     expo: "npm:50.0.8"
+    expo-insights: "npm:~0.6.1"
     expo-status-bar: "npm:~1.11.1"
     expo-updates: "npm:^0.24.11"
     prettier: "npm:^3.2.5"
