@@ -5,6 +5,7 @@ export default function App() {
   return (
     <View style={styles.container}>
       <Text style={{ fontWeight: "bold", color: "white" }}>Hello, world!</Text>
+      <Text style={{ fontWeight: "bold", color: "white" }}>👋 🤜🤛</Text>
       <StatusBar style="auto" />
     </View>
   );
