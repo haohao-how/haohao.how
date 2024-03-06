@@ -5,7 +5,7 @@ on:
       platform:
         description: "Platform"
         required: true
-        default: "ios"
+        default: "all"
         type: choice
         options:
           - ios
