@@ -23,7 +23,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "how.haohao.hoa"
     },
     "web": {
       "favicon": "./assets/favicon.png"
