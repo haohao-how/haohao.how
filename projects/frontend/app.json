@@ -3,6 +3,7 @@
     "name": "Hao",
     "slug": "hao",
     "version": "1.0.0",
+    "scheme": "hao",
     "runtimeVersion": {
       "policy": "appVersion"
     },
@@ -17,16 +18,32 @@
     "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "how.haohao.hoa"
+      "bundleIdentifier": "how.haohao.hoa",
+      "associatedDomains": ["applinks:haohao.how"]
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
+      "intentFilters": [
+        {
+          "action": "VIEW",
+          "autoVerify": true,
+          "data": [
+            {
+              "scheme": "https",
+              "host": "*.haohao.how",
+              "pathPrefix": "/learn"
+            }
+          ],
+          "category": ["BROWSABLE", "DEFAULT"]
+        }
+      ],
       "package": "how.haohao.hoa"
     },
     "web": {
+      "bundler": "metro",
       "favicon": "./assets/favicon.png"
     },
     "extra": {
@@ -37,6 +54,7 @@
     "owner": "haohaohow",
     "updates": {
       "url": "https://u.expo.dev/67cd571e-6234-4837-8e61-d9b4d19f0acf"
-    }
+    },
+    "plugins": ["expo-router"]
   }
 }
