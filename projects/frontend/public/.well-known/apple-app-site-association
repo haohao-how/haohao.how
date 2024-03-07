@@ -1,0 +1,22 @@
+{
+  // This section enables Universal Links
+  "applinks": {
+    "apps": [],
+    "details": [
+      {
+        // Example: "QQ57RJ5UTD.com.acme.myapp"
+        "appID": "9GVZK5FM29.how.haohao.hoa",
+        // All paths that should support redirecting
+        "paths": ["/learn/*"]
+      }
+    ]
+  },
+  // This section enables Apple Handoff
+  "activitycontinuation": {
+    "apps": ["9GVZK5FM29.how.haohao.hoa"]
+  },
+  // This section enable Shared Web Credentials
+  "webcredentials": {
+    "apps": ["9GVZK5FM29.how.haohao.hoa"]
+  }
+}
