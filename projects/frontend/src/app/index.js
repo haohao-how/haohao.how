@@ -17,22 +17,25 @@ export default function IndexPage() {
     <View style={styles.container}>
       <Text style={{ fontWeight: "bold", color: "white" }}>Hello, world!</Text>
       <Text style={{ fontWeight: "bold", color: "white" }}>👋 🤜🤛</Text>
-      <Link href="/learn">
+      <Link href="/learn" asChild>
         <Pressable
           onPress={() => {
             setTimesPressed((current) => current + 1);
           }}
-          style={({ pressed }) => [
-            {
-              backgroundColor: pressed ? "rgb(210, 230, 255)" : "white",
-            },
-            styles.wrapperCustom,
-          ]}
         >
           {({ pressed }) => (
-            <Text style={styles.text} selectable={false}>
-              {pressed ? "Release!" : "Go to /learn"}
-            </Text>
+            <View
+              style={[
+                {
+                  backgroundColor: pressed ? "rgb(210, 230, 255)" : "white",
+                },
+                styles.wrapperCustom,
+              ]}
+            >
+              <Text style={styles.text} selectable={false}>
+                Go to /learn
+              </Text>
+            </View>
           )}
         </Pressable>
       </Link>
