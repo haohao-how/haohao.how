@@ -1,4 +1,7 @@
 {
-  "compilerOptions": {},
+  "compilerOptions": {
+    "outDir": "../../.moon/cache/types/projects/frontend",
+    "strict": true
+  },
   "extends": "expo/tsconfig.base"
 }

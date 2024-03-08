@@ -30,6 +30,7 @@ tasks:
     platform: node
     inputs:
       - "assets/**/*"
+      - "public/**/*"
       - "src/**/*"
       - "*.json"
     outputs:
@@ -37,4 +38,5 @@ tasks:
 
 tags:
   - prettier
+  - typescript
   - vercel
