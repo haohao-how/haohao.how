@@ -2,6 +2,7 @@ import { useState } from "react";
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Pressable, Text, View } from "react-native";
 import { Link } from "expo-router";
+import { RootView } from "../components/RootView";
 
 export default function IndexPage() {
   const [timesPressed, setTimesPressed] = useState(0);
@@ -14,7 +15,7 @@ export default function IndexPage() {
   }
 
   return (
-    <View style={styles.container}>
+    <RootView backgroundColor="tomato" style={styles.container}>
       <Text style={{ fontWeight: "bold", color: "white" }}>Hello, world!</Text>
       <Text style={{ fontWeight: "bold", color: "white" }}>👋 🤜🤛</Text>
       <Link href="/learn" asChild>
@@ -40,14 +41,13 @@ export default function IndexPage() {
         </Pressable>
       </Link>
       <StatusBar style="auto" />
-    </View>
+    </RootView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "tomato",
     alignItems: "center",
     justifyContent: "center",
   },
