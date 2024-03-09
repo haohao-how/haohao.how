@@ -2,6 +2,7 @@ import * as Sentry from "@sentry/react-native";
 import { Slot, useNavigationContainerRef } from "expo-router";
 import * as Updates from "expo-updates";
 import { useEffect } from "react";
+import { Platform } from "react-native";
 
 // Via the guide: https://docs.expo.dev/guides/using-sentry/
 const manifest = Updates.manifest;
@@ -29,6 +30,8 @@ Sentry.init({
 Sentry.configureScope((scope) => {
   scope.setTag("expo-update-id", Updates.updateId);
   scope.setTag("expo-is-embedded-update", Updates.isEmbeddedLaunch);
+  scope.setTag("platform-os", Platform.OS);
+  scope.setTag("platform-version", Platform.Version);
 
   if (typeof updateGroup === "string") {
     scope.setTag("expo-update-group-id", updateGroup);

@@ -10,12 +10,6 @@ export default function LearnPage() {
       <Link href="/" asChild>
         <CircleButton color="purple" />
       </Link>
-      <CircleButton
-        color="#333"
-        onPress={() => {
-          throw new Error("Hello, again, Sentry!");
-        }}
-      />
       <StatusBar style="auto" />
     </RootView>
   );
