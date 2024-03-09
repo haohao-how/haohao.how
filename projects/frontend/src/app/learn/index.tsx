@@ -10,6 +10,12 @@ export default function LearnPage() {
       <Link href="/" asChild>
         <CircleButton color="purple" />
       </Link>
+      <CircleButton
+        color="#333"
+        onPress={() => {
+          throw new Error("Hello, again, Sentry!");
+        }}
+      />
       <StatusBar style="auto" />
     </RootView>
   );
@@ -18,6 +24,7 @@ export default function LearnPage() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    gap: 8,
     alignItems: "center",
     justifyContent: "center",
   },

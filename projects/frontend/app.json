@@ -55,6 +55,15 @@
     "updates": {
       "url": "https://u.expo.dev/67cd571e-6234-4837-8e61-d9b4d19f0acf"
     },
-    "plugins": ["expo-router"]
+    "plugins": [
+      "expo-router",
+      [
+        "@sentry/react-native/expo",
+        {
+          "organization": "haohaohow",
+          "project": "frontend"
+        }
+      ]
+    ]
   }
 }

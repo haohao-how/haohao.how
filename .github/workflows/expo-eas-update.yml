@@ -19,6 +19,8 @@ jobs:
         uses: "moonrepo/setup-toolchain@v0"
 
       - name: 🚀 Publish update
-        run: moon run frontend:eas -- update --auto --non-interactive
+        run: |
+          moon run frontend:eas -- update --auto --non-interactive
+          npx sentry-expo-upload-sourcemaps dist
         env:
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
