@@ -35,6 +35,13 @@ tasks:
       - "*.json"
     outputs:
       - "dist/"
+  upload-sentry-source-maps:
+    command:
+      - npx
+      - sentry-expo-upload-sourcemaps
+      - dist
+    platform: node
+    local: true
 
 tags:
   - prettier

@@ -21,6 +21,6 @@ jobs:
       - name: 🚀 Publish update
         run: |
           moon run frontend:eas -- update --auto --non-interactive
-          npx sentry-expo-upload-sourcemaps dist
+          moon run frontend:upload-sentry-source-maps
         env:
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
