@@ -1,8 +1,10 @@
 import { useState } from "react";
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Pressable, Text, View } from "react-native";
+import { StyleSheet, Pressable, Text, View, Platform } from "react-native";
 import { Link } from "expo-router";
 import { RootView } from "../components/RootView";
+import { Image } from "expo-image";
+import { CircleButton } from "../components/CircleButton";
 
 export default function IndexPage() {
   const [timesPressed, setTimesPressed] = useState(0);
@@ -16,29 +18,8 @@ export default function IndexPage() {
 
   return (
     <RootView backgroundColor="tomato" style={styles.container}>
-      <Text style={{ fontWeight: "bold", color: "white" }}>Hello, world!</Text>
-      <Text style={{ fontWeight: "bold", color: "white" }}>👋 🤜🤛</Text>
       <Link href="/learn" asChild>
-        <Pressable
-          onPress={() => {
-            setTimesPressed((current) => current + 1);
-          }}
-        >
-          {({ pressed }) => (
-            <View
-              style={[
-                {
-                  backgroundColor: pressed ? "rgb(210, 230, 255)" : "white",
-                },
-                styles.wrapperCustom,
-              ]}
-            >
-              <Text style={styles.text} selectable={false}>
-                Go to /learn
-              </Text>
-            </View>
-          )}
-        </Pressable>
+        <CircleButton />
       </Link>
       <StatusBar style="auto" />
     </RootView>
@@ -49,13 +30,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
+    gap: 12,
     justifyContent: "center",
-  },
-  text: {
-    fontSize: 16,
-  },
-  wrapperCustom: {
-    borderRadius: 8,
-    padding: 6,
   },
 });
