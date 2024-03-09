@@ -2,12 +2,14 @@ import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View } from "react-native";
 import { Link } from "expo-router";
 import { RootView } from "../../components/RootView";
+import { CircleButton } from "../../components/CircleButton";
 
 export default function LearnPage() {
   return (
     <RootView backgroundColor="red" style={styles.container}>
-      <Text style={{ fontWeight: "bold", color: "white" }}>Learn</Text>
-      <Link href="/">To to /</Link>
+      <Link href="/" asChild>
+        <CircleButton color="purple" />
+      </Link>
       <StatusBar style="auto" />
     </RootView>
   );
