@@ -24,3 +24,4 @@ jobs:
           moon run frontend:upload-sentry-source-maps
         env:
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
