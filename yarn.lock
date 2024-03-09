@@ -9009,7 +9009,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"expo-font@npm:~11.10.3":
+"expo-font@npm:^11.10.3, expo-font@npm:~11.10.3":
   version: 11.10.3
   resolution: "expo-font@npm:11.10.3"
   dependencies:
@@ -9147,7 +9147,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"expo-splash-screen@npm:0.26.4":
+"expo-splash-screen@npm:0.26.4, expo-splash-screen@npm:^0.26.4":
   version: 0.26.4
   resolution: "expo-splash-screen@npm:0.26.4"
   dependencies:
@@ -9564,11 +9564,13 @@ __metadata:
     color: "npm:^4.2.3"
     expo: "npm:^50.0.11"
     expo-constants: "npm:~15.4.5"
+    expo-font: "npm:^11.10.3"
     expo-haptics: "npm:~12.8.1"
     expo-image: "npm:~1.10.6"
     expo-insights: "npm:~0.6.1"
     expo-linking: "npm:~6.2.2"
     expo-router: "npm:~3.4.8"
+    expo-splash-screen: "npm:^0.26.4"
     expo-status-bar: "npm:~1.11.1"
     expo-system-ui: "npm:~2.9.3"
     expo-updates: "npm:^0.24.11"
