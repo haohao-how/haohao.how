@@ -1,10 +1,9 @@
-import { useState } from "react";
-import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Pressable, Text, View, Platform } from "react-native";
 import { Link } from "expo-router";
-import { RootView } from "../components/RootView";
-import { Image } from "expo-image";
+import { StatusBar } from "expo-status-bar";
+import { useState } from "react";
+import { StyleSheet } from "react-native";
 import { CircleButton } from "../components/CircleButton";
+import { RootView } from "../components/RootView";
 
 export default function IndexPage() {
   const [timesPressed, setTimesPressed] = useState(0);

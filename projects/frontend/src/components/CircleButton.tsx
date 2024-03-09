@@ -1,9 +1,9 @@
+import Color from "color";
 import { Image } from "expo-image";
 import { forwardRef, useMemo } from "react";
 import { ColorValue, Pressable, View } from "react-native";
 import { PropsOf } from "./types";
 import { hapticImpactIfMobile } from "./util";
-import Color from "color";
 
 export type CircleButtonProps = {
   thickness?: number;
