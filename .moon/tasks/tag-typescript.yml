@@ -1,0 +1,6 @@
+tasks:
+  typecheck:
+    command:
+      - tsc
+      - --noEmit
+    platform: node
