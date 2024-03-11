@@ -6,8 +6,10 @@ import { hapticImpactIfMobile } from "./util";
 
 export type RectButtonProps = {
   borderRadius?: number;
+  borderWidth?: number;
   thickness?: number;
   color?: ColorValue;
+  accentColor?: ColorValue;
   children?: ViewProps["children"];
 } & Omit<PropsOf<typeof Pressable>, "children">;
 
@@ -15,14 +17,23 @@ export const RectButton = forwardRef<View, RectButtonProps>(
   (
     {
       thickness = 4,
-      borderRadius = 0,
+      borderRadius = 16,
+      borderWidth = 0,
       color = "#1CB0F5",
+      accentColor,
       children,
       ...pressableProps
     },
     ref,
   ) => {
-    const baseColor = useMemo(() => Color(color).darken(0.2).hex(), [color]);
+    accentColor = useMemo(
+      () => accentColor ?? Color(color).darken(0.2).hex(),
+      [accentColor, color],
+    );
+
+    // The border contributes to the same *thickness* appearance, so to avoid
+    // doubling up, we subtract it.
+    thickness = thickness - borderWidth;
 
     return (
       <Pressable
@@ -34,20 +45,16 @@ export const RectButton = forwardRef<View, RectButtonProps>(
         ref={ref}
       >
         {({ pressed }) => (
-          <View>
+          <View style={{ flex: 1 }}>
             <View
               // base
               style={[
                 {
-                  backgroundColor: baseColor,
-                  alignItems: "center",
+                  flex: 1,
+                  backgroundColor: accentColor,
+                  alignItems: "stretch",
                   justifyContent: "center",
                   borderRadius,
-                  position: "absolute",
-                  top: 0,
-                  bottom: 0,
-                  right: 0,
-                  left: 0,
                 },
               ]}
             >
@@ -55,7 +62,7 @@ export const RectButton = forwardRef<View, RectButtonProps>(
               // thickness
               style={[
                 {
-                  backgroundColor: baseColor,
+                  backgroundColor: accentColor,
                   opacity: pressed ? 0 : 1,
                   height: thickness,
                   position: "absolute",
@@ -63,22 +70,26 @@ export const RectButton = forwardRef<View, RectButtonProps>(
                 },
               ]}
             /> */}
-            </View>
-            <View
-              // top surface
-              style={[
-                {
-                  backgroundColor: color,
-                  alignItems: "center",
-                  justifyContent: "center",
-                  borderRadius: borderRadius,
-                  padding: 10,
-                  transform: [{ translateY: pressed ? 0 : -thickness }],
-                  transformOrigin: "top",
-                },
-              ]}
-            >
-              {children}
+
+              <View
+                // top surface
+                style={[
+                  {
+                    flex: 1,
+                    borderWidth,
+                    borderColor: accentColor,
+                    backgroundColor: color,
+                    alignItems: "center",
+                    justifyContent: "center",
+                    borderRadius: borderRadius,
+                    padding: 10,
+                    transform: [{ translateY: pressed ? 0 : -thickness }],
+                    transformOrigin: "top",
+                  },
+                ]}
+              >
+                {children}
+              </View>
             </View>
           </View>
         )}
