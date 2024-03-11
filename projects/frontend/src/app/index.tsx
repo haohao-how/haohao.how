@@ -123,13 +123,15 @@ const Section = ({
           width: "100%",
         }}
       />
-      <Link href="/learn" asChild>
+      <Link href="/learn/quiz" asChild>
         <CircleButton color={color} />
       </Link>
-      <CircleButton
-        color={disabledColor}
-        style={{ transform: [{ translateX: 20 }] }}
-      />
+      <Link href="/learn" asChild>
+        <CircleButton
+          color={disabledColor}
+          style={{ transform: [{ translateX: 20 }] }}
+        />
+      </Link>
       <CircleButton color={disabledColor} />
       <CircleButton
         color={disabledColor}
