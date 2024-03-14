@@ -20,7 +20,6 @@ export function SectionHeaderButton({
       {...rectButtonProps}
       borderRadius={rectButtonProps.borderRadius ?? 10}
       color={rectButtonProps.color ?? "#333"}
-      style={rectButtonProps.style ?? { flex: 1 }}
     >
       <Text
         style={{

@@ -13,7 +13,7 @@ export default function QuizPage() {
           flex: 1,
           width: "100%",
           alignItems: "center",
-          paddingTop: StatusBar.currentHeight,
+          paddingTop: StatusBar.currentHeight, // Necessary for Android
         }}
       >
         <View

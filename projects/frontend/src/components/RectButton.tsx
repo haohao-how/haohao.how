@@ -45,20 +45,15 @@ export const RectButton = forwardRef<View, RectButtonProps>(
         ref={ref}
       >
         {({ pressed }) => (
-          <View style={{ flex: 1 }}>
-            <View
-              // base
-              style={[
-                {
-                  flex: 1,
-                  backgroundColor: accentColor,
-                  alignItems: "stretch",
-                  justifyContent: "center",
-                  borderRadius,
-                },
-              ]}
-            >
-              {/* <View
+          <View
+            style={{
+              flexGrow: 1,
+              flexShrink: 1,
+              backgroundColor: accentColor,
+              borderRadius,
+            }}
+          >
+            {/* <View
               // thickness
               style={[
                 {
@@ -71,25 +66,25 @@ export const RectButton = forwardRef<View, RectButtonProps>(
               ]}
             /> */}
 
-              <View
-                // top surface
-                style={[
-                  {
-                    flex: 1,
-                    borderWidth,
-                    borderColor: accentColor,
-                    backgroundColor: color,
-                    alignItems: "center",
-                    justifyContent: "center",
-                    borderRadius: borderRadius,
-                    padding: 10,
-                    transform: [{ translateY: pressed ? 0 : -thickness }],
-                    transformOrigin: "top",
-                  },
-                ]}
-              >
-                {children}
-              </View>
+            <View
+              // top surface
+              style={[
+                {
+                  borderWidth,
+                  borderColor: accentColor,
+                  backgroundColor: color,
+                  flexGrow: 1,
+                  flexShrink: 1,
+                  alignItems: "center",
+                  justifyContent: "center",
+                  borderRadius: borderRadius,
+                  padding: 10,
+                  transform: [{ translateY: pressed ? 0 : -thickness }],
+                  transformOrigin: "top",
+                },
+              ]}
+            >
+              {children}
             </View>
           </View>
         )}
