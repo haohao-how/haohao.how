@@ -106,15 +106,17 @@ const SubmitButton = forwardRef<
       {...(disabled ? null : rectButtonProps)}
     >
       <Text
-        selectable={false}
-        style={{
-          textTransform: "uppercase",
-          color: textColor,
-          fontSize: 16,
-          fontWeight: "bold",
-          paddingBottom: 4,
-          paddingTop: 4,
-        }}
+        style={[
+          {
+            textTransform: "uppercase",
+            color: textColor,
+            fontSize: 16,
+            fontWeight: "bold",
+            paddingBottom: 4,
+            paddingTop: 4,
+          },
+          styles.buttonText,
+        ]}
       >
         Check
       </Text>
@@ -148,7 +150,7 @@ const AnswerButton = ({
       style={{ flex: 1 }}
     >
       <View style={{ justifyContent: "center" }}>
-        <Text style={{ color: "white", fontSize: 80 }} selectable={false}>
+        <Text style={[{ color: "white", fontSize: 80 }, styles.buttonText]}>
           {text}
         </Text>
       </View>
@@ -168,5 +170,8 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "stretch",
     gap,
+  },
+  buttonText: {
+    userSelect: "none",
   },
 });
