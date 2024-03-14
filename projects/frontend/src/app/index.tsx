@@ -115,14 +115,9 @@ const Section = ({
   const disabledColor: ColorValue = "#AAA";
   return (
     <>
-      <SectionHeaderButton
-        title={title}
-        subtitle={subtitle}
-        color={color}
-        style={{
-          width: "100%",
-        }}
-      />
+      <View style={{ flex: 1 }}>
+        <SectionHeaderButton title={title} subtitle={subtitle} color={color} />
+      </View>
       <Link href="/learn/quiz" asChild>
         <CircleButton color={color} />
       </Link>

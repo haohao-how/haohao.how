@@ -37,60 +37,54 @@ export const FourUpQuiz = Object.assign(
     };
 
     return (
-      <View style={{ flex: 1 }}>
-        <View style={{ flex: 1, gap: gap + buttonThickness }}>
-          {flag === FourUpQuizFlag.WeakWord ? (
-            <View
-              style={{ flexDirection: "row", alignItems: "center", gap: 10 }}
-            >
-              <Image
-                source={require("../../assets/target-red.svg")}
-                style={{ flexShrink: 1, width: 33, height: 30 }}
-              />
-              <Text
-                style={{
-                  flex: 1,
-                  color: "#EC5A53",
-                  fontSize: 16,
-                  fontWeight: "bold",
-                  textTransform: "uppercase",
-                  textShadowColor: "black",
-                  textShadowRadius: 1,
-                }}
-              >
-                Weak word
-              </Text>
-            </View>
-          ) : null}
-
-          <View>
+      <View style={{ flex: 1, gap: gap + buttonThickness }}>
+        {flag === FourUpQuizFlag.WeakWord ? (
+          <View style={{ flexDirection: "row", alignItems: "center", gap: 10 }}>
+            <Image
+              source={require("../../assets/target-red.svg")}
+              style={{ flexShrink: 1, width: 33, height: 30 }}
+            />
             <Text
               style={{
-                color: "white",
-                fontSize: 24,
+                color: "#EC5A53",
+                fontSize: 16,
                 fontWeight: "bold",
+                textTransform: "uppercase",
+                textShadowColor: "black",
+                textShadowRadius: 1,
               }}
             >
-              {prompt}
+              Weak word
             </Text>
           </View>
-          {choicesRows.map((choicesRow, i) => (
-            <View style={styles.answerRow} key={i}>
-              {choicesRow.map((choice, i) => (
-                <AnswerButton
-                  text={choice}
-                  selected={choice === selectedChoice}
-                  onPress={setSelectedChoice}
-                  key={i}
-                />
-              ))}
-            </View>
-          ))}
-          <SubmitButton
-            disabled={selectedChoice == null}
-            onPress={handleSubmit}
-          />
+        ) : null}
+        <View>
+          <Text
+            style={{
+              color: "white",
+              fontSize: 24,
+              fontWeight: "bold",
+            }}
+          >
+            {prompt}
+          </Text>
         </View>
+        {choicesRows.map((choicesRow, i) => (
+          <View style={styles.answerRow} key={i}>
+            {choicesRow.map((choice, i) => (
+              <AnswerButton
+                text={choice}
+                selected={choice === selectedChoice}
+                onPress={setSelectedChoice}
+                key={i}
+              />
+            ))}
+          </View>
+        ))}
+        <SubmitButton
+          disabled={selectedChoice == null}
+          onPress={handleSubmit}
+        />
       </View>
     );
   },
@@ -153,9 +147,11 @@ const AnswerButton = ({
       onPress={handlePress}
       style={{ flex: 1 }}
     >
-      <Text style={{ color: "white", fontSize: 80 }} selectable={false}>
-        {text}
-      </Text>
+      <View style={{ justifyContent: "center" }}>
+        <Text style={{ color: "white", fontSize: 80 }} selectable={false}>
+          {text}
+        </Text>
+      </View>
     </RectButton>
   );
 };
@@ -170,6 +166,7 @@ const styles = StyleSheet.create({
   answerRow: {
     flex: 1,
     flexDirection: "row",
+    alignItems: "stretch",
     gap,
   },
 });
