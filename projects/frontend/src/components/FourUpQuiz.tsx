@@ -6,6 +6,7 @@ import {
   TransitionPresets,
 } from "@react-navigation/stack";
 import { Image } from "expo-image";
+import { LinearGradient } from "expo-linear-gradient";
 import { router } from "expo-router";
 import { chunk } from "lodash-es";
 import {
@@ -16,7 +17,14 @@ import {
   useRef,
   useState,
 } from "react";
-import { Animated, StyleSheet, Text, View } from "react-native";
+import {
+  Animated,
+  LayoutChangeEvent,
+  LayoutRectangle,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import { RectButton } from "./RectButton";
 import { PropsOf } from "./types";
 
@@ -58,16 +66,6 @@ interface Question {
 
 type QuestionStateMap = Map<Question, QuestionState>;
 
-// function getQuestionState(
-//   questionStateMap: QuestionStateMap,
-//   question: Question,
-// ): QuestionState {
-//   if (questionStateMap.has(question)) {
-//     return questionStateMap.get(question)!;
-//   }
-//   return QuestionState.Unanswered;
-// }
-
 export const FourUpQuiz = Object.assign(
   ({
     questions,
@@ -83,6 +81,8 @@ export const FourUpQuiz = Object.assign(
     >(() => new Map());
 
     const isFirstQuestion = questionStateMap.size === 0;
+    // The number of questions in a row correctly answered.
+    const [streakCount, setStreakCount] = useState(0);
 
     const progress = useMemo(
       () =>
@@ -110,13 +110,16 @@ export const FourUpQuiz = Object.assign(
 
       // There's no next question, bail.
       if (currentQuestion == null) {
-        router.push("/");
+        setTimeout(() => {
+          router.push("/");
+        }, 500);
       }
     }, [currentQuestion, isFirstQuestion]);
 
     const onComplete = useCallback(
       (success: boolean) => {
         if (currentQuestion != null) {
+          setStreakCount((prev) => (success ? prev + 1 : 0));
           setQuestionStateMap((prev) => {
             const next = new Map(prev);
             const prevState = prev.get(currentQuestion);
@@ -154,36 +157,16 @@ export const FourUpQuiz = Object.assign(
             source={require("../../assets/cog.svg")}
             style={{ flexShrink: 1, width: 33, height: 33 }}
           />
-          <View
-            style={{
-              backgroundColor: "#3A464E",
-              height: 16,
-              flex: 1,
-              borderRadius: 8,
-            }}
-          >
-            <View
-              style={{
-                backgroundColor: "#3F4CF5",
-                height: 16,
-                width: `${Math.round(progress * 100)}%`,
-                flex: 1,
-                borderRadius: 8,
-              }}
-            >
-              <View
-                style={{
-                  backgroundColor: "#6570F6",
-                  height: 5,
-                  marginLeft: 8,
-                  marginRight: 8,
-                  marginTop: 4,
-                  borderRadius: 2,
-                }}
-              ></View>
-            </View>
-          </View>
+          <ProgressBar
+            progress={progress}
+            colors={
+              streakCount >= 2
+                ? ["#E861F8", "#414DF6", "#75F076"] // streak
+                : ["#3F4CF5", "#3F4CF5"] // solid blue
+            }
+          />
         </View>
+
         {currentQuestion?.flag === FourUpQuizFlag.WeakWord ? (
           <View
             style={{
@@ -247,6 +230,72 @@ export const FourUpQuiz = Object.assign(
   },
   { Flag: FourUpQuizFlag },
 );
+
+const ProgressBar = ({
+  progress,
+  colors,
+}: {
+  progress: number;
+  colors: string[];
+}) => {
+  // Always show a little bit of progress, so that there's a hint of the bar
+  // existing.
+  const minProgress = 0.06;
+
+  const [layout, setLayout] = useState<LayoutRectangle>();
+
+  const handleLayout = useCallback((x: LayoutChangeEvent) => {
+    setLayout(x.nativeEvent.layout);
+  }, []);
+
+  return (
+    <View
+      style={{
+        backgroundColor: "#3A464E",
+        height: 16,
+        flex: 1,
+        borderRadius: 8,
+      }}
+      onLayout={handleLayout}
+    >
+      <View
+        style={{
+          width: `${Math.round(Math.max(progress, minProgress) * 100)}%`,
+          height: 16,
+          flex: 1,
+          borderRadius: 8,
+          overflow: "hidden",
+        }}
+      >
+        {/* Background */}
+        <LinearGradient
+          colors={colors}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 0 }}
+          style={{
+            flex: 1,
+            height: 16,
+            display: layout == null ? "none" : "flex", // Intended to jank, but not sure if necessary.
+            width: layout?.width,
+          }}
+        />
+        {/* Highlight accent */}
+        <View
+          style={{
+            backgroundColor: "white",
+            opacity: 0.2,
+            height: 5,
+            left: 8,
+            right: 8,
+            top: 4,
+            borderRadius: 2,
+            position: "absolute",
+          }}
+        ></View>
+      </View>
+    </View>
+  );
+};
 
 function forHorizontalIOS({
   current,
