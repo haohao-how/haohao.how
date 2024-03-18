@@ -28,3 +28,12 @@ moon frontend:dev
 
 Inside `toolchain.yml` edit `node.yarn.version` and update the version. Run
 `moon sync projects` to apply the change.
+
+## Writing Pinyin on macOS
+
+Enable the `ABC – Extended` keyboard, then:
+
+- 1st tone: `⌥` + `a` — ā
+- 2nd tone: `⌥` + `e` — á
+- 3rd tone: `⌥` + `v` — ǎ
+- 4th tone: `⌥` + `~` — à
