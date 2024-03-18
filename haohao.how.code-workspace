@@ -19,5 +19,8 @@
       "source.fixAll.eslint": "explicit",
       "source.organizeImports": "always",
     },
+    "[xml]": {
+      "editor.defaultFormatter": "redhat.vscode-xml",
+    },
   },
 }
