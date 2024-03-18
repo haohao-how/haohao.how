@@ -17,10 +17,32 @@ export default function QuizPage() {
       >
         <View style={{ maxWidth: 600, flex: 1 }}>
           <FourUpQuiz
-            answer="好"
-            flag={FourUpQuiz.Flag.WeakWord}
-            choices={["好", "爱", "别", "姆"]}
-            prompt="Select the correct word for the character “dǔ”"
+            questions={[
+              {
+                prompt: "Select the correct word for the character “dǔ”",
+                choices: ["好", "爱", "别", "姆"],
+                answer: "好",
+                flag: FourUpQuiz.Flag.WeakWord,
+              },
+              {
+                prompt: "Select the correct word for the character “dá”",
+                choices: ["好", "爱", "别", "姆"],
+                answer: "好",
+                flag: FourUpQuiz.Flag.WeakWord,
+              },
+              {
+                prompt: "Select the correct word for the character “d”",
+                choices: ["好", "爱", "别", "姆"],
+                answer: "好",
+                flag: FourUpQuiz.Flag.WeakWord,
+              },
+              {
+                prompt: "Select the correct word for the character “dǔ”",
+                choices: ["好", "爱", "别", "姆"],
+                answer: "好",
+                flag: FourUpQuiz.Flag.WeakWord,
+              },
+            ]}
             onNext={(success) => {
               if (success) {
               }

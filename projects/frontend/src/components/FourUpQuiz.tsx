@@ -6,8 +6,16 @@ import {
   TransitionPresets,
 } from "@react-navigation/stack";
 import { Image } from "expo-image";
+import { router } from "expo-router";
 import { chunk } from "lodash-es";
-import { forwardRef, useCallback, useState } from "react";
+import {
+  forwardRef,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { Animated, StyleSheet, Text, View } from "react-native";
 import { RectButton } from "./RectButton";
 import { PropsOf } from "./types";
@@ -19,25 +27,117 @@ export enum FourUpQuizFlag {
   WeakWord,
 }
 
+type QuestionState =
+  | {
+      type: QuestionStateType.Correct;
+    }
+  | {
+      type: QuestionStateType.Incorrect;
+      attempts: number;
+    };
+
+enum QuestionStateType {
+  Correct,
+  Incorrect,
+}
+
 const ScreenName = "screen";
 
 const Stack = createStackNavigator();
 
+interface Navigation {
+  replace: (name: string) => void;
+}
+
+interface Question {
+  prompt: string;
+  answer: string;
+  flag?: FourUpQuizFlag;
+  choices: readonly string[];
+}
+
+type QuestionStateMap = Map<Question, QuestionState>;
+
+// function getQuestionState(
+//   questionStateMap: QuestionStateMap,
+//   question: Question,
+// ): QuestionState {
+//   if (questionStateMap.has(question)) {
+//     return questionStateMap.get(question)!;
+//   }
+//   return QuestionState.Unanswered;
+// }
+
 export const FourUpQuiz = Object.assign(
   ({
-    prompt,
-    answer,
-    flag,
-    choices,
+    questions,
     onNext,
   }: {
-    prompt: string;
-    answer: string;
-    flag?: FourUpQuizFlag;
-    choices: readonly string[];
+    questions: readonly Question[];
     onNext: (success: boolean) => void;
   }) => {
     const theme = useTheme();
+    const navigationRef = useRef<Navigation>();
+    const [questionStateMap, setQuestionStateMap] = useState<
+      Readonly<QuestionStateMap>
+    >(() => new Map());
+
+    const isFirstQuestion = questionStateMap.size === 0;
+
+    const progress = useMemo(
+      () =>
+        Array.from(questionStateMap.values()).filter(
+          (s) => s.type === QuestionStateType.Correct,
+        ).length / questions.length,
+      [questionStateMap],
+    );
+
+    const currentQuestion = useMemo(() => {
+      for (const question of questions) {
+        if (questionStateMap.get(question)?.type != QuestionStateType.Correct) {
+          return question;
+        }
+      }
+    }, [questions, questionStateMap]);
+
+    // This is the engine that moves the quiz forward.
+    useEffect(() => {
+      // The first question is automatically rendered, we only need to pump the
+      // navigator for subsequent.
+      if (!isFirstQuestion) {
+        navigationRef.current?.replace(ScreenName);
+      }
+
+      // There's no next question, bail.
+      if (currentQuestion == null) {
+        router.push("/");
+      }
+    }, [currentQuestion, isFirstQuestion]);
+
+    const onComplete = useCallback(
+      (success: boolean) => {
+        if (currentQuestion != null) {
+          setQuestionStateMap((prev) => {
+            const next = new Map(prev);
+            const prevState = prev.get(currentQuestion);
+            next.set(
+              currentQuestion,
+              success
+                ? { type: QuestionStateType.Correct }
+                : {
+                    type: QuestionStateType.Incorrect,
+                    attempts:
+                      prevState?.type === QuestionStateType.Incorrect
+                        ? prevState.attempts + 1
+                        : 1,
+                  },
+            );
+            return next;
+          });
+        }
+      },
+      [currentQuestion, setQuestionStateMap],
+    );
 
     return (
       <View style={{ flex: 1, gap: gap + buttonThickness }}>
@@ -66,7 +166,7 @@ export const FourUpQuiz = Object.assign(
               style={{
                 backgroundColor: "#3F4CF5",
                 height: 16,
-                width: "80%",
+                width: `${Math.round(progress * 100)}%`,
                 flex: 1,
                 borderRadius: 8,
               }}
@@ -84,7 +184,7 @@ export const FourUpQuiz = Object.assign(
             </View>
           </View>
         </View>
-        {flag === FourUpQuizFlag.WeakWord ? (
+        {currentQuestion?.flag === FourUpQuizFlag.WeakWord ? (
           <View
             style={{
               flexDirection: "row",
@@ -125,15 +225,20 @@ export const FourUpQuiz = Object.assign(
           >
             <Stack.Screen
               name={ScreenName}
-              children={({ navigation }) => (
-                // These props are only passed in initially, the element is not re-rendered.
-                <InnerScreen
-                  prompt={prompt}
-                  answer={answer}
-                  choices={choices}
-                  navigation={navigation}
-                />
-              )}
+              children={({ navigation }) => {
+                // HACK
+                navigationRef.current = navigation;
+
+                return currentQuestion ? (
+                  // These props are only passed in initially, the element is not re-rendered.
+                  <InnerScreen
+                    prompt={currentQuestion.prompt}
+                    answer={currentQuestion.answer}
+                    choices={currentQuestion.choices}
+                    onComplete={onComplete}
+                  />
+                ) : null;
+              }}
             />
           </Stack.Navigator>
         </NavigationContainer>
@@ -187,20 +292,19 @@ const InnerScreen = ({
   prompt,
   answer,
   choices,
-  navigation,
+  onComplete,
 }: {
   prompt: string;
   answer: string;
   choices: readonly string[];
-  navigation: any;
+  onComplete: (success: boolean) => void;
 }) => {
   const [selectedChoice, setSelectedChoice] = useState<string>();
   const choicesRows = chunk(choices, 2);
   const handleSubmit = () => {
-    const success = selectedChoice === answer;
-    if (success) {
-      navigation.replace(ScreenName);
-    }
+    // TODO: show error or success modal
+
+    onComplete(selectedChoice === answer);
   };
   return (
     <View
