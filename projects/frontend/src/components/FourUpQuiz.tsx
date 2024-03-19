@@ -238,15 +238,20 @@ const ProgressBar = ({
   progress: number;
   colors: string[];
 }) => {
-  // Always show a little bit of progress, so that there's a hint of the bar
-  // existing.
-  const minProgress = 0.06;
-
   const [layout, setLayout] = useState<LayoutRectangle>();
+  const widthAnim = useRef(new Animated.Value(0)).current;
 
   const handleLayout = useCallback((x: LayoutChangeEvent) => {
     setLayout(x.nativeEvent.layout);
   }, []);
+
+  useEffect(() => {
+    Animated.timing(widthAnim, {
+      toValue: progress,
+      duration: 200,
+      useNativeDriver: false, // layout properties aren't compatible with the native driver on mobile (it works on Web though)
+    }).start();
+  }, [widthAnim, progress]);
 
   return (
     <View
@@ -258,9 +263,15 @@ const ProgressBar = ({
       }}
       onLayout={handleLayout}
     >
-      <View
+      <Animated.View
         style={{
-          width: `${Math.round(Math.max(progress, minProgress) * 100)}%`,
+          width: widthAnim.interpolate({
+            inputRange: [0, 1],
+            outputRange: [
+              "6%", // Always show a little bit of progress, so that there's a hint of the bar existing.
+              "100%",
+            ],
+          }),
           height: 16,
           flex: 1,
           borderRadius: 8,
@@ -291,8 +302,8 @@ const ProgressBar = ({
             borderRadius: 2,
             position: "absolute",
           }}
-        ></View>
-      </View>
+        />
+      </Animated.View>
     </View>
   );
 };
