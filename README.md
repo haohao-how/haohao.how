@@ -29,6 +29,20 @@ moon frontend:dev
 Inside `toolchain.yml` edit `node.yarn.version` and update the version. Run
 `moon sync projects` to apply the change.
 
+## Upgrading Moon
+
+In the root directory with `.prototools`:
+
+```
+proto outdated --update
+```
+
+## Upgrading Proto
+
+```
+proto upgrade
+```
+
 ## Writing Pinyin on macOS
 
 Enable the `ABC – Extended` keyboard, then:
