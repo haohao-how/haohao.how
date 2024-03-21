@@ -17,13 +17,11 @@ tasks:
     extends: dev
     args:
       - --web
-  check-expo-deps:
+  expo-doctor:
     command:
-      - expo
-      - install
-      - --check
-    env:
-      CI: "1" # don't attempt to prompt to upgrade, immediately exit 1 instead.
+      - npx
+      - "--yes"
+      - expo-doctor
     platform: node
   eas:
     command:
