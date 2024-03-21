@@ -34,6 +34,7 @@ export default function IndexPage() {
   if (!fontsLoaded && !fontError) {
     return null;
   }
+  null;
 
   return (
     <RootView

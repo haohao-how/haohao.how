@@ -9255,9 +9255,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"expo@npm:^50.0.13":
-  version: 50.0.13
-  resolution: "expo@npm:50.0.13"
+"expo@npm:~50.0.14":
+  version: 50.0.14
+  resolution: "expo@npm:50.0.14"
   dependencies:
     "@babel/runtime": "npm:^7.20.0"
     "@expo/cli": "npm:0.17.8"
@@ -9276,7 +9276,7 @@ __metadata:
     whatwg-url-without-unicode: "npm:8.0.0-3"
   bin:
     expo: bin/cli
-  checksum: 10c0/98be82883b2cb1b5dc5ce2528e9253a13576d7c96f4f8e856570627df6d207ca3ea9c3a75393583ff9a52f8d08f8e189ad87fb0ade1c8f52d0d57e6625c84c55
+  checksum: 10c0/26820a28aaec3a3f5aba1372e5bec6b08c7885e6d2c027a49253adb8123be7331017cf4cda0e5228c9d44701c73a6dccae02d6e11fd6df7f46b552f40a33aa03
   languageName: node
   linkType: hard
 
@@ -9604,7 +9604,7 @@ __metadata:
     "@types/lodash-es": "npm:^4"
     "@types/react-dom": "npm:~18.0.10"
     color: "npm:^4.2.3"
-    expo: "npm:^50.0.13"
+    expo: "npm:~50.0.14"
     expo-constants: "npm:~15.4.5"
     expo-font: "npm:^11.10.3"
     expo-haptics: "npm:~12.8.1"
@@ -9621,7 +9621,7 @@ __metadata:
     prettier: "npm:^3.2.5"
     react: "npm:18.2.0"
     react-dom: "npm:^18.2.0"
-    react-native: "npm:0.73.5"
+    react-native: "npm:0.73.6"
     react-native-gesture-handler: "npm:~2.14.0"
     react-native-safe-area-context: "npm:4.8.2"
     react-native-screens: "npm:~3.29.0"
@@ -13750,9 +13750,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native@npm:0.73.5":
-  version: 0.73.5
-  resolution: "react-native@npm:0.73.5"
+"react-native@npm:0.73.6":
+  version: 0.73.6
+  resolution: "react-native@npm:0.73.6"
   dependencies:
     "@jest/create-cache-key-function": "npm:^29.6.3"
     "@react-native-community/cli": "npm:12.3.6"
@@ -13796,7 +13796,7 @@ __metadata:
     react: 18.2.0
   bin:
     react-native: cli.js
-  checksum: 10c0/ba9b7ba8cdf88daa61e7abc466a2e25b96cf31af68f2a6cca5a863e6147531861539df78a1eae251b0cc24ec1cbd933342a69f791f6186523bad3a5cd2e2eb1b
+  checksum: 10c0/1185a5310ffa1f3ac49a0e3be96a49780f779f40d4bd186a8ecaeb796890382f8ba5a27e33f7fef239c7c6b4c6037628a6fc79195c05a3e1290b589976857f93
   languageName: node
   linkType: hard
 
