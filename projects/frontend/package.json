@@ -29,14 +29,25 @@
     "react-native-safe-area-context": "4.8.2",
     "react-native-screens": "~3.29.0",
     "react-native-web": "^0.19.10",
+    "typescript-eslint": "^7.3.1",
     "vercel": "^33.5.3"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
     "@types/color": "^3.0.6",
+    "@types/eslint": "^8",
+    "@types/eslint__js": "^8.42.3",
     "@types/lodash-es": "^4",
     "@types/react-dom": "~18.0.10",
-    "prettier": "^3.2.5"
+    "@typescript-eslint/utils": "^7.3.1",
+    "eslint": "^8.57.0",
+    "eslint-plugin-deprecation": "^2.0.0",
+    "eslint-plugin-import": "^2.29.1",
+    "eslint-plugin-react": "^7.34.1",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "globals": "^14.0.0",
+    "prettier": "^3.2.5",
+    "typescript": "^5.4.3"
   },
   "private": true
 }

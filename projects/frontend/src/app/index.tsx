@@ -1,3 +1,4 @@
+import * as Sentry from "@sentry/react-native";
 import { useFonts } from "expo-font";
 import { Link } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
@@ -21,13 +22,17 @@ import {
 
 export default function IndexPage() {
   const [fontsLoaded, fontError] = useFonts({
-    "MaShanZheng-Regular": require("../../assets/fonts/MaShanZheng-Regular.ttf"),
-    "NotoSerifSC-Medium": require("../../assets/fonts/NotoSerifSC-Medium.otf"),
+    "MaShanZheng-Regular":
+      require("../../assets/fonts/MaShanZheng-Regular.ttf") as string,
+    "NotoSerifSC-Medium":
+      require("../../assets/fonts/NotoSerifSC-Medium.otf") as string,
   });
 
-  const onLayoutRootView = useCallback(async () => {
+  const onLayoutRootView = useCallback(() => {
     if (fontsLoaded || fontError) {
-      await SplashScreen.hideAsync();
+      SplashScreen.hideAsync().catch((e: unknown) =>
+        Sentry.captureException(e),
+      );
     }
   }, [fontsLoaded, fontError]);
 

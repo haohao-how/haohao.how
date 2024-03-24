@@ -50,6 +50,7 @@ tasks:
     local: true
 
 tags:
+  - eslint
   - prettier
   - typescript
   - vercel

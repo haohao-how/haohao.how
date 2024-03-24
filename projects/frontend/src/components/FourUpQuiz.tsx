@@ -1,9 +1,9 @@
 import { NavigationContainer, useTheme } from "@react-navigation/native";
 import {
-  createStackNavigator,
   StackCardInterpolatedStyle,
   StackCardInterpolationProps,
   TransitionPresets,
+  createStackNavigator,
 } from "@react-navigation/stack";
 import { Image } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
@@ -69,7 +69,6 @@ type QuestionStateMap = Map<Question, QuestionState>;
 export const FourUpQuiz = Object.assign(
   ({
     questions,
-    onNext,
   }: {
     questions: readonly Question[];
     onNext: (success: boolean) => void;
@@ -94,7 +93,9 @@ export const FourUpQuiz = Object.assign(
 
     const currentQuestion = useMemo(() => {
       for (const question of questions) {
-        if (questionStateMap.get(question)?.type != QuestionStateType.Correct) {
+        if (
+          questionStateMap.get(question)?.type !== QuestionStateType.Correct
+        ) {
           return question;
         }
       }
@@ -109,7 +110,7 @@ export const FourUpQuiz = Object.assign(
       }
 
       // There's no next question, bail.
-      if (currentQuestion == null) {
+      if (currentQuestion === undefined) {
         setTimeout(() => {
           router.push("/");
         }, 500);
@@ -118,7 +119,7 @@ export const FourUpQuiz = Object.assign(
 
     const onComplete = useCallback(
       (success: boolean) => {
-        if (currentQuestion != null) {
+        if (currentQuestion !== undefined) {
           setStreakCount((prev) => (success ? prev + 1 : 0));
           setQuestionStateMap((prev) => {
             const next = new Map(prev);
@@ -154,7 +155,7 @@ export const FourUpQuiz = Object.assign(
           }}
         >
           <Image
-            source={require("../../assets/cog.svg")}
+            source={require("../../assets/cog.svg") as string}
             style={{ flexShrink: 1, width: 33, height: 33 }}
           />
           <ProgressBar
@@ -178,7 +179,7 @@ export const FourUpQuiz = Object.assign(
             }}
           >
             <Image
-              source={require("../../assets/target-red.svg")}
+              source={require("../../assets/target-red.svg") as string}
               style={{ flexShrink: 1, width: 33, height: 30 }}
             />
             <Text
@@ -210,7 +211,7 @@ export const FourUpQuiz = Object.assign(
               name={ScreenName}
               children={({ navigation }) => {
                 // HACK
-                navigationRef.current = navigation;
+                navigationRef.current = navigation as Navigation;
 
                 return currentQuestion ? (
                   // These props are only passed in initially, the element is not re-rendered.
