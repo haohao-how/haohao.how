@@ -57,9 +57,7 @@ function RootLayout() {
   const ref = useNavigationContainerRef();
 
   useEffect(() => {
-    if (ref) {
-      routingInstrumentation.registerNavigationContainer(ref);
-    }
+    routingInstrumentation.registerNavigationContainer(ref);
   }, [ref]);
 
   // Even though this looks like an no-op layout—it's not, and it ensures the

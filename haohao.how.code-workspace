@@ -19,6 +19,11 @@
       "source.fixAll.eslint": "explicit",
       "source.organizeImports": "always",
     },
+    "eslint.experimental.useFlatConfig": true,
+    "eslint.workingDirectories": [
+      { "directory": "./" },
+      { "pattern": "./projects/*" },
+    ],
     "[xml]": {
       "editor.defaultFormatter": "redhat.vscode-xml",
     },

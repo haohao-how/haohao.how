@@ -13,7 +13,7 @@ export type CircleButtonProps = {
 } & PropsOf<typeof Pressable>;
 
 export const CircleButton = forwardRef<View, CircleButtonProps>(
-  (
+  function CircleButton(
     {
       thickness = 10,
       scaleY = 0.8,
@@ -22,7 +22,7 @@ export const CircleButton = forwardRef<View, CircleButtonProps>(
       ...pressableProps
     },
     ref,
-  ) => {
+  ) {
     const baseColor = useMemo(() => Color(color).darken(0.2).hex(), [color]);
 
     return (
@@ -94,7 +94,7 @@ export const CircleButton = forwardRef<View, CircleButtonProps>(
               ]}
             >
               <Image
-                source={require("./star.svg")}
+                source={require("./star.svg") as string}
                 style={{ width: diameter * 0.6, height: diameter * 0.6 }}
               />
             </View>
