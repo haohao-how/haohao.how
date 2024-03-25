@@ -1,10 +1,15 @@
-/** Globals is commonjs */
+import url from "node:url";
+
+import { FlatCompat } from "@eslint/eslintrc";
 import deprecationPlugin from "eslint-plugin-deprecation";
 import importPlugin from "eslint-plugin-import";
 import reactPlugin from "eslint-plugin-react";
 import reactHooksPlugin from "eslint-plugin-react-hooks";
 import globals from "globals";
 import tseslint from "typescript-eslint";
+
+const __dirname = url.fileURLToPath(new URL(".", import.meta.url));
+const compat = new FlatCompat({ baseDirectory: __dirname });
 
 // Based on https://github.com/typescript-eslint/typescript-eslint/blob/41323746de299e6d62b4d6122975301677d7c8e0/eslint.config.mjs
 export default tseslint.config(
@@ -38,6 +43,11 @@ export default tseslint.config(
 
   // base config
   {
+    extends: [
+      ...compat.config(reactPlugin.configs.recommended),
+      ...compat.config(reactHooksPlugin.configs.recommended),
+    ],
+
     languageOptions: {
       globals: {
         ...globals.es2020,
@@ -49,7 +59,18 @@ export default tseslint.config(
       },
     },
 
+    settings: {
+      react: {
+        version: "detect",
+      },
+    },
+
     rules: {
+      // Expo or react-native or metro or something handles this, so there's no
+      // need to import React.
+      "react/react-in-jsx-scope": "off",
+      "react/no-children-prop": ["error", { allowFunctions: true }],
+
       // make sure we're not leveraging any deprecated APIs
       "deprecation/deprecation": "error",
 

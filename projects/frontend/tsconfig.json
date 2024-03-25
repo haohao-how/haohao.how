@@ -1,7 +1,11 @@
 {
   "compilerOptions": {
     "outDir": "../../.moon/cache/types/projects/frontend",
-    "strict": true
+    "strict": true,
+    // Necessary for package.json `exports` style imports working for some of
+    // the typings.
+    "module": "Node16",
+    "moduleResolution": "Node16"
   },
   "extends": "expo/tsconfig.base"
 }
