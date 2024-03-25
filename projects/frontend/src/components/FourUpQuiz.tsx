@@ -8,7 +8,7 @@ import {
 import { Image } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
 import { router } from "expo-router";
-import { chunk } from "lodash-es";
+import chunk from "lodash/chunk";
 import {
   forwardRef,
   useCallback,
@@ -88,7 +88,7 @@ export const FourUpQuiz = Object.assign(
         Array.from(questionStateMap.values()).filter(
           (s) => s.type === QuestionStateType.Correct,
         ).length / questions.length,
-      [questionStateMap],
+      [questionStateMap, questions.length],
     );
 
     const currentQuestion = useMemo(() => {
@@ -407,7 +407,7 @@ const InnerScreen = ({
 const SubmitButton = forwardRef<
   View,
   { disabled: boolean } & Pick<PropsOf<typeof RectButton>, "onPress">
->(({ disabled, ...rectButtonProps }, ref) => {
+>(function SubmitButton({ disabled, ...rectButtonProps }, ref) {
   const color = disabled ? "#3A464E" : "#A1D151";
   const textColor = disabled ? "#56646C" : "#161F23";
 
@@ -448,7 +448,7 @@ const AnswerButton = ({
 }) => {
   const handlePress = useCallback(() => {
     onPress(text);
-  }, [text]);
+  }, [onPress, text]);
 
   const color = selected ? "#232E35" : "#161F23";
   const accentColor = selected ? "#5183A4" : "#3A464E";
