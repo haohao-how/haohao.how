@@ -9,7 +9,7 @@
     "@react-navigation/stack": "^6.3.28",
     "@sentry/react-native": "5.19.1",
     "color": "^4.2.3",
-    "expo": "~50.0.14",
+    "expo": "~50.0.15",
     "expo-constants": "~15.4.5",
     "expo-font": "^11.10.3",
     "expo-haptics": "~12.8.1",
