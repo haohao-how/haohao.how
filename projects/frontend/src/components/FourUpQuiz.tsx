@@ -27,6 +27,7 @@ import {
 } from "react-native";
 import { RectButton } from "./RectButton";
 import { PropsOf } from "./types";
+import { useEventCallback } from "./util";
 
 const buttonThickness = 4;
 const gap = 16;
@@ -117,31 +118,28 @@ export const FourUpQuiz = Object.assign(
       }
     }, [currentQuestion, isFirstQuestion]);
 
-    const onComplete = useCallback(
-      (success: boolean) => {
-        if (currentQuestion !== undefined) {
-          setStreakCount((prev) => (success ? prev + 1 : 0));
-          setQuestionStateMap((prev) => {
-            const next = new Map(prev);
-            const prevState = prev.get(currentQuestion);
-            next.set(
-              currentQuestion,
-              success
-                ? { type: QuestionStateType.Correct }
-                : {
-                    type: QuestionStateType.Incorrect,
-                    attempts:
-                      prevState?.type === QuestionStateType.Incorrect
-                        ? prevState.attempts + 1
-                        : 1,
-                  },
-            );
-            return next;
-          });
-        }
-      },
-      [currentQuestion, setQuestionStateMap],
-    );
+    const onComplete = useEventCallback((success: boolean) => {
+      if (currentQuestion !== undefined) {
+        setStreakCount((prev) => (success ? prev + 1 : 0));
+        setQuestionStateMap((prev) => {
+          const next = new Map(prev);
+          const prevState = prev.get(currentQuestion);
+          next.set(
+            currentQuestion,
+            success
+              ? { type: QuestionStateType.Correct }
+              : {
+                  type: QuestionStateType.Incorrect,
+                  attempts:
+                    prevState?.type === QuestionStateType.Incorrect
+                      ? prevState.attempts + 1
+                      : 1,
+                },
+          );
+          return next;
+        });
+      }
+    });
 
     return (
       <View style={{ flex: 1, gap: gap + buttonThickness }}>
@@ -242,9 +240,9 @@ const ProgressBar = ({
   const [layout, setLayout] = useState<LayoutRectangle>();
   const widthAnim = useRef(new Animated.Value(0)).current;
 
-  const handleLayout = useCallback((x: LayoutChangeEvent) => {
+  const handleLayout = useEventCallback((x: LayoutChangeEvent) => {
     setLayout(x.nativeEvent.layout);
-  }, []);
+  });
 
   useEffect(() => {
     Animated.timing(widthAnim, {
