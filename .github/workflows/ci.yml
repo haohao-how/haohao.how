@@ -4,6 +4,10 @@ on:
     branches:
       - "main"
   pull_request:
+  schedule:
+    # Run at 7 AM AEST, some tests check if packages are up to date (e.g. `expo
+    # doctor`). Without a schedule then random pull requests can fail.
+    - cron: "0 17 * * *"
 jobs:
   ci:
     name: "CI"
