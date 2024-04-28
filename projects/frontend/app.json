@@ -61,7 +61,8 @@
         "@sentry/react-native/expo",
         {
           "organization": "haohaohow",
-          "project": "frontend"
+          "project": "frontend",
+          "url": "https://sentry.io/"
         }
       ]
     ]
