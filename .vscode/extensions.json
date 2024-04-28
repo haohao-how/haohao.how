@@ -5,7 +5,6 @@
     "esbenp.prettier-vscode",
     "expo.vscode-expo-tools",
     "stkb.rewrap",
-    "svelte.svelte-vscode",
     "tamasfe.even-better-toml"
   ]
 }
