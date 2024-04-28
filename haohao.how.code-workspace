@@ -8,11 +8,7 @@
     "[git-commit]": {
       "editor.rulers": [80],
     },
-    "[svelte]": {
-      "editor.defaultFormatter": "svelte.svelte-vscode",
-    },
     "editor.defaultFormatter": "esbenp.prettier-vscode",
-    "svelte.enable-ts-plugin": true,
     "typescript.tsdk": "node_modules/typescript/lib",
     "editor.codeActionsOnSave": {
       "source.formatDocument": "explicit",

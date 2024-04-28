@@ -12,7 +12,6 @@
     "node": "~21.6"
   },
   "resolutions": {
-    "@sentry/svelte@npm:7.98.0": "patch:@sentry/svelte@npm%3A7.98.0#~/.yarn/patches/@sentry-svelte-npm-7.98.0-3cd6521606.patch",
     "@testing-library/user-event@npm:14.3.0": "npm:@testing-library/user-event@^14.5.0",
     "debug@npm:^4.1.0": "4.3.4",
     "debug@npm:^4.1.1": "4.3.4",
