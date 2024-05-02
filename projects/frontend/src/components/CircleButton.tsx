@@ -94,7 +94,7 @@ export const CircleButton = forwardRef<View, CircleButtonProps>(
               ]}
             >
               <Image
-                source={require("./star.svg") as string}
+                source={require("./star.svg")}
                 style={{ width: diameter * 0.6, height: diameter * 0.6 }}
               />
             </View>

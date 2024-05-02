@@ -153,7 +153,7 @@ export const FourUpQuiz = Object.assign(
           }}
         >
           <Image
-            source={require("../../assets/cog.svg") as string}
+            source={require("../../assets/cog.svg")}
             style={{ flexShrink: 1, width: 33, height: 33 }}
           />
           <ProgressBar
@@ -177,7 +177,7 @@ export const FourUpQuiz = Object.assign(
             }}
           >
             <Image
-              source={require("../../assets/target-red.svg") as string}
+              source={require("../../assets/target-red.svg")}
               style={{ flexShrink: 1, width: 33, height: 30 }}
             />
             <Text
