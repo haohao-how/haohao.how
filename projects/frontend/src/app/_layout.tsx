@@ -3,6 +3,8 @@ import { Slot, useNavigationContainerRef } from "expo-router";
 import * as Updates from "expo-updates";
 import { useEffect } from "react";
 import { Platform } from "react-native";
+import { ReplicacheProvider } from "../components/ReplicacheContext";
+import { bootCryptoPolyfill } from "../components/crypto-polyfill";
 
 // Via the guide: https://docs.expo.dev/guides/using-sentry/
 const manifest = Updates.manifest;
@@ -52,6 +54,8 @@ Sentry.configureScope((scope) => {
   }
 });
 
+bootCryptoPolyfill();
+
 function RootLayout() {
   // Capture the NavigationContainer ref and register it with the instrumentation.
   const ref = useNavigationContainerRef();
@@ -62,7 +66,11 @@ function RootLayout() {
 
   // Even though this looks like an no-op layout—it's not, and it ensures the
   // top and bottom of the app have the correct color.
-  return <Slot />;
+  return (
+    <ReplicacheProvider>
+      <Slot />
+    </ReplicacheProvider>
+  );
 }
 
 // Wrap the Root Layout route component with `Sentry.wrap` to capture gesture info and profiling data.

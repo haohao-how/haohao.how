@@ -1,9 +1,18 @@
 import { StatusBar as ExpoStatusBar } from "expo-status-bar";
+import { useEffect } from "react";
 import { SafeAreaView, StatusBar, StyleSheet, View } from "react-native";
 import { FourUpQuiz } from "../../components/FourUpQuiz";
+import { useReplicache } from "../../components/ReplicacheContext";
 import { RootView } from "../../components/RootView";
 
 export default function QuizPage() {
+  const r = useReplicache();
+
+  useEffect(() => {
+    // eslint-disable-next-line no-console
+    console.log(`r.clientID = ${r?.clientID ?? "<nullish>"}`);
+  }, [r]);
+
   return (
     <RootView backgroundColor="#161F23" style={styles.container}>
       <SafeAreaView

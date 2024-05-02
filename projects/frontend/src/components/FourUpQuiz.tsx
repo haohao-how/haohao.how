@@ -285,7 +285,7 @@ const ProgressBar = ({
           style={{
             flex: 1,
             height: 16,
-            display: layout == null ? "none" : "flex", // Intended to jank, but not sure if necessary.
+            display: layout === undefined ? "none" : "flex", // Intended to jank, but not sure if necessary.
             width: layout?.width,
           }}
         />
@@ -397,7 +397,10 @@ const InnerScreen = ({
           ))}
         </View>
       ))}
-      <SubmitButton disabled={selectedChoice == null} onPress={handleSubmit} />
+      <SubmitButton
+        disabled={selectedChoice === undefined}
+        onPress={handleSubmit}
+      />
     </View>
   );
 };

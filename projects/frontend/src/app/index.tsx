@@ -3,7 +3,7 @@ import { useFonts } from "expo-font";
 import { Link } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { StatusBar as ExpoStatusBar } from "expo-status-bar";
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
 import {
   ColorValue,
   SafeAreaView,
@@ -14,6 +14,7 @@ import {
   View,
 } from "react-native";
 import { CircleButton } from "../components/CircleButton";
+import { useReplicache } from "../components/ReplicacheContext";
 import { RootView } from "../components/RootView";
 import {
   SectionHeaderButton,
@@ -36,10 +37,30 @@ export default function IndexPage() {
     }
   }, [fontsLoaded, fontError]);
 
+  const r = useReplicache();
+
+  useEffect(() => {
+    if (r) {
+      r.query((tx) => tx.get("counter")).then(
+        (counter) => {
+          // eslint-disable-next-line no-console
+          console.log(`counter =`, counter);
+          r.mutate.incrementCounter().catch((e: unknown) => {
+            // eslint-disable-next-line no-console
+            console.error(e);
+          });
+        },
+        (e: unknown) => {
+          // eslint-disable-next-line no-console
+          console.error(e);
+        },
+      );
+    }
+  }, [r]);
+
   if (!fontsLoaded && !fontError) {
     return null;
   }
-  null;
 
   return (
     <RootView
