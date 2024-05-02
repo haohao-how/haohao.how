@@ -23,10 +23,8 @@ import {
 
 export default function IndexPage() {
   const [fontsLoaded, fontError] = useFonts({
-    "MaShanZheng-Regular":
-      require("../../assets/fonts/MaShanZheng-Regular.ttf") as string,
-    "NotoSerifSC-Medium":
-      require("../../assets/fonts/NotoSerifSC-Medium.otf") as string,
+    "MaShanZheng-Regular": require("../../assets/fonts/MaShanZheng-Regular.ttf"),
+    "NotoSerifSC-Medium": require("../../assets/fonts/NotoSerifSC-Medium.otf"),
   });
 
   const onLayoutRootView = useCallback(() => {
