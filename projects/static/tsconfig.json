@@ -1,0 +1,19 @@
+{
+  "ts-node": {
+    // Include `.d.ts` files (e.g. `src/typings/*`)
+    "files": true
+  },
+  "compilerOptions": {
+    "outDir": "../../.moon/cache/types/projects/static",
+    "strict": true,
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "allowJs": true,
+    "esModuleInterop": true,
+    "lib": ["DOM", "ESNext"],
+    "noEmit": true,
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "target": "ESNext"
+  }
+}
