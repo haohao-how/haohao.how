@@ -1,8 +1,8 @@
 node:
-  version: "21.6"
+  version: "22.1"
   packageManager: "yarn"
   yarn:
-    version: "4.1.1"
+    version: "4.2.1"
 
 typescript:
   routeOutDirToCache: true
