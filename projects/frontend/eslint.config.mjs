@@ -133,6 +133,10 @@ export default tseslint.config(
       //
 
       "@typescript-eslint/no-var-requires": "off",
+      "@typescript-eslint/restrict-template-expressions": [
+        "error",
+        { allowBoolean: true, allowNumber: true },
+      ],
     },
   },
   {
