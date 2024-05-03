@@ -16,7 +16,15 @@ yargs(hideBin(process.argv))
       for (const voice of voices) {
         for (const phrase of phrases) {
           const tempPath = "speech.aac";
-          spawnSync("say", ["-v", voice.name, "-o", tempPath, phrase.text]);
+          spawnSync("say", [
+            "-v",
+            voice.name,
+            "-r",
+            "50",
+            "-o",
+            tempPath,
+            phrase.text,
+          ]);
           const md5Hash = await createMD5(tempPath);
           const destPathPrefix = `public/speech/${phrase.id}/${voice.id}-`;
           const destPath = `${destPathPrefix}${md5Hash}.aac`;
