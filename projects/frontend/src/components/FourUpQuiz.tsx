@@ -5,6 +5,8 @@ import {
   TransitionPresets,
   createStackNavigator,
 } from "@react-navigation/stack";
+import { Asset } from "expo-asset";
+import { Audio } from "expo-av";
 import { Image } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
 import { router } from "expo-router";
@@ -359,6 +361,42 @@ const InnerScreen = ({
   onComplete: (success: boolean) => void;
 }) => {
   const [selectedChoice, setSelectedChoice] = useState<string>();
+  const [sound, setSound] = useState<Audio.Sound>();
+
+  async function playSound() {
+    // eslint-disable-next-line no-console
+    console.log("Loading Sound");
+    const soundAsset = Asset.fromURI(
+      `https://static-ruddy.vercel.app/speech/1/1-a5f201b13799ea05b40f5a0db098cb2a.aac`,
+    );
+    const { sound } = await Audio.Sound.createAsync(soundAsset);
+    setSound(sound);
+
+    // eslint-disable-next-line no-console
+    console.log("Playing Sound");
+    await sound.playAsync();
+  }
+
+  useEffect(() => {
+    return sound
+      ? () => {
+          // eslint-disable-next-line no-console
+          console.log("Unloading Sound");
+          sound.unloadAsync().catch((e: unknown) => {
+            // eslint-disable-next-line no-console
+            console.log(`Error unloading sound`, e);
+          });
+        }
+      : undefined;
+  }, [sound]);
+
+  useEffect(() => {
+    playSound().catch((e: unknown) => {
+      // eslint-disable-next-line no-console
+      console.log(`Error playing sound`, e);
+    });
+  }, [selectedChoice]);
+
   const choicesRows = chunk(choices, 2);
   const handleSubmit = () => {
     // TODO: show error or success modal

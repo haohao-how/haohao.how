@@ -10066,6 +10066,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"expo-av@npm:~13.10.6":
+  version: 13.10.6
+  resolution: "expo-av@npm:13.10.6"
+  peerDependencies:
+    expo: "*"
+  checksum: 10c0/de6317c88374d16c1f69f513ab3c16aad1b8b5eb3c56c435e6480f853e9557e140384afb08df5b0f7f7ef4c02c19c12cc9d80dc8477cccbd5cdf8a9f92ab45e1
+  languageName: node
+  linkType: hard
+
 "expo-constants@npm:~15.4.0, expo-constants@npm:~15.4.3, expo-constants@npm:~15.4.6":
   version: 15.4.6
   resolution: "expo-constants@npm:15.4.6"
@@ -10725,6 +10734,8 @@ __metadata:
     eslint-plugin-react: "npm:^7.34.1"
     eslint-plugin-react-hooks: "npm:^4.6.0"
     expo: "npm:~50.0.17"
+    expo-asset: "npm:~9.0.2"
+    expo-av: "npm:~13.10.6"
     expo-constants: "npm:~15.4.6"
     expo-crypto: "npm:^12.8.1"
     expo-font: "npm:^11.10.3"

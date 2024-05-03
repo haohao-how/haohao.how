@@ -11,6 +11,8 @@
     "@sentry/react-native": "~5.20.0",
     "color": "^4.2.3",
     "expo": "~50.0.17",
+    "expo-asset": "~9.0.2",
+    "expo-av": "~13.10.6",
     "expo-constants": "~15.4.6",
     "expo-crypto": "^12.8.1",
     "expo-font": "^11.10.3",
