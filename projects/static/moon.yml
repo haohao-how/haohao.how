@@ -1,0 +1,15 @@
+tasks:
+  generate-speech:
+    command:
+      - ts-node-script
+      - src/bin/generate-speech.ts
+    platform: node
+    env:
+      # Hide the warning about fs/promises glob
+      NODE_OPTIONS: --no-warnings=ExperimentalWarning
+    local: true
+
+tags:
+  - prettier
+  - typescript
+  - vercel
