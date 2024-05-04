@@ -363,19 +363,58 @@ const InnerScreen = ({
   const [selectedChoice, setSelectedChoice] = useState<string>();
   const [sound, setSound] = useState<Audio.Sound>();
 
+  const [logMsg, setLogMsg] = useState<string>();
+  const [logMsgTimer, setLogMsgTimer] = useState<NodeJS.Timeout>();
+
   async function playSound() {
     // eslint-disable-next-line no-console
     console.log("Loading Sound");
     const soundAsset = Asset.fromURI(
-      `https://static-ruddy.vercel.app/speech/1/1-a5f201b13799ea05b40f5a0db098cb2a.aac`,
+      // `https://static-ruddy.vercel.app/speech/1/1-40525355adb34c563f09cf8ff2a4679a.aac`,
+      `https://static-ruddy.vercel.app/speech/1/2-1d2454055c29d34e69979f8873769672.aac`,
+      // `https://static-ruddy.vercel.app/speech/2/1-9bd7c3e09e439f99f0d761583f37c020.aac`,
+      // `https://static-ruddy.vercel.app/speech/2/2-44b3d90b3a91a4a75f7de0e63581cca6.aac`,
     );
+    setLogMsg(
+      `downloaded=${soundAsset.downloaded} downloading=${soundAsset.downloading} localUri=${soundAsset.localUri}`,
+    );
+    setLogMsgTimer(
+      setInterval(() => {
+        setLogMsg(
+          `downloaded=${soundAsset.downloaded} downloading=${soundAsset.downloading} localUri=${soundAsset.localUri}`,
+        );
+      }, 100),
+    );
+
     const { sound } = await Audio.Sound.createAsync(soundAsset);
+    try {
+      await Audio.setAudioModeAsync({ playsInSilentModeIOS: true });
+    } catch (e) {
+      // eslint-disable-next-line no-console
+      console.log("Could not set playsInSilentModeIOS: true", e);
+    }
     setSound(sound);
 
     // eslint-disable-next-line no-console
     console.log("Playing Sound");
+    await sound.setRateAsync(2, true, Audio.PitchCorrectionQuality.High);
     await sound.playAsync();
   }
+
+  useEffect(() => {
+    if (logMsg !== undefined) {
+      // eslint-disable-next-line no-console
+      console.log(logMsg);
+    }
+  }, [logMsg]);
+
+  useEffect(() => {
+    if (logMsgTimer !== undefined) {
+      return () => {
+        clearInterval(logMsgTimer);
+      };
+    }
+  }, [logMsgTimer]);
 
   useEffect(() => {
     return sound
