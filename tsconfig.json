@@ -1,5 +1,11 @@
 {
   "compilerOptions": {
-    "outDir": ".moon/cache/types"
-  }
+    "outDir": ".moon/cache/types",
+    "allowJs": true,
+    "checkJs": true,
+    "lib": ["ESNext"],
+    "typeRoots": []
+  },
+  "include": ["**/*"],
+  "exclude": ["projects/", "node_modules/"]
 }
