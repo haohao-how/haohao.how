@@ -1,4 +1,4 @@
-moon = "1.24.3"
+moon = "1.24.4"
 
 [plugins]
 moon = "source:https://raw.githubusercontent.com/moonrepo/moon/master/proto-plugin.toml"

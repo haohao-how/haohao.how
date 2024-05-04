@@ -31,8 +31,6 @@ Inside `toolchain.yml` edit `node.yarn.version` and update the version. Run
 
 ## Upgrading Moon
 
-In the root directory with `.prototools`:
-
 ```
 proto outdated --update
 ```
