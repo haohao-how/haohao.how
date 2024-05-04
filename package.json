@@ -6,7 +6,9 @@
   ],
   "devDependencies": {
     "@yarnpkg/doctor": "^4.0.1",
-    "prettier": "^3.2.5"
+    "@yarnpkg/types": "^4.0.0",
+    "prettier": "^3.2.5",
+    "typescript": "^5.4.5"
   },
   "engines": {
     "node": "~22.1"
