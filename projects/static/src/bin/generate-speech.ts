@@ -46,16 +46,16 @@ yargs(hideBin(process.argv))
   .parse();
 
 function createMD5(filePath: string): Promise<string> {
-  return new Promise((res, rej) => {
+  return new Promise((resolve, reject) => {
     const hash = createHash("md5");
 
-    const rStream = createReadStream(filePath);
-    rStream.on("data", (data) => {
+    const readStream = createReadStream(filePath);
+    readStream.on("data", (data) => {
       hash.update(data);
     });
-    rStream.on("end", () => {
-      res(hash.digest("hex"));
+    readStream.on("end", () => {
+      resolve(hash.digest("hex"));
     });
-    rStream.on("error", (err) => rej(err));
+    readStream.on("error", (err) => reject(err));
   });
 }
