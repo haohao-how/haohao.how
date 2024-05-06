@@ -41,6 +41,15 @@ proto outdated --update
 proto upgrade
 ```
 
+## Upgrading a transitive Yarn dependency (e.g. for security patch)
+
+A normal `yarn up ___` won't work if no workspace depends on it directly, so you
+need to use `--recursive`. For example to upgrade `tar` use:
+
+```
+yarn up -R tar
+```
+
 ## Writing Pinyin on macOS
 
 Enable the `ABC – Extended` keyboard, then:
