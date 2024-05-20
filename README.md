@@ -52,9 +52,9 @@ yarn up -R tar
 
 ## Writing Pinyin on macOS
 
-Enable the `ABC – Extended` keyboard, then:
+1. Enable the `Pinyin - Simplified` keyboard.
+1. Type the pinyin without the tone (e.g. `hao`).
+1. Press <kbd>Tab</kbd> to cycle through each tone.
+1. Press <kbd>Enter</kbd> to accept the pinyin.
 
-- 1st tone: `⌥` + `a` — ā
-- 2nd tone: `⌥` + `e` — á
-- 3rd tone: `⌥` + `v` — ǎ
-- 4th tone: `⌥` + `~` — à
+Example: to write `hǎo` type <kbd>h</kbd> <kbd>a</kbd> <kbd>o</kbd> <kbd>Tab</kbd> <kbd>Tab</kbd> <kbd>Tab</kbd> <kbd>Enter</kbd>.
