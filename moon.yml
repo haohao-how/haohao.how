@@ -15,6 +15,12 @@ tasks:
       - yarn
       - constraints
     platform: node
+    inputs:
+      - ".env.yarn"
+      - ".yarnrc.yml"
+      - "package.json"
+      - "projects/*/package.json"
+      - "yarn.config.cjs"
 
 tags:
   - prettier
