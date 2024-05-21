@@ -5,7 +5,7 @@
     "version": "1.7.0",
     "scheme": "hao",
     "runtimeVersion": {
-      "policy": "appVersion"
+      "policy": "fingerprint"
     },
     "orientation": "portrait",
     "icon": "./assets/icon.png",
