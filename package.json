@@ -5,9 +5,11 @@
     "projects/*"
   ],
   "devDependencies": {
+    "@types/semver": "~7.5",
     "@yarnpkg/doctor": "^4.0.1",
     "@yarnpkg/types": "^4.0.0",
     "prettier": "^3.2.5",
+    "semver": "^7.5.0",
     "typescript": "^5.4.5"
   },
   "engines": {

@@ -376,12 +376,18 @@ const InnerScreen = ({
       // `https://static-ruddy.vercel.app/speech/2/2-44b3d90b3a91a4a75f7de0e63581cca6.aac`,
     );
     setLogMsg(
-      `downloaded=${soundAsset.downloaded} downloading=${soundAsset.downloading} localUri=${soundAsset.localUri}`,
+      `downloaded=${soundAsset.downloaded} downloading=${
+        // @ts-expect-error it's private but only temporary
+        soundAsset.downloading
+      } localUri=${soundAsset.localUri}`,
     );
     setLogMsgTimer(
       setInterval(() => {
         setLogMsg(
-          `downloaded=${soundAsset.downloaded} downloading=${soundAsset.downloading} localUri=${soundAsset.localUri}`,
+          `downloaded=${soundAsset.downloaded} downloading=${
+            // @ts-expect-error it's private but only temporary
+            soundAsset.downloading
+          } localUri=${soundAsset.localUri}`,
         );
       }, 100),
     );

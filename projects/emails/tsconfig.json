@@ -10,6 +10,8 @@
     "module": "esnext",
     "moduleResolution": "bundler",
     "noEmit": true,
+    "noPropertyAccessFromIndexSignature": true,
+    "noUncheckedIndexedAccess": true,
     "outDir": "../../.moon/cache/types/projects/emails",
     "resolveJsonModule": true,
     "rootDirs": ["."],

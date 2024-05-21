@@ -1,5 +1,6 @@
 /** @type {import('@yarnpkg/types')} */
 const { defineConfig } = require("@yarnpkg/types");
+const semver = require("semver");
 
 /**
  * @typedef {import('@yarnpkg/types').Yarn.Constraints.Workspace} Workspace
@@ -27,8 +28,86 @@ function enforceConsistentDependenciesAcrossTheProject({ Yarn }) {
   }
 }
 
+/**
+ * This rule will enforce that a workspace MUST depend on the same version of a
+ * dependency as the one used by the other workspaces.
+ *
+ * @param {Context} ctx
+ * @param {{ [identAtRange: string]: string }} [resolutions] Overrides for
+ * `@types/*` packages, e.g. `{ "eslint@^7": "~6.54.0" }`
+ */
+function enforceStrictTypesCompatibility(ctx, resolutions = {}) {
+  const { Yarn } = ctx;
+  const unseen = new Set(Object.keys(resolutions));
+
+  for (const dependency of Yarn.dependencies()) {
+    if (dependency.type === `peerDependencies`) continue;
+    if (dependency.ident.startsWith(`@types/`)) continue;
+
+    for (const typesDependency of Yarn.dependencies({
+      ident: typesPackageIdent(dependency.ident),
+    })) {
+      if (typesDependency.type === `peerDependencies`) continue;
+
+      const identAtRange = `${dependency.ident}@${dependency.range}`;
+      unseen.delete(identAtRange);
+
+      let expectedTypesRange =
+        resolutions[identAtRange] ?? rangeMatchingMinor(dependency.range);
+
+      typesDependency.update(expectedTypesRange);
+    }
+  }
+
+  // To avoid accidentally keeping cruft around after packages have been
+  // updated, ensure that all rules were used.
+  if (unseen.size > 0)
+    reportRootError(
+      ctx,
+      `Unused enforceStrictTypesCompatibility(…, resolutions) keys: ${Array.from(unseen).join(",")}`,
+    );
+}
+
+/**
+ * Return the corresponding `@types/` package for a given package.
+ *
+ * @param {string} packageIdent
+ */
+function typesPackageIdent(packageIdent) {
+  return `@types/${packageIdent.replace("/", "__").replace("@", "")}`;
+}
+
+/**
+ * Return a semver range that matches the major and minor for a given range.
+ *
+ * @param {string} range
+ */
+function rangeMatchingMinor(range) {
+  const version = semver.minVersion(range);
+  if (version === null) {
+    throw new Error(`Could not evalute semver.minVersion(${range})`);
+  }
+  return `~${version.major}.${version.minor}`;
+}
+
+/**
+ * @param {Context} context
+ * @param {string} message
+ */
+function reportRootError({ Yarn }, message) {
+  const rootWorkspace = Yarn.workspace({ cwd: "." });
+  if (rootWorkspace === null) {
+    throw new Error("Could not find root workspace");
+  }
+  rootWorkspace.error(message);
+}
+
 module.exports = defineConfig({
-  async constraints({ Yarn }) {
-    enforceConsistentDependenciesAcrossTheProject({ Yarn });
+  async constraints(ctx) {
+    await enforceConsistentDependenciesAcrossTheProject(ctx);
+    await enforceStrictTypesCompatibility(ctx, {
+      "color@^4.2.3": "^3",
+      "eslint@^8.57.0": "^8",
+    });
   },
 });

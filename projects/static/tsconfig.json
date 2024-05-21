@@ -12,6 +12,8 @@
     "esModuleInterop": true,
     "lib": ["DOM", "ESNext"],
     "noEmit": true,
+    "noPropertyAccessFromIndexSignature": true,
+    "noUncheckedIndexedAccess": true,
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "target": "ESNext"

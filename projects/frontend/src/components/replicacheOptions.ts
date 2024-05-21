@@ -1,5 +1,5 @@
 import { deepFreeze } from "@react-native-replicache/deep-freeze";
-import * as SQLite from "expo-sqlite/next";
+import * as SQLite from "expo-sqlite";
 import type {
   ExperimentalKVRead,
   ExperimentalKVStore,
