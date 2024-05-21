@@ -4,6 +4,9 @@
     "allowJs": true,
     "checkJs": true,
     "lib": ["ESNext"],
+    "strict": true,
+    "noPropertyAccessFromIndexSignature": true,
+    "noUncheckedIndexedAccess": true,
     "typeRoots": []
   },
   "include": ["**/*"],

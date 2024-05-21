@@ -3,7 +3,9 @@
     "outDir": "../../.moon/cache/types/projects/frontend",
     "strict": true,
     "module": "Preserve",
-    "moduleResolution": "Bundler"
+    "moduleResolution": "Bundler",
+    "noPropertyAccessFromIndexSignature": true,
+    "noUncheckedIndexedAccess": true
   },
   "extends": "expo/tsconfig.base"
 }
