@@ -65,6 +65,9 @@
           "url": "https://sentry.io/"
         }
       ]
-    ]
+    ],
+    "experiments": {
+      "typedRoutes": true
+    }
   }
 }

@@ -1,20 +1,30 @@
 {
+  "extends": "expo/tsconfig.base",
   "compilerOptions": {
-    "outDir": "../../.moon/cache/types/projects/frontend",
-    "strict": true,
-    "module": "Preserve",
-    "moduleResolution": "Bundler",
-    "noPropertyAccessFromIndexSignature": true,
-    "noUncheckedIndexedAccess": true,
     "allowJs": true,
     "esModuleInterop": true,
     "jsx": "react-native",
     "lib": ["DOM", "ESNext"],
+    "module": "esnext",
+    "moduleResolution": "Bundler",
     "noEmit": true,
+    "noPropertyAccessFromIndexSignature": true,
+    "noUncheckedIndexedAccess": true,
+    "outDir": "../../.moon/cache/types/projects/frontend",
     "resolveJsonModule": true,
     "skipLibCheck": true,
+    "strict": true,
     "target": "ESNext"
   },
-
+  "include": [
+    "**/*.ts",
+    "**/*.tsx",
+    "**/*.mts",
+    "**/*.js",
+    "**/*.cjs",
+    "**/*.mjs",
+    ".expo/types/**/*.ts",
+    "expo-env.d.ts"
+  ],
   "exclude": ["dist", "node_modules"]
 }
