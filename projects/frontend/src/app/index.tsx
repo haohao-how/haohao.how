@@ -152,7 +152,9 @@ const Section = ({
           style={{ transform: [{ translateX: 20 }] }}
         />
       </Link>
-      <CircleButton color={disabledColor} />
+      <Link href="/radical/手" asChild>
+        <CircleButton color={disabledColor} />
+      </Link>
       <CircleButton
         color={disabledColor}
         style={{ transform: [{ translateX: -20 }] }}

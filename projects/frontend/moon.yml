@@ -41,6 +41,20 @@ tasks:
       - "*.json"
     outputs:
       - "dist/"
+  expo-generate-types:
+    # The recommended command from https://docs.expo.dev/router/reference/typed-routes/#type-generation
+    command:
+      - expo
+      - customize
+      - tsconfig.json
+    platform: node
+    options:
+      cache: false
+  typecheck:
+    deps:
+      - expo-generate-types
+    options:
+      mergeDeps: append
   upload-sentry-source-maps:
     command:
       - npx

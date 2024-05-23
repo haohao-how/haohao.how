@@ -9547,7 +9547,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"expo-router@npm:~3.5.14":
+"expo-router@npm:3.5.14":
   version: 3.5.14
   resolution: "expo-router@npm:3.5.14"
   dependencies:
@@ -9577,6 +9577,39 @@ __metadata:
     react-native-reanimated:
       optional: true
   checksum: 10c0/7b865d52c577838220ddc355e2c00409be4b96746b1e8fc40dd762146e7d3c46c83a46aead4bca3c0eccc50731b894dff4e60e389b1c989369ef03532b761768
+  languageName: node
+  linkType: hard
+
+"expo-router@patch:expo-router@npm%3A3.5.14#~/.yarn/patches/expo-router-npm-3.5.14-d816ef3444.patch":
+  version: 3.5.14
+  resolution: "expo-router@patch:expo-router@npm%3A3.5.14#~/.yarn/patches/expo-router-npm-3.5.14-d816ef3444.patch::version=3.5.14&hash=aa5b5c"
+  dependencies:
+    "@expo/metro-runtime": "npm:3.2.1"
+    "@expo/server": "npm:^0.4.0"
+    "@radix-ui/react-slot": "npm:1.0.1"
+    "@react-navigation/bottom-tabs": "npm:~6.5.7"
+    "@react-navigation/native": "npm:~6.1.6"
+    "@react-navigation/native-stack": "npm:~6.9.12"
+    expo-splash-screen: "npm:0.27.4"
+    react-native-helmet-async: "npm:2.0.4"
+    schema-utils: "npm:^4.0.1"
+  peerDependencies:
+    "@react-navigation/drawer": ^6.5.8
+    expo: "*"
+    expo-constants: "*"
+    expo-linking: "*"
+    expo-status-bar: "*"
+    react-native-reanimated: "*"
+    react-native-safe-area-context: "*"
+    react-native-screens: "*"
+  peerDependenciesMeta:
+    "@react-navigation/drawer":
+      optional: true
+    "@testing-library/jest-native":
+      optional: true
+    react-native-reanimated:
+      optional: true
+  checksum: 10c0/069958e17d6fed71c08cc42c2d6bf7cdd855944c11098d48eba214ca36fd46f6b3fc4473b4ba83a5a99ef41df4fd0e9b8356ca9bd1270f250c8f01516aa2ccf5
   languageName: node
   linkType: hard
 
@@ -10061,7 +10094,7 @@ __metadata:
     expo-insights: "npm:~0.7.0"
     expo-linear-gradient: "npm:^13.0.2"
     expo-linking: "npm:~6.3.1"
-    expo-router: "npm:~3.5.14"
+    expo-router: "patch:expo-router@npm%3A3.5.14#~/.yarn/patches/expo-router-npm-3.5.14-d816ef3444.patch"
     expo-splash-screen: "npm:~0.27.4"
     expo-sqlite: "npm:^14.0.3"
     expo-status-bar: "npm:~1.12.1"

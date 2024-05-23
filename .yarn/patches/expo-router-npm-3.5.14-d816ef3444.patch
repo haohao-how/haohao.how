@@ -1,0 +1,13 @@
+diff --git a/build/typed-routes/generate.js b/build/typed-routes/generate.js
+index 1e621830d26f90b3105d326ae31690c1e51730d1..71eb94bbf3cbdc4a6469f1f7e3215d9cb8773326 100644
+--- a/build/typed-routes/generate.js
++++ b/build/typed-routes/generate.js
+@@ -26,7 +26,7 @@ function getTypedRoutesDeclarationFile(ctx) {
+     return (node_fs_1.default
+         .readFileSync(path_1.default.join(__dirname, '../../types/expo-router.d.ts'), 'utf-8')
+         // Swap from being a namespace to a module
+-        .replace('declare namespace ExpoRouter {', `declare module "expo-router" {`)
++        .replace('export namespace ExpoRouter {', `declare module "expo-router" {`)
+         // Add the route values
+         .replace('type StaticRoutes = string;', `type StaticRoutes = ${setToUnionType(staticRoutes)};`)
+         .replace('type DynamicRoutes<T extends string> = string;', `type DynamicRoutes<T extends string> = ${setToUnionType(dynamicRoutes)};`)
