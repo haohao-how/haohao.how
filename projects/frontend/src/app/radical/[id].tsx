@@ -5,10 +5,12 @@ import { StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { RootView } from "../../components/RootView";
 import { GradientAqua } from "../../components/styles";
+import { radicalLookupByChar } from "../../data/radicals";
 
 export default function RadicalPage() {
   const { id } = useLocalSearchParams<"/radical/[id]">();
   const insets = useSafeAreaInsets();
+  const radical = radicalLookupByChar.get(id);
 
   return (
     <RootView style={styles.root}>
@@ -26,57 +28,57 @@ export default function RadicalPage() {
             justifyContent: "center",
           }}
         >
-          <Text style={styles.headerTitleText}>{id}</Text>
+          <Text style={styles.headerTitleText}>{radical?.char ?? "⁉️"}</Text>
         </View>
       </LinearGradient>
+
       <View style={styles.beltContainer}>
-        <Text style={styles.beltText}>hand</Text>
+        <Text style={styles.beltText}>{radical?.name ?? ""}</Text>
       </View>
+
       <View style={styles.body}>
-        <View style={styles.titledSectionContainer}>
-          <View style={styles.titledSectionContainerInner}>
-            <View>
-              <Text style={styles.titledSectionTitleText}>Mnemonic</Text>
-            </View>
-            <View>
-              <Text style={styles.titledSectionBodyText}>
-                A merchant who was selling spears and shields. He claimed that
-                his spears were so sharp they could penetrate anything. And the
-                shields were impervious to any blow. A skeptical customer asked:
-                “What happens if I hit one of your shields with one of your
-                spears.”
-              </Text>
-            </View>
-          </View>
-        </View>
+        {radical?.mnemonic !== undefined ? (
+          <TitledSection title="Mnemonic">{radical.mnemonic}</TitledSection>
+        ) : null}
 
-        <View style={styles.titledSectionContainer}>
-          <View style={styles.titledSectionContainerInner}>
-            <View>
-              <Text style={styles.titledSectionTitleText}>Meaning</Text>
-            </View>
-            <View>
-              <Text style={styles.titledSectionBodyText}>hand, clutch</Text>
-            </View>
-          </View>
-        </View>
+        {radical !== undefined ? (
+          <TitledSection title="Meaning">
+            {[radical.name].concat(radical.altNames ?? []).join(", ")}
+          </TitledSection>
+        ) : null}
 
-        <View style={styles.titledSectionContainer}>
-          <View style={styles.titledSectionContainerInner}>
-            <View>
-              <Text style={styles.titledSectionTitleText}>Pronunciation</Text>
-            </View>
-            <View>
-              <Text style={styles.titledSectionBodyText}>shǒu • shou3</Text>
-            </View>
-          </View>
-        </View>
+        {radical?.pronunciations !== undefined ? (
+          <TitledSection title="Pronunciation">
+            {radical.pronunciations.join(", ")}
+          </TitledSection>
+        ) : null}
       </View>
 
       <ExpoStatusBar style="auto" />
     </RootView>
   );
 }
+
+const TitledSection = ({
+  title,
+  children,
+}: {
+  title: string;
+  children: string;
+}) => {
+  return (
+    <View style={styles.titledSectionContainer}>
+      <View style={styles.titledSectionContainerInner}>
+        <View>
+          <Text style={styles.titledSectionTitleText}>{title}</Text>
+        </View>
+        <View>
+          <Text style={styles.titledSectionBodyText}>{children}</Text>
+        </View>
+      </View>
+    </View>
+  );
+};
 
 const styles = StyleSheet.create({
   root: {
