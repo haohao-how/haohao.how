@@ -5,7 +5,16 @@
     "module": "Preserve",
     "moduleResolution": "Bundler",
     "noPropertyAccessFromIndexSignature": true,
-    "noUncheckedIndexedAccess": true
+    "noUncheckedIndexedAccess": true,
+    "allowJs": true,
+    "esModuleInterop": true,
+    "jsx": "react-native",
+    "lib": ["DOM", "ESNext"],
+    "noEmit": true,
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "target": "ESNext"
   },
-  "extends": "expo/tsconfig.base"
+
+  "exclude": ["dist", "node_modules"]
 }
