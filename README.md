@@ -33,6 +33,7 @@ Inside `toolchain.yml` edit `node.yarn.version` and update the version. Run
 
 ```
 proto outdated --update
+proto use
 ```
 
 ## Upgrading Proto
