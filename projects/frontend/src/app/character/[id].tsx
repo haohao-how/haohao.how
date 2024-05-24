@@ -5,7 +5,7 @@ import { ReferencePageHeader } from "../../components/ReferencePageHeader";
 import { GradientRed } from "../../components/styles";
 import { characterLookupByChar } from "../../data/characters";
 
-export default function RadicalPage() {
+export default function CharacterPage() {
   const { id } = useLocalSearchParams<"/character/[id]">();
   const character = characterLookupByChar.get(id);
 
@@ -35,6 +35,12 @@ export default function RadicalPage() {
           {character?.pronunciations !== undefined ? (
             <ReferencePageBodySection title="Pronunciation">
               {character.pronunciations.join(", ")}
+            </ReferencePageBodySection>
+          ) : null}
+
+          {character?.radicals !== undefined ? (
+            <ReferencePageBodySection title="Radicals">
+              {character.radicals.join(", ")}
             </ReferencePageBodySection>
           ) : null}
         </>

@@ -234,7 +234,7 @@ const characterData: CharacterDatum[] = [
   { char: "龠", names: ["flute"], radicals: ["龠"] },
 ];
 
-// Transform radical data into easier shape.
+// Transform data into an easier shape to work with.
 const characters = characterData.map(
   ({ char, names, pronunciations, mnemonic, radicals }) => {
     const [name, ...altNames] = names;

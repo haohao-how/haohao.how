@@ -20,6 +20,11 @@ import {
   SectionHeaderButton,
   SectionHeaderButtonProps,
 } from "../components/SectionHeaderButton";
+import {
+  GradientAqua,
+  GradientPurple,
+  GradientRed,
+} from "../components/styles";
 
 export default function IndexPage() {
   const [fontsLoaded, fontError] = useFonts({
@@ -153,7 +158,13 @@ const Section = ({
         />
       </Link>
       <Link href="/radical/手" asChild>
-        <CircleButton color={disabledColor} />
+        <CircleButton color={GradientAqua[0]} />
+      </Link>
+      <Link href="/character/手" asChild>
+        <CircleButton color={GradientRed[0]} />
+      </Link>
+      <Link href="/word/手" asChild>
+        <CircleButton color={GradientPurple[0]} />
       </Link>
       <CircleButton
         color={disabledColor}
