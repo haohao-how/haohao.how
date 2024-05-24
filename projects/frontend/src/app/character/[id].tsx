@@ -2,39 +2,39 @@ import { useLocalSearchParams } from "expo-router";
 import { ReferencePage } from "../../components/ReferencePage";
 import { ReferencePageBodySection } from "../../components/ReferencePageBodySection";
 import { ReferencePageHeader } from "../../components/ReferencePageHeader";
-import { GradientAqua } from "../../components/styles";
-import { radicalLookupByChar } from "../../data/radicals";
+import { GradientRed } from "../../components/styles";
+import { characterLookupByChar } from "../../data/characters";
 
 export default function RadicalPage() {
   const { id } = useLocalSearchParams<"/character/[id]">();
-  const radical = radicalLookupByChar.get(id);
+  const character = characterLookupByChar.get(id);
 
   return (
     <ReferencePage
       header={
         <ReferencePageHeader
-          gradientColors={GradientAqua}
-          title={radical?.char ?? null}
-          subtitle={radical?.name ?? null}
+          gradientColors={GradientRed}
+          title={character?.char ?? null}
+          subtitle={character?.name ?? null}
         />
       }
       body={
         <>
-          {radical?.mnemonic !== undefined ? (
+          {character?.mnemonic !== undefined ? (
             <ReferencePageBodySection title="Mnemonic">
-              {radical.mnemonic}
+              {character.mnemonic}
             </ReferencePageBodySection>
           ) : null}
 
-          {radical !== undefined ? (
+          {character !== undefined ? (
             <ReferencePageBodySection title="Meaning">
-              {[radical.name].concat(radical.nameAlts ?? []).join(", ")}
+              {[character.name].concat(character.nameAlts ?? []).join(", ")}
             </ReferencePageBodySection>
           ) : null}
 
-          {radical?.pronunciations !== undefined ? (
+          {character?.pronunciations !== undefined ? (
             <ReferencePageBodySection title="Pronunciation">
-              {radical.pronunciations.join(", ")}
+              {character.pronunciations.join(", ")}
             </ReferencePageBodySection>
           ) : null}
         </>

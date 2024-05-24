@@ -6,7 +6,7 @@ import { GradientAqua } from "../../components/styles";
 import { radicalLookupByChar } from "../../data/radicals";
 
 export default function RadicalPage() {
-  const { id } = useLocalSearchParams<"/character/[id]">();
+  const { id } = useLocalSearchParams<"/radical/[id]">();
   const radical = radicalLookupByChar.get(id);
 
   return (
