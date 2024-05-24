@@ -1,12 +1,14 @@
 import { StatusBar as ExpoStatusBar } from "expo-status-bar";
 import { useEffect } from "react";
-import { SafeAreaView, StatusBar, StyleSheet, View } from "react-native";
+import { StyleSheet, View } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { FourUpQuiz } from "../../components/FourUpQuiz";
 import { useReplicache } from "../../components/ReplicacheContext";
 import { RootView } from "../../components/RootView";
 
 export default function QuizPage() {
   const r = useReplicache();
+  const insets = useSafeAreaInsets();
 
   useEffect(() => {
     // eslint-disable-next-line no-console
@@ -15,13 +17,13 @@ export default function QuizPage() {
 
   return (
     <RootView backgroundColor="#161F23" style={styles.container}>
-      <SafeAreaView
+      <View
         style={{
           flex: 1,
           width: "100%",
           flexDirection: "row",
           justifyContent: "center",
-          paddingTop: StatusBar.currentHeight, // Necessary for Android
+          paddingTop: insets.top,
         }}
       >
         <View style={{ maxWidth: 600, flex: 1 }}>
@@ -59,7 +61,7 @@ export default function QuizPage() {
           />
         </View>
         <ExpoStatusBar style="auto" />
-      </SafeAreaView>
+      </View>
     </RootView>
   );
 }

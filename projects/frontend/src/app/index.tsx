@@ -4,15 +4,8 @@ import { Link } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { StatusBar as ExpoStatusBar } from "expo-status-bar";
 import { useCallback, useEffect } from "react";
-import {
-  ColorValue,
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
+import { ColorValue, ScrollView, StyleSheet, Text, View } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { CircleButton } from "../components/CircleButton";
 import { useReplicache } from "../components/ReplicacheContext";
 import { RootView } from "../components/RootView";
@@ -27,6 +20,7 @@ import {
 } from "../components/styles";
 
 export default function IndexPage() {
+  const insets = useSafeAreaInsets();
   const [fontsLoaded, fontError] = useFonts({
     "MaShanZheng-Regular": require("../../assets/fonts/MaShanZheng-Regular.ttf"),
     "NotoSerifSC-Medium": require("../../assets/fonts/NotoSerifSC-Medium.otf"),
@@ -69,15 +63,14 @@ export default function IndexPage() {
     <RootView
       backgroundColor="tomato"
       onLayout={onLayoutRootView}
-      style={styles.container}
+      style={[styles.container, { paddingTop: insets.top }]}
     >
-      <SafeAreaView
+      <View
         style={{
           flex: 1,
           width: "100%",
           alignItems: "center",
           justifyContent: "center",
-          paddingTop: StatusBar.currentHeight,
         }}
       >
         <ScrollView style={{ flex: 1 }}>
@@ -131,7 +124,7 @@ export default function IndexPage() {
             />
           </View>
         </ScrollView>
-      </SafeAreaView>
+      </View>
       <ExpoStatusBar style="auto" />
     </RootView>
   );
