@@ -42,6 +42,17 @@ proto use
 proto upgrade
 ```
 
+## Upgrading Node.js
+
+Edit `.moon/toolchain.yml` edit `node.version`.
+
+```
+moon run node-version
+```
+
+Moon will automatically synchronize `package.json` `engines.node`, and it will
+use proto to download and install the right version of Node.js.
+
 ## Upgrading a transitive Yarn dependency (e.g. for security patch)
 
 A normal `yarn up ___` won't work if no workspace depends on it directly, so you
