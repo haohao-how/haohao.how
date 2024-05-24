@@ -1,10 +1,10 @@
+import { FourUpQuiz } from "@/components/FourUpQuiz";
+import { useReplicache } from "@/components/ReplicacheContext";
+import { RootView } from "@/components/RootView";
 import { StatusBar as ExpoStatusBar } from "expo-status-bar";
 import { useEffect } from "react";
 import { StyleSheet, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { FourUpQuiz } from "../../components/FourUpQuiz";
-import { useReplicache } from "../../components/ReplicacheContext";
-import { RootView } from "../../components/RootView";
 
 export default function QuizPage() {
   const r = useReplicache();

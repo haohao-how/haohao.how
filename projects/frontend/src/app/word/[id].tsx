@@ -1,9 +1,9 @@
+import { ReferencePage } from "@/components/ReferencePage";
+import { ReferencePageBodySection } from "@/components/ReferencePageBodySection";
+import { ReferencePageHeader } from "@/components/ReferencePageHeader";
+import { GradientPurple } from "@/components/styles";
+import { wordLookupByWord } from "@/data/words";
 import { useLocalSearchParams } from "expo-router";
-import { ReferencePage } from "../../components/ReferencePage";
-import { ReferencePageBodySection } from "../../components/ReferencePageBodySection";
-import { ReferencePageHeader } from "../../components/ReferencePageHeader";
-import { GradientPurple } from "../../components/styles";
-import { wordLookupByWord } from "../../data/words";
 
 export default function WordPage() {
   const { id } = useLocalSearchParams<"/word/[id]">();

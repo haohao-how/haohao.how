@@ -2,6 +2,7 @@
   "extends": "expo/tsconfig.base",
   "compilerOptions": {
     "allowJs": true,
+    "baseUrl": ".",
     "esModuleInterop": true,
     "jsx": "react-native",
     "lib": ["DOM", "ESNext"],
@@ -11,6 +12,7 @@
     "noPropertyAccessFromIndexSignature": true,
     "noUncheckedIndexedAccess": true,
     "outDir": "../../.moon/cache/types/projects/frontend",
+    "paths": { "@/*": ["src/*"] },
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "strict": true,

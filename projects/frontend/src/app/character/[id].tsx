@@ -1,9 +1,9 @@
+import { ReferencePage } from "@/components/ReferencePage";
+import { ReferencePageBodySection } from "@/components/ReferencePageBodySection";
+import { ReferencePageHeader } from "@/components/ReferencePageHeader";
+import { GradientRed } from "@/components/styles";
+import { characterLookupByChar } from "@/data/characters";
 import { useLocalSearchParams } from "expo-router";
-import { ReferencePage } from "../../components/ReferencePage";
-import { ReferencePageBodySection } from "../../components/ReferencePageBodySection";
-import { ReferencePageHeader } from "../../components/ReferencePageHeader";
-import { GradientRed } from "../../components/styles";
-import { characterLookupByChar } from "../../data/characters";
 
 export default function CharacterPage() {
   const { id } = useLocalSearchParams<"/character/[id]">();
