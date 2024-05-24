@@ -233,7 +233,7 @@ const radicalData: RadicalDatum[] = [
   { chars: "龠", names: ["flute"] },
 ];
 
-// Transform radical data into easier shape.
+// Transform data into an easier shape to work with.
 const radicals = radicalData.map(
   ({ chars, names, pronunciations, mnemonic }) => {
     const [char, ...charAlts] = chars;
