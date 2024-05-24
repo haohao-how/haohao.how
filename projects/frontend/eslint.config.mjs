@@ -90,6 +90,20 @@ export default tseslint.config(
       ],
       "one-var": ["error", "never"],
 
+      "no-restricted-imports": [
+        "error",
+        {
+          paths: [
+            {
+              name: "react-native",
+              importNames: ["SafeAreaView"],
+              message:
+                "Please use `useSafeAreaInsets` from `react-native-safe-area-context` instead.",
+            },
+          ],
+        },
+      ],
+
       //
       // eslint-plugin-import
       //
