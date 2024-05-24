@@ -1,10 +1,10 @@
+import { ReplicacheProvider } from "@/components/ReplicacheContext";
+import { bootCryptoPolyfill } from "@/components/crypto-polyfill";
 import * as Sentry from "@sentry/react-native";
 import { Slot, useNavigationContainerRef } from "expo-router";
 import * as Updates from "expo-updates";
 import { useEffect } from "react";
 import { Platform } from "react-native";
-import { ReplicacheProvider } from "../components/ReplicacheContext";
-import { bootCryptoPolyfill } from "../components/crypto-polyfill";
 
 // Via the guide: https://docs.expo.dev/guides/using-sentry/
 const manifest = Updates.manifest;

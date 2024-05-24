@@ -1,9 +1,9 @@
+import { ReferencePage } from "@/components/ReferencePage";
+import { ReferencePageBodySection } from "@/components/ReferencePageBodySection";
+import { ReferencePageHeader } from "@/components/ReferencePageHeader";
+import { GradientAqua } from "@/components/styles";
+import { radicalLookupByChar } from "@/data/radicals";
 import { useLocalSearchParams } from "expo-router";
-import { ReferencePage } from "../../components/ReferencePage";
-import { ReferencePageBodySection } from "../../components/ReferencePageBodySection";
-import { ReferencePageHeader } from "../../components/ReferencePageHeader";
-import { GradientAqua } from "../../components/styles";
-import { radicalLookupByChar } from "../../data/radicals";
 
 export default function RadicalPage() {
   const { id } = useLocalSearchParams<"/character/[id]">();

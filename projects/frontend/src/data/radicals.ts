@@ -1,4 +1,4 @@
-import { invariant } from "../util/invariant";
+import { invariant } from "@/util/invariant";
 
 interface RadicalDatum {
   chars: string | string[];

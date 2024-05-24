@@ -1,8 +1,8 @@
+import { CircleButton } from "@/components/CircleButton";
+import { RootView } from "@/components/RootView";
 import { Link } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet } from "react-native";
-import { CircleButton } from "../../components/CircleButton";
-import { RootView } from "../../components/RootView";
 
 export default function LearnPage() {
   return (
