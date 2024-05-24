@@ -2,18 +2,18 @@ import { invariant } from "../util/invariant";
 
 interface RadicalDatum {
   chars: string | string[];
+  mnemonic?: string;
   names: string | string[];
   pronunciations?: string[];
-  mnemonic?: string;
 }
 
 export interface Radical {
   char: string;
-  altChars?: string[];
-  name: string;
-  altNames?: string[];
-  pronunciations?: string[];
+  charAlts?: string[];
   mnemonic?: string;
+  name: string;
+  nameAlts?: string[];
+  pronunciations?: string[];
 }
 
 const radicalData: RadicalDatum[] = [
@@ -236,10 +236,10 @@ const radicalData: RadicalDatum[] = [
 // Transform radical data into easier shape.
 const radicals = radicalData.map(
   ({ chars, names, pronunciations, mnemonic }) => {
-    const [char, ...altChars] = chars;
+    const [char, ...charAlts] = chars;
     invariant(char !== undefined, "expected at least one character");
 
-    const [name, ...altNames] = names;
+    const [name, ...nameAlts] = names;
     invariant(name !== undefined, "expected at least one name");
 
     const radical: Radical = {
@@ -247,12 +247,12 @@ const radicals = radicalData.map(
       name,
     };
 
-    if (altChars.length > 0) {
-      radical.altChars = altChars;
+    if (charAlts.length > 0) {
+      radical.charAlts = charAlts;
     }
 
-    if (altNames.length > 0) {
-      radical.altNames = altNames;
+    if (nameAlts.length > 0) {
+      radical.nameAlts = nameAlts;
     }
 
     if (pronunciations !== undefined && pronunciations.length > 0) {
@@ -271,5 +271,5 @@ const radicals = radicalData.map(
  * Lookup by primary or alternative character.
  */
 export const radicalLookupByChar: ReadonlyMap<string, Radical> = new Map(
-  radicals.flatMap((r) => [r.char].concat(r.altChars ?? []).map((c) => [c, r])),
+  radicals.flatMap((r) => [r.char].concat(r.charAlts ?? []).map((c) => [c, r])),
 );
