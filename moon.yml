@@ -10,6 +10,12 @@ tasks:
       - doctor
       - .
     platform: node
+  node-version:
+    command:
+      - node
+      - "--version"
+    platform: node
+    local: true
   yarn-constraints:
     command:
       - yarn
