@@ -1,4 +1,4 @@
-import { FourUpQuiz } from "@/components/FourUpQuiz";
+import { QuizDeck, QuizDeckItemType } from "@/components/QuizDeck";
 import { useReplicache } from "@/components/ReplicacheContext";
 import { RootView } from "@/components/RootView";
 import { StatusBar as ExpoStatusBar } from "expo-status-bar";
@@ -27,31 +27,43 @@ export default function QuizPage() {
         }}
       >
         <View style={{ maxWidth: 600, flex: 1 }}>
-          <FourUpQuiz
-            questions={[
+          <QuizDeck
+            items={[
               {
-                prompt: "Select the correct word for the character “dǔ”",
-                choices: ["好", "爱", "别", "姆"],
-                answer: "好",
-                flag: FourUpQuiz.Flag.WeakWord,
+                type: QuizDeckItemType.MultipleChoice,
+                question: {
+                  prompt: "Select the correct word for the character “dǔ”",
+                  choices: ["好", "爱", "别", "姆"],
+                  answer: "好",
+                  flag: QuizDeck.Flag.WeakWord,
+                },
               },
               {
-                prompt: "Select the correct word for the character “dá”",
-                choices: ["好", "爱", "别", "姆"],
-                answer: "好",
-                flag: FourUpQuiz.Flag.WeakWord,
+                type: QuizDeckItemType.MultipleChoice,
+                question: {
+                  prompt: "Select the correct word for the character “dá”",
+                  choices: ["好", "爱", "别", "姆"],
+                  answer: "好",
+                  flag: QuizDeck.Flag.WeakWord,
+                },
               },
               {
-                prompt: "Select the correct word for the character “d”",
-                choices: ["好", "爱", "别", "姆"],
-                answer: "好",
-                flag: FourUpQuiz.Flag.WeakWord,
+                type: QuizDeckItemType.MultipleChoice,
+                question: {
+                  prompt: "Select the correct word for the character “d”",
+                  choices: ["好", "爱", "别", "姆"],
+                  answer: "好",
+                  flag: QuizDeck.Flag.WeakWord,
+                },
               },
               {
-                prompt: "Select the correct word for the character “dǔ”",
-                choices: ["好", "爱", "别", "姆"],
-                answer: "好",
-                flag: FourUpQuiz.Flag.WeakWord,
+                type: QuizDeckItemType.MultipleChoice,
+                question: {
+                  prompt: "Select the correct word for the character “dǔ”",
+                  choices: ["好", "爱", "别", "姆"],
+                  answer: "好",
+                  flag: QuizDeck.Flag.WeakWord,
+                },
               },
             ]}
             onNext={(success) => {
