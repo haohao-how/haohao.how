@@ -120,8 +120,6 @@ export const QuizDeckMultipleChoiceQuestion = ({
       style={{
         flex: 1,
         gap: gap + buttonThickness,
-        marginLeft: 10,
-        marginRight: 10,
       }}
     >
       <View>
