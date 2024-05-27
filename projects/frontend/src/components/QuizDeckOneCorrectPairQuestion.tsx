@@ -7,7 +7,7 @@ import {
   useRef,
   useState,
 } from "react";
-import { Animated, StyleSheet, Text, View } from "react-native";
+import { Animated, Easing, StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { RectButton } from "./RectButton";
 import { PropsOf } from "./types";
@@ -74,8 +74,12 @@ export const QuizDeckOneCorrectPairQuestion = ({
                   style={{ flexDirection: "row", alignItems: "center", gap: 8 }}
                 >
                   <Image
-                    source={require("../../assets/cog.svg")}
-                    style={{ flexShrink: 1, width: 24, height: 24 }}
+                    source={require("../../assets/check-circled.svg")}
+                    style={{
+                      flexShrink: 1,
+                      width: 32,
+                      height: 32,
+                    }}
                   />
                   <Text
                     style={{
@@ -94,8 +98,8 @@ export const QuizDeckOneCorrectPairQuestion = ({
                   style={{ flexDirection: "row", alignItems: "center", gap: 8 }}
                 >
                   <Image
-                    source={require("../../assets/cog.svg")}
-                    style={{ flexShrink: 1, width: 24, height: 24 }}
+                    source={require("../../assets/closed-circled.svg")}
+                    style={{ flexShrink: 1, width: 32, height: 32 }}
                   />
                   <Text
                     style={{
@@ -217,6 +221,7 @@ const Skeleton = ({
       Animated.timing(slideInAnim, {
         toValue: 1,
         duration: 200,
+        easing: Easing.out(Easing.exp),
         useNativeDriver: false, // layout properties aren't compatible with the native driver on mobile (it works on Web though)
       }).start();
     } else {
