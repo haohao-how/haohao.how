@@ -4,7 +4,7 @@ import { RectButton } from "./RectButton";
 import { PropsOf } from "./types";
 
 const buttonThickness = 4;
-const gap = 16;
+const gap = 12;
 
 export interface OneCorrectPairQuestion {
   prompt: string;
@@ -43,9 +43,7 @@ export const QuizDeckOneCorrectPairQuestion = ({
     <View
       style={{
         flex: 1,
-        gap: gap + buttonThickness,
-        marginLeft: 10,
-        marginRight: 10,
+        justifyContent: "space-between",
       }}
     >
       <View>
@@ -59,28 +57,37 @@ export const QuizDeckOneCorrectPairQuestion = ({
           {prompt}
         </Text>
       </View>
-      {choiceRows.map(({ a, b }, i) => (
-        <View style={styles.answerRow} key={i}>
-          {a !== undefined ? (
-            <AnswerButton
-              text={a}
-              selected={a === selectedAChoice}
-              onPress={setSelectedAChoice}
-            />
-          ) : (
-            <View />
-          )}
-          {b !== undefined ? (
-            <AnswerButton
-              text={b}
-              selected={b === selectedBChoice}
-              onPress={setSelectedBChoice}
-            />
-          ) : (
-            <View />
-          )}
-        </View>
-      ))}
+      <View
+        style={{
+          flex: 1,
+          gap: gap + buttonThickness,
+          maxHeight:
+            choiceRowCount * 80 + (choiceRowCount - 1) * gap + buttonThickness,
+        }}
+      >
+        {choiceRows.map(({ a, b }, i) => (
+          <View style={styles.answerRow} key={i}>
+            {a !== undefined ? (
+              <AnswerButton
+                text={a}
+                selected={a === selectedAChoice}
+                onPress={setSelectedAChoice}
+              />
+            ) : (
+              <View />
+            )}
+            {b !== undefined ? (
+              <AnswerButton
+                text={b}
+                selected={b === selectedBChoice}
+                onPress={setSelectedBChoice}
+              />
+            ) : (
+              <View />
+            )}
+          </View>
+        ))}
+      </View>
       <SubmitButton
         disabled={
           selectedAChoice === undefined || selectedBChoice === undefined
@@ -150,7 +157,7 @@ const AnswerButton = ({
       style={{ flex: 1 }}
     >
       <View style={{ justifyContent: "center" }}>
-        <Text style={[{ color: "white", fontSize: 30 }, styles.buttonText]}>
+        <Text style={[{ color: "white", fontSize: 20 }, styles.buttonText]}>
           {text}
         </Text>
       </View>
@@ -169,7 +176,7 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: "row",
     alignItems: "stretch",
-    gap,
+    gap: 28,
   },
   buttonText: {
     userSelect: "none",

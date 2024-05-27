@@ -142,20 +142,25 @@ export const QuizDeck = Object.assign(
     });
 
     return (
-      <View style={{ flex: 1, gap: gap + buttonThickness }}>
+      <View
+        style={{
+          flex: 1,
+          gap: gap + buttonThickness,
+        }}
+      >
         <View
           style={{
             flexDirection: "row",
             alignItems: "center",
             gap: 24,
-            marginLeft: 10,
-            marginRight: 10,
+            paddingLeft: 16,
+            paddingRight: 16,
           }}
         >
-          <Image
+          {/* <Image
             source={require("../../assets/cog.svg")}
             style={{ flexShrink: 1, width: 33, height: 33 }}
-          />
+          /> */}
           <QuizProgressBar
             progress={progress}
             colors={
@@ -173,8 +178,8 @@ export const QuizDeck = Object.assign(
               flexDirection: "row",
               alignItems: "center",
               gap: 10,
-              marginLeft: 10,
-              marginRight: 10,
+              paddingLeft: 16,
+              paddingRight: 16,
             }}
           >
             <Image
@@ -216,17 +221,33 @@ export const QuizDeck = Object.assign(
                 switch (currentDeckItem?.type) {
                   case QuizDeckItemType.MultipleChoice:
                     return (
-                      <QuizDeckMultipleChoiceQuestion
-                        question={currentDeckItem.question}
-                        onComplete={onComplete}
-                      />
+                      <View
+                        style={{
+                          flex: 1,
+                          paddingLeft: 16,
+                          paddingRight: 16,
+                        }}
+                      >
+                        <QuizDeckMultipleChoiceQuestion
+                          question={currentDeckItem.question}
+                          onComplete={onComplete}
+                        />
+                      </View>
                     );
                   case QuizDeckItemType.OneCorrectPair:
                     return (
-                      <QuizDeckOneCorrectPairQuestion
-                        question={currentDeckItem.question}
-                        onComplete={onComplete}
-                      />
+                      <View
+                        style={{
+                          flex: 1,
+                          paddingLeft: 16,
+                          paddingRight: 16,
+                        }}
+                      >
+                        <QuizDeckOneCorrectPairQuestion
+                          question={currentDeckItem.question}
+                          onComplete={onComplete}
+                        />
+                      </View>
                     );
                   case undefined:
                   default:
