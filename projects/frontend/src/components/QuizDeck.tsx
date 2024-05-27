@@ -14,6 +14,10 @@ import {
   MultipleChoiceQuestion,
   QuizDeckMultipleChoiceQuestion,
 } from "./QuizDeckMultipleChoiceQuestion";
+import {
+  OneCorrectPairQuestion,
+  QuizDeckOneCorrectPairQuestion,
+} from "./QuizDeckOneCorrectPairQuestion";
 import { QuizProgressBar } from "./QuizProgressBar";
 import { useEventCallback } from "./util";
 
@@ -45,13 +49,6 @@ interface Navigation {
 export enum QuizDeckItemType {
   MultipleChoice,
   OneCorrectPair,
-}
-
-export interface OneCorrectPairQuestion {
-  prompt: string;
-  groupA: string[];
-  groupB: string[];
-  answer: [groupA: string, groupB: string];
 }
 
 export interface MultipleChoiceQuestionDeckItem {
@@ -224,9 +221,17 @@ export const QuizDeck = Object.assign(
                         onComplete={onComplete}
                       />
                     );
+                  case QuizDeckItemType.OneCorrectPair:
+                    return (
+                      <QuizDeckOneCorrectPairQuestion
+                        question={currentDeckItem.question}
+                        onComplete={onComplete}
+                      />
+                    );
+                  case undefined:
+                  default:
+                    return null;
                 }
-
-                return null;
               }}
             />
           </Stack.Navigator>

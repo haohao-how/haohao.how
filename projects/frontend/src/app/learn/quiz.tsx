@@ -30,6 +30,15 @@ export default function QuizPage() {
           <QuizDeck
             items={[
               {
+                type: QuizDeckItemType.OneCorrectPair,
+                question: {
+                  prompt: "Select the correct translation",
+                  groupA: ["早", "燥", "澡", "凿", "遭"],
+                  groupB: ["zao", "zāo", "záo", "zǎo", "zào"],
+                  answer: ["早", "zǎo"],
+                },
+              },
+              {
                 type: QuizDeckItemType.MultipleChoice,
                 question: {
                   prompt: "Select the correct word for the character “dǔ”",

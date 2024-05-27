@@ -151,6 +151,10 @@ export default tseslint.config(
         "error",
         { allowBoolean: true, allowNumber: true },
       ],
+      "@typescript-eslint/switch-exhaustiveness-check": [
+        "error",
+        { requireDefaultForNonUnion: true },
+      ],
     },
   },
   {
