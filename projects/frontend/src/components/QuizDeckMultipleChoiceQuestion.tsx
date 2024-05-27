@@ -25,9 +25,6 @@ export const QuizDeckMultipleChoiceQuestion = ({
   onComplete,
 }: {
   question: MultipleChoiceQuestion;
-  // prompt: string;
-  // answer: string;
-  // choices: readonly string[];
   onComplete: (success: boolean) => void;
 }) => {
   const [selectedChoice, setSelectedChoice] = useState<string>();
