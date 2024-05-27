@@ -24,10 +24,14 @@ export default function QuizPage() {
           flexDirection: "row",
           justifyContent: "center",
           paddingTop: insets.top + 20,
-          paddingBottom: insets.bottom + 20,
         }}
       >
-        <View style={{ maxWidth: 600, flex: 1 }}>
+        <View
+          style={{
+            maxWidth: 600,
+            flex: 1,
+          }}
+        >
           <QuizDeck
             items={[
               {

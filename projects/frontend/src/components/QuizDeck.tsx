@@ -221,33 +221,17 @@ export const QuizDeck = Object.assign(
                 switch (currentDeckItem?.type) {
                   case QuizDeckItemType.MultipleChoice:
                     return (
-                      <View
-                        style={{
-                          flex: 1,
-                          paddingLeft: 16,
-                          paddingRight: 16,
-                        }}
-                      >
-                        <QuizDeckMultipleChoiceQuestion
-                          question={currentDeckItem.question}
-                          onComplete={onComplete}
-                        />
-                      </View>
+                      <QuizDeckMultipleChoiceQuestion
+                        question={currentDeckItem.question}
+                        onComplete={onComplete}
+                      />
                     );
                   case QuizDeckItemType.OneCorrectPair:
                     return (
-                      <View
-                        style={{
-                          flex: 1,
-                          paddingLeft: 16,
-                          paddingRight: 16,
-                        }}
-                      >
-                        <QuizDeckOneCorrectPairQuestion
-                          question={currentDeckItem.question}
-                          onComplete={onComplete}
-                        />
-                      </View>
+                      <QuizDeckOneCorrectPairQuestion
+                        question={currentDeckItem.question}
+                        onComplete={onComplete}
+                      />
                     );
                   case undefined:
                   default:
