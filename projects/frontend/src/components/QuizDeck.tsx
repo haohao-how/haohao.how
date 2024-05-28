@@ -157,10 +157,11 @@ export const QuizDeck = Object.assign(
             paddingRight: 16,
           }}
         >
-          {/* <Image
-            source={require("../../assets/cog.svg")}
-            style={{ flexShrink: 1, width: 33, height: 33 }}
-          /> */}
+          <Image
+            source={require("@/assets/icons/close.svg")}
+            style={[{ flexShrink: 1, width: 24, height: 24 }]}
+            tintColor="#3C464D"
+          />
           <QuizProgressBar
             progress={progress}
             colors={
@@ -182,10 +183,10 @@ export const QuizDeck = Object.assign(
               paddingRight: 16,
             }}
           >
-            <Image
-              source={require("../../assets/target-red.svg")}
+            {/* <Image
+              source={require("@/assets/target-red.svg")}
               style={{ flexShrink: 1, width: 33, height: 30 }}
-            />
+            /> */}
             <Text
               style={{
                 color: "#EC5A53",

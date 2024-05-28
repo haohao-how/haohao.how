@@ -74,12 +74,13 @@ export const QuizDeckOneCorrectPairQuestion = ({
                   style={{ flexDirection: "row", alignItems: "center", gap: 8 }}
                 >
                   <Image
-                    source={require("../../assets/check-circled.svg")}
+                    source={require("@/assets/icons/check-circled-filled.svg")}
                     style={{
                       flexShrink: 1,
                       width: 32,
                       height: 32,
                     }}
+                    tintColor="#ABD063"
                   />
                   <Text
                     style={{
@@ -98,8 +99,9 @@ export const QuizDeckOneCorrectPairQuestion = ({
                   style={{ flexDirection: "row", alignItems: "center", gap: 8 }}
                 >
                   <Image
-                    source={require("../../assets/closed-circled.svg")}
+                    source={require("@/assets/icons/close-circled-filled.svg")}
                     style={{ flexShrink: 1, width: 32, height: 32 }}
+                    tintColor="#CE675F"
                   />
                   <Text
                     style={{
@@ -148,7 +150,14 @@ export const QuizDeckOneCorrectPairQuestion = ({
           {prompt}
         </Text>
       </View>
-      <View style={{ flex: 1, justifyContent: "center" }}>
+      <View
+        style={{
+          flex: 1,
+          justifyContent: "center",
+          paddingBottom: quizPaddingLeftRight,
+          paddingTop: quizPaddingLeftRight,
+        }}
+      >
         <View
           style={{
             flex: 1,
