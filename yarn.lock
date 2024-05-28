@@ -9454,7 +9454,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"expo-image@npm:~1.12.9":
+"expo-image@npm:1.12.9":
   version: 1.12.9
   resolution: "expo-image@npm:1.12.9"
   dependencies:
@@ -9462,6 +9462,17 @@ __metadata:
   peerDependencies:
     expo: "*"
   checksum: 10c0/9c9b020978036c9a81134759024eae5d931d8f2c6480619197ee06251ff57a4a34edac1e4a1442adcba52d942c3af2da8f66534c9f8a7518fc4d77d3b711863b
+  languageName: node
+  linkType: hard
+
+"expo-image@patch:expo-image@npm%3A1.12.9#~/.yarn/patches/expo-image-npm-1.12.9-116d224baf.patch":
+  version: 1.12.9
+  resolution: "expo-image@patch:expo-image@npm%3A1.12.9#~/.yarn/patches/expo-image-npm-1.12.9-116d224baf.patch::version=1.12.9&hash=286057"
+  dependencies:
+    "@react-native/assets-registry": "npm:~0.74.83"
+  peerDependencies:
+    expo: "*"
+  checksum: 10c0/62f188f4f2a5d4825ab83715f4a091f93f577a43353c74cd947df6559a93d627ddcc09e0782091cbf06b62c7c27b5c9cba6f248baa4f6f1109126c6c7ff82ea0
   languageName: node
   linkType: hard
 
@@ -10090,7 +10101,7 @@ __metadata:
     expo-crypto: "npm:^13.0.2"
     expo-font: "npm:^12.0.5"
     expo-haptics: "npm:~13.0.1"
-    expo-image: "npm:~1.12.9"
+    expo-image: "patch:expo-image@npm%3A1.12.9#~/.yarn/patches/expo-image-npm-1.12.9-116d224baf.patch"
     expo-insights: "npm:~0.7.0"
     expo-linear-gradient: "npm:^13.0.2"
     expo-linking: "npm:~6.3.1"

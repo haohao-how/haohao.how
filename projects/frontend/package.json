@@ -17,7 +17,7 @@
     "expo-crypto": "^13.0.2",
     "expo-font": "^12.0.5",
     "expo-haptics": "~13.0.1",
-    "expo-image": "~1.12.9",
+    "expo-image": "patch:expo-image@npm%3A1.12.9#~/.yarn/patches/expo-image-npm-1.12.9-116d224baf.patch",
     "expo-insights": "~0.7.0",
     "expo-linear-gradient": "^13.0.2",
     "expo-linking": "~6.3.1",

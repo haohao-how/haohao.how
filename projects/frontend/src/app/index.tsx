@@ -18,8 +18,8 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 export default function IndexPage() {
   const insets = useSafeAreaInsets();
   const [fontsLoaded, fontError] = useFonts({
-    "MaShanZheng-Regular": require("../../assets/fonts/MaShanZheng-Regular.ttf"),
-    "NotoSerifSC-Medium": require("../../assets/fonts/NotoSerifSC-Medium.otf"),
+    "MaShanZheng-Regular": require("@/assets/fonts/MaShanZheng-Regular.ttf"),
+    "NotoSerifSC-Medium": require("@/assets/fonts/NotoSerifSC-Medium.otf"),
   });
 
   const onLayoutRootView = useCallback(() => {

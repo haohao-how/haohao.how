@@ -62,6 +62,12 @@ need to use `--recursive`. For example to upgrade `tar` use:
 yarn up -R tar
 ```
 
+## Updating frontend icons
+
+Icons can be exported directly from Figma. Frames are labelled appropriately
+such that everything in Figma can be exported to the
+`projects/frontend/src/assets` directory.
+
 ## Writing Pinyin on macOS
 
 1. Enable the `Pinyin - Simplified` keyboard.
