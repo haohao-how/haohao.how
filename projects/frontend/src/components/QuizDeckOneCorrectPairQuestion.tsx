@@ -226,7 +226,7 @@ const Skeleton = ({
   submitButton: ReactNode;
 }) => {
   const insets = useSafeAreaInsets();
-  const submitButtonHeight = 56;
+  const submitButtonHeight = 44;
   const submitButtonInsetBottom = insets.bottom + 20;
   const contentInsetBottom = submitButtonInsetBottom + 5 + submitButtonHeight;
   const contentPaddingTopBottom = 20;
@@ -381,6 +381,7 @@ const SubmitButton = forwardRef<
       thickness={state === SubmitButtonState.Disabled ? 0 : undefined}
       ref={ref}
       style={{ flex: 1 }}
+      borderRadius={12}
       onPress={state === SubmitButtonState.Disabled ? undefined : onPress}
     >
       <Text
