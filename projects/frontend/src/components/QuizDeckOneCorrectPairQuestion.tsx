@@ -7,7 +7,16 @@ import {
   useRef,
   useState,
 } from "react";
-import { Animated, Easing, StyleSheet, Text, View } from "react-native";
+import {
+  Animated,
+  Easing,
+  Platform,
+  StyleProp,
+  StyleSheet,
+  Text,
+  View,
+  ViewStyle,
+} from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { RectButton } from "./RectButton";
 import { PropsOf } from "./types";
@@ -242,6 +251,30 @@ const Skeleton = ({
     }
   }, [slideInAnim, hasToast]);
 
+  const slideInStyle: StyleProp<ViewStyle> =
+    Platform.OS === "web"
+      ? {
+          // On web the `bottom: <percent>%` approach doesn't work when the
+          // parent is `position: absolute`. But using `translateY: <percent>%`
+          // DOES work (but this doesn't work on mobile native because only
+          // pixel values are accepted).
+          transform: [
+            {
+              translateY: slideInAnim.interpolate({
+                inputRange: [0, 1],
+                outputRange: ["100%", "0%"],
+              }),
+            },
+          ],
+        }
+      : {
+          position: "relative",
+          bottom: slideInAnim.interpolate({
+            inputRange: [0, 1],
+            outputRange: ["-100%", "0%"],
+          }),
+        };
+
   return (
     <>
       <View
@@ -265,18 +298,16 @@ const Skeleton = ({
           }}
         >
           <Animated.View
-            style={{
-              backgroundColor: "#252E34",
-              position: "relative",
-              bottom: slideInAnim.interpolate({
-                inputRange: [0, 1],
-                outputRange: ["-100%", "0%"],
-              }),
-              paddingLeft: quizPaddingLeftRight,
-              paddingRight: quizPaddingLeftRight,
-              paddingTop: contentPaddingTopBottom,
-              paddingBottom: contentInsetBottom + contentPaddingTopBottom,
-            }}
+            style={[
+              {
+                backgroundColor: "#252E34",
+                paddingLeft: quizPaddingLeftRight,
+                paddingRight: quizPaddingLeftRight,
+                paddingTop: contentPaddingTopBottom,
+                paddingBottom: contentInsetBottom + contentPaddingTopBottom,
+              },
+              slideInStyle,
+            ]}
           >
             {toast}
           </Animated.View>
