@@ -8,7 +8,7 @@ import {
 import { Image } from "expo-image";
 import { router } from "expo-router";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Animated, Text, View } from "react-native";
+import { Animated, Pressable, Text, View } from "react-native";
 import {
   FourUpQuizFlag,
   MultipleChoiceQuestion,
@@ -157,11 +157,17 @@ export const QuizDeck = Object.assign(
             paddingRight: 16,
           }}
         >
-          <Image
-            source={require("@/assets/icons/close.svg")}
-            style={[{ flexShrink: 1, width: 24, height: 24 }]}
-            tintColor="#3C464D"
-          />
+          <Pressable
+            onPressIn={() => {
+              router.push("/");
+            }}
+          >
+            <Image
+              source={require("@/assets/icons/close.svg")}
+              style={[{ flexShrink: 1, width: 24, height: 24 }]}
+              tintColor="#3C464D"
+            />
+          </Pressable>
           <QuizProgressBar
             progress={progress}
             colors={
