@@ -1,6 +1,7 @@
 import { LinearGradient } from "expo-linear-gradient";
 import { StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { CloseButton } from "./CloseButton";
 
 export const ReferencePageHeader = ({
   title,
@@ -24,6 +25,17 @@ export const ReferencePageHeader = ({
         <View style={styles.title}>
           <Text style={styles.titleText}>{title ?? "⁉️"}</Text>
         </View>
+        <View
+          style={[
+            styles.closeButton,
+            {
+              top: insets.top,
+              left: 16,
+            },
+          ]}
+        >
+          <CloseButton href="/" tintColor="white" />
+        </View>
       </LinearGradient>
 
       <View style={styles.subtitle}>
@@ -34,6 +46,10 @@ export const ReferencePageHeader = ({
 };
 
 const styles = StyleSheet.create({
+  closeButton: {
+    position: "absolute",
+  },
+
   subtitle: {
     backgroundColor: "#20293A",
     alignItems: "center",
