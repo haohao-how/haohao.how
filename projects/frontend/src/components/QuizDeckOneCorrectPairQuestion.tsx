@@ -294,7 +294,6 @@ const Skeleton = ({
             bottom: 0,
             left: 0,
             right: 0,
-            zIndex: 1,
           }}
         >
           <Animated.View
@@ -319,7 +318,6 @@ const Skeleton = ({
           bottom: submitButtonInsetBottom,
           left: quizPaddingLeftRight,
           right: quizPaddingLeftRight,
-          zIndex: 2,
           height: submitButtonHeight,
           flexDirection: "row",
           alignItems: "stretch",
@@ -391,8 +389,6 @@ const SubmitButton = forwardRef<
             color: textColor,
             fontSize: 16,
             fontWeight: "bold",
-            paddingBottom: 4,
-            paddingTop: 4,
           },
           styles.buttonText,
         ]}
