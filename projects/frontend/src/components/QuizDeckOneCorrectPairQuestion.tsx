@@ -7,7 +7,16 @@ import {
   useRef,
   useState,
 } from "react";
-import { Animated, Easing, StyleSheet, Text, View } from "react-native";
+import {
+  Animated,
+  Easing,
+  Platform,
+  StyleProp,
+  StyleSheet,
+  Text,
+  View,
+  ViewStyle,
+} from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { RectButton } from "./RectButton";
 import { PropsOf } from "./types";
@@ -217,7 +226,7 @@ const Skeleton = ({
   submitButton: ReactNode;
 }) => {
   const insets = useSafeAreaInsets();
-  const submitButtonHeight = 56;
+  const submitButtonHeight = 44;
   const submitButtonInsetBottom = insets.bottom + 20;
   const contentInsetBottom = submitButtonInsetBottom + 5 + submitButtonHeight;
   const contentPaddingTopBottom = 20;
@@ -242,6 +251,30 @@ const Skeleton = ({
     }
   }, [slideInAnim, hasToast]);
 
+  const slideInStyle: StyleProp<ViewStyle> =
+    Platform.OS === "web"
+      ? {
+          // On web the `bottom: <percent>%` approach doesn't work when the
+          // parent is `position: absolute`. But using `translateY: <percent>%`
+          // DOES work (but this doesn't work on mobile native because only
+          // pixel values are accepted).
+          transform: [
+            {
+              translateY: slideInAnim.interpolate({
+                inputRange: [0, 1],
+                outputRange: ["100%", "0%"],
+              }),
+            },
+          ],
+        }
+      : {
+          position: "relative",
+          bottom: slideInAnim.interpolate({
+            inputRange: [0, 1],
+            outputRange: ["-100%", "0%"],
+          }),
+        };
+
   return (
     <>
       <View
@@ -261,22 +294,19 @@ const Skeleton = ({
             bottom: 0,
             left: 0,
             right: 0,
-            zIndex: 1,
           }}
         >
           <Animated.View
-            style={{
-              backgroundColor: "#252E34",
-              position: "relative",
-              bottom: slideInAnim.interpolate({
-                inputRange: [0, 1],
-                outputRange: ["-100%", "0%"],
-              }),
-              paddingLeft: quizPaddingLeftRight,
-              paddingRight: quizPaddingLeftRight,
-              paddingTop: contentPaddingTopBottom,
-              paddingBottom: contentInsetBottom + contentPaddingTopBottom,
-            }}
+            style={[
+              {
+                backgroundColor: "#252E34",
+                paddingLeft: quizPaddingLeftRight,
+                paddingRight: quizPaddingLeftRight,
+                paddingTop: contentPaddingTopBottom,
+                paddingBottom: contentInsetBottom + contentPaddingTopBottom,
+              },
+              slideInStyle,
+            ]}
           >
             {toast}
           </Animated.View>
@@ -288,7 +318,6 @@ const Skeleton = ({
           bottom: submitButtonInsetBottom,
           left: quizPaddingLeftRight,
           right: quizPaddingLeftRight,
-          zIndex: 2,
           height: submitButtonHeight,
           flexDirection: "row",
           alignItems: "stretch",
@@ -350,6 +379,7 @@ const SubmitButton = forwardRef<
       thickness={state === SubmitButtonState.Disabled ? 0 : undefined}
       ref={ref}
       style={{ flex: 1 }}
+      borderRadius={12}
       onPress={state === SubmitButtonState.Disabled ? undefined : onPress}
     >
       <Text
@@ -359,8 +389,6 @@ const SubmitButton = forwardRef<
             color: textColor,
             fontSize: 16,
             fontWeight: "bold",
-            paddingBottom: 4,
-            paddingTop: 4,
           },
           styles.buttonText,
         ]}
