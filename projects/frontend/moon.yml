@@ -50,6 +50,22 @@ tasks:
     platform: node
     options:
       cache: false
+  test:
+    command:
+      - node
+      - --test
+    args:
+      - --import
+      - tsx
+      - "**/*.test.ts"
+    platform: node
+  test-watch:
+    extends: test
+    args:
+      - --watch
+    options:
+      mergeArgs: prepend
+    local: true
   typecheck:
     deps:
       - expo-generate-types

@@ -10,6 +10,7 @@
     "@react-navigation/stack": "^6.3.29",
     "@sentry/react-native": "~5.22.2",
     "color": "^4.2.3",
+    "date-fns": "^3.6.0",
     "expo": "~51.0.14",
     "expo-asset": "~10.0.9",
     "expo-av": "~14.0.5",
@@ -38,7 +39,8 @@
     "replicache": "^14.2.2",
     "replicache-react": "^5.0.1",
     "typescript-eslint": "^7.10.0",
-    "vercel": "^34.1.8"
+    "vercel": "^34.1.8",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
@@ -56,6 +58,7 @@
     "eslint-plugin-react-hooks": "^4.6.0",
     "globals": "^14.0.0",
     "prettier": "^3.2.5",
+    "tsx": "^4.13.2",
     "typescript": "^5.4.5"
   },
   "private": true,
