@@ -1,3 +1,11 @@
+fileGroups:
+  yarnConfig:
+    - ".env.yarn"
+    - ".yarnrc.yml"
+    - "package.json"
+    - "projects/*/package.json"
+    - "yarn.config.cjs"
+
 tasks:
   prettier-check:
     args:
@@ -7,9 +15,12 @@ tasks:
       - "'!./projects/**/*'"
   doctor:
     command:
+      - yarn
       - doctor
       - .
     platform: node
+    inputs:
+      - "@group(yarnConfig)"
   node-version:
     command:
       - node
@@ -22,11 +33,7 @@ tasks:
       - constraints
     platform: node
     inputs:
-      - ".env.yarn"
-      - ".yarnrc.yml"
-      - "package.json"
-      - "projects/*/package.json"
-      - "yarn.config.cjs"
+      - "@group(yarnConfig)"
 
 tags:
   - prettier

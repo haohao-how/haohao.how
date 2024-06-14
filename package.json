@@ -6,7 +6,7 @@
   ],
   "devDependencies": {
     "@types/semver": "~7.5",
-    "@yarnpkg/doctor": "^4.0.1",
+    "@yarnpkg/doctor": "patch:@yarnpkg/doctor@npm%3A4.0.1#~/.yarn/patches/@yarnpkg-doctor-npm-4.0.1-f56e9f5fea.patch",
     "@yarnpkg/types": "^4.0.0",
     "prettier": "^3.2.5",
     "semver": "^7.5.0",

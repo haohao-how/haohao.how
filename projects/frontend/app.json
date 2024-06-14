@@ -64,7 +64,9 @@
           "project": "frontend",
           "url": "https://sentry.io/"
         }
-      ]
+      ],
+      "expo-asset",
+      "expo-font"
     ],
     "experiments": {
       "typedRoutes": true
