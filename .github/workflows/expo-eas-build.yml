@@ -37,3 +37,4 @@ jobs:
         run: moon run frontend:eas -- build --profile=${{ inputs.profile }} --platform=${{ inputs.platform }} --non-interactive
         env:
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+          EXPO_PUBLIC_REPLICACHE_LICENSE_KEY: ${{ secrets.EXPO_PUBLIC_REPLICACHE_LICENSE_KEY }}

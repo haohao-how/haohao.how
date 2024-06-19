@@ -6,6 +6,14 @@ declare global {
     // known extension.
     (id: `${string}.${"ttf" | "otf" | "svg" | "png"}`): string;
   }
+
+  namespace NodeJS {
+    // Necessary to avoid noPropertyAccessFromIndexSignature errors. Keep in
+    // sync with `env.ts`.
+    interface ProcessEnv {
+      EXPO_PUBLIC_REPLICACHE_LICENSE_KEY?: string;
+    }
+  }
 }
 
 export {};

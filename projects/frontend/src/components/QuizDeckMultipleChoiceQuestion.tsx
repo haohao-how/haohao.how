@@ -1,3 +1,4 @@
+import { Rating } from "@/util/fsrs";
 import { Asset } from "expo-asset";
 import { Audio } from "expo-av";
 import chunk from "lodash/chunk";
@@ -25,7 +26,7 @@ export const QuizDeckMultipleChoiceQuestion = ({
   onComplete,
 }: {
   question: MultipleChoiceQuestion;
-  onComplete: (success: boolean) => void;
+  onComplete: (rating: Rating) => void;
 }) => {
   const [selectedChoice, setSelectedChoice] = useState<string>();
   const [sound, setSound] = useState<Audio.Sound>();
@@ -113,7 +114,7 @@ export const QuizDeckMultipleChoiceQuestion = ({
   const handleSubmit = () => {
     // TODO: show error or success modal
 
-    onComplete(selectedChoice === answer);
+    onComplete(selectedChoice === answer ? Rating.Good : Rating.Again);
   };
   return (
     <View
