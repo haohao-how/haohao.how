@@ -1,5 +1,10 @@
 import { CircleButton } from "@/components/CircleButton";
-import { useReplicache } from "@/components/ReplicacheContext";
+import {
+  Skill,
+  SkillType,
+  hanziKeyedSkillDescriptorToId,
+  useReplicache,
+} from "@/components/ReplicacheContext";
 import { RootView } from "@/components/RootView";
 import {
   SectionHeaderButton,
@@ -34,20 +39,61 @@ export default function IndexPage() {
 
   useEffect(() => {
     if (r) {
-      r.query((tx) => tx.get("counter")).then(
-        (counter) => {
+      (async () => {
+        const hanzi = "火";
+
+        const shouldSeed = await r.query(async (tx) => {
+          const result = await tx.get(
+            hanziKeyedSkillDescriptorToId({
+              type: SkillType.HanziWordToEnglish,
+              hanzi,
+            }),
+          );
+          return result === undefined;
+        });
+
+        if (shouldSeed) {
+          // eslint-disable-next-line no-console
+          console.log("Adding skill…");
+          const skill: Skill = {
+            type: SkillType.HanziWordToEnglish,
+            hanzi,
+          };
+          await r.mutate.addSkill({ skill });
+        }
+
+        await r.query(async (tx) => {
+          {
+            // eslint-disable-next-line no-console
+            console.log("Next 10 skill reviews:");
+            const items = await tx
+              .scan({ prefix: "/s/he/", limit: 10 })
+              .entries()
+              .toArray();
+            // eslint-disable-next-line no-console
+            console.log(items);
+          }
+
+          {
+            const x = tx.scan({ prefix: "count" });
+            for await (const y of x.entries()) {
+              // eslint-disable-next-line no-console
+              console.log(y);
+            }
+          }
+
+          const counter = await tx.get("counter");
           // eslint-disable-next-line no-console
           console.log(`counter =`, counter);
           r.mutate.incrementCounter().catch((e: unknown) => {
             // eslint-disable-next-line no-console
             console.error(e);
           });
-        },
-        (e: unknown) => {
-          // eslint-disable-next-line no-console
-          console.error(e);
-        },
-      );
+        });
+      })().catch((err: unknown) => {
+        // eslint-disable-next-line no-console
+        console.error(err);
+      });
     }
   }, [r]);
 

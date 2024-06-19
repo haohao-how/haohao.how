@@ -1,3 +1,4 @@
+import { Rating } from "@/util/fsrs";
 import { NavigationContainer, useTheme } from "@react-navigation/native";
 import {
   StackCardInterpolatedStyle,
@@ -19,6 +20,7 @@ import {
   QuizDeckOneCorrectPairQuestion,
 } from "./QuizDeckOneCorrectPairQuestion";
 import { QuizProgressBar } from "./QuizProgressBar";
+import { Skill, useReplicache } from "./ReplicacheContext";
 import { useEventCallback } from "./util";
 
 const buttonThickness = 4;
@@ -59,6 +61,7 @@ export interface MultipleChoiceQuestionDeckItem {
 export interface OneCorrectPairQuestionDeckItem {
   type: QuizDeckItemType.OneCorrectPair;
   question: OneCorrectPairQuestion;
+  skill: Skill;
 }
 
 export type DeckItem =
@@ -118,8 +121,21 @@ export const QuizDeck = Object.assign(
       }
     }, [currentDeckItem, isFirstDeckItem]);
 
-    const onComplete = useEventCallback((success: boolean) => {
+    const r = useReplicache();
+
+    const onComplete = useEventCallback((rating: Rating) => {
+      const success = rating !== Rating.Again;
+
       if (currentDeckItem !== undefined) {
+        if (currentDeckItem.type === QuizDeckItemType.OneCorrectPair) {
+          r?.mutate
+            .updateSkill({ skill: currentDeckItem.skill, rating })
+            .catch((e: unknown) => {
+              // eslint-disable-next-line no-console
+              console.error("failed to update skill", e);
+            });
+        }
+
         setStreakCount((prev) => (success ? prev + 1 : 0));
         setDeckItemStateMap((prev) => {
           const next = new Map(prev);

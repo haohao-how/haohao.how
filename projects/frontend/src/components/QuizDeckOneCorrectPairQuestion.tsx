@@ -1,3 +1,4 @@
+import { Rating } from "@/util/fsrs";
 import { Image } from "expo-image";
 import {
   ReactNode,
@@ -28,9 +29,9 @@ const quizPaddingLeftRight = 16;
 
 export interface OneCorrectPairQuestion {
   prompt: string;
-  groupA: string[];
-  groupB: string[];
-  answer: [groupA: string, groupB: string];
+  groupA: readonly string[];
+  groupB: readonly string[];
+  answer: readonly [groupA: string, groupB: string];
 }
 
 export const QuizDeckOneCorrectPairQuestion = ({
@@ -43,10 +44,11 @@ export const QuizDeckOneCorrectPairQuestion = ({
   onComplete,
 }: {
   question: OneCorrectPairQuestion;
-  onComplete: (success: boolean) => void;
+  onComplete: (rating: Rating) => void;
 }) => {
   const [selectedAChoice, setSelectedAChoice] = useState<string>();
   const [selectedBChoice, setSelectedBChoice] = useState<string>();
+  const [rating, setRating] = useState<Rating>();
 
   const choiceRowCount = Math.max(groupA.length, groupB.length);
   const choiceRows: { a: string | undefined; b: string | undefined }[] = [];
@@ -55,17 +57,20 @@ export const QuizDeckOneCorrectPairQuestion = ({
     choiceRows.push({ a: groupA[i], b: groupB[i] });
   }
 
-  const [showResult, setShowResult] = useState(false);
-
   const handleSubmit = () => {
-    if (!showResult) {
-      setShowResult(true);
+    if (rating === undefined) {
+      setRating(
+        selectedAChoice === answerA && selectedBChoice === answerB
+          ? Rating.Good
+          : Rating.Again,
+      );
     } else {
-      onComplete(selectedAChoice === answerA && selectedBChoice === answerB);
+      onComplete(rating);
     }
   };
 
-  const isCorrect = selectedAChoice === answerA && selectedBChoice === answerB;
+  const showResult = rating !== undefined;
+  const isCorrect = rating !== Rating.Again;
 
   return (
     <Skeleton
@@ -140,7 +145,7 @@ export const QuizDeckOneCorrectPairQuestion = ({
               ? SubmitButtonState.Disabled
               : !showResult
                 ? SubmitButtonState.Check
-                : selectedAChoice === answerA && selectedBChoice === answerB
+                : isCorrect
                   ? SubmitButtonState.Correct
                   : SubmitButtonState.Incorrect
           }
