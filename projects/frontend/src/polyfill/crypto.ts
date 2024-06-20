@@ -7,7 +7,7 @@ declare const global: {
   };
 };
 
-export function bootCryptoPolyfill() {
+export function installCryptoPolyfill() {
   global.crypto = {
     getRandomValues(array: Uint8Array) {
       return Crypto.getRandomValues(array);
