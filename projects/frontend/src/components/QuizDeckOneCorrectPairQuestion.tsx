@@ -1,3 +1,4 @@
+import { OneCorrectPairQuestion } from "@/data/model";
 import { Rating } from "@/util/fsrs";
 import { Image } from "expo-image";
 import {
@@ -26,13 +27,6 @@ const buttonThickness = 4;
 const gap = 12;
 
 const quizPaddingLeftRight = 16;
-
-export interface OneCorrectPairQuestion {
-  prompt: string;
-  groupA: readonly string[];
-  groupB: readonly string[];
-  answer: readonly [groupA: string, groupB: string];
-}
 
 export const QuizDeckOneCorrectPairQuestion = ({
   question: {

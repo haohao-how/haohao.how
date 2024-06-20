@@ -1,3 +1,4 @@
+import { DeckItem, FourUpQuizFlag, QuizDeckItemType } from "@/data/model";
 import { Rating } from "@/util/fsrs";
 import { NavigationContainer, useTheme } from "@react-navigation/native";
 import {
@@ -10,17 +11,10 @@ import { router } from "expo-router";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Animated, Text, View } from "react-native";
 import { CloseButton } from "./CloseButton";
-import {
-  FourUpQuizFlag,
-  MultipleChoiceQuestion,
-  QuizDeckMultipleChoiceQuestion,
-} from "./QuizDeckMultipleChoiceQuestion";
-import {
-  OneCorrectPairQuestion,
-  QuizDeckOneCorrectPairQuestion,
-} from "./QuizDeckOneCorrectPairQuestion";
+import { QuizDeckMultipleChoiceQuestion } from "./QuizDeckMultipleChoiceQuestion";
+import { QuizDeckOneCorrectPairQuestion } from "./QuizDeckOneCorrectPairQuestion";
 import { QuizProgressBar } from "./QuizProgressBar";
-import { Skill, useReplicache } from "./ReplicacheContext";
+import { useReplicache } from "./ReplicacheContext";
 import { useEventCallback } from "./util";
 
 const buttonThickness = 4;
@@ -47,26 +41,6 @@ const Stack = createStackNavigator();
 interface Navigation {
   replace: (name: string) => void;
 }
-
-export enum QuizDeckItemType {
-  MultipleChoice,
-  OneCorrectPair,
-}
-
-export interface MultipleChoiceQuestionDeckItem {
-  type: QuizDeckItemType.MultipleChoice;
-  question: MultipleChoiceQuestion;
-}
-
-export interface OneCorrectPairQuestionDeckItem {
-  type: QuizDeckItemType.OneCorrectPair;
-  question: OneCorrectPairQuestion;
-  skill: Skill;
-}
-
-export type DeckItem =
-  | MultipleChoiceQuestionDeckItem
-  | OneCorrectPairQuestionDeckItem;
 
 type DeckItemStateMap = Map<DeckItem, QuestionState>;
 
