@@ -1,5 +1,4 @@
 import { ReplicacheProvider } from "@/components/ReplicacheContext";
-import { bootCryptoPolyfill } from "@/components/crypto-polyfill";
 import * as Sentry from "@sentry/react-native";
 import { Slot, useNavigationContainerRef } from "expo-router";
 import * as Updates from "expo-updates";
@@ -53,8 +52,6 @@ Sentry.configureScope((scope) => {
     );
   }
 });
-
-bootCryptoPolyfill();
 
 function RootLayout() {
   // Capture the NavigationContainer ref and register it with the instrumentation.
