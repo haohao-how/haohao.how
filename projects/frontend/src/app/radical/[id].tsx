@@ -2,7 +2,7 @@ import { ReferencePage } from "@/components/ReferencePage";
 import { ReferencePageBodySection } from "@/components/ReferencePageBodySection";
 import { ReferencePageHeader } from "@/components/ReferencePageHeader";
 import { GradientAqua } from "@/components/styles";
-import { radicalLookupByChar } from "@/data/radicals";
+import { radicalLookupByChar } from "@/dictionary/radicals";
 import { useLocalSearchParams } from "expo-router";
 
 export default function RadicalPage() {

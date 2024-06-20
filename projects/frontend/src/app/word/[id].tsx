@@ -2,7 +2,7 @@ import { ReferencePage } from "@/components/ReferencePage";
 import { ReferencePageBodySection } from "@/components/ReferencePageBodySection";
 import { ReferencePageHeader } from "@/components/ReferencePageHeader";
 import { GradientPurple } from "@/components/styles";
-import { wordLookupByWord } from "@/data/words";
+import { wordLookupByWord } from "@/dictionary/words";
 import { useLocalSearchParams } from "expo-router";
 
 export default function WordPage() {

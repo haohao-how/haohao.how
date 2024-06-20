@@ -1,14 +1,13 @@
-import { DeckItem, QuizDeck, QuizDeckItemType } from "@/components/QuizDeck";
+import { QuizDeck } from "@/components/QuizDeck";
+import { useReplicache } from "@/components/ReplicacheContext";
+import { RootView } from "@/components/RootView";
+import { generateQuestionForSkill } from "@/data/generator";
+import { DeckItem, QuizDeckItemType, Review, Skill } from "@/data/model";
 import {
-  Review,
-  Skill,
   compactReviewSchema,
   decodeCompactReview,
   decodeHanziKeyedSkillKey,
-  generateQuestionForSkill,
-  useReplicache,
-} from "@/components/ReplicacheContext";
-import { RootView } from "@/components/RootView";
+} from "@/data/replicache";
 import { StatusBar as ExpoStatusBar } from "expo-status-bar";
 import { useEffect, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";

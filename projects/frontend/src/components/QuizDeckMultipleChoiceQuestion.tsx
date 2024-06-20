@@ -1,3 +1,4 @@
+import { MultipleChoiceQuestion } from "@/data/model";
 import { Rating } from "@/util/fsrs";
 import { Asset } from "expo-asset";
 import { Audio } from "expo-av";
@@ -9,17 +10,6 @@ import { PropsOf } from "./types";
 
 const buttonThickness = 4;
 const gap = 16;
-
-export enum FourUpQuizFlag {
-  WeakWord,
-}
-
-export interface MultipleChoiceQuestion {
-  prompt: string;
-  answer: string;
-  flag?: FourUpQuizFlag;
-  choices: readonly string[];
-}
 
 export const QuizDeckMultipleChoiceQuestion = ({
   question: { prompt, answer, choices },

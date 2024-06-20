@@ -2,7 +2,7 @@ import { ReferencePage } from "@/components/ReferencePage";
 import { ReferencePageBodySection } from "@/components/ReferencePageBodySection";
 import { ReferencePageHeader } from "@/components/ReferencePageHeader";
 import { GradientRed } from "@/components/styles";
-import { characterLookupByChar } from "@/data/characters";
+import { characterLookupByChar } from "@/dictionary/characters";
 import { useLocalSearchParams } from "expo-router";
 
 export default function CharacterPage() {

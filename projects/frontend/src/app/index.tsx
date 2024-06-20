@@ -1,16 +1,13 @@
 import { CircleButton } from "@/components/CircleButton";
-import {
-  Skill,
-  SkillType,
-  hanziKeyedSkillDescriptorToId,
-  useReplicache,
-} from "@/components/ReplicacheContext";
+import { useReplicache } from "@/components/ReplicacheContext";
 import { RootView } from "@/components/RootView";
 import {
   SectionHeaderButton,
   SectionHeaderButtonProps,
 } from "@/components/SectionHeaderButton";
 import { GradientAqua, GradientPurple, GradientRed } from "@/components/styles";
+import { Skill, SkillType } from "@/data/model";
+import { hanziKeyedSkillDescriptorToId } from "@/data/replicache";
 import * as Sentry from "@sentry/react-native";
 import { useFonts } from "expo-font";
 import { Link } from "expo-router";
