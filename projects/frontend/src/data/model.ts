@@ -1,9 +1,8 @@
 import z from "zod";
 
 export enum SrsType {
-  // TODO remove values, move to `codec`
-  Null = "0",
-  FsrsFourPointFive = "1",
+  Null,
+  FsrsFourPointFive,
 }
 
 export const srsTypeSchema = z.nativeEnum(SrsType);

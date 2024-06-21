@@ -2,12 +2,8 @@ import { QuizDeck } from "@/components/QuizDeck";
 import { useReplicache } from "@/components/ReplicacheContext";
 import { RootView } from "@/components/RootView";
 import { generateQuestionForSkill } from "@/data/generator";
+import { decodeHanziKeyedSkillKey, unmarshalReviewJson } from "@/data/marshal";
 import { DeckItem, QuizDeckItemType, Review, Skill } from "@/data/model";
-import {
-  compactReviewSchema,
-  decodeCompactReview,
-  decodeHanziKeyedSkillKey,
-} from "@/data/replicache";
 import { StatusBar as ExpoStatusBar } from "expo-status-bar";
 import { useEffect, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
@@ -35,9 +31,7 @@ export default function QuizPage() {
             ([key, review]) =>
               [
                 decodeHanziKeyedSkillKey(key),
-                compactReviewSchema
-                  .transform(decodeCompactReview)
-                  .parse(review),
+                unmarshalReviewJson(review),
               ] as const,
           )
           .filter(

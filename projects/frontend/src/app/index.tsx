@@ -6,8 +6,8 @@ import {
   SectionHeaderButtonProps,
 } from "@/components/SectionHeaderButton";
 import { GradientAqua, GradientPurple, GradientRed } from "@/components/styles";
+import { hanziKeyedSkillToKey } from "@/data/marshal";
 import { Skill, SkillType } from "@/data/model";
-import { hanziKeyedSkillDescriptorToId } from "@/data/replicache";
 import * as Sentry from "@sentry/react-native";
 import { useFonts } from "expo-font";
 import { Link } from "expo-router";
@@ -41,7 +41,7 @@ export default function IndexPage() {
 
         const shouldSeed = await r.query(async (tx) => {
           const result = await tx.get(
-            hanziKeyedSkillDescriptorToId({
+            hanziKeyedSkillToKey({
               type: SkillType.HanziWordToEnglish,
               hanzi,
             }),

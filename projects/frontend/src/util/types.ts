@@ -12,3 +12,5 @@ export type RepeatedSequence2<
     : Result extends []
       ? RepeatedSequence2<Tuple, Tuple, [...Count, 1]>
       : RepeatedSequence2<Tuple, Result | [...Result, ...Tuple], [...Count, 1]>;
+
+export type ValuesOf<X> = X[keyof X];
