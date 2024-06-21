@@ -24,7 +24,7 @@ export const ReferencePage = ({
 const styles = StyleSheet.create({
   root: {
     flex: 1,
-    alignItems: "stretch",
+    alignItems: `stretch`,
   },
 
   body: {

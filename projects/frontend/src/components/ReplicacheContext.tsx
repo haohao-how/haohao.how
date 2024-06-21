@@ -29,7 +29,7 @@ export function ReplicacheProvider({ children }: React.PropsWithChildren) {
   const rep = useMemo(
     () =>
       new Replicache<M>({
-        name: "hao",
+        name: `hao`,
         licenseKey: replicacheLicenseKey,
         pushURL: `/api/push`,
         pullURL: `/api/pull`,
@@ -37,8 +37,8 @@ export function ReplicacheProvider({ children }: React.PropsWithChildren) {
         mutators: {
           async incrementCounter(tx, options) {
             const quantity = options?.quantity ?? 1;
-            const counter = await tx.get<number>("counter");
-            await tx.set("counter", (counter ?? 0) + quantity);
+            const counter = await tx.get<number>(`counter`);
+            await tx.set(`counter`, (counter ?? 0) + quantity);
           },
           async addSkill(tx, { skill }) {
             const key = hanziKeyedSkillToKey(skill);

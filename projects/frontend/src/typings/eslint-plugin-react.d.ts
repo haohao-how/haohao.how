@@ -11,7 +11,7 @@ declare module "eslint-plugin-react" {
       all: ClassicConfig.Config;
       "jsx-runtime": ClassicConfig.Config;
     };
-    rules: NonNullable<Linter.Plugin["rules"]>;
+    rules: NonNullable<Linter.Plugin[`rules`]>;
   };
   export = exprt;
 }

@@ -26,7 +26,7 @@ export const QuizDeckMultipleChoiceQuestion = ({
 
   async function playSound() {
     // eslint-disable-next-line no-console
-    console.log("Loading Sound");
+    console.log(`Loading Sound`);
     const soundAsset = Asset.fromURI(
       // `https://static-ruddy.vercel.app/speech/1/1-40525355adb34c563f09cf8ff2a4679a.aac`,
       `https://static-ruddy.vercel.app/speech/1/2-1d2454055c29d34e69979f8873769672.aac`,
@@ -55,12 +55,12 @@ export const QuizDeckMultipleChoiceQuestion = ({
       await Audio.setAudioModeAsync({ playsInSilentModeIOS: true });
     } catch (e) {
       // eslint-disable-next-line no-console
-      console.log("Could not set playsInSilentModeIOS: true", e);
+      console.log(`Could not set playsInSilentModeIOS: true`, e);
     }
     setSound(sound);
 
     // eslint-disable-next-line no-console
-    console.log("Playing Sound");
+    console.log(`Playing Sound`);
     await sound.setRateAsync(2, true, Audio.PitchCorrectionQuality.High);
     await sound.playAsync();
   }
@@ -84,7 +84,7 @@ export const QuizDeckMultipleChoiceQuestion = ({
     return sound
       ? () => {
           // eslint-disable-next-line no-console
-          console.log("Unloading Sound");
+          console.log(`Unloading Sound`);
           sound.unloadAsync().catch((e: unknown) => {
             // eslint-disable-next-line no-console
             console.log(`Error unloading sound`, e);
@@ -116,9 +116,9 @@ export const QuizDeckMultipleChoiceQuestion = ({
       <View>
         <Text
           style={{
-            color: "white",
+            color: `white`,
             fontSize: 24,
-            fontWeight: "bold",
+            fontWeight: `bold`,
           }}
         >
           {prompt}
@@ -146,10 +146,10 @@ export const QuizDeckMultipleChoiceQuestion = ({
 
 const SubmitButton = forwardRef<
   View,
-  { disabled: boolean } & Pick<PropsOf<typeof RectButton>, "onPress">
+  { disabled: boolean } & Pick<PropsOf<typeof RectButton>, `onPress`>
 >(function SubmitButton({ disabled, ...rectButtonProps }, ref) {
-  const color = disabled ? "#3A464E" : "#A1D151";
-  const textColor = disabled ? "#56646C" : "#161F23";
+  const color = disabled ? `#3A464E` : `#A1D151`;
+  const textColor = disabled ? `#56646C` : `#161F23`;
 
   return (
     <RectButton
@@ -161,10 +161,10 @@ const SubmitButton = forwardRef<
       <Text
         style={[
           {
-            textTransform: "uppercase",
+            textTransform: `uppercase`,
             color: textColor,
             fontSize: 16,
-            fontWeight: "bold",
+            fontWeight: `bold`,
             paddingBottom: 4,
             paddingTop: 4,
           },
@@ -190,8 +190,8 @@ const AnswerButton = ({
     onPress(text);
   }, [onPress, text]);
 
-  const color = selected ? "#232E35" : "#161F23";
-  const accentColor = selected ? "#5183A4" : "#3A464E";
+  const color = selected ? `#232E35` : `#161F23`;
+  const accentColor = selected ? `#5183A4` : `#3A464E`;
 
   return (
     <RectButton
@@ -202,8 +202,8 @@ const AnswerButton = ({
       onPress={handlePress}
       style={{ flex: 1 }}
     >
-      <View style={{ justifyContent: "center" }}>
-        <Text style={[{ color: "white", fontSize: 80 }, styles.buttonText]}>
+      <View style={{ justifyContent: `center` }}>
+        <Text style={[{ color: `white`, fontSize: 80 }, styles.buttonText]}>
           {text}
         </Text>
       </View>
@@ -215,16 +215,16 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     gap: 8,
-    alignItems: "center",
-    justifyContent: "center",
+    alignItems: `center`,
+    justifyContent: `center`,
   },
   answerRow: {
     flex: 1,
-    flexDirection: "row",
-    alignItems: "stretch",
+    flexDirection: `row`,
+    alignItems: `stretch`,
     gap,
   },
   buttonText: {
-    userSelect: "none",
+    userSelect: `none`,
   },
 });

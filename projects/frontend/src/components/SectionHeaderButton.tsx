@@ -19,7 +19,7 @@ export function SectionHeaderButton({
     <RectButton
       {...rectButtonProps}
       borderRadius={rectButtonProps.borderRadius ?? 10}
-      color={rectButtonProps.color ?? "#333"}
+      color={rectButtonProps.color ?? `#333`}
     >
       <Text
         style={[
@@ -27,7 +27,7 @@ export function SectionHeaderButton({
           {
             fontSize: 10,
             opacity: 0.8,
-            textTransform: "uppercase",
+            textTransform: `uppercase`,
             marginBottom: 5,
           },
         ]}
@@ -41,9 +41,9 @@ export function SectionHeaderButton({
 
 const styles = StyleSheet.create({
   text: {
-    userSelect: "none",
-    color: "white",
-    fontWeight: "bold",
-    alignSelf: "flex-start",
+    userSelect: `none`,
+    color: `white`,
+    fontWeight: `bold`,
+    alignSelf: `flex-start`,
   },
 });

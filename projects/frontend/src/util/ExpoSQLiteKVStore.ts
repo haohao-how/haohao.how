@@ -18,7 +18,7 @@ export class ExpoSQLiteKVStore implements ExperimentalKVStore {
 
   async truncate() {
     const db = await this.open();
-    await db.execAsync("DELETE FROM entry");
+    await db.execAsync(`DELETE FROM entry`);
     this.release(db);
   }
 
@@ -30,7 +30,7 @@ export class ExpoSQLiteKVStore implements ExperimentalKVStore {
     log?.(`ExpoSQLiteKVStore#read()`);
     const db = await this.open();
 
-    await db.execAsync("BEGIN");
+    await db.execAsync(`BEGIN`);
     return new ExpoSQLiteKVStoreReadImpl(db, () => {
       this.release(db);
     });
@@ -39,7 +39,7 @@ export class ExpoSQLiteKVStore implements ExperimentalKVStore {
   async write(): Promise<ExperimentalKVWrite> {
     log?.(`ExpoSQLiteKVStore#write()`);
     const db = await this.open();
-    await db.execAsync("BEGIN");
+    await db.execAsync(`BEGIN`);
     return new ExpoSQLiteKVStoreWriteImpl(db, () => {
       this.release(db);
     });
@@ -77,7 +77,7 @@ export class ExpoSQLiteKVStore implements ExperimentalKVStore {
     });
     this._busyDbs.push(db);
     await db.execAsync(
-      "CREATE TABLE IF NOT EXISTS entry (key TEXT PRIMARY KEY, value TEXT)",
+      `CREATE TABLE IF NOT EXISTS entry (key TEXT PRIMARY KEY, value TEXT)`,
     );
     return db;
   }
@@ -112,19 +112,19 @@ export class ExpoSQLiteKVStoreReadImpl implements ExperimentalKVRead {
     this._db = db;
   }
 
-  async has(key: string): ReturnType<ExperimentalKVRead["has"]> {
+  async has(key: string): ReturnType<ExperimentalKVRead[`has`]> {
     log?.(`KV[${this._txId.toString()}]#has()`);
     const row = await this.txOrThrow().getFirstAsync<object>(
-      "SELECT 1 FROM entry WHERE key = ?",
+      `SELECT 1 FROM entry WHERE key = ?`,
       [key],
     );
     return row !== null;
   }
 
-  async get(key: string): ReturnType<ExperimentalKVRead["get"]> {
+  async get(key: string): ReturnType<ExperimentalKVRead[`get`]> {
     log?.(`KV[${this._txId.toString()}]#get()`);
     const row = await this.txOrThrow().getFirstAsync<{ value: string }>(
-      "SELECT value FROM entry WHERE key = ?",
+      `SELECT value FROM entry WHERE key = ?`,
       [key],
     );
 
@@ -140,7 +140,7 @@ export class ExpoSQLiteKVStoreReadImpl implements ExperimentalKVRead {
   async release(): Promise<void> {
     log?.(`KV[${this._txId.toString()}]#release()`);
     if (this._db) {
-      await this._db.execAsync("ROLLBACK");
+      await this._db.execAsync(`ROLLBACK`);
       this._db = null;
     }
     this.onRelease();
@@ -152,7 +152,7 @@ export class ExpoSQLiteKVStoreReadImpl implements ExperimentalKVRead {
 
   protected txOrThrow() {
     if (this._db === null) {
-      throw new Error("transaction already closed");
+      throw new Error(`transaction already closed`);
     }
     return this._db;
   }
@@ -166,19 +166,19 @@ export class ExpoSQLiteKVStoreWriteImpl
     log?.(`KV[${this._txId.toString()}]#put()`);
     const jsonValueString = JSON.stringify(value);
     await this.txOrThrow().runAsync(
-      "INSERT OR REPLACE INTO entry (key, value) VALUES (?, ?)",
+      `INSERT OR REPLACE INTO entry (key, value) VALUES (?, ?)`,
       [key, jsonValueString],
     );
   }
 
   async del(key: string) {
     log?.(`KV[${this._txId.toString()}]#del()`);
-    await this.txOrThrow().runAsync("DELETE FROM entry WHERE key = ?", [key]);
+    await this.txOrThrow().runAsync(`DELETE FROM entry WHERE key = ?`, [key]);
   }
 
   async commit() {
     log?.(`KV[${this._txId.toString()}]#commit()`);
-    await this.txOrThrow().execAsync("COMMIT");
+    await this.txOrThrow().execAsync(`COMMIT`);
     // Not sure if this is exactly part of the spec, but by making `commit` only
     // allowed once, it simplifies some other logic.
     this._db = null;

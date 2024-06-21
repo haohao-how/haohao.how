@@ -33,7 +33,7 @@ export const QuizProgressBar = ({
   return (
     <View
       style={{
-        backgroundColor: "#3A464E",
+        backgroundColor: `#3A464E`,
         height: 16,
         flex: 1,
         borderRadius: 8,
@@ -45,14 +45,14 @@ export const QuizProgressBar = ({
           width: widthAnim.interpolate({
             inputRange: [0, 1],
             outputRange: [
-              "6%", // Always show a little bit of progress, so that there's a hint of the bar existing.
-              "100%",
+              `6%`, // Always show a little bit of progress, so that there's a hint of the bar existing.
+              `100%`,
             ],
           }),
           height: 16,
           flex: 1,
           borderRadius: 8,
-          overflow: "hidden",
+          overflow: `hidden`,
         }}
       >
         {/* Background */}
@@ -63,21 +63,21 @@ export const QuizProgressBar = ({
           style={{
             flex: 1,
             height: 16,
-            display: layout === undefined ? "none" : "flex", // Intended to jank, but not sure if necessary.
+            display: layout === undefined ? `none` : `flex`, // Intended to jank, but not sure if necessary.
             width: layout?.width,
           }}
         />
         {/* Highlight accent */}
         <View
           style={{
-            backgroundColor: "white",
+            backgroundColor: `white`,
             opacity: 0.2,
             height: 5,
             left: 8,
             right: 8,
             top: 4,
             borderRadius: 2,
-            position: "absolute",
+            position: `absolute`,
           }}
         />
       </Animated.View>

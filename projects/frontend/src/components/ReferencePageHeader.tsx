@@ -23,7 +23,7 @@ export const ReferencePageHeader = ({
         style={{ paddingTop: insets.top }}
       >
         <View style={styles.title}>
-          <Text style={styles.titleText}>{title ?? "⁉️"}</Text>
+          <Text style={styles.titleText}>{title ?? `⁉️`}</Text>
         </View>
         <View
           style={[
@@ -39,7 +39,7 @@ export const ReferencePageHeader = ({
       </LinearGradient>
 
       <View style={styles.subtitle}>
-        <Text style={styles.subtitleText}>{subtitle ?? ""}</Text>
+        <Text style={styles.subtitleText}>{subtitle ?? ``}</Text>
       </View>
     </>
   );
@@ -47,31 +47,31 @@ export const ReferencePageHeader = ({
 
 const styles = StyleSheet.create({
   closeButton: {
-    position: "absolute",
+    position: `absolute`,
   },
 
   subtitle: {
-    backgroundColor: "#20293A",
-    alignItems: "center",
-    justifyContent: "center",
+    backgroundColor: `#20293A`,
+    alignItems: `center`,
+    justifyContent: `center`,
     height: 52,
   },
 
   subtitleText: {
-    color: "white",
+    color: `white`,
     fontSize: 23,
-    fontFamily: "Roboto",
+    fontFamily: `Roboto`,
   },
 
   title: {
-    alignItems: "center",
+    alignItems: `center`,
     height: 250,
-    justifyContent: "center",
+    justifyContent: `center`,
   },
 
   titleText: {
-    color: "white",
+    color: `white`,
     fontSize: 60,
-    fontFamily: "Roboto",
+    fontFamily: `Roboto`,
   },
 });

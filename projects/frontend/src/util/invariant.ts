@@ -1,7 +1,7 @@
 export class Invariant extends Error {
   constructor(message?: string) {
     super(message);
-    this.name = "InvariantException";
+    this.name = `InvariantException`;
   }
 }
 

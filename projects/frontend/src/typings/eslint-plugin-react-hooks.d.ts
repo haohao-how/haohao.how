@@ -9,7 +9,7 @@ declare module "eslint-plugin-react-hooks" {
     configs: {
       recommended: ClassicConfig.Config;
     };
-    rules: NonNullable<Linter.Plugin["rules"]>;
+    rules: NonNullable<Linter.Plugin[`rules`]>;
   };
   export = exprt;
 }

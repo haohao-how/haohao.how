@@ -6,7 +6,7 @@ import { radicalLookupByChar } from "@/dictionary/radicals";
 import { useLocalSearchParams } from "expo-router";
 
 export default function RadicalPage() {
-  const { id } = useLocalSearchParams<"/character/[id]">();
+  const { id } = useLocalSearchParams<`/character/[id]`>();
   const radical = radicalLookupByChar.get(id);
 
   return (
@@ -28,13 +28,13 @@ export default function RadicalPage() {
 
           {radical !== undefined ? (
             <ReferencePageBodySection title="Meaning">
-              {[radical.name].concat(radical.nameAlts ?? []).join(", ")}
+              {[radical.name].concat(radical.nameAlts ?? []).join(`, `)}
             </ReferencePageBodySection>
           ) : null}
 
           {radical?.pronunciations !== undefined ? (
             <ReferencePageBodySection title="Pronunciation">
-              {radical.pronunciations.join(", ")}
+              {radical.pronunciations.join(`, `)}
             </ReferencePageBodySection>
           ) : null}
         </>

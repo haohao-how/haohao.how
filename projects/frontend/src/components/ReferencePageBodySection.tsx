@@ -23,8 +23,8 @@ export const ReferencePageBodySection = ({
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: "row",
-    justifyContent: "center",
+    flexDirection: `row`,
+    justifyContent: `center`,
   },
 
   containerInner: {
@@ -34,11 +34,11 @@ const styles = StyleSheet.create({
     flexBasis: 500,
   },
   titleText: {
-    color: "#868686",
+    color: `#868686`,
     fontSize: 16,
   },
   bodyText: {
-    color: "#353F38",
+    color: `#353F38`,
     fontSize: 18,
   },
 });

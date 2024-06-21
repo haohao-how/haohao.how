@@ -16,7 +16,7 @@ export const CloseButton = ({
       }}
     >
       <Image
-        source={require("@/assets/icons/close.svg")}
+        source={require(`@/assets/icons/close.svg`)}
         style={[{ flexShrink: 1, width: 24, height: 24 }]}
         tintColor={tintColor}
       />

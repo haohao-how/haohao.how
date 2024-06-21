@@ -7,5 +7,5 @@
 // - https://www.typescriptlang.org/docs/handbook/release-notes/typescript-2-3.html#caveats
 export function installSymbolAsyncInteratorPolyfill() {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access
-  (Symbol as any).asyncIterator ??= Symbol.for("Symbol.asyncIterator");
+  (Symbol as any).asyncIterator ??= Symbol.for(`Symbol.asyncIterator`);
 }

@@ -34,7 +34,7 @@ enum QuestionStateType {
   Incorrect,
 }
 
-const ScreenName = "screen";
+const ScreenName = `screen`;
 
 const Stack = createStackNavigator();
 
@@ -90,7 +90,7 @@ export const QuizDeck = ({
     // There's no next deck item, bail.
     if (currentQuestion === undefined) {
       setTimeout(() => {
-        router.push("/");
+        router.push(`/`);
       }, 500);
     }
   }, [currentQuestion, isFirstQuestion]);
@@ -106,7 +106,7 @@ export const QuizDeck = ({
           .updateSkill({ skill: currentQuestion.skill, rating })
           .catch((e: unknown) => {
             // eslint-disable-next-line no-console
-            console.error("failed to update skill", e);
+            console.error(`failed to update skill`, e);
           });
       }
 
@@ -140,8 +140,8 @@ export const QuizDeck = ({
     >
       <View
         style={{
-          flexDirection: "row",
-          alignItems: "center",
+          flexDirection: `row`,
+          alignItems: `center`,
           gap: 24,
           paddingLeft: 16,
           paddingRight: 16,
@@ -152,8 +152,8 @@ export const QuizDeck = ({
           progress={progress}
           colors={
             streakCount >= 2
-              ? ["#E861F8", "#414DF6", "#75F076"] // streak
-              : ["#3F4CF5", "#3F4CF5"] // solid blue
+              ? [`#E861F8`, `#414DF6`, `#75F076`] // streak
+              : [`#3F4CF5`, `#3F4CF5`] // solid blue
           }
         />
       </View>
@@ -161,8 +161,8 @@ export const QuizDeck = ({
       {currentQuestion?.flag === QuestionFlag.WeakWord ? (
         <View
           style={{
-            flexDirection: "row",
-            alignItems: "center",
+            flexDirection: `row`,
+            alignItems: `center`,
             gap: 10,
             paddingLeft: 16,
             paddingRight: 16,
@@ -174,11 +174,11 @@ export const QuizDeck = ({
             /> */}
           <Text
             style={{
-              color: "#EC5A53",
+              color: `#EC5A53`,
               fontSize: 16,
-              fontWeight: "bold",
-              textTransform: "uppercase",
-              textShadowColor: "black",
+              fontWeight: `bold`,
+              textTransform: `uppercase`,
+              textShadowColor: `black`,
               textShadowRadius: 1,
             }}
           >
@@ -241,7 +241,7 @@ function forHorizontalIOS({
     current.progress.interpolate({
       inputRange: [0, 1],
       outputRange: [screen.width, 0],
-      extrapolate: "clamp",
+      extrapolate: `clamp`,
     }),
     inverted,
   );
@@ -251,7 +251,7 @@ function forHorizontalIOS({
         next.progress.interpolate({
           inputRange: [0, 1],
           outputRange: [0, screen.width * -1],
-          extrapolate: "clamp",
+          extrapolate: `clamp`,
         }),
         inverted,
       )

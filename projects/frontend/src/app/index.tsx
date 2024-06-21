@@ -20,8 +20,8 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 export default function IndexPage() {
   const insets = useSafeAreaInsets();
   const [fontsLoaded, fontError] = useFonts({
-    "MaShanZheng-Regular": require("@/assets/fonts/MaShanZheng-Regular.ttf"),
-    "NotoSerifSC-Medium": require("@/assets/fonts/NotoSerifSC-Medium.otf"),
+    "MaShanZheng-Regular": require(`@/assets/fonts/MaShanZheng-Regular.ttf`),
+    "NotoSerifSC-Medium": require(`@/assets/fonts/NotoSerifSC-Medium.otf`),
   });
 
   const onLayoutRootView = useCallback(() => {
@@ -37,7 +37,7 @@ export default function IndexPage() {
   useEffect(() => {
     if (r) {
       (async () => {
-        const hanzi = "火";
+        const hanzi = `火`;
 
         const shouldSeed = await r.query(async (tx) => {
           const result = await tx.get(
@@ -51,7 +51,7 @@ export default function IndexPage() {
 
         if (shouldSeed) {
           // eslint-disable-next-line no-console
-          console.log("Adding skill…");
+          console.log(`Adding skill…`);
           const skill: Skill = {
             type: SkillType.HanziWordToEnglish,
             hanzi,
@@ -62,9 +62,9 @@ export default function IndexPage() {
         await r.query(async (tx) => {
           {
             // eslint-disable-next-line no-console
-            console.log("Next 10 skill reviews:");
+            console.log(`Next 10 skill reviews:`);
             const items = await tx
-              .scan({ prefix: "/s/he/", limit: 10 })
+              .scan({ prefix: `/s/he/`, limit: 10 })
               .entries()
               .toArray();
             // eslint-disable-next-line no-console
@@ -72,14 +72,14 @@ export default function IndexPage() {
           }
 
           {
-            const x = tx.scan({ prefix: "count" });
+            const x = tx.scan({ prefix: `count` });
             for await (const y of x.entries()) {
               // eslint-disable-next-line no-console
               console.log(y);
             }
           }
 
-          const counter = await tx.get("counter");
+          const counter = await tx.get(`counter`);
           // eslint-disable-next-line no-console
           console.log(`counter =`, counter);
           r.mutate.incrementCounter().catch((e: unknown) => {
@@ -107,26 +107,26 @@ export default function IndexPage() {
       <View
         style={{
           flex: 1,
-          width: "100%",
-          alignItems: "center",
-          justifyContent: "center",
+          width: `100%`,
+          alignItems: `center`,
+          justifyContent: `center`,
         }}
       >
         <ScrollView style={{ flex: 1 }}>
           <View
             style={{
-              justifyContent: "center",
-              flexDirection: "row",
+              justifyContent: `center`,
+              flexDirection: `row`,
             }}
           >
-            <Text style={[{ fontFamily: "MaShanZheng-Regular" }, styles.text]}>
+            <Text style={[{ fontFamily: `MaShanZheng-Regular` }, styles.text]}>
               好好好
             </Text>
           </View>
           <View
             style={{
-              flexDirection: "column",
-              alignItems: "center",
+              flexDirection: `column`,
+              alignItems: `center`,
               gap: 10,
               padding: 10,
             }}
@@ -173,8 +173,8 @@ const Section = ({
   title,
   color,
   subtitle,
-}: Pick<SectionHeaderButtonProps, "title" | "subtitle" | "color">) => {
-  const disabledColor: ColorValue = "#AAA";
+}: Pick<SectionHeaderButtonProps, `title` | `subtitle` | `color`>) => {
+  const disabledColor: ColorValue = `#AAA`;
   return (
     <>
       <View style={{ flex: 1 }}>
@@ -211,12 +211,12 @@ const Section = ({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: "center",
+    alignItems: `center`,
     gap: 12,
-    justifyContent: "center",
+    justifyContent: `center`,
   },
   text: {
-    color: "white",
+    color: `white`,
     fontSize: 72,
   },
 });

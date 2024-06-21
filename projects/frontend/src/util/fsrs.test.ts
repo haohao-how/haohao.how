@@ -178,10 +178,10 @@ type ExpectedReview = z.TypeOf<typeof expectedReviewSchema>;
 
 function ratingName(rating: Rating) {
   return {
-    [Rating.Again]: "Again",
-    [Rating.Hard]: "Hard",
-    [Rating.Good]: "Good",
-    [Rating.Easy]: "Easy",
+    [Rating.Again]: `Again`,
+    [Rating.Hard]: `Hard`,
+    [Rating.Good]: `Good`,
+    [Rating.Easy]: `Easy`,
   }[rating];
 }
 
@@ -197,14 +197,14 @@ function testFsrsSequence(sequence: FsrsSequence) {
       const rating = ratingSchema.safeParse(x);
       return rating.success ? [ratingName(rating.data)] : [];
     })
-    .join(" → ");
+    .join(` → `);
 
   void test(name, assertFsrsSequence(sequence));
 }
 
 function assertFsrsSequence(sequence: readonly (ExpectedReview | Rating)[]) {
   return function ({ mock }: TestContext) {
-    mock.timers.enable({ apis: ["Date"] });
+    mock.timers.enable({ apis: [`Date`] });
 
     let review: UpcomingReview | null = null;
 
