@@ -1,10 +1,9 @@
-import { Skill, SrsType } from "@/data/model";
 import {
-  compactReviewSchema,
-  decodeCompactReview,
-  encodeReview,
-  hanziKeyedSkillDescriptorToId,
-} from "@/data/replicache";
+  hanziKeyedSkillToKey,
+  marshalReviewJson,
+  unmarshalReviewJson,
+} from "@/data/marshal";
+import { Skill, SrsType } from "@/data/model";
 import { replicacheLicenseKey } from "@/env";
 import { Rating, UpcomingReview, nextReview } from "@/util/fsrs";
 import { createContext, useContext, useMemo } from "react";
@@ -42,11 +41,11 @@ export function ReplicacheProvider({ children }: React.PropsWithChildren) {
             await tx.set("counter", (counter ?? 0) + quantity);
           },
           async addSkill(tx, { skill }) {
-            const key = hanziKeyedSkillDescriptorToId(skill);
+            const key = hanziKeyedSkillToKey(skill);
             const s = nextReview(null, Rating.Again);
             await tx.set(
               key,
-              encodeReview({
+              marshalReviewJson({
                 created: new Date(),
                 srs: {
                   type: SrsType.FsrsFourPointFive,
@@ -58,11 +57,11 @@ export function ReplicacheProvider({ children }: React.PropsWithChildren) {
             );
           },
           async updateSkill(tx, { skill, rating }) {
-            const key = hanziKeyedSkillDescriptorToId(skill);
+            const key = hanziKeyedSkillToKey(skill);
             const lastReviewRaw = await tx.get(key);
             const lastReview =
               lastReviewRaw !== undefined
-                ? decodeCompactReview(compactReviewSchema.parse(lastReviewRaw))
+                ? unmarshalReviewJson(lastReviewRaw)
                 : null;
             const lastUpcomingReview =
               lastReview?.srs.type !== SrsType.FsrsFourPointFive
@@ -78,7 +77,7 @@ export function ReplicacheProvider({ children }: React.PropsWithChildren) {
             console.log(`updating ${key} to `, s);
             await tx.set(
               key,
-              encodeReview({
+              marshalReviewJson({
                 created: new Date(),
                 srs: {
                   type: SrsType.FsrsFourPointFive,
