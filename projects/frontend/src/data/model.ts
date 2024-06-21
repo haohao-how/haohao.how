@@ -42,7 +42,7 @@ export interface HanziKeyedSkill {
 
 export type Skill = HanziKeyedSkill;
 
-export type SkillKey = string & z.BRAND<"SkillKey">;
+export type SkillKey = string & z.BRAND<`SkillKey`>;
 
 export enum QuestionFlag {
   WeakWord,

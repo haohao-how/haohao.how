@@ -46,6 +46,7 @@
   "devDependencies": {
     "@babel/core": "^7.20.0",
     "@eslint/eslintrc": "^3.0.2",
+    "@stylistic/eslint-plugin": "^2.2.2",
     "@types/color": "^3",
     "@types/eslint": "^8",
     "@types/eslint__js": "^8.42.3",

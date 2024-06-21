@@ -4,7 +4,7 @@ import { useCallback, useInsertionEffect, useRef } from "react";
 import { Platform } from "react-native";
 
 export function hapticImpactIfMobile() {
-  if (Platform.OS === "ios" || Platform.OS === "android") {
+  if (Platform.OS === `ios` || Platform.OS === `android`) {
     // Calling impactAsync on an unsupported platform (e.g. web) throws an
     // exception and will crash the app.
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium).catch(
@@ -54,6 +54,6 @@ export function useEventCallback<TCallback extends VoidFunction>(
 
 function useEventCallback_shouldNotBeInvokedBeforeMount() {
   throw new Error(
-    "invoking useEvent before mounting violates the rules of React",
+    `invoking useEvent before mounting violates the rules of React`,
   );
 }

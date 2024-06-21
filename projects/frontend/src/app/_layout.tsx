@@ -7,17 +7,17 @@ import { Platform } from "react-native";
 
 // Via the guide: https://docs.expo.dev/guides/using-sentry/
 const manifest = Updates.manifest;
-const metadata = "metadata" in manifest ? manifest.metadata : undefined;
-const extra = "extra" in manifest ? manifest.extra : undefined;
+const metadata = `metadata` in manifest ? manifest.metadata : undefined;
+const extra = `extra` in manifest ? manifest.extra : undefined;
 const updateGroup =
-  metadata && "updateGroup" in metadata ? metadata.updateGroup : undefined;
+  metadata && `updateGroup` in metadata ? metadata.updateGroup : undefined;
 
 // Construct a new instrumentation instance. This is needed to communicate between the integration and React
 const routingInstrumentation = new Sentry.ReactNavigationInstrumentation();
 
 Sentry.init({
   enabled: !__DEV__,
-  dsn: "https://88e3787d84756d748f01113cc6a01fde@o4506645802909696.ingest.us.sentry.io/4506645804679168",
+  dsn: `https://88e3787d84756d748f01113cc6a01fde@o4506645802909696.ingest.us.sentry.io/4506645804679168`,
   // If `true`, Sentry will try to print out useful debugging information if
   // something goes wrong with sending the event. Set it to `false` in
   // production
@@ -30,25 +30,25 @@ Sentry.init({
 });
 
 Sentry.configureScope((scope) => {
-  scope.setTag("expo-update-id", Updates.updateId);
-  scope.setTag("expo-is-embedded-update", Updates.isEmbeddedLaunch);
-  scope.setTag("platform-os", Platform.OS);
-  scope.setTag("platform-version", Platform.Version);
+  scope.setTag(`expo-update-id`, Updates.updateId);
+  scope.setTag(`expo-is-embedded-update`, Updates.isEmbeddedLaunch);
+  scope.setTag(`platform-os`, Platform.OS);
+  scope.setTag(`platform-version`, Platform.Version);
 
-  if (typeof updateGroup === "string") {
-    scope.setTag("expo-update-group-id", updateGroup);
+  if (typeof updateGroup === `string`) {
+    scope.setTag(`expo-update-group-id`, updateGroup);
 
-    const owner = extra?.expoClient?.owner ?? "[account]";
-    const slug = extra?.expoClient?.slug ?? "[project]";
+    const owner = extra?.expoClient?.owner ?? `[account]`;
+    const slug = extra?.expoClient?.slug ?? `[project]`;
     scope.setTag(
-      "expo-update-debug-url",
+      `expo-update-debug-url`,
       `https://expo.dev/accounts/${owner}/projects/${slug}/updates/${updateGroup}`,
     );
   } else if (Updates.isEmbeddedLaunch) {
     // This will be `true` if the update is the one embedded in the build, and not one downloaded from the updates server.
     scope.setTag(
-      "expo-update-debug-url",
-      "not applicable for embedded updates",
+      `expo-update-debug-url`,
+      `not applicable for embedded updates`,
     );
   }
 });

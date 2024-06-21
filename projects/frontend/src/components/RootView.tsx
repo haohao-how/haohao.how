@@ -22,7 +22,7 @@ export function RootView({
       />
       {
         // On iOS Safari the top status bar area of the screen color is white by default.
-        Platform.OS === "web" ? (
+        Platform.OS === `web` ? (
           // Inspired by how expo sets the reset styles
           // https://github.com/expo/expo/blob/44c3a60b1be80a475f59782c64c3b4909c88d7d3/packages/expo-router/src/static/html.tsx#L12
           <style

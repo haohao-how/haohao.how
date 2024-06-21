@@ -16,7 +16,7 @@ declare module "eslint-plugin-import" {
       electron: ClassicConfig.Config;
       typescript: ClassicConfig.Config;
     };
-    rules: NonNullable<Linter.Plugin["rules"]>;
+    rules: NonNullable<Linter.Plugin[`rules`]>;
   };
   export = exprt;
 }

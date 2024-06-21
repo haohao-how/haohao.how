@@ -79,10 +79,10 @@ export const QuizDeckOneCorrectPairQuestion = ({
             {isCorrect ? (
               <>
                 <View
-                  style={{ flexDirection: "row", alignItems: "center", gap: 8 }}
+                  style={{ flexDirection: `row`, alignItems: `center`, gap: 8 }}
                 >
                   <Image
-                    source={require("@/assets/icons/check-circled-filled.svg")}
+                    source={require(`@/assets/icons/check-circled-filled.svg`)}
                     style={{
                       flexShrink: 1,
                       width: 32,
@@ -92,9 +92,9 @@ export const QuizDeckOneCorrectPairQuestion = ({
                   />
                   <Text
                     style={{
-                      color: "#ABD063",
+                      color: `#ABD063`,
                       fontSize: 24,
-                      fontWeight: "bold",
+                      fontWeight: `bold`,
                     }}
                   >
                     Nice!
@@ -104,29 +104,29 @@ export const QuizDeckOneCorrectPairQuestion = ({
             ) : (
               <>
                 <View
-                  style={{ flexDirection: "row", alignItems: "center", gap: 8 }}
+                  style={{ flexDirection: `row`, alignItems: `center`, gap: 8 }}
                 >
                   <Image
-                    source={require("@/assets/icons/close-circled-filled.svg")}
+                    source={require(`@/assets/icons/close-circled-filled.svg`)}
                     style={{ flexShrink: 1, width: 32, height: 32 }}
                     tintColor="#CE675F"
                   />
                   <Text
                     style={{
-                      color: "#CE675F",
+                      color: `#CE675F`,
                       fontSize: 24,
-                      fontWeight: "bold",
+                      fontWeight: `bold`,
                     }}
                   >
                     Incorrect
                   </Text>
                 </View>
                 <Text
-                  style={{ color: "#CE675F", fontSize: 20, fontWeight: "bold" }}
+                  style={{ color: `#CE675F`, fontSize: 20, fontWeight: `bold` }}
                 >
                   Correct answer:
                 </Text>
-                <Text style={{ color: "#CE675F", fontSize: 20 }}>早 (zǎo)</Text>
+                <Text style={{ color: `#CE675F`, fontSize: 20 }}>早 (zǎo)</Text>
               </>
             )}
           </View>
@@ -150,9 +150,9 @@ export const QuizDeckOneCorrectPairQuestion = ({
       <View>
         <Text
           style={{
-            color: "white",
+            color: `white`,
             fontSize: 24,
-            fontWeight: "bold",
+            fontWeight: `bold`,
           }}
         >
           {prompt}
@@ -161,7 +161,7 @@ export const QuizDeckOneCorrectPairQuestion = ({
       <View
         style={{
           flex: 1,
-          justifyContent: "center",
+          justifyContent: `center`,
           paddingBottom: quizPaddingLeftRight,
           paddingTop: quizPaddingLeftRight,
         }}
@@ -251,7 +251,7 @@ const Skeleton = ({
   }, [slideInAnim, hasToast]);
 
   const slideInStyle: StyleProp<ViewStyle> =
-    Platform.OS === "web"
+    Platform.OS === `web`
       ? {
           // On web the `bottom: <percent>%` approach doesn't work when the
           // parent is `position: absolute`. But using `translateY: <percent>%`
@@ -261,16 +261,16 @@ const Skeleton = ({
             {
               translateY: slideInAnim.interpolate({
                 inputRange: [0, 1],
-                outputRange: ["100%", "0%"],
+                outputRange: [`100%`, `0%`],
               }),
             },
           ],
         }
       : {
-          position: "relative",
+          position: `relative`,
           bottom: slideInAnim.interpolate({
             inputRange: [0, 1],
-            outputRange: ["-100%", "0%"],
+            outputRange: [`-100%`, `0%`],
           }),
         };
 
@@ -289,7 +289,7 @@ const Skeleton = ({
       {toast !== null ? (
         <View
           style={{
-            position: "absolute",
+            position: `absolute`,
             bottom: 0,
             left: 0,
             right: 0,
@@ -298,7 +298,7 @@ const Skeleton = ({
           <Animated.View
             style={[
               {
-                backgroundColor: "#252E34",
+                backgroundColor: `#252E34`,
                 paddingLeft: quizPaddingLeftRight,
                 paddingRight: quizPaddingLeftRight,
                 paddingTop: contentPaddingTopBottom,
@@ -313,13 +313,13 @@ const Skeleton = ({
       ) : null}
       <View
         style={{
-          position: "absolute",
+          position: `absolute`,
           bottom: submitButtonInsetBottom,
           left: quizPaddingLeftRight,
           right: quizPaddingLeftRight,
           height: submitButtonHeight,
-          flexDirection: "row",
-          alignItems: "stretch",
+          flexDirection: `row`,
+          alignItems: `stretch`,
         }}
       >
         {submitButton}
@@ -337,7 +337,7 @@ enum SubmitButtonState {
 
 const SubmitButton = forwardRef<
   View,
-  { state: SubmitButtonState } & Pick<PropsOf<typeof RectButton>, "onPress">
+  { state: SubmitButtonState } & Pick<PropsOf<typeof RectButton>, `onPress`>
 >(function SubmitButton({ state, onPress }, ref) {
   let color;
   let textColor;
@@ -346,29 +346,29 @@ const SubmitButton = forwardRef<
   switch (state) {
     case SubmitButtonState.Disabled:
     case SubmitButtonState.Check:
-      text = "Check";
+      text = `Check`;
       break;
     case SubmitButtonState.Correct:
-      text = "Continue";
+      text = `Continue`;
       break;
     case SubmitButtonState.Incorrect:
-      text = "Got it";
+      text = `Got it`;
       break;
   }
 
   switch (state) {
     case SubmitButtonState.Disabled:
-      color = "#3A464E";
-      textColor = "#56646C";
+      color = `#3A464E`;
+      textColor = `#56646C`;
       break;
     case SubmitButtonState.Check:
     case SubmitButtonState.Correct:
-      color = "#A1D151";
-      textColor = "#161F23";
+      color = `#A1D151`;
+      textColor = `#161F23`;
       break;
     case SubmitButtonState.Incorrect:
-      color = "#CE675F";
-      textColor = "#161F23";
+      color = `#CE675F`;
+      textColor = `#161F23`;
       break;
   }
 
@@ -384,10 +384,10 @@ const SubmitButton = forwardRef<
       <Text
         style={[
           {
-            textTransform: "uppercase",
+            textTransform: `uppercase`,
             color: textColor,
             fontSize: 16,
-            fontWeight: "bold",
+            fontWeight: `bold`,
           },
           styles.buttonText,
         ]}
@@ -411,8 +411,8 @@ const AnswerButton = ({
     onPress(text);
   }, [onPress, text]);
 
-  const color = selected ? "#232E35" : "#161F23";
-  const accentColor = selected ? "#5183A4" : "#3A464E";
+  const color = selected ? `#232E35` : `#161F23`;
+  const accentColor = selected ? `#5183A4` : `#3A464E`;
 
   return (
     <RectButton
@@ -423,8 +423,8 @@ const AnswerButton = ({
       onPress={handlePress}
       style={{ flex: 1 }}
     >
-      <View style={{ justifyContent: "center" }}>
-        <Text style={[{ color: "white", fontSize: 20 }, styles.buttonText]}>
+      <View style={{ justifyContent: `center` }}>
+        <Text style={[{ color: `white`, fontSize: 20 }, styles.buttonText]}>
           {text}
         </Text>
       </View>
@@ -436,16 +436,16 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     gap: 8,
-    alignItems: "center",
-    justifyContent: "center",
+    alignItems: `center`,
+    justifyContent: `center`,
   },
   answerRow: {
     flex: 1,
-    flexDirection: "row",
-    alignItems: "stretch",
+    flexDirection: `row`,
+    alignItems: `stretch`,
     gap: 28,
   },
   buttonText: {
-    userSelect: "none",
+    userSelect: `none`,
   },
 });

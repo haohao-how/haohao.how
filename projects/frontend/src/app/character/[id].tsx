@@ -6,7 +6,7 @@ import { characterLookupByChar } from "@/dictionary/characters";
 import { useLocalSearchParams } from "expo-router";
 
 export default function CharacterPage() {
-  const { id } = useLocalSearchParams<"/character/[id]">();
+  const { id } = useLocalSearchParams<`/character/[id]`>();
   const character = characterLookupByChar.get(id);
 
   return (
@@ -28,19 +28,19 @@ export default function CharacterPage() {
 
           {character !== undefined ? (
             <ReferencePageBodySection title="Meaning">
-              {[character.name].concat(character.nameAlts ?? []).join(", ")}
+              {[character.name].concat(character.nameAlts ?? []).join(`, `)}
             </ReferencePageBodySection>
           ) : null}
 
           {character?.pronunciations !== undefined ? (
             <ReferencePageBodySection title="Pronunciation">
-              {character.pronunciations.join(", ")}
+              {character.pronunciations.join(`, `)}
             </ReferencePageBodySection>
           ) : null}
 
           {character?.radicals !== undefined ? (
             <ReferencePageBodySection title="Radicals">
-              {character.radicals.join(", ")}
+              {character.radicals.join(`, `)}
             </ReferencePageBodySection>
           ) : null}
         </>

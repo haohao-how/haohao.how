@@ -10,15 +10,15 @@ export type RectButtonProps = {
   thickness?: number;
   color?: ColorValue;
   accentColor?: ColorValue;
-  children?: ViewProps["children"];
-} & Omit<PropsOf<typeof Pressable>, "children">;
+  children?: ViewProps[`children`];
+} & Omit<PropsOf<typeof Pressable>, `children`>;
 
 export const RectButton = forwardRef<View, RectButtonProps>(function RectButton(
   {
     thickness = 4,
     borderRadius = 16,
     borderWidth = 0,
-    color = "#1CB0F5",
+    color = `#1CB0F5`,
     accentColor,
     children,
     ...pressableProps
@@ -74,12 +74,12 @@ export const RectButton = forwardRef<View, RectButtonProps>(function RectButton(
                 backgroundColor: color,
                 flexGrow: 1,
                 flexShrink: 1,
-                alignItems: "center",
-                justifyContent: "center",
+                alignItems: `center`,
+                justifyContent: `center`,
                 borderRadius: borderRadius,
                 padding: 10,
                 transform: [{ translateY: pressed ? 0 : -thickness }],
-                transformOrigin: "top",
+                transformOrigin: `top`,
               },
             ]}
           >

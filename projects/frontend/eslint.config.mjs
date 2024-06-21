@@ -1,6 +1,7 @@
 import url from "node:url";
 
 import { FlatCompat } from "@eslint/eslintrc";
+import stylisticPlugin from "@stylistic/eslint-plugin";
 import deprecationPlugin from "eslint-plugin-deprecation";
 import importPlugin from "eslint-plugin-import";
 import reactPlugin from "eslint-plugin-react";
@@ -8,7 +9,7 @@ import reactHooksPlugin from "eslint-plugin-react-hooks";
 import globals from "globals";
 import tseslint from "typescript-eslint";
 
-const __dirname = url.fileURLToPath(new URL(".", import.meta.url));
+const __dirname = url.fileURLToPath(new URL(`.`, import.meta.url));
 const compat = new FlatCompat({ baseDirectory: __dirname });
 
 // Based on https://github.com/typescript-eslint/typescript-eslint/blob/41323746de299e6d62b4d6122975301677d7c8e0/eslint.config.mjs
@@ -16,17 +17,18 @@ export default tseslint.config(
   {
     // note - intentionally uses computed syntax to make it easy to sort the keys
     plugins: {
-      ["@typescript-eslint"]: tseslint.plugin,
+      [`@typescript-eslint`]: tseslint.plugin,
+      "@stylistic": stylisticPlugin,
       // ['@typescript-eslint/internal']: tseslintInternalPlugin,
-      ["deprecation"]: deprecationPlugin,
+      [`deprecation`]: deprecationPlugin,
       // ['eslint-comments']: eslintCommentsPlugin,
       // ['eslint-plugin']: eslintPluginPlugin,
-      ["import"]: importPlugin,
+      [`import`]: importPlugin,
       // ['jest']: jestPlugin,
       // ['jsdoc']: jsdocPlugin,
       // ['jsx-a11y']: jsxA11yPlugin,
-      ["react-hooks"]: reactHooksPlugin,
-      ["react"]: reactPlugin,
+      [`react-hooks`]: reactHooksPlugin,
+      [`react`]: reactPlugin,
       // ['simple-import-sort']: simpleImportSortPlugin,
       // ['unicorn']: unicornPlugin,
     },
@@ -34,7 +36,7 @@ export default tseslint.config(
 
   {
     // config with just ignores is the replacement for `.eslintignore`
-    ignores: [".expo/", "dist/", "node_modules/"],
+    ignores: [`.expo/`, `dist/`, `node_modules/`],
   },
 
   // extends ...
@@ -55,50 +57,49 @@ export default tseslint.config(
       },
       parserOptions: {
         allowAutomaticSingleRunInference: true,
-        project: ["tsconfig.json"],
+        project: [`tsconfig.json`],
       },
     },
 
     settings: {
       react: {
-        version: "detect",
+        version: `detect`,
       },
     },
 
     rules: {
       // Expo or react-native or metro or something handles this, so there's no
       // need to import React.
-      "react/react-in-jsx-scope": "off",
-      "react/no-children-prop": ["error", { allowFunctions: true }],
+      "react/react-in-jsx-scope": `off`,
+      "react/no-children-prop": [`error`, { allowFunctions: true }],
 
       // make sure we're not leveraging any deprecated APIs
-      "deprecation/deprecation": "error",
+      "deprecation/deprecation": `error`,
 
       //
       // eslint-base
       //
 
-      curly: ["error", "all"],
-      eqeqeq: "error",
-      "logical-assignment-operators": "error",
-      "no-else-return": "error",
-      "no-console": "error",
-      "no-process-exit": "error",
+      curly: [`error`, `all`],
+      eqeqeq: `error`,
+      "logical-assignment-operators": `error`,
+      "no-else-return": `error`,
+      "no-console": `error`,
+      "no-process-exit": `error`,
       "no-fallthrough": [
-        "error",
-        { commentPattern: ".*intentional fallthrough.*" },
+        `error`,
+        { commentPattern: `.*intentional fallthrough.*` },
       ],
-      "one-var": ["error", "never"],
+      "one-var": [`error`, `never`],
 
       "no-restricted-imports": [
-        "error",
+        `error`,
         {
           paths: [
             {
-              name: "react-native",
-              importNames: ["SafeAreaView"],
-              message:
-                "Please use `useSafeAreaInsets` from `react-native-safe-area-context` instead.",
+              name: `react-native`,
+              importNames: [`SafeAreaView`],
+              message: `Please use \`useSafeAreaInsets\` from \`react-native-safe-area-context\` instead.`,
             },
           ],
         },
@@ -109,22 +110,22 @@ export default tseslint.config(
       //
 
       // enforces consistent type specifier style for named imports
-      "import/consistent-type-specifier-style": "error",
+      "import/consistent-type-specifier-style": `error`,
       // disallow non-import statements appearing before import statements
-      "import/first": "error",
+      "import/first": `error`,
       // Require a newline after the last import/require in a group
-      "import/newline-after-import": "error",
+      "import/newline-after-import": `error`,
       // Forbid import of modules using absolute paths
-      "import/no-absolute-path": "error",
+      "import/no-absolute-path": `error`,
       // disallow AMD require/define
-      "import/no-amd": "error",
+      "import/no-amd": `error`,
       // forbid default exports - we want to standardize on named exports so that imported names are consistent
-      "import/no-default-export": "error",
+      "import/no-default-export": `error`,
       // disallow imports from duplicate paths
-      "import/no-duplicates": "error",
+      "import/no-duplicates": `error`,
       // Forbid the use of extraneous packages
       "import/no-extraneous-dependencies": [
-        "error",
+        `error`,
         {
           devDependencies: true,
           peerDependencies: true,
@@ -132,41 +133,46 @@ export default tseslint.config(
         },
       ],
       // Forbid mutable exports
-      "import/no-mutable-exports": "error",
+      "import/no-mutable-exports": `error`,
       // Prevent importing the default as if it were named
-      "import/no-named-default": "error",
+      "import/no-named-default": `error`,
       // Prohibit named exports
-      "import/no-named-export": "off", // we want everything to be a named export
+      "import/no-named-export": `off`, // we want everything to be a named export
       // Forbid a module from importing itself
-      "import/no-self-import": "error",
+      "import/no-self-import": `error`,
       // Require modules with a single export to use a default export
-      "import/prefer-default-export": "off", // we want everything to be named
+      "import/prefer-default-export": `off`, // we want everything to be named
 
       //
       // @typescript-eslint
       //
 
-      "@typescript-eslint/no-var-requires": "off",
+      "@typescript-eslint/no-var-requires": `off`,
       "@typescript-eslint/restrict-template-expressions": [
-        "error",
+        `error`,
         { allowBoolean: true, allowNumber: true },
       ],
       "@typescript-eslint/switch-exhaustiveness-check": [
-        "error",
+        `error`,
         { requireDefaultForNonUnion: true },
       ],
+
+      //
+      // @stylistic
+      //
+      "@stylistic/quotes": [`error`, `backtick`],
     },
   },
   {
-    files: ["**/*.js"],
+    files: [`**/*.js`],
     extends: [tseslint.configs.disableTypeChecked],
     rules: {
       // turn off other type-aware rules
-      "deprecation/deprecation": "off",
-      "@typescript-eslint/internal/no-poorly-typed-ts-props": "off",
+      "deprecation/deprecation": `off`,
+      "@typescript-eslint/internal/no-poorly-typed-ts-props": `off`,
 
       // turn off rules that don't apply to JS code
-      "@typescript-eslint/explicit-function-return-type": "off",
+      "@typescript-eslint/explicit-function-return-type": `off`,
     },
   },
 );

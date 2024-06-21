@@ -18,7 +18,7 @@ export const CircleButton = forwardRef<View, CircleButtonProps>(
       thickness = 10,
       scaleY = 0.8,
       diameter = 80,
-      color = "#1CB0F5",
+      color = `#1CB0F5`,
       ...pressableProps
     },
     ref,
@@ -48,16 +48,16 @@ export const CircleButton = forwardRef<View, CircleButtonProps>(
               style={[
                 {
                   backgroundColor: baseColor,
-                  alignItems: "center",
-                  justifyContent: "center",
+                  alignItems: `center`,
+                  justifyContent: `center`,
                   borderRadius: diameter / 2,
                   width: diameter,
                   height: diameter,
                   opacity: pressed ? 0 : 1,
-                  position: "absolute",
+                  position: `absolute`,
                   top: thickness,
                   transform: [{ scaleY }],
-                  transformOrigin: "top",
+                  transformOrigin: `top`,
                 },
               ]}
             />
@@ -69,7 +69,7 @@ export const CircleButton = forwardRef<View, CircleButtonProps>(
                   width: diameter,
                   opacity: pressed ? 0 : 1,
                   height: thickness,
-                  position: "absolute",
+                  position: `absolute`,
                   top: thickness + (diameter * scaleY) / 2,
                   transform: [{ translateY: -thickness }],
                 },
@@ -81,20 +81,20 @@ export const CircleButton = forwardRef<View, CircleButtonProps>(
                 {
                   backgroundColor: color,
                   // opacity: 0.5,
-                  alignItems: "center",
-                  justifyContent: "center",
+                  alignItems: `center`,
+                  justifyContent: `center`,
                   borderRadius: diameter / 2,
                   width: diameter,
                   height: diameter,
-                  position: "absolute",
+                  position: `absolute`,
                   top: pressed ? thickness : 0,
                   transform: [{ scaleY }],
-                  transformOrigin: "top",
+                  transformOrigin: `top`,
                 },
               ]}
             >
               <Image
-                source={require("./star.svg")}
+                source={require(`./star.svg`)}
                 style={{ width: diameter * 0.6, height: diameter * 0.6 }}
               />
             </View>

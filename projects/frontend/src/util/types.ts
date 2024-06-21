@@ -5,7 +5,7 @@ export type RepeatedSequence2<
   Tuple extends unknown[],
   Result extends unknown[] = [],
   Count extends readonly number[] = [],
-> = Count["length"] extends MaximumAllowedBoundary
+> = Count[`length`] extends MaximumAllowedBoundary
   ? Result
   : Tuple extends []
     ? []

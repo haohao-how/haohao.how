@@ -10,7 +10,7 @@ import { Review, SrsState, SrsType } from "./model";
 
 // TODO: data generator fuzzy testing
 
-void test("Review", () => {
+void test(`Review`, () => {
   const review: Review = {
     created: new Date(),
     srs: {
@@ -25,7 +25,7 @@ void test("Review", () => {
   );
 });
 
-void test("SrsState", () => {
+void test(`SrsState`, () => {
   const value: SrsState = {
     type: SrsType.Null,
   };

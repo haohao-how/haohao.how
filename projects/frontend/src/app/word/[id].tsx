@@ -6,7 +6,7 @@ import { wordLookupByWord } from "@/dictionary/words";
 import { useLocalSearchParams } from "expo-router";
 
 export default function WordPage() {
-  const { id } = useLocalSearchParams<"/word/[id]">();
+  const { id } = useLocalSearchParams<`/word/[id]`>();
   const word = wordLookupByWord.get(id);
 
   return (
@@ -28,19 +28,19 @@ export default function WordPage() {
 
           {word !== undefined ? (
             <ReferencePageBodySection title="Meaning">
-              {[word.name].concat(word.nameAlts ?? []).join(", ")}
+              {[word.name].concat(word.nameAlts ?? []).join(`, `)}
             </ReferencePageBodySection>
           ) : null}
 
           {word?.pronunciations !== undefined ? (
             <ReferencePageBodySection title="Pronunciation">
-              {word.pronunciations.join(", ")}
+              {word.pronunciations.join(`, `)}
             </ReferencePageBodySection>
           ) : null}
 
           {word?.characters !== undefined ? (
             <ReferencePageBodySection title="Characters">
-              {word.characters.join(", ")}
+              {word.characters.join(`, `)}
             </ReferencePageBodySection>
           ) : null}
         </>

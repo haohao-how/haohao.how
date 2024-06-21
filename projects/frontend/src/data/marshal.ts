@@ -16,18 +16,18 @@ export type OpaqueJSON = ReadonlyJSONValue;
 // SrsType
 //
 const SrsTypeMarshal = {
-  [SrsType.Null]: "0",
-  [SrsType.FsrsFourPointFive]: "1",
+  [SrsType.Null]: `0`,
+  [SrsType.FsrsFourPointFive]: `1`,
 } as const;
 const SrsTypeUnmarshal = {
-  ["0"]: SrsType.Null,
-  ["1"]: SrsType.FsrsFourPointFive,
+  [`0`]: SrsType.Null,
+  [`1`]: SrsType.FsrsFourPointFive,
 } as const;
 
 //
 // SrsState
 //
-const MarshaledSrsState = z.discriminatedUnion("t", [
+const MarshaledSrsState = z.discriminatedUnion(`t`, [
   z.object({
     /** type */
     t: z.literal(SrsTypeMarshal[SrsType.Null]),
@@ -102,22 +102,22 @@ const unmarshalReview = (x: MarshaledReview): Review => ({
 // SkillType
 //
 const SkillTypeMarshal = {
-  [SkillType.HanziWordToEnglish]: "he",
-  [SkillType.HanziWordToPinyinInitial]: "hpi",
-  [SkillType.HanziWordToPinyinFinal]: "hpf",
-  [SkillType.HanziWordToPinyinTone]: "hpt",
-  [SkillType.EnglishToHanzi]: "eh",
-  [SkillType.PinyinToHanzi]: "ph",
-  [SkillType.ImageToHanzi]: "ih",
+  [SkillType.HanziWordToEnglish]: `he`,
+  [SkillType.HanziWordToPinyinInitial]: `hpi`,
+  [SkillType.HanziWordToPinyinFinal]: `hpf`,
+  [SkillType.HanziWordToPinyinTone]: `hpt`,
+  [SkillType.EnglishToHanzi]: `eh`,
+  [SkillType.PinyinToHanzi]: `ph`,
+  [SkillType.ImageToHanzi]: `ih`,
 } as const;
 const SkillTypeUnmarshal = {
-  ["he"]: SkillType.HanziWordToEnglish,
-  ["hpi"]: SkillType.HanziWordToPinyinInitial,
-  ["hpf"]: SkillType.HanziWordToPinyinFinal,
-  ["hpt"]: SkillType.HanziWordToPinyinTone,
-  ["eh"]: SkillType.EnglishToHanzi,
-  ["ph"]: SkillType.PinyinToHanzi,
-  ["ih"]: SkillType.ImageToHanzi,
+  [`he`]: SkillType.HanziWordToEnglish,
+  [`hpi`]: SkillType.HanziWordToPinyinInitial,
+  [`hpf`]: SkillType.HanziWordToPinyinFinal,
+  [`hpt`]: SkillType.HanziWordToPinyinTone,
+  [`eh`]: SkillType.EnglishToHanzi,
+  [`ph`]: SkillType.PinyinToHanzi,
+  [`ih`]: SkillType.ImageToHanzi,
 } as const;
 
 const MarshaledSkillType = z.enum(

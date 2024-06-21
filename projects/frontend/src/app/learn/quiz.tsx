@@ -23,15 +23,15 @@ export default function QuizPage() {
 
   useEffect(() => {
     // eslint-disable-next-line no-console
-    console.log(`r.clientID = ${r?.clientID ?? "<nullish>"}`);
+    console.log(`r.clientID = ${r?.clientID ?? `<nullish>`}`);
 
     void r?.query(async (tx) => {
       {
         // eslint-disable-next-line no-console
-        console.log("Next 10 skill reviews:");
+        console.log(`Next 10 skill reviews:`);
         const now = new Date();
         const items = (
-          await tx.scan({ prefix: "/s/he/", limit: 10 }).entries().toArray()
+          await tx.scan({ prefix: `/s/he/`, limit: 10 }).entries().toArray()
         )
           .map(
             ([key, review]) =>
@@ -69,30 +69,30 @@ export default function QuizPage() {
           x ?? [
             {
               type: QuestionType.MultipleChoice,
-              prompt: "Select the correct word for the character “dǔ”",
-              choices: ["好", "爱", "别", "姆"],
-              answer: "好",
+              prompt: `Select the correct word for the character “dǔ”`,
+              choices: [`好`, `爱`, `别`, `姆`],
+              answer: `好`,
               flag: QuestionFlag.WeakWord,
             },
             {
               type: QuestionType.MultipleChoice,
-              prompt: "Select the correct word for the character “dá”",
-              choices: ["好", "爱", "别", "姆"],
-              answer: "好",
+              prompt: `Select the correct word for the character “dá”`,
+              choices: [`好`, `爱`, `别`, `姆`],
+              answer: `好`,
               flag: QuestionFlag.WeakWord,
             },
             {
               type: QuestionType.MultipleChoice,
-              prompt: "Select the correct word for the character “d”",
-              choices: ["好", "爱", "别", "姆"],
-              answer: "好",
+              prompt: `Select the correct word for the character “d”`,
+              choices: [`好`, `爱`, `别`, `姆`],
+              answer: `好`,
               flag: QuestionFlag.WeakWord,
             },
             {
               type: QuestionType.MultipleChoice,
-              prompt: "Select the correct word for the character “dǔ”",
-              choices: ["好", "爱", "别", "姆"],
-              answer: "好",
+              prompt: `Select the correct word for the character “dǔ”`,
+              choices: [`好`, `爱`, `别`, `姆`],
+              answer: `好`,
               flag: QuestionFlag.WeakWord,
             },
           ],
@@ -109,9 +109,9 @@ export default function QuizPage() {
       <View
         style={{
           flex: 1,
-          width: "100%",
-          flexDirection: "row",
-          justifyContent: "center",
+          width: `100%`,
+          flexDirection: `row`,
+          justifyContent: `center`,
           paddingTop: insets.top + 20,
         }}
       >
@@ -143,7 +143,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     gap: 8,
-    alignItems: "center",
-    justifyContent: "center",
+    alignItems: `center`,
+    justifyContent: `center`,
   },
 });

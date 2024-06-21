@@ -7,29 +7,29 @@ export function generateQuestionForSkill(skill: Skill): Question {
   switch (skill.type) {
     case SkillType.HanziWordToEnglish: {
       const english = wordLookupByWord.get(skill.hanzi);
-      invariant(english !== undefined, "couldn't find an english translation");
+      invariant(english !== undefined, `couldn't find an english translation`);
       return {
         type: QuestionType.OneCorrectPair,
         // SingleHanziWordToEnglish,
-        prompt: "Translate this",
+        prompt: `Translate this`,
         groupA: [
           skill.hanzi, // TODO: 3 other items
-          "x",
-          "y",
-          "z",
+          `x`,
+          `y`,
+          `z`,
         ],
         groupB: [
           english.name,
           // TODO: 3 other items
-          "xx",
-          "yy",
-          "zz",
+          `xx`,
+          `yy`,
+          `zz`,
         ],
         answer: [skill.hanzi, english.name],
         skill,
       };
     }
     default:
-      throw new Error("todo: not implemented");
+      throw new Error(`todo: not implemented`);
   }
 }
