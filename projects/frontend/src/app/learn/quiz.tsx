@@ -2,8 +2,14 @@ import { QuizDeck } from "@/components/QuizDeck";
 import { useReplicache } from "@/components/ReplicacheContext";
 import { RootView } from "@/components/RootView";
 import { generateQuestionForSkill } from "@/data/generator";
-import { decodeHanziKeyedSkillKey, unmarshalReviewJson } from "@/data/marshal";
-import { DeckItem, QuizDeckItemType, Review, Skill } from "@/data/model";
+import { parseHanziKeyedSkillKey, unmarshalReviewJson } from "@/data/marshal";
+import {
+  Question,
+  QuestionFlag,
+  QuestionType,
+  Review,
+  Skill,
+} from "@/data/model";
 import { StatusBar as ExpoStatusBar } from "expo-status-bar";
 import { useEffect, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
@@ -13,7 +19,7 @@ export default function QuizPage() {
   const r = useReplicache();
   const insets = useSafeAreaInsets();
   const [skills, setSkills] = useState<(readonly [Skill, Review])[]>();
-  const [questions, setQuestions] = useState<readonly DeckItem[]>();
+  const [questions, setQuestions] = useState<readonly Question[]>();
 
   useEffect(() => {
     // eslint-disable-next-line no-console
@@ -30,7 +36,7 @@ export default function QuizPage() {
           .map(
             ([key, review]) =>
               [
-                decodeHanziKeyedSkillKey(key),
+                parseHanziKeyedSkillKey(key),
                 unmarshalReviewJson(review),
               ] as const,
           )
@@ -62,40 +68,32 @@ export default function QuizPage() {
         (x) =>
           x ?? [
             {
-              type: QuizDeckItemType.MultipleChoice,
-              question: {
-                prompt: "Select the correct word for the character “dǔ”",
-                choices: ["好", "爱", "别", "姆"],
-                answer: "好",
-                flag: QuizDeck.Flag.WeakWord,
-              },
+              type: QuestionType.MultipleChoice,
+              prompt: "Select the correct word for the character “dǔ”",
+              choices: ["好", "爱", "别", "姆"],
+              answer: "好",
+              flag: QuestionFlag.WeakWord,
             },
             {
-              type: QuizDeckItemType.MultipleChoice,
-              question: {
-                prompt: "Select the correct word for the character “dá”",
-                choices: ["好", "爱", "别", "姆"],
-                answer: "好",
-                flag: QuizDeck.Flag.WeakWord,
-              },
+              type: QuestionType.MultipleChoice,
+              prompt: "Select the correct word for the character “dá”",
+              choices: ["好", "爱", "别", "姆"],
+              answer: "好",
+              flag: QuestionFlag.WeakWord,
             },
             {
-              type: QuizDeckItemType.MultipleChoice,
-              question: {
-                prompt: "Select the correct word for the character “d”",
-                choices: ["好", "爱", "别", "姆"],
-                answer: "好",
-                flag: QuizDeck.Flag.WeakWord,
-              },
+              type: QuestionType.MultipleChoice,
+              prompt: "Select the correct word for the character “d”",
+              choices: ["好", "爱", "别", "姆"],
+              answer: "好",
+              flag: QuestionFlag.WeakWord,
             },
             {
-              type: QuizDeckItemType.MultipleChoice,
-              question: {
-                prompt: "Select the correct word for the character “dǔ”",
-                choices: ["好", "爱", "别", "姆"],
-                answer: "好",
-                flag: QuizDeck.Flag.WeakWord,
-              },
+              type: QuestionType.MultipleChoice,
+              prompt: "Select the correct word for the character “dǔ”",
+              choices: ["好", "爱", "别", "姆"],
+              answer: "好",
+              flag: QuestionFlag.WeakWord,
             },
           ],
       );
@@ -127,7 +125,7 @@ export default function QuizPage() {
             <Text>Loading…</Text>
           ) : (
             <QuizDeck
-              items={questions}
+              questions={questions}
               onNext={(success) => {
                 if (success) {
                 }
