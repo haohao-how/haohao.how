@@ -4,10 +4,10 @@ import z from "zod";
 import {
   HanziKeyedSkill,
   Review,
-  SkillId,
+  SkillKey,
+  SkillType,
   SrsState,
   SrsType,
-  skillTypeSchema,
 } from "./model";
 
 export type OpaqueJSON = ReadonlyJSONValue;
@@ -99,6 +99,32 @@ const unmarshalReview = (x: MarshaledReview): Review => ({
 });
 
 //
+// SkillType
+//
+const SkillTypeMarshal = {
+  [SkillType.HanziWordToEnglish]: "he",
+  [SkillType.HanziWordToPinyinInitial]: "hpi",
+  [SkillType.HanziWordToPinyinFinal]: "hpf",
+  [SkillType.HanziWordToPinyinTone]: "hpt",
+  [SkillType.EnglishToHanzi]: "eh",
+  [SkillType.PinyinToHanzi]: "ph",
+  [SkillType.ImageToHanzi]: "ih",
+} as const;
+const SkillTypeUnmarshal = {
+  ["he"]: SkillType.HanziWordToEnglish,
+  ["hpi"]: SkillType.HanziWordToPinyinInitial,
+  ["hpf"]: SkillType.HanziWordToPinyinFinal,
+  ["hpt"]: SkillType.HanziWordToPinyinTone,
+  ["eh"]: SkillType.EnglishToHanzi,
+  ["ph"]: SkillType.PinyinToHanzi,
+  ["ih"]: SkillType.ImageToHanzi,
+} as const;
+
+const MarshaledSkillType = z.enum(
+  Object.keys(SkillTypeUnmarshal) as [keyof typeof SkillTypeUnmarshal],
+);
+
+//
 // Public API, these don't expose the compressed shape in their types so the
 // implementation shouldn't leak into the rest of the code.
 //
@@ -116,16 +142,16 @@ export const marshalSrsStateJson = (x: SrsState) =>
 
 // Skill key
 export const hanziKeyedSkillToKey = (x: HanziKeyedSkill) =>
-  `/s/${x.type}/${x.hanzi}` as SkillId;
+  `/s/${SkillTypeMarshal[x.type]}/${x.hanzi}` as SkillKey;
 
-export const decodeHanziKeyedSkillKey = (x: string) => {
+export const parseHanziKeyedSkillKey = (x: string) => {
   const result = x.match(/^\/s\/([^\/]+)\/([^\/]+)$/);
   invariant(result !== null);
   const [, rawType, rawHanzi] = result;
   invariant(rawType !== undefined);
   invariant(rawHanzi !== undefined);
   return {
-    type: skillTypeSchema.parse(rawType),
+    type: SkillTypeUnmarshal[MarshaledSkillType.parse(rawType)],
     hanzi: rawHanzi,
   };
 };

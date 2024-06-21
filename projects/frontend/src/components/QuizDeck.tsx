@@ -1,4 +1,4 @@
-import { DeckItem, FourUpQuizFlag, QuizDeckItemType } from "@/data/model";
+import { Question, QuestionFlag, QuestionType } from "@/data/model";
 import { Rating } from "@/util/fsrs";
 import { NavigationContainer, useTheme } from "@react-navigation/native";
 import {
@@ -22,14 +22,14 @@ const gap = 16;
 
 type QuestionState =
   | {
-      type: DeckItemStateType.Correct;
+      type: QuestionStateType.Correct;
     }
   | {
-      type: DeckItemStateType.Incorrect;
+      type: QuestionStateType.Incorrect;
       attempts: number;
     };
 
-enum DeckItemStateType {
+enum QuestionStateType {
   Correct,
   Incorrect,
 }
@@ -42,197 +42,194 @@ interface Navigation {
   replace: (name: string) => void;
 }
 
-type DeckItemStateMap = Map<DeckItem, QuestionState>;
+type QuestionStateMap = Map<Question, QuestionState>;
 
-export const QuizDeck = Object.assign(
-  ({
-    items: deckItems,
-  }: {
-    items: readonly DeckItem[];
-    onNext: (success: boolean) => void;
-  }) => {
-    const theme = useTheme();
-    const navigationRef = useRef<Navigation>();
-    const [deckItemStateMap, setDeckItemStateMap] = useState<
-      Readonly<DeckItemStateMap>
-    >(() => new Map());
+export const QuizDeck = ({
+  questions,
+}: {
+  questions: readonly Question[];
+  onNext: (success: boolean) => void;
+}) => {
+  const theme = useTheme();
+  const navigationRef = useRef<Navigation>();
+  const [questionStateMap, setQuestionStateMap] = useState<
+    Readonly<QuestionStateMap>
+  >(() => new Map());
 
-    const isFirstDeckItem = deckItemStateMap.size === 0;
-    // The number of questions in a row correctly answered.
-    const [streakCount, setStreakCount] = useState(0);
+  const isFirstQuestion = questionStateMap.size === 0;
+  // The number of questions in a row correctly answered.
+  const [streakCount, setStreakCount] = useState(0);
 
-    const progress = useMemo(
-      () =>
-        Array.from(deckItemStateMap.values()).filter(
-          (s) => s.type === DeckItemStateType.Correct,
-        ).length / deckItems.length,
-      [deckItemStateMap, deckItems.length],
-    );
+  const progress = useMemo(
+    () =>
+      Array.from(questionStateMap.values()).filter(
+        (s) => s.type === QuestionStateType.Correct,
+      ).length / questions.length,
+    [questionStateMap, questions.length],
+  );
 
-    const currentDeckItem = useMemo(() => {
-      for (const deckItem of deckItems) {
-        if (
-          deckItemStateMap.get(deckItem)?.type !== DeckItemStateType.Correct
-        ) {
-          return deckItem;
-        }
+  const currentQuestion = useMemo(() => {
+    // TODO:
+    // - cycle incorrect questions.
+    // - have a question queue
+    for (const question of questions) {
+      if (questionStateMap.get(question)?.type !== QuestionStateType.Correct) {
+        return question;
       }
-    }, [deckItems, deckItemStateMap]);
+    }
+  }, [questions, questionStateMap]);
 
-    // This is the engine that moves the quiz forward.
-    useEffect(() => {
-      // The first deck item is automatically rendered, we only need to pump the
-      // navigator for subsequent.
-      if (!isFirstDeckItem) {
-        navigationRef.current?.replace(ScreenName);
+  // This is the engine that moves the quiz forward.
+  useEffect(() => {
+    // The first deck item is automatically rendered, we only need to pump the
+    // navigator for subsequent.
+    if (!isFirstQuestion) {
+      navigationRef.current?.replace(ScreenName);
+    }
+
+    // There's no next deck item, bail.
+    if (currentQuestion === undefined) {
+      setTimeout(() => {
+        router.push("/");
+      }, 500);
+    }
+  }, [currentQuestion, isFirstQuestion]);
+
+  const r = useReplicache();
+
+  const onComplete = useEventCallback((rating: Rating) => {
+    const success = rating !== Rating.Again;
+
+    if (currentQuestion !== undefined) {
+      if (currentQuestion.type === QuestionType.OneCorrectPair) {
+        r?.mutate
+          .updateSkill({ skill: currentQuestion.skill, rating })
+          .catch((e: unknown) => {
+            // eslint-disable-next-line no-console
+            console.error("failed to update skill", e);
+          });
       }
 
-      // There's no next deck item, bail.
-      if (currentDeckItem === undefined) {
-        setTimeout(() => {
-          router.push("/");
-        }, 500);
-      }
-    }, [currentDeckItem, isFirstDeckItem]);
+      setStreakCount((prev) => (success ? prev + 1 : 0));
+      setQuestionStateMap((prev) => {
+        const next = new Map(prev);
+        const prevState = prev.get(currentQuestion);
+        next.set(
+          currentQuestion,
+          success
+            ? { type: QuestionStateType.Correct }
+            : {
+                type: QuestionStateType.Incorrect,
+                attempts:
+                  prevState?.type === QuestionStateType.Incorrect
+                    ? prevState.attempts + 1
+                    : 1,
+              },
+        );
+        return next;
+      });
+    }
+  });
 
-    const r = useReplicache();
-
-    const onComplete = useEventCallback((rating: Rating) => {
-      const success = rating !== Rating.Again;
-
-      if (currentDeckItem !== undefined) {
-        if (currentDeckItem.type === QuizDeckItemType.OneCorrectPair) {
-          r?.mutate
-            .updateSkill({ skill: currentDeckItem.skill, rating })
-            .catch((e: unknown) => {
-              // eslint-disable-next-line no-console
-              console.error("failed to update skill", e);
-            });
-        }
-
-        setStreakCount((prev) => (success ? prev + 1 : 0));
-        setDeckItemStateMap((prev) => {
-          const next = new Map(prev);
-          const prevState = prev.get(currentDeckItem);
-          next.set(
-            currentDeckItem,
-            success
-              ? { type: DeckItemStateType.Correct }
-              : {
-                  type: DeckItemStateType.Incorrect,
-                  attempts:
-                    prevState?.type === DeckItemStateType.Incorrect
-                      ? prevState.attempts + 1
-                      : 1,
-                },
-          );
-          return next;
-        });
-      }
-    });
-
-    return (
+  return (
+    <View
+      style={{
+        flex: 1,
+        gap: gap + buttonThickness,
+      }}
+    >
       <View
         style={{
-          flex: 1,
-          gap: gap + buttonThickness,
+          flexDirection: "row",
+          alignItems: "center",
+          gap: 24,
+          paddingLeft: 16,
+          paddingRight: 16,
         }}
       >
+        <CloseButton href="/" tintColor="#3C464D" />
+        <QuizProgressBar
+          progress={progress}
+          colors={
+            streakCount >= 2
+              ? ["#E861F8", "#414DF6", "#75F076"] // streak
+              : ["#3F4CF5", "#3F4CF5"] // solid blue
+          }
+        />
+      </View>
+
+      {currentQuestion?.flag === QuestionFlag.WeakWord ? (
         <View
           style={{
             flexDirection: "row",
             alignItems: "center",
-            gap: 24,
+            gap: 10,
             paddingLeft: 16,
             paddingRight: 16,
           }}
         >
-          <CloseButton href="/" tintColor="#3C464D" />
-          <QuizProgressBar
-            progress={progress}
-            colors={
-              streakCount >= 2
-                ? ["#E861F8", "#414DF6", "#75F076"] // streak
-                : ["#3F4CF5", "#3F4CF5"] // solid blue
-            }
-          />
-        </View>
-
-        {currentDeckItem?.type === QuizDeckItemType.MultipleChoice &&
-        currentDeckItem.question.flag === FourUpQuizFlag.WeakWord ? (
-          <View
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              gap: 10,
-              paddingLeft: 16,
-              paddingRight: 16,
-            }}
-          >
-            {/* <Image
+          {/* <Image
               source={require("@/assets/target-red.svg")}
               style={{ flexShrink: 1, width: 33, height: 30 }}
             /> */}
-            <Text
-              style={{
-                color: "#EC5A53",
-                fontSize: 16,
-                fontWeight: "bold",
-                textTransform: "uppercase",
-                textShadowColor: "black",
-                textShadowRadius: 1,
-              }}
-            >
-              Weak word
-            </Text>
-          </View>
-        ) : null}
-
-        <NavigationContainer independent={true} theme={theme}>
-          <Stack.Navigator
-            screenOptions={{
-              gestureEnabled: false,
-              headerShown: false,
-              animationEnabled: true,
-              ...TransitionPresets.SlideFromRightIOS,
-              cardStyleInterpolator: forHorizontalIOS,
+          <Text
+            style={{
+              color: "#EC5A53",
+              fontSize: 16,
+              fontWeight: "bold",
+              textTransform: "uppercase",
+              textShadowColor: "black",
+              textShadowRadius: 1,
             }}
           >
-            <Stack.Screen
-              name={ScreenName}
-              children={({ navigation }) => {
-                // HACK
-                navigationRef.current = navigation as Navigation;
+            Weak word
+          </Text>
+        </View>
+      ) : null}
 
-                // These props are only passed in initially, the element is not re-rendered.
-                switch (currentDeckItem?.type) {
-                  case QuizDeckItemType.MultipleChoice:
-                    return (
-                      <QuizDeckMultipleChoiceQuestion
-                        question={currentDeckItem.question}
-                        onComplete={onComplete}
-                      />
-                    );
-                  case QuizDeckItemType.OneCorrectPair:
-                    return (
-                      <QuizDeckOneCorrectPairQuestion
-                        question={currentDeckItem.question}
-                        onComplete={onComplete}
-                      />
-                    );
-                  case undefined:
-                  default:
-                    return null;
-                }
-              }}
-            />
-          </Stack.Navigator>
-        </NavigationContainer>
-      </View>
-    );
-  },
-  { Flag: FourUpQuizFlag },
-);
+      <NavigationContainer independent={true} theme={theme}>
+        <Stack.Navigator
+          screenOptions={{
+            gestureEnabled: false,
+            headerShown: false,
+            animationEnabled: true,
+            ...TransitionPresets.SlideFromRightIOS,
+            cardStyleInterpolator: forHorizontalIOS,
+          }}
+        >
+          <Stack.Screen
+            name={ScreenName}
+            children={({ navigation }) => {
+              // HACK
+              navigationRef.current = navigation as Navigation;
+
+              // These props are only passed in initially, the element is not re-rendered.
+              switch (currentQuestion?.type) {
+                case QuestionType.MultipleChoice:
+                  return (
+                    <QuizDeckMultipleChoiceQuestion
+                      question={currentQuestion}
+                      onComplete={onComplete}
+                    />
+                  );
+                case QuestionType.OneCorrectPair:
+                  return (
+                    <QuizDeckOneCorrectPairQuestion
+                      question={currentQuestion}
+                      onComplete={onComplete}
+                    />
+                  );
+                case undefined:
+                default:
+                  return null;
+              }
+            }}
+          />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </View>
+  );
+};
 
 function forHorizontalIOS({
   current,

@@ -1,11 +1,9 @@
-import z from "zod";
+import type z from "zod";
 
 export enum SrsType {
   Null,
   FsrsFourPointFive,
 }
-
-export const srsTypeSchema = z.nativeEnum(SrsType);
 
 export interface SrsNullState {
   type: SrsType.Null;
@@ -26,66 +24,51 @@ export interface Review {
 }
 
 export enum SkillType {
-  HanziWordToEnglish = "he",
-  HanziWordToPinyinInitial = "hpi",
-  HanziWordToPinyinFinal = "hpf",
-  HanziWordToPinyinTone = "hpt",
-  EnglishToHanzi = "eh",
-  PinyinToHanzi = "ph",
-  ImageToHanzi = "ih",
+  HanziWordToEnglish,
+  HanziWordToPinyinInitial,
+  HanziWordToPinyinFinal,
+  HanziWordToPinyinTone,
+  EnglishToHanzi,
+  PinyinToHanzi,
+  ImageToHanzi,
 }
 
-export type HanziKeyedSkill = z.infer<typeof hanziKeyedSkillSchema>;
+// export type HanziKeyedSkill = z.infer<typeof hanziKeyedSkillSchema>;
+
+export interface HanziKeyedSkill {
+  type: SkillType;
+  hanzi: string;
+}
 
 export type Skill = HanziKeyedSkill;
 
-export const skillTypeSchema = z.nativeEnum(SkillType);
+export type SkillKey = string & z.BRAND<"SkillKey">;
 
-export const hanziKeyedSkillSchema = z.object({
-  type: skillTypeSchema,
-  hanzi: z.string(),
-});
-
-export const skillUnscopedIdSchema = z.string().brand<"SkillUnscopedId">();
-export type SkillUnscopedId = z.infer<typeof skillUnscopedIdSchema>;
-
-export const skillIdSchema = z.string().brand<"SkillId">();
-export type SkillId = z.infer<typeof skillIdSchema>;
-
-export enum FourUpQuizFlag {
+export enum QuestionFlag {
   WeakWord,
 }
 
-export interface MultipleChoiceQuestion {
-  prompt: string;
-  answer: string;
-  flag?: FourUpQuizFlag;
-  choices: readonly string[];
-}
-
-export enum QuizDeckItemType {
+export enum QuestionType {
   MultipleChoice,
   OneCorrectPair,
 }
 
+export interface MultipleChoiceQuestion {
+  type: QuestionType.MultipleChoice;
+  prompt: string;
+  answer: string;
+  flag?: QuestionFlag;
+  choices: readonly string[];
+}
+
 export interface OneCorrectPairQuestion {
+  type: QuestionType.OneCorrectPair;
   prompt: string;
   groupA: readonly string[];
   groupB: readonly string[];
   answer: readonly [groupA: string, groupB: string];
-}
-
-export interface MultipleChoiceQuestionDeckItem {
-  type: QuizDeckItemType.MultipleChoice;
-  question: MultipleChoiceQuestion;
-}
-
-export interface OneCorrectPairQuestionDeckItem {
-  type: QuizDeckItemType.OneCorrectPair;
-  question: OneCorrectPairQuestion;
+  flag?: QuestionFlag;
   skill: Skill;
 }
 
-export type DeckItem =
-  | MultipleChoiceQuestionDeckItem
-  | OneCorrectPairQuestionDeckItem;
+export type Question = MultipleChoiceQuestion | OneCorrectPairQuestion;
