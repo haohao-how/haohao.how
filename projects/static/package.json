@@ -4,8 +4,8 @@
   "devDependencies": {
     "@types/node": "^20.12.12",
     "ts-node": "^10.9.2",
-    "typescript": "^5.4.5",
-    "vercel": "^34.1.8",
+    "typescript": "^5.5.2",
+    "vercel": "^34.2.7",
     "yargs": "^17.7.2"
   }
 }
