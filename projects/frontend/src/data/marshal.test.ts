@@ -1,17 +1,19 @@
 import assert from "node:assert";
 import test from "node:test";
 import {
-  marshalReviewJson,
+  marshalSkillJson,
   marshalSrsStateJson,
-  unmarshalReviewJson,
+  unmarshalSkillJson,
   unmarshalSrsStateJson,
 } from "./marshal";
-import { Review, SrsState, SrsType } from "./model";
+import { Skill as Review, SkillType, SrsState, SrsType } from "./model";
 
 // TODO: data generator fuzzy testing
 
-void test(`Review`, () => {
-  const review: Review = {
+void test(`Skill`, () => {
+  const skill: Review = {
+    type: SkillType.HanziWordToEnglish,
+    hanzi: `火`,
     created: new Date(),
     srs: {
       type: SrsType.Null,
@@ -19,10 +21,7 @@ void test(`Review`, () => {
     due: new Date(),
   };
 
-  assert.deepStrictEqual(
-    review,
-    unmarshalReviewJson(marshalReviewJson(review)),
-  );
+  assert.deepStrictEqual(skill, unmarshalSkillJson(marshalSkillJson(skill)));
 });
 
 void test(`SrsState`, () => {

@@ -1,5 +1,3 @@
-import type z from "zod";
-
 export enum SrsType {
   Null,
   FsrsFourPointFive,
@@ -17,7 +15,7 @@ export interface SrsFourPointFiveState {
 
 export type SrsState = SrsNullState | SrsFourPointFiveState;
 
-export interface Review {
+export interface SkillBase {
   created: Date;
   srs: SrsState;
   due: Date;
@@ -33,16 +31,21 @@ export enum SkillType {
   ImageToHanzi,
 }
 
-// export type HanziKeyedSkill = z.infer<typeof hanziKeyedSkillSchema>;
-
-export interface HanziKeyedSkill {
-  type: SkillType;
+export interface HanziSkill extends SkillBase {
+  type:
+    | SkillType.HanziWordToEnglish
+    | SkillType.HanziWordToPinyinInitial
+    | SkillType.HanziWordToPinyinFinal
+    | SkillType.HanziWordToPinyinTone
+    | SkillType.EnglishToHanzi
+    | SkillType.PinyinToHanzi
+    | SkillType.ImageToHanzi;
   hanzi: string;
 }
 
-export type Skill = HanziKeyedSkill;
+export type HanziSkillKey = Pick<HanziSkill, `type` | `hanzi`>;
 
-export type SkillKey = string & z.BRAND<`SkillKey`>;
+export type Skill = HanziSkill;
 
 export enum QuestionFlag {
   WeakWord,
