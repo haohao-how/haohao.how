@@ -1,16 +1,16 @@
 {
   "name": "haohaohow",
-  "packageManager": "yarn@4.3.0",
+  "packageManager": "yarn@4.3.1",
   "workspaces": [
     "projects/*"
   ],
   "devDependencies": {
     "@types/semver": "~7.5",
-    "@yarnpkg/doctor": "patch:@yarnpkg/doctor@npm%3A4.0.1#~/.yarn/patches/@yarnpkg-doctor-npm-4.0.1-f56e9f5fea.patch",
+    "@yarnpkg/doctor": "^4.0.2",
     "@yarnpkg/types": "^4.0.0",
     "prettier": "^3.2.5",
     "semver": "^7.5.0",
-    "typescript": "^5.4.5"
+    "typescript": "^5.5.2"
   },
   "engines": {
     "node": "~21.6"
