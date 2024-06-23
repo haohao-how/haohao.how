@@ -57,7 +57,7 @@ export const mutators = {
     {
       k: key,
       r: rating,
-      n: now,
+      n: nowTimestamp,
     }: { k: MarshaledSkillKey; r: Rating; n: number },
   ): Promise<void> {
     const skillValue = await tx.get(key);
@@ -70,6 +70,8 @@ export const mutators = {
       return;
     }
 
+    const now = new Date(nowTimestamp);
+
     // - TODO: check that the last state created before this result.
     // - TODO: store the results a separate key prefix and recalculate to merge
     //   the results each time a new result is created.
@@ -80,12 +82,12 @@ export const mutators = {
         difficulty: skill.srs.difficulty,
         due: skill.due,
       },
-      // TODO: pass `now` here.
       rating,
+      now,
     );
     const [, value] = marshalSkillJson({
       ...skill,
-      created: new Date(now),
+      created: now,
       srs: {
         type: SrsType.FsrsFourPointFive,
         stability: s.stability,
@@ -106,8 +108,8 @@ export const mutators = {
 type HHReplicache = Replicache<typeof mutators>;
 
 export async function addHanziSkill(r: HHReplicache, skill: HanziSkillKey) {
-  const { stability, difficulty } = nextReview(null, Rating.Again);
   const now = new Date();
+  const { stability, difficulty } = nextReview(null, Rating.Again, now);
 
   await r.mutate.addSkill({
     s: marshalSkill({

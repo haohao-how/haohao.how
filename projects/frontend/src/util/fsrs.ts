@@ -55,8 +55,15 @@ const learnedLevelStability = initStability(Rating.Good);
 export function nextReview(
   lastReview: UpcomingReview | null,
   rating: Rating,
+  /**
+   * When the rating was made.
+   *
+   * This makes it easier to deterministically play forward a sequence of
+   * ratings.
+   */
+  now = new Date(),
 ): UpcomingReview {
-  const created = new Date();
+  const created = now;
   const stability =
     lastReview === null
       ? initStability(rating)

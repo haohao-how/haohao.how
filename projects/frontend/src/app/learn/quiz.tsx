@@ -20,17 +20,15 @@ export default function QuizPage() {
     console.log(`r.clientID = ${r?.clientID ?? `<nullish>`}`);
 
     void r?.query(async (tx) => {
-      {
-        // eslint-disable-next-line no-console
-        console.log(`Next 10 skill reviews:`);
-        const now = new Date();
-        const skills = (
-          await tx.scan({ prefix: `/s/he/`, limit: 10 }).entries().toArray()
-        )
-          .map(unmarshalSkillJson)
-          .filter((skill) => skill.due <= now);
-        setSkills(skills);
-      }
+      // eslint-disable-next-line no-console
+      console.log(`Next 10 skill reviews:`);
+      const now = new Date();
+      const skills = (
+        await tx.scan({ prefix: `/s/he/`, limit: 10 }).entries().toArray()
+      )
+        .map(unmarshalSkillJson)
+        .filter((skill) => skill.due <= now);
+      setSkills(skills);
     });
   }, [r]);
 
