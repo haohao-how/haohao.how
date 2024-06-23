@@ -69,8 +69,8 @@ export function nextReview(
 
   return {
     created,
-    difficulty: difficulty,
-    stability: stability,
+    difficulty,
+    stability,
     due: add(created, dueDuration),
   };
 }

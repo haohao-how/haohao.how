@@ -105,6 +105,8 @@ export default tseslint.config(
         },
       ],
 
+      "object-shorthand": `error`,
+
       //
       // eslint-plugin-import
       //
