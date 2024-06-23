@@ -76,7 +76,7 @@ export const RectButton = forwardRef<View, RectButtonProps>(function RectButton(
                 flexShrink: 1,
                 alignItems: `center`,
                 justifyContent: `center`,
-                borderRadius: borderRadius,
+                borderRadius,
                 padding: 10,
                 transform: [{ translateY: pressed ? 0 : -thickness }],
                 transformOrigin: `top`,
