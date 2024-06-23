@@ -6,8 +6,9 @@ import {
   SectionHeaderButtonProps,
 } from "@/components/SectionHeaderButton";
 import { GradientAqua, GradientPurple, GradientRed } from "@/components/styles";
-import { hanziKeyedSkillToKey } from "@/data/marshal";
-import { Skill, SkillType } from "@/data/model";
+import { hanziSkillToKey } from "@/data/marshal";
+import { SkillType } from "@/data/model";
+import { addHanziSkill, incrementCounter } from "@/data/mutators";
 import * as Sentry from "@sentry/react-native";
 import { useFonts } from "expo-font";
 import { Link } from "expo-router";
@@ -41,7 +42,7 @@ export default function IndexPage() {
 
         const shouldSeed = await r.query(async (tx) => {
           const result = await tx.get(
-            hanziKeyedSkillToKey({
+            hanziSkillToKey({
               type: SkillType.HanziWordToEnglish,
               hanzi,
             }),
@@ -52,11 +53,10 @@ export default function IndexPage() {
         if (shouldSeed) {
           // eslint-disable-next-line no-console
           console.log(`Adding skill…`);
-          const skill: Skill = {
+          await addHanziSkill(r, {
             type: SkillType.HanziWordToEnglish,
             hanzi,
-          };
-          await r.mutate.addSkill({ skill });
+          });
         }
 
         await r.query(async (tx) => {
@@ -82,7 +82,7 @@ export default function IndexPage() {
           const counter = await tx.get(`counter`);
           // eslint-disable-next-line no-console
           console.log(`counter =`, counter);
-          r.mutate.incrementCounter().catch((e: unknown) => {
+          incrementCounter(r).catch((e: unknown) => {
             // eslint-disable-next-line no-console
             console.error(e);
           });

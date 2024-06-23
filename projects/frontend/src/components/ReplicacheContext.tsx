@@ -1,97 +1,66 @@
-import {
-  hanziKeyedSkillToKey,
-  marshalReviewJson,
-  unmarshalReviewJson,
-} from "@/data/marshal";
-import { Skill, SrsType } from "@/data/model";
+import { mutators } from "@/data/mutators";
 import { replicacheLicenseKey } from "@/env";
-import { Rating, UpcomingReview, nextReview } from "@/util/fsrs";
-import { createContext, useContext, useMemo } from "react";
-import type { MutatorDefs, WriteTransaction } from "replicache";
-import { Replicache } from "replicache";
+import { invariant } from "@/util/invariant";
+import { createContext, useContext, useEffect, useMemo } from "react";
+import { PullerResultV1, Replicache } from "replicache";
 import { experimentalCreateKVStore } from "./replicacheOptions";
 
-interface M extends MutatorDefs {
-  incrementCounter(
-    tx: WriteTransaction,
-    options?: { quantity?: number },
-  ): Promise<void>;
-  addSkill(tx: WriteTransaction, options: { skill: Skill }): Promise<void>;
-  updateSkill(
-    tx: WriteTransaction,
-    options: { skill: Skill; rating: Rating },
-  ): Promise<void>;
-}
-
-const ReplicacheContext = createContext<Replicache<M> | null>(null);
+const ReplicacheContext = createContext<Replicache<typeof mutators> | null>(
+  null,
+);
 
 export function ReplicacheProvider({ children }: React.PropsWithChildren) {
-  const rep = useMemo(
+  const rep: Replicache<typeof mutators> = useMemo(
     () =>
-      new Replicache<M>({
+      new Replicache({
         name: `hao`,
+        schemaVersion: `1`,
         licenseKey: replicacheLicenseKey,
-        pushURL: `/api/push`,
-        pullURL: `/api/pull`,
-        experimentalCreateKVStore: experimentalCreateKVStore,
-        mutators: {
-          async incrementCounter(tx, options) {
-            const quantity = options?.quantity ?? 1;
-            const counter = await tx.get<number>(`counter`);
-            await tx.set(`counter`, (counter ?? 0) + quantity);
-          },
-          async addSkill(tx, { skill }) {
-            const key = hanziKeyedSkillToKey(skill);
-            const s = nextReview(null, Rating.Again);
-            await tx.set(
-              key,
-              marshalReviewJson({
-                created: new Date(),
-                srs: {
-                  type: SrsType.FsrsFourPointFive,
-                  stability: s.stability,
-                  difficulty: s.difficulty,
-                },
-                due: s.due,
-              }),
-            );
-          },
-          async updateSkill(tx, { skill, rating }) {
-            const key = hanziKeyedSkillToKey(skill);
-            const lastReviewRaw = await tx.get(key);
-            const lastReview =
-              lastReviewRaw !== undefined
-                ? unmarshalReviewJson(lastReviewRaw)
-                : null;
-            const lastUpcomingReview =
-              lastReview?.srs.type !== SrsType.FsrsFourPointFive
-                ? null
-                : ({
-                    created: lastReview.created,
-                    stability: lastReview.srs.stability,
-                    difficulty: lastReview.srs.difficulty,
-                    due: lastReview.due,
-                  } satisfies UpcomingReview);
-            const s = nextReview(lastUpcomingReview, rating);
-            // eslint-disable-next-line no-console
-            console.log(`updating ${key} to `, s);
-            await tx.set(
-              key,
-              marshalReviewJson({
-                created: new Date(),
-                srs: {
-                  type: SrsType.FsrsFourPointFive,
-                  stability: s.stability,
-                  difficulty: s.difficulty,
-                },
-                due: s.due,
-              }),
-            );
-          },
+        puller(req, requestID) {
+          invariant(req.pullVersion === 1);
+
+          // eslint-disable-next-line no-console
+          console.log(`rep.clientID =`, rep.clientID);
+
+          // eslint-disable-next-line no-console
+          console.log(`puller(…) requestId=${requestID} req=`, req);
+
+          return Promise.resolve({
+            response: {
+              cookie: req.cookie,
+              lastMutationIDChanges: { [rep.clientID]: 0 },
+              patch: [],
+            },
+            httpRequestInfo: {
+              errorMessage: ``,
+              httpStatusCode: 200,
+            },
+          } satisfies PullerResultV1);
         },
+        experimentalCreateKVStore: experimentalCreateKVStore,
+        mutators,
       }),
     [],
   );
+
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      (async () => {
+        const pendingMutations = await rep.experimentalPendingMutations();
+        // eslint-disable-next-line no-console
+        console.log(`pendingMutations = `, JSON.stringify(pendingMutations));
+      })().catch((err: unknown) => {
+        // eslint-disable-next-line no-console
+        console.error(err);
+      });
+    }, 1000);
+
+    return () => {
+      clearTimeout(timeoutId);
+    };
+  }, [rep]);
+
+  // use react-query to wait for the promise??
 
   return (
     <ReplicacheContext.Provider value={rep}>

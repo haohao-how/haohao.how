@@ -1,4 +1,5 @@
 import { Question, QuestionFlag, QuestionType } from "@/data/model";
+import { saveSkillRating } from "@/data/mutators";
 import { Rating } from "@/util/fsrs";
 import { NavigationContainer, useTheme } from "@react-navigation/native";
 import {
@@ -102,12 +103,14 @@ export const QuizDeck = ({
 
     if (currentQuestion !== undefined) {
       if (currentQuestion.type === QuestionType.OneCorrectPair) {
-        r?.mutate
-          .updateSkill({ skill: currentQuestion.skill, rating })
-          .catch((e: unknown) => {
-            // eslint-disable-next-line no-console
-            console.error(`failed to update skill`, e);
-          });
+        if (r) {
+          saveSkillRating(r, currentQuestion.skill, rating).catch(
+            (e: unknown) => {
+              // eslint-disable-next-line no-console
+              console.error(`failed to update skill`, e);
+            },
+          );
+        }
       }
 
       setStreakCount((prev) => (success ? prev + 1 : 0));

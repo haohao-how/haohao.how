@@ -1,14 +1,7 @@
 import { invariant } from "@/util/invariant";
 import { ReadonlyJSONValue } from "replicache";
 import z from "zod";
-import {
-  HanziKeyedSkill,
-  Review,
-  SkillKey,
-  SkillType,
-  SrsState,
-  SrsType,
-} from "./model";
+import { HanziSkillKey, Skill, SkillType, SrsState, SrsType } from "./model";
 
 export type OpaqueJSON = ReadonlyJSONValue;
 
@@ -74,31 +67,6 @@ const unmarshalSrsState = (x: MarshaledSrsState): SrsState => {
 };
 
 //
-// Review
-//
-const MarshaledReview = z.object({
-  /** created */
-  c: z.string().datetime(),
-  /** srs */
-  s: MarshaledSrsState,
-  /** difficulty */
-  d: z.string().datetime(),
-});
-type MarshaledReview = z.infer<typeof MarshaledReview>;
-
-const marshalReview = (x: Review): MarshaledReview => ({
-  c: x.created.toISOString(),
-  s: marshalSrsState(x.srs),
-  d: x.due.toISOString(),
-});
-
-const unmarshalReview = (x: MarshaledReview): Review => ({
-  created: z.coerce.date().parse(x.c),
-  srs: unmarshalSrsState(x.s),
-  due: z.coerce.date().parse(x.d),
-});
-
-//
 // SkillType
 //
 const SkillTypeMarshal = {
@@ -125,14 +93,52 @@ const MarshaledSkillType = z.enum(
 );
 
 //
+// Skill
+//
+const MarshaledSkill = z.object({
+  /** created */
+  c: z.string().datetime(),
+  /** srs */
+  s: MarshaledSrsState,
+  /** difficulty */
+  d: z.string().datetime(),
+});
+export type MarshaledSkillValue = z.infer<typeof MarshaledSkill>;
+
+export type MarshaledSkill = [
+  key: MarshaledSkillKey,
+  value: MarshaledSkillValue,
+];
+
+export const marshalSkill = (x: Skill): MarshaledSkill => [
+  hanziSkillToKey(x),
+  {
+    c: x.created.toISOString(),
+    s: marshalSrsState(x.srs),
+    d: x.due.toISOString(),
+  },
+];
+
+const unmarshalSkill = ([k, v]: MarshaledSkill): Skill => ({
+  ...parseHanziKeyedSkillKey(k),
+  created: z.coerce.date().parse(v.c),
+  srs: unmarshalSrsState(v.s),
+  due: z.coerce.date().parse(v.d),
+});
+
+//
 // Public API, these don't expose the compressed shape in their types so the
 // implementation shouldn't leak into the rest of the code.
 //
 
-// Review
-export const unmarshalReviewJson = (value: OpaqueJSON): Review =>
-  MarshaledReview.transform(unmarshalReview).parse(value);
-export const marshalReviewJson = (x: Review) => marshalReview(x) as OpaqueJSON;
+// Skill
+export const unmarshalSkillJson = ([key, value]: readonly [
+  key: string,
+  value: OpaqueJSON,
+]): Skill =>
+  unmarshalSkill([key as MarshaledSkillKey, MarshaledSkill.parse(value)]);
+export const marshalSkillJson = (x: Skill) =>
+  marshalSkill(x) as [string, OpaqueJSON];
 
 // SrsState
 export const unmarshalSrsStateJson = (value: OpaqueJSON): SrsState =>
@@ -141,8 +147,10 @@ export const marshalSrsStateJson = (x: SrsState) =>
   marshalSrsState(x) as OpaqueJSON;
 
 // Skill key
-export const hanziKeyedSkillToKey = (x: HanziKeyedSkill) =>
-  `/s/${SkillTypeMarshal[x.type]}/${x.hanzi}` as SkillKey;
+export type MarshaledSkillKey = string & z.BRAND<`SkillKey`>;
+
+export const hanziSkillToKey = (x: HanziSkillKey) =>
+  `/s/${SkillTypeMarshal[x.type]}/${x.hanzi}` as MarshaledSkillKey;
 
 export const parseHanziKeyedSkillKey = (x: string) => {
   const result = x.match(/^\/s\/([^\/]+)\/([^\/]+)$/);

@@ -97,7 +97,9 @@ export class ExpoSQLiteKVStore implements ExperimentalKVStore {
   }
 }
 
-let txId = 0;
+// For debugging purposes, a sequentially incrementing transaction number (not
+// connection specific).
+const txIds: Record<string, number> = {};
 
 export class ExpoSQLiteKVStoreReadImpl implements ExperimentalKVRead {
   protected _db: SQLite.SQLiteDatabase | null;
@@ -107,7 +109,7 @@ export class ExpoSQLiteKVStoreReadImpl implements ExperimentalKVRead {
     db: SQLite.SQLiteDatabase,
     public readonly onRelease: () => void,
   ) {
-    this._txId = txId++;
+    this._txId = txIds[db.databaseName] = (txIds[db.databaseName] ?? 0) + 1;
     log?.(`KV[${this._txId.toString()}]#constructor()`);
     this._db = db;
   }
