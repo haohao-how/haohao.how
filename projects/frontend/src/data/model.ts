@@ -15,9 +15,12 @@ export interface SrsFourPointFiveState {
 
 export type SrsState = SrsNullState | SrsFourPointFiveState;
 
-export interface SkillBase {
+// TODO: "SkillUpcomingReview" maybe?
+export interface SkillState {
+  // TODO: this shoudl be "last reviewed"
   created: Date;
-  srs: SrsState;
+  /** When null, it means it's never been reviewed. */
+  srs: SrsState | null;
   due: Date;
 }
 
@@ -31,7 +34,7 @@ export enum SkillType {
   ImageToHanzi,
 }
 
-export interface HanziSkill extends SkillBase {
+export interface HanziSkill {
   type:
     | SkillType.HanziWordToEnglish
     | SkillType.HanziWordToPinyinInitial
@@ -43,8 +46,7 @@ export interface HanziSkill extends SkillBase {
   hanzi: string;
 }
 
-export type HanziSkillKey = Pick<HanziSkill, `type` | `hanzi`>;
-
+/** Data that forms the unique key for a skill */
 export type Skill = HanziSkill;
 
 export enum QuestionFlag {

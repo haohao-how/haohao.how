@@ -6,7 +6,7 @@ import {
   SectionHeaderButtonProps,
 } from "@/components/SectionHeaderButton";
 import { GradientAqua, GradientPurple, GradientRed } from "@/components/styles";
-import { hanziSkillToKey } from "@/data/marshal";
+import { marshalSkillStateKey } from "@/data/marshal";
 import { SkillType } from "@/data/model";
 import { addHanziSkill, incrementCounter } from "@/data/mutators";
 import * as Sentry from "@sentry/react-native";
@@ -42,7 +42,7 @@ export default function IndexPage() {
 
         const shouldSeed = await r.query(async (tx) => {
           const result = await tx.get(
-            hanziSkillToKey({
+            marshalSkillStateKey({
               type: SkillType.HanziWordToEnglish,
               hanzi,
             }),
