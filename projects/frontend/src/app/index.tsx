@@ -36,62 +36,60 @@ export default function IndexPage() {
   const r = useReplicache();
 
   useEffect(() => {
-    if (r) {
-      (async () => {
-        const hanzi = `火`;
+    (async () => {
+      const hanzi = `火`;
 
-        const shouldSeed = await r.query(async (tx) => {
-          const result = await tx.get(
-            marshalSkillStateKey({
-              type: SkillType.HanziWordToEnglish,
-              hanzi,
-            }),
-          );
-          return result === undefined;
-        });
-
-        if (shouldSeed) {
-          // eslint-disable-next-line no-console
-          console.log(`Adding skill…`);
-          await addHanziSkill(r, {
+      const shouldSeed = await r.query(async (tx) => {
+        const result = await tx.get(
+          marshalSkillStateKey({
             type: SkillType.HanziWordToEnglish,
             hanzi,
-          });
+          }),
+        );
+        return result === undefined;
+      });
+
+      if (shouldSeed) {
+        // eslint-disable-next-line no-console
+        console.log(`Adding skill…`);
+        await addHanziSkill(r, {
+          type: SkillType.HanziWordToEnglish,
+          hanzi,
+        });
+      }
+
+      await r.query(async (tx) => {
+        {
+          // eslint-disable-next-line no-console
+          console.log(`Next 10 skill reviews:`);
+          const items = await tx
+            .scan({ prefix: `/s/he/`, limit: 10 })
+            .entries()
+            .toArray();
+          // eslint-disable-next-line no-console
+          console.log(items);
         }
 
-        await r.query(async (tx) => {
-          {
+        {
+          const x = tx.scan({ prefix: `count` });
+          for await (const y of x.entries()) {
             // eslint-disable-next-line no-console
-            console.log(`Next 10 skill reviews:`);
-            const items = await tx
-              .scan({ prefix: `/s/he/`, limit: 10 })
-              .entries()
-              .toArray();
-            // eslint-disable-next-line no-console
-            console.log(items);
+            console.log(y);
           }
+        }
 
-          {
-            const x = tx.scan({ prefix: `count` });
-            for await (const y of x.entries()) {
-              // eslint-disable-next-line no-console
-              console.log(y);
-            }
-          }
-
-          const counter = await tx.get(`counter`);
-          // eslint-disable-next-line no-console
-          console.log(`counter =`, counter);
-          incrementCounter(r).catch((e: unknown) => {
-            // eslint-disable-next-line no-console
-            console.error(e);
-          });
-        });
-      })().catch((err: unknown) => {
+        const counter = await tx.get(`counter`);
         // eslint-disable-next-line no-console
-        console.error(err);
+        console.log(`counter =`, counter);
+        incrementCounter(r).catch((e: unknown) => {
+          // eslint-disable-next-line no-console
+          console.error(e);
+        });
       });
-    }
+    })().catch((err: unknown) => {
+      // eslint-disable-next-line no-console
+      console.error(err);
+    });
   }, [r]);
 
   if (!fontsLoaded && !fontError) {

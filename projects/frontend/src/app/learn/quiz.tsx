@@ -1,91 +1,34 @@
 import { QuizDeck } from "@/components/QuizDeck";
-import { useReplicache } from "@/components/ReplicacheContext";
+import { RectButton } from "@/components/RectButton";
+import { useQueryOnce } from "@/components/ReplicacheContext";
 import { RootView } from "@/components/RootView";
 import { generateQuestionForSkill } from "@/data/generator";
 import { unmarshalSkillStateJson } from "@/data/marshal";
-import { Question, QuestionFlag, QuestionType, Skill } from "@/data/model";
+import { formatDuration } from "date-fns/formatDuration";
+import { interval } from "date-fns/interval";
+import { intervalToDuration } from "date-fns/intervalToDuration";
+import { router } from "expo-router";
 import { StatusBar as ExpoStatusBar } from "expo-status-bar";
-import { useEffect, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function QuizPage() {
-  const r = useReplicache();
   const insets = useSafeAreaInsets();
-  const [skills, setSkills] = useState<readonly Skill[]>();
-  const [questions, setQuestions] = useState<readonly Question[]>();
 
-  useEffect(() => {
-    // eslint-disable-next-line no-console
-    console.log(`r.clientID = ${r?.clientID ?? `<nullish>`}`);
+  const questions = useQueryOnce(async (tx) => {
+    const now = new Date();
+    return (await tx.scan({ prefix: `s/`, limit: 10 }).entries().toArray())
+      .map(unmarshalSkillStateJson)
+      .filter(([, state]) => state.due <= now)
+      .map(([skill]) => generateQuestionForSkill(skill));
+  });
 
-    void r?.query(async (tx) => {
-      // eslint-disable-next-line no-console
-      console.log(`Next 10 skill reviews:`);
-      const now = new Date();
-      const skills = (
-        await tx.scan({ prefix: `s/`, limit: 10 }).entries().toArray()
-      )
+  const nextSkillState = useQueryOnce(
+    async (tx) =>
+      (await tx.scan({ prefix: `s/`, limit: 1 }).entries().toArray())
         .map(unmarshalSkillStateJson)
-        .filter(([, state]) => state.due <= now)
-        .map(([skill]) => skill);
-      setSkills(skills);
-    });
-  }, [r]);
-
-  useEffect(() => {
-    // eslint-disable-next-line no-console
-    console.log(skills);
-    const questions = skills?.map((skill) => generateQuestionForSkill(skill));
-    if (questions !== undefined && questions.length > 0) {
-      // eslint-disable-next-line no-console
-      console.log(`setting questions to`, questions);
-      setQuestions(questions);
-    }
-  }, [skills]);
-
-  useEffect(() => {
-    // HACK: Fallback questions for dev in case replicache is empty.
-    const timeoutId = setTimeout(() => {
-      setQuestions(
-        (x) =>
-          x ?? [
-            {
-              type: QuestionType.MultipleChoice,
-              prompt: `Select the correct word for the character “dǔ”`,
-              choices: [`好`, `爱`, `别`, `姆`],
-              answer: `好`,
-              flag: QuestionFlag.WeakWord,
-            },
-            {
-              type: QuestionType.MultipleChoice,
-              prompt: `Select the correct word for the character “dá”`,
-              choices: [`好`, `爱`, `别`, `姆`],
-              answer: `好`,
-              flag: QuestionFlag.WeakWord,
-            },
-            {
-              type: QuestionType.MultipleChoice,
-              prompt: `Select the correct word for the character “d”`,
-              choices: [`好`, `爱`, `别`, `姆`],
-              answer: `好`,
-              flag: QuestionFlag.WeakWord,
-            },
-            {
-              type: QuestionType.MultipleChoice,
-              prompt: `Select the correct word for the character “dǔ”`,
-              choices: [`好`, `爱`, `别`, `姆`],
-              answer: `好`,
-              flag: QuestionFlag.WeakWord,
-            },
-          ],
-      );
-    }, 1000);
-
-    return () => {
-      clearTimeout(timeoutId);
-    };
-  }, []);
+        .map(([, skillState]) => skillState)[0],
+  );
 
   return (
     <RootView backgroundColor="#161F23" style={styles.container}>
@@ -104,16 +47,47 @@ export default function QuizPage() {
             flex: 1,
           }}
         >
-          {questions === undefined ? (
+          {questions.loading ? (
             <Text>Loading…</Text>
-          ) : (
+          ) : questions.error ? (
+            <Text>Oops something broken</Text>
+          ) : questions.data.length > 0 ? (
             <QuizDeck
-              questions={questions}
+              questions={questions.data}
               onNext={(success) => {
                 if (success) {
                 }
               }}
             />
+          ) : (
+            <View
+              style={{
+                flex: 1,
+                gap: 16,
+                alignItems: `center`,
+                justifyContent: `center`,
+                paddingLeft: 20,
+                paddingRight: 20,
+              }}
+            >
+              <Text
+                style={{ color: `white`, fontSize: 30, textAlign: `center` }}
+              >
+                👏 You’re all caught up on your reviews!
+              </Text>
+              <GoHomeButton />
+              {nextSkillState.loading ||
+              nextSkillState.data === undefined ? null : (
+                <Text style={{ color: `#AAA`, textAlign: `center` }}>
+                  Next review in{` `}
+                  {formatDuration(
+                    intervalToDuration(
+                      interval(new Date(), nextSkillState.data.due),
+                    ),
+                  )}
+                </Text>
+              )}
+            </View>
           )}
         </View>
         <ExpoStatusBar style="auto" />
@@ -121,6 +95,21 @@ export default function QuizPage() {
     </RootView>
   );
 }
+
+const GoHomeButton = () => (
+  <View style={{ height: 44 }}>
+    <RectButton
+      onPressIn={() => {
+        router.push(`/`);
+      }}
+      color={`#333`}
+    >
+      <Text style={{ fontWeight: `bold`, color: `white`, fontSize: 20 }}>
+        Back
+      </Text>
+    </RectButton>
+  </View>
+);
 
 const styles = StyleSheet.create({
   container: {
