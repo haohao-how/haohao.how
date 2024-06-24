@@ -66,11 +66,25 @@ export const mutators = {
     }
 
     const skill = unmarshalSkillJson([key, skillValue]);
-    if (skill.srs.type !== SrsType.FsrsFourPointFive) {
-      return;
-    }
 
     const now = new Date(nowTimestamp);
+
+    const lastFsrs =
+      skill.srs?.type === SrsType.FsrsFourPointFive ? skill.srs : null;
+    const { stability, difficulty } =
+      lastFsrs ??
+      nextReview(
+        null,
+        // Default initial rating, using `Rating.Again` or `Rating.Hard`
+        // simulates getting it wrong the first time, and you need multiple
+        // correct answers to work your way back up to "learned" level (the
+        // level you would be if you answered `Rating.Good` on the first
+        // attempt).
+        //
+        // This is done to mitigate the case where you could "accidentally" get
+        // an answer correct on the first try.
+        Rating.Again,
+      );
 
     // - TODO: check that the last state created before this result.
     // - TODO: store the results a separate key prefix and recalculate to merge
@@ -78,8 +92,8 @@ export const mutators = {
     const s = nextReview(
       {
         created: skill.created,
-        stability: skill.srs.stability,
-        difficulty: skill.srs.difficulty,
+        stability,
+        difficulty,
         due: skill.due,
       },
       rating,
@@ -109,17 +123,12 @@ type HHReplicache = Replicache<typeof mutators>;
 
 export async function addHanziSkill(r: HHReplicache, skill: HanziSkillKey) {
   const now = new Date();
-  const { stability, difficulty } = nextReview(null, Rating.Again, now);
 
   await r.mutate.addSkill({
     s: marshalSkill({
       ...skill,
       created: now,
-      srs: {
-        type: SrsType.FsrsFourPointFive,
-        stability,
-        difficulty,
-      },
+      srs: null,
       due: now,
     }),
   });

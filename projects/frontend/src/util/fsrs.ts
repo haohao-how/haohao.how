@@ -47,11 +47,6 @@ function initStability(rating: Rating) {
   return Math.max(w[(rating - 1) as 0 | 1 | 2 | 3], 0.1);
 }
 
-/**
- * The stability level at which something is considered "learned".
- */
-const learnedLevelStability = initStability(Rating.Good);
-
 export function nextReview(
   lastReview: UpcomingReview | null,
   rating: Rating,
@@ -87,26 +82,26 @@ export function nextReview(
  * @param {number} stability - Stability (interval when R=90%)
  */
 function nextDueDuration(stability: number, rating: Rating): Duration {
-  // Before something has actually been _learned_ (i.e. reached the Good
-  // stability), keep reviewing it rapidly.
-  if (stability <= learnedLevelStability) {
-    switch (rating) {
-      case Rating.Again:
-        return { minutes: 1 };
-      case Rating.Hard:
-        return { minutes: 5 };
-      case Rating.Good:
-        return { minutes: 10 };
-      case Rating.Easy:
-        // If it's "easy" it's now learned, fall through and use the curve.
-        break;
-    }
+  switch (rating) {
+    case Rating.Again:
+      return { minutes: 1 };
+    case Rating.Hard:
+      return { minutes: 5 };
+    case Rating.Good:
+    case Rating.Easy:
+      // Fall-through and use the curve.
+      break;
   }
 
   return {
-    days: Math.min(
-      Math.max(1, Math.round(stability * intervalModifier(0.9 /* 90% */))),
-      36500 /* 100 years */,
+    minutes: Math.round(
+      24 *
+        60 *
+        // This returns in "days", multiply by 24*60 to turn into minutes.
+        Math.min(
+          stability * intervalModifier(0.9 /* 90% */),
+          36500 /* 100 years */,
+        ),
     ),
   };
 }

@@ -17,7 +17,8 @@ export type SrsState = SrsNullState | SrsFourPointFiveState;
 
 export interface SkillBase {
   created: Date;
-  srs: SrsState;
+  /** When null, it means it's never been reviewed. */
+  srs: SrsState | null;
   due: Date;
 }
 

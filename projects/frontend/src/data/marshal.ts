@@ -20,24 +20,28 @@ const SrsTypeUnmarshal = {
 //
 // SrsState
 //
-const MarshaledSrsState = z.discriminatedUnion(`t`, [
-  z.object({
-    /** type */
-    t: z.literal(SrsTypeMarshal[SrsType.Null]),
-  }),
-  z.object({
-    /** type */
-    t: z.literal(SrsTypeMarshal[SrsType.FsrsFourPointFive]),
-    /** stability */
-    s: z.number(),
-    /** difficulty */
-    d: z.number(),
-  }),
-]);
+const MarshaledSrsState = z
+  .discriminatedUnion(`t`, [
+    z.object({
+      /** type */
+      t: z.literal(SrsTypeMarshal[SrsType.Null]),
+    }),
+    z.object({
+      /** type */
+      t: z.literal(SrsTypeMarshal[SrsType.FsrsFourPointFive]),
+      /** stability */
+      s: z.number(),
+      /** difficulty */
+      d: z.number(),
+    }),
+  ])
+  .nullable();
 type MarshaledSrsState = z.infer<typeof MarshaledSrsState>;
 
-const marshalSrsState = (x: SrsState): MarshaledSrsState => {
-  switch (x.type) {
+const marshalSrsState = (x: SrsState | null): MarshaledSrsState => {
+  switch (x?.type) {
+    case undefined:
+      return null;
     case SrsType.Null:
       return {
         t: SrsTypeMarshal[x.type],
@@ -51,8 +55,10 @@ const marshalSrsState = (x: SrsState): MarshaledSrsState => {
   }
 };
 
-const unmarshalSrsState = (x: MarshaledSrsState): SrsState => {
-  switch (x.t) {
+const unmarshalSrsState = (x: MarshaledSrsState): SrsState | null => {
+  switch (x?.t) {
+    case undefined:
+      return null;
     case SrsTypeMarshal[SrsType.Null]:
       return {
         type: SrsTypeUnmarshal[x.t],
@@ -141,9 +147,9 @@ export const marshalSkillJson = (x: Skill) =>
   marshalSkill(x) as [string, OpaqueJSON];
 
 // SrsState
-export const unmarshalSrsStateJson = (value: OpaqueJSON): SrsState =>
+export const unmarshalSrsStateJson = (value: OpaqueJSON): SrsState | null =>
   MarshaledSrsState.transform(unmarshalSrsState).parse(value);
-export const marshalSrsStateJson = (x: SrsState) =>
+export const marshalSrsStateJson = (x: SrsState | null) =>
   marshalSrsState(x) as OpaqueJSON;
 
 // Skill key
