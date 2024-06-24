@@ -103,14 +103,12 @@ export const QuizDeck = ({
 
     if (currentQuestion !== undefined) {
       if (currentQuestion.type === QuestionType.OneCorrectPair) {
-        if (r) {
-          saveSkillRating(r, currentQuestion.skill, rating).catch(
-            (e: unknown) => {
-              // eslint-disable-next-line no-console
-              console.error(`failed to update skill`, e);
-            },
-          );
-        }
+        saveSkillRating(r, currentQuestion.skill, rating).catch(
+          (e: unknown) => {
+            // eslint-disable-next-line no-console
+            console.error(`failed to update skill`, e);
+          },
+        );
       }
 
       setStreakCount((prev) => (success ? prev + 1 : 0));
