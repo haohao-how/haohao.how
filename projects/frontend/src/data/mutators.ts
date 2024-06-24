@@ -1,24 +1,26 @@
-import { Rating, nextReview } from "@/util/fsrs";
+import { nextReview, Rating, UpcomingReview } from "@/util/fsrs";
+import { invariant } from "@/util/invariant";
 import { MutatorDefs, Replicache } from "replicache";
+import { z } from "zod";
 import {
-  MarshaledSkill,
-  MarshaledSkillKey,
-  hanziSkillToKey,
-  marshalSkill,
-  marshalSkillJson,
-  unmarshalSkillJson,
+  MarshaledSkillId,
+  MarshaledSkillStateKey,
+  MarshaledSkillStateValue,
+  marshalSkillId,
+  marshalSkillStateKey,
+  marshalSkillStateValue,
+  Timestamp,
+  unmarshalSkillStateJson,
 } from "./marshal";
-import { HanziSkillKey, SrsType } from "./model";
+import { HanziSkill, SrsType } from "./model";
 
 // Schema
 //
 // Version 2
 //
-// Changes:
-//
-// - Move
-//
 // Version 1
+//
+// Skill "current state", the current state of a skill.
 //
 // - `/s/he/<hanzi>`
 // - `/s/hpi/<hanzi>`
@@ -27,6 +29,14 @@ import { HanziSkillKey, SrsType } from "./model";
 // - `/s/eh/<hanzi>`
 // - `/s/ph/<hanzi>`
 // - `/s/ih/<hanzi>`
+//
+// Skill reviews, history of each time a skill was reviewed.
+//
+// - `sr/he/<hanzi>/<timestamp>` { r: Rating }
+// - `sr/hpi/<hanzi>/<timestamp>`
+//
+// Notes:
+// - no useless leading `/`
 
 export const mutators = {
   async incrementCounter(tx, options?: { quantity?: number }) {
@@ -35,42 +45,116 @@ export const mutators = {
     await tx.set(`counter`, (counter ?? 0) + quantity);
   },
 
-  async addSkill(
+  // TODO: rename to `skill review state` or something?
+  async addSkillState(
     tx,
     {
-      s: [key, value],
+      s: skillId,
+      n: nowTimestamp,
     }: {
-      // TODO: this isn't just storing the intent, it's storing specific values,
-      // is that okay? maybe… IDs need to be passed through, mutators should be
-      // deterministic (but doesn't mean client/server need to be the same).
-      s: MarshaledSkill;
+      s: MarshaledSkillId;
+      n: Timestamp;
     },
   ) {
-    // TODO: check if it's already been added by another client
-    await tx.set(key, value);
+    const now = new Date(nowTimestamp);
+    const key = marshalSkillStateKey(skillId);
+
+    const existing = await tx.has(key);
+    if (!existing) {
+      await tx.set(
+        key,
+        marshalSkillStateValue({
+          created: now,
+          srs: null,
+          due: now,
+        }),
+      );
+    }
   },
 
-  // TODO: rename to "skill reviewed" or something more declarative of the
-  // intent so ti's not just last write wins.
+  async reviewSkill(
+    tx,
+    {
+      s: skillId,
+      r: rating,
+      n: nowTimestamp,
+    }: { s: MarshaledSkillId; r: Rating; n: Timestamp },
+  ) {
+    await tx.set(`sr/${skillId}/${nowTimestamp}`, { r: rating });
+
+    // TODO: perf? batch these?
+    const reviews = await tx
+      .scan({ prefix: `sr/${skillId}/` })
+      .entries()
+      .toArray();
+
+    // should already be sorted given the key
+    // reviews.sort(([k]) => k.split(`/`).length);
+    // TODO: add invariant for debug mode
+
+    let state: UpcomingReview | null = null;
+    for (const [key, value] of reviews) {
+      const date = new Date(z.coerce.number().parse(key.split(`/`)[2]));
+      const { r: rating } = z.object({ r: z.nativeEnum(Rating) }).parse(value);
+      state = nextReview(state, rating, date);
+    }
+
+    invariant(state !== null);
+
+    await tx.set(
+      marshalSkillStateKey(skillId),
+      marshalSkillStateValue({
+        created: state.created,
+        srs: {
+          type: SrsType.FsrsFourPointFive,
+          stability: state.stability,
+          difficulty: state.difficulty,
+        },
+        due: state.due,
+      }),
+    );
+  },
+
+  //
+  // Deprecated mutators
+  //
+
+  /**
+   * @deprecated Use {@link mutators.reviewSkill} instead.
+   *
+   * Reasons:
+   * - The key was the full state key not just the skill ID (which is more
+   *   portable).
+   * - It doesn't handle long offline periods, it doesn't splice together the
+   *   reviews in the correct order, so if there's a delayed sync from one
+   *   client its mutation will be treated like it was applied last. Instead the
+   *   reviews should be stored individually and re-aggregated to a "current
+   *   state" if a review is inserted before the latest.
+   */
+  // eslint-disable-next-line deprecation/deprecation
   async updateSkill(
     tx,
     {
       k: key,
       r: rating,
       n: nowTimestamp,
-    }: { k: MarshaledSkillKey; r: Rating; n: number },
+    }: { k: MarshaledSkillStateKey; r: Rating; n: Timestamp },
   ): Promise<void> {
-    const skillValue = await tx.get(key);
-    if (skillValue === undefined) {
+    // TODO: make API to do this that handles the unmarshaling.
+    const marshaledSkillState = await tx.get(key);
+    if (marshaledSkillState === undefined) {
       return;
     }
 
-    const skill = unmarshalSkillJson([key, skillValue]);
+    const [, skillState] = unmarshalSkillStateJson([key, marshaledSkillState]);
 
     const now = new Date(nowTimestamp);
 
     const lastFsrs =
-      skill.srs?.type === SrsType.FsrsFourPointFive ? skill.srs : null;
+      skillState.srs?.type === SrsType.FsrsFourPointFive
+        ? skillState.srs
+        : null;
+
     const { stability, difficulty } =
       lastFsrs ??
       nextReview(
@@ -86,21 +170,17 @@ export const mutators = {
         Rating.Again,
       );
 
-    // - TODO: check that the last state created before this result.
-    // - TODO: store the results a separate key prefix and recalculate to merge
-    //   the results each time a new result is created.
     const s = nextReview(
       {
-        created: skill.created,
+        created: skillState.created,
         stability,
         difficulty,
-        due: skill.due,
+        due: skillState.due,
       },
       rating,
       now,
     );
-    const [, value] = marshalSkillJson({
-      ...skill,
+    const value = marshalSkillStateValue({
       created: now,
       srs: {
         type: SrsType.FsrsFourPointFive,
@@ -109,39 +189,48 @@ export const mutators = {
       },
       due: s.due,
     });
-    // eslint-disable-next-line no-console
-    console.log(`updating ${key} to `, value);
+    await tx.set(key, value);
+  },
+
+  /**
+   * @deprecated Use {@link mutators.addSkillState} instead.
+   *
+   * Reasons:
+   * - This is storing values instead of intent, which makes it harder to ensure
+   *   backwards compatibility and conflict resolution (other than last write
+   *   wins, but it's not even last write because we don't store the timestamp
+   *   of the update).
+   */
+  // eslint-disable-next-line deprecation/deprecation
+  async addSkill(
+    tx,
+    {
+      s: [key, value],
+    }: {
+      s: [MarshaledSkillStateKey, MarshaledSkillStateValue];
+    },
+  ) {
     await tx.set(key, value);
   },
 } satisfies MutatorDefs;
 
-// TODO: ban new Date() (with no args) in this file.
-
-// TODO: function to wrap all mutators to do the schema version check first?
-
 type HHReplicache = Replicache<typeof mutators>;
 
-export async function addHanziSkill(r: HHReplicache, skill: HanziSkillKey) {
-  const now = new Date();
-
-  await r.mutate.addSkill({
-    s: marshalSkill({
-      ...skill,
-      created: now,
-      srs: null,
-      due: now,
-    }),
+export async function addHanziSkill(r: HHReplicache, skill: HanziSkill) {
+  await r.mutate.addSkillState({
+    s: marshalSkillId(skill),
+    n: Date.now(),
   });
 }
 
 export async function saveSkillRating(
   r: HHReplicache,
-  skill: HanziSkillKey,
+  skill: HanziSkill,
   rating: Rating,
 ) {
-  await r.mutate.updateSkill({
+  await r.mutate.reviewSkill({
     n: Date.now(),
-    k: hanziSkillToKey(skill),
+    s: marshalSkillId(skill),
     r: rating,
   });
 }

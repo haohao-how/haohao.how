@@ -2,7 +2,7 @@ import { QuizDeck } from "@/components/QuizDeck";
 import { useReplicache } from "@/components/ReplicacheContext";
 import { RootView } from "@/components/RootView";
 import { generateQuestionForSkill } from "@/data/generator";
-import { unmarshalSkillJson } from "@/data/marshal";
+import { unmarshalSkillStateJson } from "@/data/marshal";
 import { Question, QuestionFlag, QuestionType, Skill } from "@/data/model";
 import { StatusBar as ExpoStatusBar } from "expo-status-bar";
 import { useEffect, useState } from "react";
@@ -24,10 +24,11 @@ export default function QuizPage() {
       console.log(`Next 10 skill reviews:`);
       const now = new Date();
       const skills = (
-        await tx.scan({ prefix: `/s/he/`, limit: 10 }).entries().toArray()
+        await tx.scan({ prefix: `s/`, limit: 10 }).entries().toArray()
       )
-        .map(unmarshalSkillJson)
-        .filter((skill) => skill.due <= now);
+        .map(unmarshalSkillStateJson)
+        .filter(([, state]) => state.due <= now)
+        .map(([skill]) => skill);
       setSkills(skills);
     });
   }, [r]);

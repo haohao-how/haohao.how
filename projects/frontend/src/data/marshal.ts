@@ -1,7 +1,13 @@
 import { invariant } from "@/util/invariant";
 import { ReadonlyJSONValue } from "replicache";
 import z from "zod";
-import { HanziSkillKey, Skill, SkillType, SrsState, SrsType } from "./model";
+import {
+  Skill,
+  SkillState as SkillStateValue,
+  SkillType,
+  SrsState,
+  SrsType,
+} from "./model";
 
 export type OpaqueJSON = ReadonlyJSONValue;
 
@@ -101,7 +107,7 @@ const MarshaledSkillType = z.enum(
 //
 // Skill
 //
-const MarshaledSkill = z.object({
+const MarshaledSkillStateValue = z.object({
   /** created */
   c: z.string().datetime(),
   /** srs */
@@ -109,24 +115,24 @@ const MarshaledSkill = z.object({
   /** difficulty */
   d: z.string().datetime(),
 });
-export type MarshaledSkillValue = z.infer<typeof MarshaledSkill>;
+export type MarshaledSkillStateValue = z.infer<typeof MarshaledSkillStateValue>;
 
-export type MarshaledSkill = [
-  key: MarshaledSkillKey,
-  value: MarshaledSkillValue,
-];
+// export type MarshaledSkillState = [
+//   key: MarshaledSkillStateKey,
+//   value: MarshaledSkillStateValue,
+// ];
 
-export const marshalSkill = (x: Skill): MarshaledSkill => [
-  hanziSkillToKey(x),
-  {
-    c: x.created.toISOString(),
-    s: marshalSrsState(x.srs),
-    d: x.due.toISOString(),
-  },
-];
+export const marshalSkillStateValue = (
+  x: SkillStateValue,
+): MarshaledSkillStateValue => ({
+  c: x.created.toISOString(),
+  s: marshalSrsState(x.srs),
+  d: x.due.toISOString(),
+});
 
-const unmarshalSkill = ([k, v]: MarshaledSkill): Skill => ({
-  ...parseHanziKeyedSkillKey(k),
+export const unmarshalSkillStateValue = (
+  v: MarshaledSkillStateValue,
+): SkillStateValue => ({
   created: z.coerce.date().parse(v.c),
   srs: unmarshalSrsState(v.s),
   due: z.coerce.date().parse(v.d),
@@ -138,13 +144,21 @@ const unmarshalSkill = ([k, v]: MarshaledSkill): Skill => ({
 //
 
 // Skill
-export const unmarshalSkillJson = ([key, value]: readonly [
+export const unmarshalSkillStateJson = ([key, value]: readonly [
   key: string,
   value: OpaqueJSON,
-]): Skill =>
-  unmarshalSkill([key as MarshaledSkillKey, MarshaledSkill.parse(value)]);
-export const marshalSkillJson = (x: Skill) =>
-  marshalSkill(x) as [string, OpaqueJSON];
+]): [Skill, SkillStateValue] => [
+  parseSkillStateKey(key),
+  MarshaledSkillStateValue.transform(unmarshalSkillStateValue).parse(value),
+];
+export const marshalSkillStateJson = ([skill, state]: readonly [
+  Skill,
+  SkillStateValue,
+]) =>
+  [
+    marshalSkillStateKey(skill),
+    marshalSkillStateValue(state) as OpaqueJSON,
+  ] as const;
 
 // SrsState
 export const unmarshalSrsStateJson = (value: OpaqueJSON): SrsState | null =>
@@ -152,20 +166,41 @@ export const unmarshalSrsStateJson = (value: OpaqueJSON): SrsState | null =>
 export const marshalSrsStateJson = (x: SrsState | null) =>
   marshalSrsState(x) as OpaqueJSON;
 
-// Skill key
-export type MarshaledSkillKey = string & z.BRAND<`SkillKey`>;
+// Skill ID e.g. `he:好`
+export type MarshaledSkillId = string & z.BRAND<`SkillId`>;
 
-export const hanziSkillToKey = (x: HanziSkillKey) =>
-  `/s/${SkillTypeMarshal[x.type]}/${x.hanzi}` as MarshaledSkillKey;
+// Skill state key e.g. `s/he:好`
+export type MarshaledSkillStateKey = string & z.BRAND<`SkillStateKey`>;
 
-export const parseHanziKeyedSkillKey = (x: string) => {
-  const result = x.match(/^\/s\/([^\/]+)\/([^\/]+)$/);
+export const marshalSkillId = (x: Skill) =>
+  `${SkillTypeMarshal[x.type]}:${x.hanzi}` as MarshaledSkillId;
+
+export const marshalSkillStateKey = (x: Skill | MarshaledSkillId) => {
+  const id = typeof x === `string` ? x : marshalSkillId(x);
+  return `s/${id}` as MarshaledSkillStateKey;
+};
+
+export const parseSkillStateKey = (x: string): Skill => {
+  const result = x.match(/^s\/(.+)$/);
   invariant(result !== null);
-  const [, rawType, rawHanzi] = result;
-  invariant(rawType !== undefined);
-  invariant(rawHanzi !== undefined);
+  const [, skillId] = result;
+  invariant(skillId !== undefined);
+  return parseSkillId(skillId);
+};
+
+export const parseSkillId = (x: string): Skill => {
+  const result = x.match(/^(.+?):(.+)$/);
+  invariant(result !== null);
+  const [, marshaledSkillType, rest] = result;
+  invariant(marshaledSkillType !== undefined);
+  invariant(rest !== undefined);
+
+  const skillType =
+    SkillTypeUnmarshal[MarshaledSkillType.parse(marshaledSkillType)];
   return {
-    type: SkillTypeUnmarshal[MarshaledSkillType.parse(rawType)],
-    hanzi: rawHanzi,
+    type: skillType,
+    hanzi: rest,
   };
 };
+
+export type Timestamp = number;
