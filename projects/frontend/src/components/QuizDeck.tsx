@@ -9,6 +9,7 @@ import {
   createStackNavigator,
 } from "@react-navigation/stack";
 import { router } from "expo-router";
+import sortBy from "lodash/sortBy";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Animated, Text, View } from "react-native";
 import { CloseButton } from "./CloseButton";
@@ -21,14 +22,10 @@ import { useEventCallback } from "./util";
 const buttonThickness = 4;
 const gap = 16;
 
-type QuestionState =
-  | {
-      type: QuestionStateType.Correct;
-    }
-  | {
-      type: QuestionStateType.Incorrect;
-      attempts: number;
-    };
+interface QuestionState {
+  type: QuestionStateType;
+  attempts: number;
+}
 
 enum QuestionStateType {
   Correct,
@@ -69,15 +66,12 @@ export const QuizDeck = ({
     [questionStateMap, questions.length],
   );
 
-  const currentQuestion = useMemo(() => {
-    // TODO:
-    // - cycle incorrect questions.
-    // - have a question queue
-    for (const question of questions) {
-      if (questionStateMap.get(question)?.type !== QuestionStateType.Correct) {
-        return question;
-      }
-    }
+  const currentQuestion = useMemo((): Question | undefined => {
+    const remainingQuestions = questions
+      .map((q) => [q, questionStateMap.get(q)] as const)
+      .filter(([, state]) => state?.type !== QuestionStateType.Correct);
+    const [x] = sortBy(remainingQuestions, ([, s]) => s?.attempts ?? 0);
+    return x?.[0];
   }, [questions, questionStateMap]);
 
   // This is the engine that moves the quiz forward.
@@ -115,18 +109,14 @@ export const QuizDeck = ({
       setQuestionStateMap((prev) => {
         const next = new Map(prev);
         const prevState = prev.get(currentQuestion);
-        next.set(
-          currentQuestion,
-          success
-            ? { type: QuestionStateType.Correct }
-            : {
-                type: QuestionStateType.Incorrect,
-                attempts:
-                  prevState?.type === QuestionStateType.Incorrect
-                    ? prevState.attempts + 1
-                    : 1,
-              },
-        );
+
+        const attempts = prevState?.attempts ?? 1;
+        next.set(currentQuestion, {
+          type: success
+            ? QuestionStateType.Correct
+            : QuestionStateType.Incorrect,
+          attempts,
+        });
         return next;
       });
     }
