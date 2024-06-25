@@ -126,7 +126,9 @@ export const QuizDeckOneCorrectPairQuestion = ({
                 >
                   Correct answer:
                 </Text>
-                <Text style={{ color: `#CE675F`, fontSize: 20 }}>早 (zǎo)</Text>
+                <Text style={{ color: `#CE675F`, fontSize: 20 }}>
+                  {answerA} ({answerB})
+                </Text>
               </>
             )}
           </View>
