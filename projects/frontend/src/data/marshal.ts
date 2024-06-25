@@ -1,5 +1,10 @@
+import { iterTake } from "@/util/collections";
 import { invariant } from "@/util/invariant";
-import { ReadonlyJSONValue } from "replicache";
+import {
+  IndexDefinitions,
+  ReadonlyJSONValue,
+  ReadTransaction,
+} from "replicache";
 import z from "zod";
 import {
   Skill,
@@ -117,10 +122,8 @@ const MarshaledSkillStateValue = z.object({
 });
 export type MarshaledSkillStateValue = z.infer<typeof MarshaledSkillStateValue>;
 
-// export type MarshaledSkillState = [
-//   key: MarshaledSkillStateKey,
-//   value: MarshaledSkillStateValue,
-// ];
+export type MarshaledSkillStateValueJsonPath =
+  `/${keyof MarshaledSkillStateValue}`;
 
 export const marshalSkillStateValue = (
   x: SkillStateValue,
@@ -177,8 +180,10 @@ export const marshalSkillId = (x: Skill) =>
 
 export const marshalSkillStateKey = (x: Skill | MarshaledSkillId) => {
   const id = typeof x === `string` ? x : marshalSkillId(x);
-  return `s/${id}` as MarshaledSkillStateKey;
+  return `${skillStatePrefix}${id}` as MarshaledSkillStateKey;
 };
+
+export const skillStatePrefix = `s/`;
 
 export const parseSkillStateKey = (x: string): Skill => {
   const result = x.match(/^s\/(.+)$/);
@@ -204,3 +209,43 @@ export const parseSkillId = (x: string): Skill => {
 };
 
 export type Timestamp = number;
+
+export enum IndexName {
+  Null = `Null`,
+  SkillStateByDue = `SkillStateByDue`,
+}
+
+export const indexes = {
+  [IndexName.Null]: {
+    allowEmpty: true,
+    prefix: `///`,
+    jsonPointer: `/d` satisfies MarshaledSkillStateValueJsonPath,
+  },
+  [IndexName.SkillStateByDue]: {
+    allowEmpty: false,
+    prefix: skillStatePrefix,
+    jsonPointer: `/d` satisfies MarshaledSkillStateValueJsonPath,
+  },
+} satisfies IndexDefinitions;
+
+export const indexUnmarshalers = {
+  [IndexName.Null]: () => null,
+  [IndexName.SkillStateByDue]: unmarshalSkillStateJson,
+};
+
+export async function indexScan<
+  I extends IndexName,
+  Unmarshaled = ReturnType<(typeof indexUnmarshalers)[I]>,
+>(tx: ReadTransaction, indexName: I, limit?: number): Promise<Unmarshaled[]> {
+  // Work around https://github.com/rocicorp/replicache/issues/1039
+  const iter = tx.scan({ indexName }).entries();
+  const results = limit ? await iterTake(iter, limit) : await iter.toArray();
+  const unmarshal = indexUnmarshalers[indexName];
+
+  return (
+    results
+      // Strip off the secondary key, put it back in the normal "no index" mode
+      // of [key, value].
+      .map(([[, key], value]) => unmarshal([key, value]) as Unmarshaled)
+  );
+}

@@ -3,12 +3,14 @@ import { RectButton } from "@/components/RectButton";
 import { useQueryOnce } from "@/components/ReplicacheContext";
 import { RootView } from "@/components/RootView";
 import { generateQuestionForSkill } from "@/data/generator";
-import { unmarshalSkillStateJson } from "@/data/marshal";
+import { IndexName, indexScan } from "@/data/marshal";
 import { formatDuration } from "date-fns/formatDuration";
 import { interval } from "date-fns/interval";
 import { intervalToDuration } from "date-fns/intervalToDuration";
 import { router } from "expo-router";
 import { StatusBar as ExpoStatusBar } from "expo-status-bar";
+import shuffle from "lodash/shuffle";
+import take from "lodash/take";
 import { StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
@@ -17,17 +19,25 @@ export default function QuizPage() {
 
   const questions = useQueryOnce(async (tx) => {
     const now = new Date();
-    return (await tx.scan({ prefix: `s/`, limit: 10 }).entries().toArray())
-      .map(unmarshalSkillStateJson)
-      .filter(([, state]) => state.due <= now)
-      .map(([skill]) => generateQuestionForSkill(skill));
+
+    // Look ahead at the next 50 skills, shuffle them and take 10. This way
+    // you don't end up with the same set over and over again (which happens a
+    // lot in development).
+    return take(
+      shuffle(
+        (await indexScan(tx, IndexName.SkillStateByDue, 50)).filter(
+          ([, { due }]) => due <= now,
+        ),
+      ),
+      10,
+    ).map(([skill]) => generateQuestionForSkill(skill));
   });
 
   const nextSkillState = useQueryOnce(
     async (tx) =>
-      (await tx.scan({ prefix: `s/`, limit: 1 }).entries().toArray())
-        .map(unmarshalSkillStateJson)
-        .map(([, skillState]) => skillState)[0],
+      (await indexScan(tx, IndexName.SkillStateByDue, 1)).map(
+        ([, skillState]) => skillState,
+      )[0],
   );
 
   return (

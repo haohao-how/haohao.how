@@ -110,7 +110,7 @@ export const QuizDeck = ({
         const next = new Map(prev);
         const prevState = prev.get(currentQuestion);
 
-        const attempts = prevState?.attempts ?? 1;
+        const attempts = (prevState?.attempts ?? 0) + 1;
         next.set(currentQuestion, {
           type: success
             ? QuestionStateType.Correct

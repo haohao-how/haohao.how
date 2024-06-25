@@ -1,3 +1,4 @@
+import { indexes } from "@/data/marshal";
 import { mutators } from "@/data/mutators";
 import { replicacheLicenseKey } from "@/env";
 import { invariant } from "@/util/invariant";
@@ -56,6 +57,7 @@ export function ReplicacheProvider({ children }: React.PropsWithChildren) {
         // },
         experimentalCreateKVStore,
         mutators,
+        indexes,
       }),
     [],
   );
