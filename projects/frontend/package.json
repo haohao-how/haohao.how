@@ -28,6 +28,7 @@
     "expo-status-bar": "~1.12.1",
     "expo-system-ui": "~3.0.6",
     "expo-updates": "~0.25.17",
+    "hanzi": "patch:hanzi@npm%3A2.1.5#~/.yarn/patches/hanzi-npm-2.1.5-506390bb41.patch",
     "lodash": "^4.17.21",
     "nanoid": "^5.0.7",
     "react": "18.2.0",

@@ -270,6 +270,6 @@ const radicals = radicalData.map(
 /**
  * Lookup by primary or alternative character.
  */
-export const radicalLookupByChar: ReadonlyMap<string, Radical> = new Map(
+export const radicalLookupByHanzi: ReadonlyMap<string, Radical> = new Map(
   radicals.flatMap((r) => [r.char].concat(r.charAlts ?? []).map((c) => [c, r])),
 );
