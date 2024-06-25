@@ -1,30 +1,34 @@
-import { wordLookupByWord } from "@/dictionary/words";
+import { characterLookupByHanzi } from "@/dictionary/characters";
+import { wordLookupByHanzi } from "@/dictionary/words";
 import { invariant } from "@/util/invariant";
+import shuffle from "lodash/shuffle";
 import { Question, QuestionType, Skill, SkillType } from "./model";
 
 // generate a question to test a skill
 export function generateQuestionForSkill(skill: Skill): Question {
   switch (skill.type) {
     case SkillType.HanziWordToEnglish: {
-      const english = wordLookupByWord.get(skill.hanzi);
+      const english = wordLookupByHanzi.get(skill.hanzi);
       invariant(english !== undefined, `couldn't find an english translation`);
+      const rowCount = 5;
+      const wrongHanzi = getOtherHanzi(skill.hanzi, rowCount - 1);
+      const wrongEnglish = getOtherNonMatchingEnglishTranslations([
+        skill.hanzi,
+        ...wrongHanzi,
+      ]).slice(0, wrongHanzi.length);
+
+      if (wrongHanzi.length < 3 || wrongEnglish.length < 3) {
+        // eslint-disable-next-line no-console
+        console.error(
+          `couldn't generate enough options for HanziWordToEnglish`,
+        );
+      }
+
       return {
         type: QuestionType.OneCorrectPair,
-        // SingleHanziWordToEnglish,
         prompt: `Translate this`,
-        groupA: [
-          skill.hanzi, // TODO: 3 other items
-          `x`,
-          `y`,
-          `z`,
-        ],
-        groupB: [
-          english.name,
-          // TODO: 3 other items
-          `xx`,
-          `yy`,
-          `zz`,
-        ],
+        groupA: shuffle([skill.hanzi, ...wrongHanzi]),
+        groupB: shuffle([english.name, ...wrongEnglish]),
         answer: [skill.hanzi, english.name],
         skill,
       };
@@ -32,4 +36,48 @@ export function generateQuestionForSkill(skill: Skill): Question {
     default:
       throw new Error(`todo: not implemented`);
   }
+}
+
+function getOtherHanzi(hanzi: string, count: number): string[] {
+  const result = new Set<string>();
+
+  for (const h of shuffle([...characterLookupByHanzi.keys()])) {
+    if (!result.has(h) && hanzi !== h) {
+      result.add(h);
+    }
+    if (result.size === count) {
+      break;
+    }
+  }
+
+  return [...result];
+}
+
+function getOtherNonMatchingEnglishTranslations(hanzis: string[]): string[] {
+  const result = new Set<string>();
+  const forbidden = new Set(
+    hanzis.flatMap((h): string[] => {
+      const char = characterLookupByHanzi.get(h);
+      const word = wordLookupByHanzi.get(h);
+      return [
+        char?.name ?? ``,
+        ...(char?.nameAlts ?? []),
+        word?.name ?? ``,
+        ...(word?.nameAlts ?? []),
+      ];
+    }),
+  );
+
+  while (result.size < hanzis.length) {
+    for (const c of shuffle([...characterLookupByHanzi.values()])) {
+      if (!forbidden.has(c.name)) {
+        result.add(c.name);
+      }
+      if (result.size === hanzis.length) {
+        break;
+      }
+    }
+  }
+
+  return [...result];
 }

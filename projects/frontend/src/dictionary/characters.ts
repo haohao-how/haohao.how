@@ -268,6 +268,6 @@ const characters = characterData.map(
 /**
  * Lookup by character.
  */
-export const characterLookupByChar: ReadonlyMap<string, Character> = new Map(
+export const characterLookupByHanzi: ReadonlyMap<string, Character> = new Map(
   characters.map((c) => [c.char, c]),
 );

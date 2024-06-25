@@ -7,8 +7,9 @@ import {
 } from "@/components/SectionHeaderButton";
 import { GradientAqua, GradientPurple, GradientRed } from "@/components/styles";
 import { marshalSkillStateKey } from "@/data/marshal";
-import { SkillType } from "@/data/model";
-import { addHanziSkill, incrementCounter } from "@/data/mutators";
+import { Skill, SkillType } from "@/data/model";
+import { addHanziSkill } from "@/data/mutators";
+import { characterLookupByHanzi } from "@/dictionary/characters";
 import * as Sentry from "@sentry/react-native";
 import { useFonts } from "expo-font";
 import { Link } from "expo-router";
@@ -37,55 +38,25 @@ export default function IndexPage() {
 
   useEffect(() => {
     (async () => {
-      const hanzi = `火`;
-
-      const shouldSeed = await r.query(async (tx) => {
-        const result = await tx.get(
-          marshalSkillStateKey({
+      const skillsToQueue = await r.query(async (tx) => {
+        const result: Skill[] = [];
+        for (const hanzi of characterLookupByHanzi.keys()) {
+          const skill = {
             type: SkillType.HanziWordToEnglish,
             hanzi,
-          }),
-        );
-        return result === undefined;
-      });
-
-      if (shouldSeed) {
-        // eslint-disable-next-line no-console
-        console.log(`Adding skill…`);
-        await addHanziSkill(r, {
-          type: SkillType.HanziWordToEnglish,
-          hanzi,
-        });
-      }
-
-      await r.query(async (tx) => {
-        {
-          // eslint-disable-next-line no-console
-          console.log(`Next 10 skill reviews:`);
-          const items = await tx
-            .scan({ prefix: `/s/he/`, limit: 10 })
-            .entries()
-            .toArray();
-          // eslint-disable-next-line no-console
-          console.log(items);
-        }
-
-        {
-          const x = tx.scan({ prefix: `count` });
-          for await (const y of x.entries()) {
-            // eslint-disable-next-line no-console
-            console.log(y);
+          };
+          if (!(await tx.has(marshalSkillStateKey(skill)))) {
+            result.push(skill);
           }
         }
-
-        const counter = await tx.get(`counter`);
-        // eslint-disable-next-line no-console
-        console.log(`counter =`, counter);
-        incrementCounter(r).catch((e: unknown) => {
-          // eslint-disable-next-line no-console
-          console.error(e);
-        });
+        return result;
       });
+
+      for (const skill of skillsToQueue) {
+        // eslint-disable-next-line no-console
+        console.log(`Adding skill…`, marshalSkillStateKey(skill));
+        await addHanziSkill(r, skill);
+      }
     })().catch((err: unknown) => {
       // eslint-disable-next-line no-console
       console.error(err);

@@ -2,12 +2,12 @@ import { ReferencePage } from "@/components/ReferencePage";
 import { ReferencePageBodySection } from "@/components/ReferencePageBodySection";
 import { ReferencePageHeader } from "@/components/ReferencePageHeader";
 import { GradientPurple } from "@/components/styles";
-import { wordLookupByWord } from "@/dictionary/words";
+import { wordLookupByHanzi } from "@/dictionary/words";
 import { useLocalSearchParams } from "expo-router";
 
 export default function WordPage() {
   const { id } = useLocalSearchParams<`/word/[id]`>();
-  const word = wordLookupByWord.get(id);
+  const word = wordLookupByHanzi.get(id);
 
   return (
     <ReferencePage

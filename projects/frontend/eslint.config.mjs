@@ -101,6 +101,14 @@ export default tseslint.config(
               importNames: [`SafeAreaView`],
               message: `Please use \`useSafeAreaInsets\` from \`react-native-safe-area-context\` instead.`,
             },
+            {
+              name: `hanzi`,
+              message: `Please use @/dictionary/hanzi instead.`,
+            },
+            {
+              name: `lodash`,
+              message: `Please use lodash/* instead.`,
+            },
           ],
         },
       ],

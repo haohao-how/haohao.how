@@ -2,12 +2,12 @@ import { ReferencePage } from "@/components/ReferencePage";
 import { ReferencePageBodySection } from "@/components/ReferencePageBodySection";
 import { ReferencePageHeader } from "@/components/ReferencePageHeader";
 import { GradientRed } from "@/components/styles";
-import { characterLookupByChar } from "@/dictionary/characters";
+import { characterLookupByHanzi } from "@/dictionary/characters";
 import { useLocalSearchParams } from "expo-router";
 
 export default function CharacterPage() {
   const { id } = useLocalSearchParams<`/character/[id]`>();
-  const character = characterLookupByChar.get(id);
+  const character = characterLookupByHanzi.get(id);
 
   return (
     <ReferencePage

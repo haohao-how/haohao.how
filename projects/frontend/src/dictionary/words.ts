@@ -268,6 +268,6 @@ const words = wordData.map(
 /**
  * Lookup by the word's characters.
  */
-export const wordLookupByWord: ReadonlyMap<string, Word> = new Map(
+export const wordLookupByHanzi: ReadonlyMap<string, Word> = new Map(
   words.map((w) => [w.text, w]),
 );
