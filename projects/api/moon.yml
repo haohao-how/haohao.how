@@ -1,0 +1,29 @@
+tasks:
+  test:
+    command:
+      - node
+      - --test
+    args:
+      - --import
+      - tsx
+      - "**/*.test.ts"
+    platform: node
+  test-watch:
+    extends: test
+    args:
+      - --watch
+    options:
+      mergeArgs: prepend
+    local: true
+  upload-sentry-source-maps:
+    command:
+      - npx
+      - sentry-expo-upload-sourcemaps
+      - dist
+    platform: node
+    local: true
+
+tags:
+  - prettier
+  - typescript
+  - vercel
