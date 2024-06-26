@@ -1,4 +1,7 @@
 tasks:
+  dev:
+    command: vercel dev
+    local: true
   test:
     command:
       - node

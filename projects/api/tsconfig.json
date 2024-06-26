@@ -2,15 +2,14 @@
   "compilerOptions": {
     "allowJs": true,
     "baseUrl": ".",
-    "esModuleInterop": true,
     "lib": ["ESNext"],
-    "module": "ESNext",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
     "noEmit": true,
-    "noPropertyAccessFromIndexSignature": true,
     "noUncheckedIndexedAccess": true,
     "outDir": "../../.moon/cache/types/projects/api",
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": ["api/*"]
     },
     "skipLibCheck": true,
     "strict": true,
