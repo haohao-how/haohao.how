@@ -1,11 +1,12 @@
 {
   "name": "api",
-  "type": "commonjs",
+  "type": "module",
   "dependencies": {
-    "vercel": "^34.2.7"
+    "vercel": "^34.2.8"
   },
   "devDependencies": {
     "@types/node": "^20.12.12",
+    "@vercel/node": "^3.2.0",
     "prettier": "^3.2.5",
     "typescript": "^5.5.2"
   },
