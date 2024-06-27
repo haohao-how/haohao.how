@@ -2,12 +2,19 @@
   "name": "api",
   "type": "module",
   "dependencies": {
-    "vercel": "^34.2.8"
+    "@neondatabase/serverless": "^0.9.4",
+    "drizzle-orm": "^0.31.2",
+    "nanoid": "^5.0.7",
+    "postgres": "^3.4.4",
+    "vercel": "^34.2.8",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "@types/node": "^20.12.12",
     "@vercel/node": "^3.2.0",
+    "drizzle-kit": "^0.22.7",
     "prettier": "^3.2.5",
+    "tsx": "^4.15.7",
     "typescript": "^5.5.2"
   },
   "private": true

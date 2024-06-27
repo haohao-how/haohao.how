@@ -1,0 +1,29 @@
+name: Test PR
+
+on:
+  pull_request:
+
+jobs:
+  test_migration:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: "actions/checkout@v4"
+        with:
+          fetch-depth: 0
+      - uses: neondatabase/create-branch-action@v4.3.1
+        id: create-branch
+        with:
+          project_id: ${{ secrets.NEON_PROJECT_ID }}
+          branch_name: test_branch
+          api_key: ${{ secrets.NEON_API_KEY }}
+          username: ${{ secrets.NEON_USERNAME }}
+          suspend_timeout: 30
+      - run: echo "DATABASE_URL=${{ steps.create-branch.outputs.db_url }}" >> ./projects/api/.env.local
+      - uses: "moonrepo/setup-toolchain@v0"
+      - run: moon run api:dbMigrate
+      - uses: neondatabase/delete-branch-action@v3
+        with:
+          project_id: ${{ secrets.NEON_PROJECT_ID }}
+          branch: test_branch
+          api_key: ${{ secrets.NEON_API_KEY }}
+        if: ${{ always() }}
