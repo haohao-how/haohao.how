@@ -1,11 +1,11 @@
 {
+  "extends": "../../tsconfig.base",
   "ts-node": {
     // Include `.d.ts` files (e.g. `src/typings/*`)
     "files": true
   },
   "compilerOptions": {
     "outDir": "../../.moon/cache/types/projects/static",
-    "strict": true,
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
     "allowJs": true,
@@ -13,7 +13,6 @@
     "lib": ["DOM", "ESNext"],
     "noEmit": true,
     "noPropertyAccessFromIndexSignature": true,
-    "noUncheckedIndexedAccess": true,
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "target": "ESNext"

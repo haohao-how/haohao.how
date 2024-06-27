@@ -1,4 +1,5 @@
 {
+  "extends": "../../tsconfig.base",
   "compilerOptions": {
     "allowJs": true,
     "checkJs": true,
@@ -11,13 +12,11 @@
     "moduleResolution": "bundler",
     "noEmit": true,
     "noPropertyAccessFromIndexSignature": true,
-    "noUncheckedIndexedAccess": true,
     "outDir": "../../.moon/cache/types/projects/emails",
     "resolveJsonModule": true,
     "rootDirs": ["."],
     "skipLibCheck": true,
     "sourceMap": true,
-    "strict": true,
     "target": "esnext",
     "verbatimModuleSyntax": true
   },
