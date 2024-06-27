@@ -1,4 +1,5 @@
 {
+  "extends": "../../tsconfig.base",
   "compilerOptions": {
     "allowJs": true,
     "baseUrl": ".",
@@ -6,13 +7,11 @@
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
     "noEmit": true,
-    "noUncheckedIndexedAccess": true,
     "outDir": "../../.moon/cache/types/projects/api",
     "paths": {
       "@/*": ["api/*"]
     },
     "skipLibCheck": true,
-    "strict": true,
     "target": "ESNext",
     "types": ["node"]
   },

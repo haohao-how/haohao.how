@@ -1,12 +1,11 @@
 {
+  "extends": "./tsconfig.base",
   "compilerOptions": {
     "outDir": ".moon/cache/types",
     "allowJs": true,
     "checkJs": true,
     "lib": ["ESNext"],
-    "strict": true,
     "noPropertyAccessFromIndexSignature": true,
-    "noUncheckedIndexedAccess": true,
     "typeRoots": []
   },
   "include": ["**/*"],

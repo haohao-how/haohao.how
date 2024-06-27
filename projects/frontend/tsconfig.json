@@ -1,5 +1,5 @@
 {
-  "extends": "expo/tsconfig.base",
+  "extends": "../../tsconfig.base",
   "compilerOptions": {
     "allowJs": true,
     "baseUrl": ".",
@@ -10,12 +10,10 @@
     "moduleResolution": "Bundler",
     "noEmit": true,
     "noPropertyAccessFromIndexSignature": true,
-    "noUncheckedIndexedAccess": true,
     "outDir": "../../.moon/cache/types/projects/frontend",
     "paths": { "@/*": ["src/*"] },
     "resolveJsonModule": true,
     "skipLibCheck": true,
-    "strict": true,
     "target": "ESNext"
   },
   "include": [
