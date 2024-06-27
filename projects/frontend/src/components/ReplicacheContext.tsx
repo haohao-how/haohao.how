@@ -5,7 +5,6 @@ import { invariant } from "@/util/invariant";
 import {
   createContext,
   useContext,
-  useEffect,
   useLayoutEffect,
   useMemo,
   useRef,
@@ -61,29 +60,6 @@ export function ReplicacheProvider({ children }: React.PropsWithChildren) {
       }),
     [],
   );
-
-  useEffect(() => {
-    // void experimentalCreateKVStore(`hao`)
-    //   .truncate()
-    //   .then(() => {
-    //     console.log(`Truncated!`);
-    //   });
-
-    const timeoutId = setTimeout(() => {
-      (async () => {
-        // const pendingMutations = await rep.experimentalPendingMutations();
-        // eslint-disable-next-line no-console
-        // console.log(`pendingMutations = `, JSON.stringify(pendingMutations));
-      })().catch((err: unknown) => {
-        // eslint-disable-next-line no-console
-        console.error(err);
-      });
-    }, 1000);
-
-    return () => {
-      clearTimeout(timeoutId);
-    };
-  }, [rep]);
 
   // use react-query to wait for the promise??
 
