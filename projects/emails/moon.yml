@@ -5,22 +5,16 @@ fileGroups:
 
 tasks:
   dev:
-    command:
-      - email
-      - dev
+    command: email dev
     platform: node
     local: true
   build:
-    command:
-      - email
-      - build
+    command: email build
     inputs:
       - "@group(emails)"
     platform: node
   start:
-    command:
-      - email
-      - start
+    command: email start
     deps:
       - build
     platform: node

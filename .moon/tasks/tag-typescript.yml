@@ -1,9 +1,7 @@
 tasks:
   typecheck:
-    command:
-      - tsc
-      - --noEmit
+    command: tsc --noEmit
     platform: node
     inputs:
       - "*.{ts,cts,mts,tsx,mtsx,js,cjs,mjs,json}"
-      - "src/**/*.{ts,cts,mts,tsx,mtsx,js,cjs,mjs,json}"
+      - "{src,api}/**/*.{ts,cts,mts,tsx,mtsx,js,cjs,mjs,json}"

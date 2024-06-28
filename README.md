@@ -8,11 +8,6 @@ Install [proto](https://moonrepo.dev/proto):
 
 ```sh
 curl -fsSL https://moonrepo.dev/install/proto.sh | bash
-```
-
-Install other tools used in the workspace:
-
-```sh
 proto use
 ```
 

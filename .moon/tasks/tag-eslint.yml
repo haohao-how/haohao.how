@@ -1,8 +1,6 @@
 tasks:
   lint:
-    command:
-      - eslint
-      - .
+    command: eslint .
     platform: node
     inputs:
       # Config files anywhere within the project
