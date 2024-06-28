@@ -1,8 +1,6 @@
 tasks:
   dev:
-    command:
-      - expo
-      - start
+    command: expo start
     platform: node
     local: true
   dev-android:
@@ -18,21 +16,12 @@ tasks:
     args:
       - --web
   expo-doctor:
-    command:
-      - npx
-      - "--yes"
-      - expo-doctor
-    platform: node
+    command: npx --yes expo-doctor
   eas:
-    command:
-      - npx
-      - "--yes"
-      - eas-cli@latest
+    command: npx --yes eas-cli@latest
     local: true
   export:
-    command:
-      - expo
-      - export
+    command: expo export
     platform: node
     inputs:
       - "assets/**/*"
@@ -43,40 +32,20 @@ tasks:
       - "dist/"
   expo-generate-types:
     # The recommended command from https://docs.expo.dev/router/reference/typed-routes/#type-generation
-    command:
-      - expo
-      - customize
-      - tsconfig.json
+    command: expo customize tsconfig.json
     platform: node
     options:
       cache: false
   test:
-    command:
-      - node
-      - --test
-    args:
-      - --import
-      - tsx
-      - "**/*.test.ts"
-    platform: node
+    command: node --test --import tsx "**/*.test.ts"
   test-watch:
-    extends: test
-    args:
-      - --watch
-    options:
-      mergeArgs: prepend
+    command: node --test --watch --import tsx "**/*.test.ts"
     local: true
   typecheck:
     deps:
       - expo-generate-types
-    options:
-      mergeDeps: append
   upload-sentry-source-maps:
-    command:
-      - npx
-      - sentry-expo-upload-sourcemaps
-      - dist
-    platform: node
+    command: npx sentry-expo-upload-sourcemaps dist
     local: true
 
 tags:

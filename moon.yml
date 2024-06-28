@@ -16,24 +16,14 @@ tasks:
     args:
       - "'!./projects/**/*'"
   doctor:
-    command:
-      - yarn
-      - doctor
-      - .
-    platform: node
+    command: yarn doctor .
     inputs:
       - "@group(yarnConfig)"
   node-version:
-    command:
-      - node
-      - "--version"
-    platform: node
+    command: node --version
     local: true
   yarn-constraints:
-    command:
-      - yarn
-      - constraints
-    platform: node
+    command: yarn constraints
     inputs:
       - "@group(yarnConfig)"
 

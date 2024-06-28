@@ -1,38 +1,24 @@
 tasks:
   dev:
     command: vercel dev
+    platform: node
     local: true
   test:
-    command:
-      - node
-      - --test
-    args:
-      - --import
-      - tsx
-      - "**/*.test.ts"
-    platform: node
+    command: node --test --import tsx '**/*.test.ts'
   test-watch:
-    extends: test
-    args:
-      - --watch
-    options:
-      mergeArgs: prepend
+    command: node --test --watch --import tsx '**/*.test.ts'
     local: true
   upload-sentry-source-maps:
-    command:
-      - npx
-      - sentry-expo-upload-sourcemaps
-      - dist
-    platform: node
+    command: npx sentry-expo-upload-sourcemaps dist
     local: true
   dbGenerate:
-    command: yarn drizzle-kit generate
-    local: true
+    command: drizzle-kit generate
     platform: node
+    local: true
   dbMigrate:
-    command: node --import tsx ./src/bin/migrate.ts
-    local: true
+    command: tsx ./src/bin/migrate.ts
     platform: node
+    local: true
     options:
       cache: false
       envFile: .env.local

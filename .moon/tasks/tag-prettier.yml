@@ -1,15 +1,7 @@
 tasks:
   prettier:
-    extends: prettier-check
-    args:
-      - --write
-    options:
-      mergeArgs: prepend
+    command: prettier --write --check .
     local: true
   prettier-check:
-    command:
-      - prettier
-    args:
-      - --check
-      - .
+    command: prettier --check .
     platform: node
