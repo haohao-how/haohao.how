@@ -31,14 +31,14 @@ Inside `toolchain.yml` edit `node.yarn.version` and update the version. Run
 
 ## Upgrading Moon
 
-```
+```sh
 proto outdated --update
 proto use
 ```
 
 ## Upgrading Proto
 
-```
+```sh
 proto upgrade
 ```
 
@@ -46,7 +46,7 @@ proto upgrade
 
 Edit `.moon/toolchain.yml` edit `node.version`.
 
-```
+```sh
 moon run node-version
 ```
 
@@ -58,7 +58,7 @@ use proto to download and install the right version of Node.js.
 A normal `yarn up ___` won't work if no workspace depends on it directly, so you
 need to use `--recursive`. For example to upgrade `tar` use:
 
-```
+```sh
 yarn up -R tar
 ```
 
@@ -66,7 +66,7 @@ yarn up -R tar
 
 Yarn doesn't automatically migrate patches, so you need to migrate it manually.
 
-```
+```sh
 yarn patch expo-image
 patch -d /private/var/folders/fs/...snip.../T/xfs-33350073/user < .yarn/patches/expo-image-npm-1.12.9-116d224baf.patch
 yarn patch-commit -s /private/var/folders/fs/...snip.../T/xfs-33350073/user
