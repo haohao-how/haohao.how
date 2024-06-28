@@ -1,3 +1,5 @@
+id: root
+
 fileGroups:
   yarnConfig:
     - ".env.yarn"
