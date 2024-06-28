@@ -1,0 +1,72 @@
+name: Release
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  api-vercel-production:
+    runs-on: ubuntu-latest
+    env:
+      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID_API }}
+    steps:
+      - name: 🏗 Clone repo
+        uses: actions/checkout@v4
+
+      - name: 📦 Install dependencies
+        uses: moonrepo/setup-toolchain@v0.3.1
+
+      - name: 🔑 Fetch Vercel secrets
+        run: moon run api:vercel -- pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
+
+      - name: 🚀 Build Project Artifacts
+        run: moon run api:vercel -- build --prod --token=${{ secrets.VERCEL_TOKEN }}
+
+      - name: 🚀 Deploy Project Artifacts to Vercel
+        run: moon run api:vercel -- deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}
+
+  frontend-vercel-production:
+    runs-on: ubuntu-latest
+    env:
+      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID_FRONTEND }}
+    steps:
+      - name: 🏗 Clone repo
+        uses: actions/checkout@v4
+
+      - name: 📦 Install dependencies
+        uses: moonrepo/setup-toolchain@v0.3.1
+
+      - name: 🔑 Fetch Vercel secrets
+        run: moon run frontend:vercel -- pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
+
+      - name: 🚀 Build Project Artifacts
+        run: moon run frontend:vercel -- build --prod --token=${{ secrets.VERCEL_TOKEN }}
+        env:
+          EXPO_PUBLIC_REPLICACHE_LICENSE_KEY: ${{ secrets.EXPO_PUBLIC_REPLICACHE_LICENSE_KEY }}
+
+      - name: 🚀 Deploy Project Artifacts to Vercel
+        run: moon run frontend:vercel -- deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}
+
+  static-vercel-production:
+    runs-on: ubuntu-latest
+    env:
+      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID_STATIC }}
+    steps:
+      - name: 🏗 Clone repo
+        uses: actions/checkout@v4
+
+      - name: 📦 Install dependencies
+        uses: moonrepo/setup-toolchain@v0.3.1
+
+      - name: 🔑 Fetch Vercel secrets
+        run: moon run static:vercel -- pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
+
+      - name: 🚀 Build Project Artifacts
+        run: moon run static:vercel -- build --prod --token=${{ secrets.VERCEL_TOKEN }}
+
+      - name: 🚀 Deploy Project Artifacts to Vercel
+        run: moon run static:vercel -- deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}
