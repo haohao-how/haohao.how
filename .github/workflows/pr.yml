@@ -7,14 +7,15 @@ jobs:
   moon-ci:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: 🏗 Clone repo
+        uses: actions/checkout@v4
         with:
-          # Fixes:
-          #
-          # × CI requires a full VCS history to operate correctly. Please avoid shallow checkouts.
           fetch-depth: 0
 
-      - uses: moonrepo/setup-toolchain@v0.3.1
+      - name: 📦 Install dependencies
+        uses: moonrepo/setup-toolchain@v0.3.1
+        with:
+          auto-install: true
 
       - run: moon ci
         env:
@@ -28,6 +29,8 @@ jobs:
     steps:
       - name: 🏗 Clone repo
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: 🏗 Create database branch for running tests
         uses: neondatabase/create-branch-action@v5
@@ -41,6 +44,8 @@ jobs:
 
       - name: 📦 Install dependencies
         uses: moonrepo/setup-toolchain@v0.3.1
+        with:
+          auto-install: true
 
       - name: 🚀 Migrate test database
         run: moon run api:dbMigrate
@@ -63,9 +68,13 @@ jobs:
     steps:
       - name: 🏗 Clone repo
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: 📦 Install dependencies
         uses: moonrepo/setup-toolchain@v0.3.1
+        with:
+          auto-install: true
 
       - name: 🔑 Fetch Vercel secrets
         run: moon run api:vercel -- pull --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
@@ -84,9 +93,13 @@ jobs:
     steps:
       - name: 🏗 Clone repo
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: 📦 Install dependencies
         uses: moonrepo/setup-toolchain@v0.3.1
+        with:
+          auto-install: true
 
       - name: 🔑 Fetch Vercel secrets
         run: moon run frontend:vercel -- pull --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
@@ -107,9 +120,13 @@ jobs:
     steps:
       - name: 🏗 Clone repo
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: 📦 Install dependencies
         uses: moonrepo/setup-toolchain@v0.3.1
+        with:
+          auto-install: true
 
       - name: 🔑 Fetch Vercel secrets
         run: moon run static:vercel -- pull --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
