@@ -1,5 +1,5 @@
 diff --git a/build/typed-routes/generate.js b/build/typed-routes/generate.js
-index 1e621830d26f90b3105d326ae31690c1e51730d1..71eb94bbf3cbdc4a6469f1f7e3215d9cb8773326 100644
+index 1e621830d26f90b3105d326ae31690c1e51730d1..36a7c479b94672edb8418e5b110baf0e2e65d879 100644
 --- a/build/typed-routes/generate.js
 +++ b/build/typed-routes/generate.js
 @@ -26,7 +26,7 @@ function getTypedRoutesDeclarationFile(ctx) {
@@ -11,3 +11,13 @@ index 1e621830d26f90b3105d326ae31690c1e51730d1..71eb94bbf3cbdc4a6469f1f7e3215d9c
          // Add the route values
          .replace('type StaticRoutes = string;', `type StaticRoutes = ${setToUnionType(staticRoutes)};`)
          .replace('type DynamicRoutes<T extends string> = string;', `type DynamicRoutes<T extends string> = ${setToUnionType(dynamicRoutes)};`)
+@@ -41,7 +41,8 @@ function walkRouteNode(routeNode, staticRoutes, dynamicRoutes, dynamicRouteConte
+         return;
+     addRouteNode(routeNode, staticRoutes, dynamicRoutes, dynamicRouteContextKeys);
+     for (const child of routeNode.children) {
+-        walkRouteNode(child, staticRoutes, dynamicRoutes, dynamicRouteContextKeys);
++        const childWithPrefixedRoute = {...child, route: `${routeNode.route}/${child.route}` }
++        walkRouteNode(childWithPrefixedRoute, staticRoutes, dynamicRoutes, dynamicRouteContextKeys);
+     }
+ }
+ /**
