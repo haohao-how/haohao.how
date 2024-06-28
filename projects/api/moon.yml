@@ -25,6 +25,17 @@ tasks:
       - dist
     platform: node
     local: true
+  dbGenerate:
+    command: yarn drizzle-kit generate
+    local: true
+    platform: node
+  dbMigrate:
+    command: node --import tsx ./src/bin/migrate.ts
+    local: true
+    platform: node
+    options:
+      cache: false
+      envFile: .env.local
 
 tags:
   - prettier
