@@ -3,18 +3,18 @@ on:
   workflow_dispatch:
     inputs:
       platform:
-        description: "Platform"
+        description: Platform
         required: true
-        default: "all"
+        default: all
         type: choice
         options:
           - ios
           - android
           - all
       profile:
-        description: "Profile"
+        description: Profile
         required: true
-        default: "preview"
+        default: preview
         type: choice
         options:
           - preview
@@ -25,13 +25,11 @@ jobs:
     name: EAS Build
     runs-on: ubuntu-latest
     steps:
-      - name: 🏗 Setup repo
-        uses: "actions/checkout@v4"
-        with:
-          fetch-depth: 0
+      - name: 🏗 Clone repo
+        uses: actions/checkout@v4
 
       - name: 📦 Install dependencies
-        uses: "moonrepo/setup-toolchain@v0"
+        uses: moonrepo/setup-toolchain@v0.3.1
 
       - name: 🚀 Build app
         run: moon run frontend:eas -- build --profile=${{ inputs.profile }} --platform=${{ inputs.platform }} --non-interactive
