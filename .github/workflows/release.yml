@@ -6,6 +6,20 @@ on:
       - main
 
 jobs:
+  database:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 🏗 Clone repo
+        uses: actions/checkout@v4
+
+      - name: 📦 Install dependencies
+        uses: moonrepo/setup-toolchain@v0.3.1
+
+      - name: 🚀 Migrate database
+        run: moon run api:dbMigrate
+        env:
+          DATABASE_URL: ${{ secrets.NEON_DATABASE_URL }}
+
   api-vercel-production:
     runs-on: ubuntu-latest
     env:
