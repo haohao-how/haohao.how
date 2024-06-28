@@ -39,14 +39,13 @@ jobs:
           project_id: ${{ secrets.NEON_PROJECT_ID }}
           username: ${{ secrets.NEON_USERNAME }}
 
-      - name: 🔑 Save Neon test database credentials
-        run: echo "DATABASE_URL=${{ steps.create-branch.outputs.db_url }}" >> ./projects/api/.env.local
-
-      - name: 📦 Install test dependencies
+      - name: 📦 Install dependencies
         uses: moonrepo/setup-toolchain@v0.3.1
 
-      - name: 🚀 Run database tests
+      - name: 🚀 Migrate test database
         run: moon run api:dbMigrate
+        env:
+          DATABASE_URL: ${{ steps.create-branch.outputs.db_url }}
 
       - name: 🗑️ Delete database branch
         uses: neondatabase/delete-branch-action@v3
