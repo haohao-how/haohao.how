@@ -1,29 +1,39 @@
 name: Test PR
 
+env:
+  NEON_BRANCH_NAME: github_test_pr_${{ github.event.number || 'unknown' }}
+  NEON_DATABASE_NAME: hao
+
 on:
   pull_request:
 
 jobs:
-  test_migration:
+  test_database:
     runs-on: ubuntu-latest
     steps:
-      - uses: "actions/checkout@v4"
+      - name: 🏗 Setup repo
+        uses: "actions/checkout@v4"
         with:
           fetch-depth: 0
-      - uses: neondatabase/create-branch-action@v4.3.1
+      - name: 🏗 Setup database branch for running tests
+        uses: neondatabase/create-branch-action@v5
         id: create-branch
         with:
-          project_id: ${{ secrets.NEON_PROJECT_ID }}
-          branch_name: test_branch
           api_key: ${{ secrets.NEON_API_KEY }}
+          branch_name: ${{ env.NEON_BRANCH_NAME }}
+          database: ${{ env.NEON_DATABASE_NAME }}
+          project_id: ${{ secrets.NEON_PROJECT_ID }}
           username: ${{ secrets.NEON_USERNAME }}
-          suspend_timeout: 30
-      - run: echo "DATABASE_URL=${{ steps.create-branch.outputs.db_url }}" >> ./projects/api/.env.local
-      - uses: "moonrepo/setup-toolchain@v0"
-      - run: moon run api:dbMigrate
-      - uses: neondatabase/delete-branch-action@v3
+      - name: 🔑 Save Neon test database credentials
+        run: echo "DATABASE_URL=${{ steps.create-branch.outputs.db_url }}" >> ./projects/api/.env.local
+      - name: 📦 Install test dependencies
+        uses: "moonrepo/setup-toolchain@v0"
+      - name: 🚀 Run database tests
+        run: moon run api:dbMigrate
+      - name: 🏗 Clean up database branch
+        uses: neondatabase/delete-branch-action@v3
         with:
           project_id: ${{ secrets.NEON_PROJECT_ID }}
-          branch: test_branch
+          branch: ${{ env.NEON_BRANCH_NAME }}
           api_key: ${{ secrets.NEON_API_KEY }}
         if: ${{ always() }}
