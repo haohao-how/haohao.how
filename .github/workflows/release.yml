@@ -47,11 +47,7 @@ jobs:
         run: moon run api:vercel -- build --prod --token=${{ secrets.VERCEL_TOKEN }}
 
       - name: 🚀 Publish artifacts
-        run: |
-          moon run api:vercel -- deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}
-          moon run api:upload-sentry-source-maps
-        env:
-          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+        run: moon run api:vercel -- deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}
 
   frontend-vercel-production:
     runs-on: ubuntu-latest
