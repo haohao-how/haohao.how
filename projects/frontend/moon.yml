@@ -17,6 +17,11 @@ tasks:
       - --web
   expo-doctor:
     command: npx --yes expo-doctor
+    options:
+      # expo-doctor checks the latest version of dependencies from the internet,
+      # so it can't cache purely off local filesystem. It's important cache is
+      # disabled otherwise the daily CI won't run this.
+      cache: false
   eas:
     command: npx --yes eas-cli@latest
     local: true
