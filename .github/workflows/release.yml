@@ -50,6 +50,8 @@ jobs:
         run: |
           moon run api:vercel -- deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}
           moon run frontend:upload-sentry-source-maps
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
 
   frontend-vercel-production:
     runs-on: ubuntu-latest
