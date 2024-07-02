@@ -26,14 +26,6 @@
       "matchManagers": ["npm"],
       "matchDepTypes": ["devDependencies"],
       "enabled": true
-    },
-    {
-      "matchDepNames": ["moonrepo/moon"],
-      "groupName": "package managers"
-    },
-    {
-      "matchPackagePatterns": ["eslint"],
-      "groupName": "eslint"
     }
   ],
   "customManagers": [
