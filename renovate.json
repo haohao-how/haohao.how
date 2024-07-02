@@ -1,0 +1,47 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:recommended"],
+  "packageRules": [
+    {
+      "matchManagers": ["npm"],
+      "enabled": false
+    },
+    {
+      "matchManagers": ["npm"],
+      "matchDepTypes": ["devDependencies"],
+      "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
+      "automerge": true
+    },
+    {
+      "matchDepNames": ["moonrepo/moon"],
+      "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
+      "automerge": true
+    },
+    {
+      "matchManagers": ["npm"],
+      "matchDepTypes": ["devDependencies"],
+      "enabled": true
+    },
+    {
+      "matchDepNames": ["moonrepo/moon"],
+      "groupName": "package managers"
+    },
+    {
+      "matchPackagePatterns": ["eslint"],
+      "groupName": "eslint"
+    }
+  ],
+  "customManagers": [
+    {
+      "customType": "regex",
+      "fileMatch": [
+        "^.moon/.*.ya?ml$",
+        "^.github/workflows/.*.ya?ml$",
+        "^.prototools$"
+      ],
+      "matchStrings": [
+        ".*?(:|=)\\s+('|\\\")(=?)(?<currentValue>.*)('|\\\")\\s+#\\s+renovate: datasource=(?<datasource>.+?) depName=(?<depName>.+?)( versioning=(?<versioning>.*?))?( extractVersion=(?<extractVersion>.*?))?\\n"
+      ]
+    }
+  ]
+}
