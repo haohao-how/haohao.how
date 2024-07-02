@@ -25,7 +25,11 @@ jobs:
   database:
     runs-on: ubuntu-latest
     env:
-      NEON_BRANCH_NAME: github_test_pr_${{ github.event.number || 'unknown' }}
+      # Format: 'github_test_pr_' <run_id> [ ':' <run_attempt> ]
+      #
+      # The run attempt is only included for re-runs to keep the branch name
+      # slightly shorter and cleaner when there is no re-run.
+      NEON_BRANCH_NAME: github_test_pr_${{ github.run_id }}${{ github.run_attempt == '1' && '' || format(':{0}', github.run_attempt) }}
       NEON_DATABASE_NAME: hao
     steps:
       - name: 🏗 Clone repo
