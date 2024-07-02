@@ -1,8 +1,8 @@
 name: PR
 
 on:
+  merge_group:
   pull_request:
-  merge_queue:
 
 jobs:
   moon-ci:
