@@ -9109,15 +9109,15 @@ __metadata:
   linkType: hard
 
 "drizzle-kit@npm:^0.22.7":
-  version: 0.22.7
-  resolution: "drizzle-kit@npm:0.22.7"
+  version: 0.22.8
+  resolution: "drizzle-kit@npm:0.22.8"
   dependencies:
     "@esbuild-kit/esm-loader": "npm:^2.5.5"
     esbuild: "npm:^0.19.7"
     esbuild-register: "npm:^3.5.0"
   bin:
     drizzle-kit: bin.cjs
-  checksum: 10c0/535d22abc657b78438124770210edec5e9d820c8fe07e61aba45ce754a6be2f63ae0328c4daf37884b981d9aea3889b3f0566be7f67290da6257383c07fd6fcc
+  checksum: 10c0/e3bbda283de8d3985644d771fe773fcee3f31dd485cb3d32af077c52a088580921fcaae3f7b383279f8799b223d74701ebc4866b6e4952c8c813cd0cb5f80908
   languageName: node
   linkType: hard
 
