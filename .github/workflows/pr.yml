@@ -83,8 +83,8 @@ jobs:
       - name: 🚀 Build Project Artifacts
         run: moon run api:vercel -- build --token=${{ secrets.VERCEL_TOKEN }}
 
-      - name: 🚀 Deploy Project Artifacts to Vercel
-        run: moon run api:vercel -- deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }}
+      # - name: 🚀 Deploy Project Artifacts to Vercel
+      #   run: moon run api:vercel -- deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }}
 
   frontend-vercel-preview:
     runs-on: ubuntu-latest
@@ -110,8 +110,8 @@ jobs:
         env:
           EXPO_PUBLIC_REPLICACHE_LICENSE_KEY: ${{ secrets.EXPO_PUBLIC_REPLICACHE_LICENSE_KEY }}
 
-      - name: 🚀 Deploy Project Artifacts to Vercel
-        run: moon run frontend:vercel -- deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }}
+      # - name: 🚀 Deploy Project Artifacts to Vercel
+      #   run: moon run frontend:vercel -- deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }}
 
   static-vercel-preview:
     runs-on: ubuntu-latest
@@ -135,5 +135,5 @@ jobs:
       - name: 🚀 Build Project Artifacts
         run: moon run static:vercel -- build --token=${{ secrets.VERCEL_TOKEN }}
 
-      - name: 🚀 Deploy Project Artifacts to Vercel
-        run: moon run static:vercel -- deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }}
+      # - name: 🚀 Deploy Project Artifacts to Vercel
+      #   run: moon run static:vercel -- deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }}
