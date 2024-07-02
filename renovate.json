@@ -13,6 +13,11 @@
       "automerge": true
     },
     {
+      "matchManagers": ["npm"],
+      "matchDepPatterns": ["@types/*"],
+      "rangeStrategy": "in-range-only"
+    },
+    {
       "matchDepNames": ["moonrepo/moon"],
       "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
       "automerge": true
