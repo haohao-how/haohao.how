@@ -5659,7 +5659,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react-dom@npm:18.2.x, @types/react-dom@npm:^18.2.0":
+"@types/react-dom@npm:18.3.x":
+  version: 18.3.0
+  resolution: "@types/react-dom@npm:18.3.0"
+  dependencies:
+    "@types/react": "npm:*"
+  checksum: 10c0/6c90d2ed72c5a0e440d2c75d99287e4b5df3e7b011838cdc03ae5cd518ab52164d86990e73246b9d812eaf02ec351d74e3b4f5bd325bf341e13bf980392fd53b
+  languageName: node
+  linkType: hard
+
+"@types/react-dom@npm:^18.2.0":
   version: 18.2.25
   resolution: "@types/react-dom@npm:18.2.25"
   dependencies:
@@ -5678,13 +5687,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react@npm:18.2.x":
-  version: 18.2.79
-  resolution: "@types/react@npm:18.2.79"
+"@types/react@npm:18.3.x":
+  version: 18.3.3
+  resolution: "@types/react@npm:18.3.3"
   dependencies:
     "@types/prop-types": "npm:*"
     csstype: "npm:^3.0.2"
-  checksum: 10c0/c8a8a005d8830a48cc1ef93c3510c4935a2a03e5557dbecaa8f1038450cbfcb18eb206fa7fba7077d54b8da21faeb25577e897a333392770a7797f625b62c78a
+  checksum: 10c0/fe455f805c5da13b89964c3d68060cebd43e73ec15001a68b34634604a78140e6fc202f3f61679b9d809dde6d7a7c2cb3ed51e0fd1462557911db09879b55114
   languageName: node
   linkType: hard
 
@@ -9327,7 +9336,7 @@ __metadata:
   resolution: "emails@workspace:projects/emails"
   dependencies:
     "@react-email/components": "npm:^0.0.14"
-    "@types/react": "npm:18.2.x"
+    "@types/react": "npm:18.3.x"
     prettier: "npm:^3.2.5"
     react: "npm:18.2.0"
     react-email: "npm:^2.1.2"
@@ -11314,7 +11323,7 @@ __metadata:
     "@types/eslint": "npm:^8"
     "@types/eslint__js": "npm:^8.42.3"
     "@types/lodash": "npm:4.17.x"
-    "@types/react-dom": "npm:18.2.x"
+    "@types/react-dom": "npm:18.3.x"
     "@typescript-eslint/utils": "npm:^7.13.1"
     color: "npm:^4.2.3"
     date-fns: "npm:^3.6.0"

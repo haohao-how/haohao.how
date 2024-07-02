@@ -52,7 +52,7 @@
     "@types/eslint": "^8",
     "@types/eslint__js": "^8.42.3",
     "@types/lodash": "4.17.x",
-    "@types/react-dom": "18.2.x",
+    "@types/react-dom": "18.3.x",
     "@typescript-eslint/utils": "^7.13.1",
     "eslint": "^8.57.0",
     "eslint-plugin-deprecation": "^2.0.0",
