@@ -5398,10 +5398,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/lodash@npm:~4.17":
-  version: 4.17.4
-  resolution: "@types/lodash@npm:4.17.4"
-  checksum: 10c0/0124c64cb9fe7a0f78b6777955abd05ef0d97844d49118652eae45f8fa57bfb7f5a7a9bccc0b5a84c0a6dc09631042e4590cb665acb9d58dfd5e6543c75341ec
+"@types/lodash@npm:4.17.x":
+  version: 4.17.6
+  resolution: "@types/lodash@npm:4.17.6"
+  checksum: 10c0/3b197ac47af9443fee8c4719c5ffde527d7febc018b827d44a6bc2523c728c7adfdd25196fdcfe3eed827993e0c41a917d0da6e78938b18b2be94164789f1117
   languageName: node
   linkType: hard
 
@@ -5464,7 +5464,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react-dom@npm:^18.2.0, @types/react-dom@npm:~18.2":
+"@types/react-dom@npm:18.2.x, @types/react-dom@npm:^18.2.0":
   version: 18.2.25
   resolution: "@types/react-dom@npm:18.2.25"
   dependencies:
@@ -5483,7 +5483,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react@npm:~18.2":
+"@types/react@npm:18.2.x":
   version: 18.2.79
   resolution: "@types/react@npm:18.2.79"
   dependencies:
@@ -5502,7 +5502,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/semver@npm:^7.1.0, @types/semver@npm:^7.5.0, @types/semver@npm:~7.5":
+"@types/semver@npm:7.5.x, @types/semver@npm:^7.1.0, @types/semver@npm:^7.5.0":
   version: 7.5.8
   resolution: "@types/semver@npm:7.5.8"
   checksum: 10c0/8663ff927234d1c5fcc04b33062cb2b9fcfbe0f5f351ed26c4d1e1581657deebd506b41ff7fdf89e787e3d33ce05854bc01686379b89e9c49b564c4cfa988efa
@@ -9072,7 +9072,7 @@ __metadata:
   resolution: "emails@workspace:projects/emails"
   dependencies:
     "@react-email/components": "npm:^0.0.14"
-    "@types/react": "npm:~18.2"
+    "@types/react": "npm:18.2.x"
     prettier: "npm:^3.2.5"
     react: "npm:18.2.0"
     react-email: "npm:^2.1.2"
@@ -11058,8 +11058,8 @@ __metadata:
     "@types/color": "npm:^3"
     "@types/eslint": "npm:^8"
     "@types/eslint__js": "npm:^8.42.3"
-    "@types/lodash": "npm:~4.17"
-    "@types/react-dom": "npm:~18.2"
+    "@types/lodash": "npm:4.17.x"
+    "@types/react-dom": "npm:18.2.x"
     "@typescript-eslint/utils": "npm:^7.13.1"
     color: "npm:^4.2.3"
     date-fns: "npm:^3.6.0"
@@ -11626,7 +11626,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "haohaohow@workspace:."
   dependencies:
-    "@types/semver": "npm:~7.5"
+    "@types/semver": "npm:7.5.x"
     "@yarnpkg/doctor": "npm:^4.0.2"
     "@yarnpkg/types": "npm:^4.0.0"
     prettier: "npm:^3.2.5"

@@ -29,12 +29,17 @@ function enforceConsistentDependenciesAcrossTheProject({ Yarn }) {
 }
 
 /**
- * This rule will enforce that a workspace MUST depend on the same version of a
- * dependency as the one used by the other workspaces.
+ * This rule will enforce that `@types/<pkg>` dependencies are compatible with
+ * the bare `<pkg>` dependency.
+ *
+ * It can be customized to allow more/less granular version matches, for example
+ * `@types/react` should match the `major.minor` of `react`, but other packages
+ * should just match the `major` because they're less maintained and have less
+ * granular releases.
  *
  * @param {Context} ctx
- * @param {{ [identAtRange: string]: string }} [resolutions] Overrides for
- * `@types/*` packages, e.g. `{ "eslint@^7": "~6.54.0" }`
+ * @param {{ [identAtRange: string]: string }} [resolutions] Overrides e.g. `{
+ * "eslint@^7": "~6.54.0" }` means allow `@types/eslint@~6.54.0` for `eslint@^7`
  */
 function enforceStrictTypesCompatibility(ctx, resolutions = {}) {
   const { Yarn } = ctx;
@@ -87,7 +92,9 @@ function rangeMatchingMinor(range) {
   if (version === null) {
     throw new Error(`Could not evalute semver.minVersion(${range})`);
   }
-  return `~${version.major}.${version.minor}`;
+  // Using `1.1.x` style instead of `~1.1.0` because it's more intuitive. The
+  // tilde rules are complicated (e.g. ~1.1.0 is different to ~1.1).
+  return `${version.major}.${version.minor}.x`;
 }
 
 /**
