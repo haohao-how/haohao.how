@@ -12,8 +12,9 @@ jobs:
     steps:
       - name: 🏗 Clone repo
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
+        # Intentionally omit `fetch-depth: 0` to force all targets to be run
+        # instead of some being skipped due to `moon run <…> --affected`
+        # behavior.
 
       - name: 📦 Install dependencies
         uses: moonrepo/setup-toolchain@v0.3.1
