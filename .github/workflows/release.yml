@@ -24,7 +24,7 @@ jobs:
         env:
           DATABASE_URL: ${{ secrets.NEON_DATABASE_URL }}
 
-  api-vercel-production:
+  api-vercel:
     runs-on: ubuntu-latest
     env:
       VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
@@ -49,11 +49,11 @@ jobs:
       - name: 🚀 Publish artifacts
         run: moon run api:vercel -- deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}
 
-  frontend-vercel-production:
+  app-vercel:
     runs-on: ubuntu-latest
     env:
       VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID_FRONTEND }}
+      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID_APP }}
     steps:
       - name: 🏗 Clone repo
         uses: actions/checkout@v4
@@ -66,21 +66,21 @@ jobs:
           auto-install: true
 
       - name: 🔑 Fetch Vercel secrets
-        run: moon run frontend:vercel -- pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
+        run: moon run app:vercel -- pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
 
       - name: 🚀 Build project artifacts
-        run: moon run frontend:vercel -- build --prod --token=${{ secrets.VERCEL_TOKEN }}
+        run: moon run app:vercel -- build --prod --token=${{ secrets.VERCEL_TOKEN }}
         env:
           EXPO_PUBLIC_REPLICACHE_LICENSE_KEY: ${{ secrets.EXPO_PUBLIC_REPLICACHE_LICENSE_KEY }}
 
       - name: 🚀 Publish artifacts
         run: |
-          moon run frontend:vercel -- deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}
-          moon run frontend:upload-sentry-source-maps
+          moon run app:vercel -- deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}
+          moon run app:upload-sentry-source-maps
         env:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
 
-  static-vercel-production:
+  static-vercel:
     runs-on: ubuntu-latest
     env:
       VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
@@ -120,8 +120,8 @@ jobs:
 
       - name: 🚀 Publish update
         run: |
-          moon run frontend:eas -- update --auto --non-interactive
-          moon run frontend:upload-sentry-source-maps
+          moon run app:eas -- update --auto --non-interactive
+          moon run app:upload-sentry-source-maps
         env:
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
           EXPO_PUBLIC_REPLICACHE_LICENSE_KEY: ${{ secrets.EXPO_PUBLIC_REPLICACHE_LICENSE_KEY }}

@@ -65,7 +65,7 @@ jobs:
           api_key: ${{ secrets.NEON_API_KEY }}
         if: ${{ always() }}
 
-  api-vercel-preview:
+  api-vercel:
     runs-on: ubuntu-latest
     env:
       VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
@@ -90,11 +90,11 @@ jobs:
       # - name: 🚀 Deploy Project Artifacts to Vercel
       #   run: moon run api:vercel -- deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }}
 
-  frontend-vercel-preview:
+  app-vercel:
     runs-on: ubuntu-latest
     env:
       VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID_FRONTEND }}
+      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID_APP }}
     steps:
       - name: 🏗 Clone repo
         uses: actions/checkout@v4
@@ -107,17 +107,17 @@ jobs:
           auto-install: true
 
       - name: 🔑 Fetch Vercel secrets
-        run: moon run frontend:vercel -- pull --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
+        run: moon run app:vercel -- pull --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
 
       - name: 🚀 Build Project Artifacts
-        run: moon run frontend:vercel -- build --token=${{ secrets.VERCEL_TOKEN }}
+        run: moon run app:vercel -- build --token=${{ secrets.VERCEL_TOKEN }}
         env:
           EXPO_PUBLIC_REPLICACHE_LICENSE_KEY: ${{ secrets.EXPO_PUBLIC_REPLICACHE_LICENSE_KEY }}
 
       # - name: 🚀 Deploy Project Artifacts to Vercel
-      #   run: moon run frontend:vercel -- deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }}
+      #   run: moon run app:vercel -- deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }}
 
-  static-vercel-preview:
+  static-vercel:
     runs-on: ubuntu-latest
     env:
       VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
