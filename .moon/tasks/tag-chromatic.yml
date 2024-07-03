@@ -10,7 +10,6 @@ tasks:
   storybook-build:
     command: storybook build --output-dir=storybook-static
     inputs:
-      - "@group(frontend)"
       - "@group(storybookConfig)"
     outputs:
       - "storybook-static/"

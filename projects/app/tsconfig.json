@@ -10,7 +10,7 @@
     "moduleResolution": "Bundler",
     "noEmit": true,
     "noPropertyAccessFromIndexSignature": true,
-    "outDir": "../../.moon/cache/types/projects/frontend",
+    "outDir": "../../.moon/cache/types/projects/app",
     "paths": { "@/*": ["src/*"] },
     "resolveJsonModule": true,
     "skipLibCheck": true,

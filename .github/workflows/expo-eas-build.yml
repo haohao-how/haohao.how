@@ -36,7 +36,7 @@ jobs:
           auto-install: true
 
       - name: 🚀 Build app
-        run: moon run frontend:eas -- build --profile=${{ inputs.profile }} --platform=${{ inputs.platform }} --non-interactive
+        run: moon run app:eas -- build --profile=${{ inputs.profile }} --platform=${{ inputs.platform }} --non-interactive
         env:
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
           EXPO_PUBLIC_REPLICACHE_LICENSE_KEY: ${{ secrets.EXPO_PUBLIC_REPLICACHE_LICENSE_KEY }}

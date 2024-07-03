@@ -14,7 +14,7 @@ proto use
 ## Running scripts with moon
 
 ```sh
-moon frontend:dev
+moon app:dev
 ```
 
 # Cookbook
@@ -68,11 +68,11 @@ yarn patch-commit -s /private/var/folders/fs/...snip.../T/xfs-33350073/user
 rm .yarn/patches/expo-image-npm-1.12.9-116d224baf.patch
 ```
 
-## Updating frontend icons
+## Updating app icons
 
 Icons can be exported directly from Figma. Frames are labelled appropriately
 such that everything in Figma can be exported to the
-`projects/frontend/src/assets` directory.
+`projects/app/src/assets` directory.
 
 ## Writing Pinyin on macOS
 
