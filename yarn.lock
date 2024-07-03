@@ -5805,6 +5805,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@vercel/build-utils@npm:8.3.0":
+  version: 8.3.0
+  resolution: "@vercel/build-utils@npm:8.3.0"
+  checksum: 10c0/ed9c9db05949f46a032de561dd5644d1bd6c0d52c4fb4aaacdc1c8f6ec2fa11c1944cc5746a90d4f049b5ca6753395c8396793f91c4e94a8fead13474f025a5b
+  languageName: node
+  linkType: hard
+
 "@vercel/error-utils@npm:2.0.2":
   version: 2.0.2
   resolution: "@vercel/error-utils@npm:2.0.2"
@@ -5911,7 +5918,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@vercel/node@npm:3.2.0, @vercel/node@npm:^3.2.0":
+"@vercel/node@npm:3.2.0":
   version: 3.2.0
   resolution: "@vercel/node@npm:3.2.0"
   dependencies:
@@ -5936,6 +5943,34 @@ __metadata:
     typescript: "npm:4.9.5"
     undici: "npm:5.28.4"
   checksum: 10c0/cc8688e1a0582a98883848678e90eeb399c01e9f6109278dd25016a13ccf1a35d2ad8fa114aac2b368f791f6de420ede4f710439cfca20dabb66e4f8dca87ddc
+  languageName: node
+  linkType: hard
+
+"@vercel/node@npm:^3.2.0":
+  version: 3.2.1
+  resolution: "@vercel/node@npm:3.2.1"
+  dependencies:
+    "@edge-runtime/node-utils": "npm:2.3.0"
+    "@edge-runtime/primitives": "npm:4.1.0"
+    "@edge-runtime/vm": "npm:3.2.0"
+    "@types/node": "npm:16.18.11"
+    "@vercel/build-utils": "npm:8.3.0"
+    "@vercel/error-utils": "npm:2.0.2"
+    "@vercel/nft": "npm:0.27.2"
+    "@vercel/static-config": "npm:3.0.0"
+    async-listen: "npm:3.0.0"
+    cjs-module-lexer: "npm:1.2.3"
+    edge-runtime: "npm:2.5.9"
+    es-module-lexer: "npm:1.4.1"
+    esbuild: "npm:0.14.47"
+    etag: "npm:1.8.1"
+    node-fetch: "npm:2.6.9"
+    path-to-regexp: "npm:6.2.1"
+    ts-morph: "npm:12.0.0"
+    ts-node: "npm:10.9.1"
+    typescript: "npm:4.9.5"
+    undici: "npm:5.28.4"
+  checksum: 10c0/1094df0830a235a5aa1ad7b7e65c19bec14906a19552c8d7407b7c8d4ee57351df39142bdd21c7f2d86cc81b898c62b06403515c5ea728ac00daa4aca73b5157
   languageName: node
   linkType: hard
 
