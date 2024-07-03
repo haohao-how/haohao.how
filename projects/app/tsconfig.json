@@ -8,12 +8,13 @@
     "lib": ["DOM", "ESNext"],
     "module": "esnext",
     "moduleResolution": "Bundler",
-    "noEmit": true,
     "noPropertyAccessFromIndexSignature": true,
     "outDir": "../../.moon/cache/types/projects/app",
-    "paths": { "@/*": ["src/*"] },
+    "paths": {
+      "@/*": ["src/*"],
+      "@haohaohow/lib/*": ["../lib/src/*"]
+    },
     "resolveJsonModule": true,
-    "skipLibCheck": true,
     "target": "ESNext"
   },
   "include": [
@@ -26,5 +27,10 @@
     ".expo/types/**/*.ts",
     "expo-env.d.ts"
   ],
-  "exclude": ["dist", "node_modules"]
+  "exclude": ["dist", "node_modules"],
+  "references": [
+    {
+      "path": "../lib"
+    }
+  ]
 }

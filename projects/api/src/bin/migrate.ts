@@ -1,32 +1,14 @@
-import type { MigrationConfig } from "drizzle-orm/migrator";
-import z from "zod";
+import { drizzle } from "drizzle-orm/node-postgres";
+import { migrate } from "drizzle-orm/node-postgres/migrator";
+import { createPool } from "../db.js";
+import * as schema from "../schema.js";
 
-const migrationConfig = {
+const pool = await createPool();
+const client = await pool.connect();
+
+await migrate(drizzle(client, { schema }), {
   migrationsFolder: "drizzle",
-} satisfies MigrationConfig;
+});
 
-const env = z.object({ DATABASE_URL: z.string() }).parse(process.env);
-
-const IS_NEON = env.DATABASE_URL.includes("neon.tech");
-
-if (IS_NEON) {
-  console.log("Migrating via Neon adapter…");
-  const { neon } = await import("@neondatabase/serverless");
-  const { migrate } = await import("drizzle-orm/neon-http/migrator");
-  const { drizzle } = await import("drizzle-orm/neon-http");
-
-  const sql = neon(env.DATABASE_URL);
-  const db = drizzle(sql);
-
-  await migrate(db, migrationConfig);
-} else {
-  console.log("Migrating via native postgres adapter…");
-  const { drizzle } = await import("drizzle-orm/postgres-js");
-  const { migrate } = await import("drizzle-orm/postgres-js/migrator");
-  const { default: postgres } = await import("postgres");
-
-  const client = postgres();
-  const db = drizzle(client);
-  await migrate(db, migrationConfig);
-  await client.end();
-}
+client.release();
+await pool.end();

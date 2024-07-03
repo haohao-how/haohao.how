@@ -19,6 +19,16 @@ moon app:dev
 
 # Cookbook
 
+## Adding a cross project dependency
+
+Add to `dependsOn:` within `moon.yml`, then run:
+
+```sh
+moon sync projects
+```
+
+This will update `package.json/dependencies`, `tsconfig.json/references`, `tsconfig.json/compilerOptions/paths`.
+
 ## Upgrading Yarn
 
 Inside `toolchain.yml` edit `node.yarn.version` and update the version. Run

@@ -1,6 +1,15 @@
 {
   "compilerOptions": {
     "strict": true,
-    "noUncheckedIndexedAccess": true
+    "noUncheckedIndexedAccess": true,
+
+    // Moon recommended https://moonrepo.dev/docs/guides/javascript/typescript-project-refs#tsconfigoptionsjson
+    "composite": true,
+    "declaration": true,
+    "declarationMap": true,
+    "emitDeclarationOnly": true,
+    "incremental": true,
+    "noEmitOnError": true,
+    "skipLibCheck": true
   }
 }

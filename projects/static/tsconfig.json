@@ -11,10 +11,8 @@
     "allowJs": true,
     "esModuleInterop": true,
     "lib": ["DOM", "ESNext"],
-    "noEmit": true,
     "noPropertyAccessFromIndexSignature": true,
     "resolveJsonModule": true,
-    "skipLibCheck": true,
     "target": "ESNext"
   }
 }

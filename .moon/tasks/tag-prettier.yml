@@ -1,7 +1,6 @@
 tasks:
   prettier:
-    command: prettier --write --check .
+    command: yarn prettier --write --check .
     local: true
   prettier-check:
-    command: prettier --check .
-    platform: node
+    command: yarn prettier --check .

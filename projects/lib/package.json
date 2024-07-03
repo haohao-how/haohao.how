@@ -1,0 +1,16 @@
+{
+  "name": "@haohaohow/lib",
+  "type": "module",
+  "dependencies": {
+    "lodash": "^4.17.21",
+    "nanoid": "^5.0.7",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/lodash": "4.17.x",
+    "prettier": "^3.2.5",
+    "tsx": "^4.15.7",
+    "typescript": "^5.5.2"
+  },
+  "private": true
+}

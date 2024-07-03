@@ -4,22 +4,19 @@ fileGroups:
 
 tasks:
   storybook:
-    command: storybook dev --port=6006
+    command: yarn storybook dev --port=6006
     local: true
-    platform: node
   storybook-build:
-    command: storybook build --output-dir=storybook-static
+    command: yarn storybook build --output-dir=storybook-static
     inputs:
       - "@group(storybookConfig)"
     outputs:
       - "storybook-static/"
-    platform: node
   chromatic:
-    command: chromatic --storybook-build-dir=storybook-static --exit-zero-on-changes
+    command: yarn chromatic --storybook-build-dir=storybook-static --exit-zero-on-changes
     inputs:
       - "storybook-static/**/*"
       - "*.*"
       - "$CHROMATIC_PROJECT_TOKEN"
     deps:
       - storybook-build
-    platform: node

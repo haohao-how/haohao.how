@@ -5,19 +5,16 @@ fileGroups:
 
 tasks:
   dev:
-    command: email dev
-    platform: node
+    command: yarn email dev
     local: true
   build:
-    command: email build
+    command: yarn email build
     inputs:
       - "@group(emails)"
-    platform: node
   start:
-    command: email start
+    command: yarn email start
     deps:
       - build
-    platform: node
     local: true
 
 tags:

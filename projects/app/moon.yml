@@ -1,7 +1,6 @@
 tasks:
   dev:
-    command: expo start
-    platform: node
+    command: yarn expo start
     local: true
   dev-android:
     extends: dev
@@ -26,8 +25,7 @@ tasks:
     command: npx --yes eas-cli@latest
     local: true
   export:
-    command: expo export
-    platform: node
+    command: yarn expo export
     inputs:
       - "assets/**/*"
       - "public/**/*"
@@ -37,8 +35,7 @@ tasks:
       - "dist/"
   expo-generate-types:
     # The recommended command from https://docs.expo.dev/router/reference/typed-routes/#type-generation
-    command: expo customize tsconfig.json
-    platform: node
+    command: yarn expo customize tsconfig.json
     options:
       cache: false
   test:
@@ -52,6 +49,9 @@ tasks:
   upload-sentry-source-maps:
     command: npx sentry-expo-upload-sourcemaps dist
     local: true
+
+dependsOn:
+  - lib
 
 tags:
   - eslint

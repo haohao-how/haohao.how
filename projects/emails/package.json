@@ -1,5 +1,5 @@
 {
-  "name": "emails",
+  "name": "@haohaohow/emails",
   "private": true,
   "type": "module",
   "dependencies": {

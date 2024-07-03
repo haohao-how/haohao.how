@@ -1,5 +1,5 @@
 import { nextReview, Rating, UpcomingReview } from "@/util/fsrs";
-import { invariant } from "@/util/invariant";
+import { invariant } from "@haohaohow/lib/invariant";
 import { MutatorDefs, Replicache } from "replicache";
 import { z } from "zod";
 import {

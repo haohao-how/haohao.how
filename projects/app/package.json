@@ -1,10 +1,11 @@
 {
-  "name": "app",
+  "name": "@haohaohow/app",
   "version": "1.0.0",
   "main": "./src/main.js",
   "type": "commonjs",
   "dependencies": {
     "@expo/metro-runtime": "^3.2.1",
+    "@haohaohow/lib": "workspace:*",
     "@react-native-replicache/deep-freeze": "^1.1.0",
     "@react-navigation/native": "^6.1.17",
     "@react-navigation/stack": "^6.3.29",

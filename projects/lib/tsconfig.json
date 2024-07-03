@@ -1,18 +1,14 @@
 {
   "extends": "../../tsconfig.base",
   "compilerOptions": {
+    "composite": true,
     "allowJs": true,
     "baseUrl": ".",
     "lib": ["ESNext"],
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
-    "outDir": "../../.moon/cache/types/projects/api",
-    "paths": {
-      "@/*": ["src/*"],
-      "@haohaohow/lib/*": ["../lib/src/*"]
-    },
-    "target": "ESNext",
-    "types": ["node"]
+    "outDir": "../../.moon/cache/types/projects/lib",
+    "target": "ESNext"
   },
   "include": [
     "**/*.ts",
@@ -22,10 +18,5 @@
     "**/*.cjs",
     "**/*.mjs"
   ],
-  "exclude": ["dist", "node_modules"],
-  "references": [
-    {
-      "path": "../lib"
-    }
-  ]
+  "exclude": ["dist", "node_modules"]
 }

@@ -1,7 +1,7 @@
+import { invariant } from "@haohaohow/lib/invariant";
 import type { Duration } from "date-fns";
 import { add } from "date-fns/add";
 import round from "lodash/round";
-import { invariant } from "./invariant";
 
 export enum Rating {
   Again = 1,

@@ -2570,6 +2570,135 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@haohaohow/api@workspace:projects/api":
+  version: 0.0.0-use.local
+  resolution: "@haohaohow/api@workspace:projects/api"
+  dependencies:
+    "@haohaohow/lib": "workspace:*"
+    "@neondatabase/serverless": "npm:^0.9.4"
+    "@types/lodash": "npm:4.17.x"
+    "@types/node": "npm:^20.12.12"
+    "@types/pg": "npm:^8 <=8.12.x"
+    "@types/ws": "npm:^8 <=8.17.x"
+    "@vercel/node": "npm:^3.2.0"
+    drizzle-kit: "npm:^0.22.7"
+    drizzle-orm: "npm:^0.31.2"
+    lodash: "npm:^4.17.21"
+    nanoid: "npm:^5.0.7"
+    pg: "npm:^8.12.0"
+    prettier: "npm:^3.2.5"
+    tsx: "npm:^4.15.7"
+    typescript: "npm:^5.5.2"
+    vercel: "npm:^34.2.8"
+    ws: "npm:^8.17.1"
+    zod: "npm:^3.23.8"
+  languageName: unknown
+  linkType: soft
+
+"@haohaohow/app@workspace:projects/app":
+  version: 0.0.0-use.local
+  resolution: "@haohaohow/app@workspace:projects/app"
+  dependencies:
+    "@babel/core": "npm:^7.20.0"
+    "@eslint/eslintrc": "npm:^3.0.2"
+    "@expo/metro-runtime": "npm:^3.2.1"
+    "@haohaohow/lib": "workspace:*"
+    "@react-native-replicache/deep-freeze": "npm:^1.1.0"
+    "@react-navigation/native": "npm:^6.1.17"
+    "@react-navigation/stack": "npm:^6.3.29"
+    "@sentry/react-native": "npm:~5.22.2"
+    "@stylistic/eslint-plugin": "npm:^2.2.2"
+    "@types/color": "npm:^3"
+    "@types/eslint": "npm:^8"
+    "@types/eslint__js": "npm:^8.42.3"
+    "@types/lodash": "npm:4.17.x"
+    "@types/react-dom": "npm:18.2.x"
+    "@typescript-eslint/utils": "npm:^7.13.1"
+    color: "npm:^4.2.3"
+    date-fns: "npm:^3.6.0"
+    eslint: "npm:^8.57.0"
+    eslint-plugin-deprecation: "npm:^3.0.0"
+    eslint-plugin-import: "npm:^2.29.1"
+    eslint-plugin-react: "npm:^7.34.3"
+    eslint-plugin-react-hooks: "npm:^4.6.2"
+    expo: "npm:~51.0.17"
+    expo-asset: "npm:~10.0.10"
+    expo-av: "npm:~14.0.6"
+    expo-constants: "npm:~16.0.2"
+    expo-crypto: "npm:^13.0.2"
+    expo-font: "npm:~12.0.7"
+    expo-haptics: "npm:~13.0.1"
+    expo-image: "patch:expo-image@npm%3A1.12.12#~/.yarn/patches/expo-image-npm-1.12.12-c96daa00a8.patch"
+    expo-insights: "npm:~0.7.0"
+    expo-linear-gradient: "npm:^13.0.2"
+    expo-linking: "npm:~6.3.1"
+    expo-router: "patch:expo-router@npm%3A3.5.17#~/.yarn/patches/expo-router-npm-3.5.17-110f3d28bf.patch"
+    expo-splash-screen: "npm:~0.27.5"
+    expo-sqlite: "npm:~14.0.4"
+    expo-status-bar: "npm:~1.12.1"
+    expo-system-ui: "npm:~3.0.7"
+    expo-updates: "npm:~0.25.18"
+    globals: "npm:^15.0.0"
+    hanzi: "patch:hanzi@npm%3A2.1.5#~/.yarn/patches/hanzi-npm-2.1.5-506390bb41.patch"
+    lodash: "npm:^4.17.21"
+    nanoid: "npm:^5.0.7"
+    prettier: "npm:^3.2.5"
+    react: "npm:18.2.0"
+    react-dom: "npm:^18.2.0"
+    react-native: "npm:0.74.3"
+    react-native-gesture-handler: "npm:~2.16.2"
+    react-native-safe-area-context: "npm:4.10.1"
+    react-native-screens: "npm:~3.31.1"
+    react-native-web: "npm:^0.19.11"
+    replicache: "npm:^14.2.2"
+    replicache-react: "npm:^5.0.1"
+    tsx: "npm:^4.15.7"
+    typescript: "npm:^5.5.2"
+    typescript-eslint: "npm:^7.13.1"
+    vercel: "npm:^34.2.8"
+    zod: "npm:^3.23.8"
+  languageName: unknown
+  linkType: soft
+
+"@haohaohow/emails@workspace:projects/emails":
+  version: 0.0.0-use.local
+  resolution: "@haohaohow/emails@workspace:projects/emails"
+  dependencies:
+    "@react-email/components": "npm:^0.0.14"
+    "@types/react": "npm:18.2.x"
+    prettier: "npm:^3.2.5"
+    react: "npm:18.2.0"
+    react-email: "npm:^2.1.2"
+  languageName: unknown
+  linkType: soft
+
+"@haohaohow/lib@workspace:*, @haohaohow/lib@workspace:projects/lib":
+  version: 0.0.0-use.local
+  resolution: "@haohaohow/lib@workspace:projects/lib"
+  dependencies:
+    "@types/lodash": "npm:4.17.x"
+    lodash: "npm:^4.17.21"
+    nanoid: "npm:^5.0.7"
+    prettier: "npm:^3.2.5"
+    tsx: "npm:^4.15.7"
+    typescript: "npm:^5.5.2"
+    zod: "npm:^3.23.8"
+  languageName: unknown
+  linkType: soft
+
+"@haohaohow/static@workspace:projects/static":
+  version: 0.0.0-use.local
+  resolution: "@haohaohow/static@workspace:projects/static"
+  dependencies:
+    "@types/node": "npm:^20.12.12"
+    prettier: "npm:^3.2.5"
+    ts-node: "npm:^10.9.2"
+    typescript: "npm:^5.5.2"
+    vercel: "npm:^34.2.8"
+    yargs: "npm:^17.7.2"
+  languageName: unknown
+  linkType: soft
+
 "@hapi/hoek@npm:^9.0.0, @hapi/hoek@npm:^9.3.0":
   version: 9.3.0
   resolution: "@hapi/hoek@npm:9.3.0"
@@ -5566,7 +5695,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/pg@npm:8.11.6":
+"@types/pg@npm:8.11.6, @types/pg@npm:^8 <=8.12.x":
   version: 8.11.6
   resolution: "@types/pg@npm:8.11.6"
   dependencies:
@@ -5658,6 +5787,15 @@ __metadata:
     tapable: "npm:^2.2.0"
     webpack: "npm:^5"
   checksum: 10c0/d1fec1f678af79dd0d84333740bdd2ce128c7f4fd1f8d14bb0ec0f4c5af70580af68350f677e3696003a8cb2e2b5f510f8c0ed7ee5ad2bc7874c87f80ecd7c8d
+  languageName: node
+  linkType: hard
+
+"@types/ws@npm:^8 <=8.17.x":
+  version: 8.5.10
+  resolution: "@types/ws@npm:8.5.10"
+  dependencies:
+    "@types/node": "npm:*"
+  checksum: 10c0/e9af279b984c4a04ab53295a40aa95c3e9685f04888df5c6920860d1dd073fcc57c7bd33578a04b285b2c655a0b52258d34bee0a20569dca8defb8393e1e5d29
   languageName: node
   linkType: hard
 
@@ -7197,89 +7335,6 @@ __metadata:
   checksum: 10c0/57b06ae984bc32a0d22592c87384cd88fe4511b1dd7581497831c56d41939c8a001b28e7b853e1450f2bf61992dfcaa8ae2d0d161a0a90c4fb631ef07098fbac
   languageName: node
   linkType: hard
-
-"api@workspace:projects/api":
-  version: 0.0.0-use.local
-  resolution: "api@workspace:projects/api"
-  dependencies:
-    "@neondatabase/serverless": "npm:^0.9.4"
-    "@types/node": "npm:^20.12.12"
-    "@vercel/node": "npm:^3.2.0"
-    drizzle-kit: "npm:^0.22.7"
-    drizzle-orm: "npm:^0.31.2"
-    nanoid: "npm:^5.0.7"
-    postgres: "npm:^3.4.4"
-    prettier: "npm:^3.2.5"
-    tsx: "npm:^4.15.7"
-    typescript: "npm:^5.5.2"
-    vercel: "npm:^34.2.8"
-    zod: "npm:^3.23.8"
-  languageName: unknown
-  linkType: soft
-
-"app@workspace:projects/app":
-  version: 0.0.0-use.local
-  resolution: "app@workspace:projects/app"
-  dependencies:
-    "@babel/core": "npm:^7.20.0"
-    "@eslint/eslintrc": "npm:^3.0.2"
-    "@expo/metro-runtime": "npm:^3.2.1"
-    "@react-native-replicache/deep-freeze": "npm:^1.1.0"
-    "@react-navigation/native": "npm:^6.1.17"
-    "@react-navigation/stack": "npm:^6.3.29"
-    "@sentry/react-native": "npm:~5.22.2"
-    "@stylistic/eslint-plugin": "npm:^2.2.2"
-    "@types/color": "npm:^3"
-    "@types/eslint": "npm:^8"
-    "@types/eslint__js": "npm:^8.42.3"
-    "@types/lodash": "npm:4.17.x"
-    "@types/react-dom": "npm:18.2.x"
-    "@typescript-eslint/utils": "npm:^7.13.1"
-    color: "npm:^4.2.3"
-    date-fns: "npm:^3.6.0"
-    eslint: "npm:^8.57.0"
-    eslint-plugin-deprecation: "npm:^3.0.0"
-    eslint-plugin-import: "npm:^2.29.1"
-    eslint-plugin-react: "npm:^7.34.3"
-    eslint-plugin-react-hooks: "npm:^4.6.2"
-    expo: "npm:~51.0.17"
-    expo-asset: "npm:~10.0.10"
-    expo-av: "npm:~14.0.6"
-    expo-constants: "npm:~16.0.2"
-    expo-crypto: "npm:^13.0.2"
-    expo-font: "npm:~12.0.7"
-    expo-haptics: "npm:~13.0.1"
-    expo-image: "patch:expo-image@npm%3A1.12.12#~/.yarn/patches/expo-image-npm-1.12.12-c96daa00a8.patch"
-    expo-insights: "npm:~0.7.0"
-    expo-linear-gradient: "npm:^13.0.2"
-    expo-linking: "npm:~6.3.1"
-    expo-router: "patch:expo-router@npm%3A3.5.17#~/.yarn/patches/expo-router-npm-3.5.17-110f3d28bf.patch"
-    expo-splash-screen: "npm:~0.27.5"
-    expo-sqlite: "npm:~14.0.4"
-    expo-status-bar: "npm:~1.12.1"
-    expo-system-ui: "npm:~3.0.7"
-    expo-updates: "npm:~0.25.18"
-    globals: "npm:^15.0.0"
-    hanzi: "patch:hanzi@npm%3A2.1.5#~/.yarn/patches/hanzi-npm-2.1.5-506390bb41.patch"
-    lodash: "npm:^4.17.21"
-    nanoid: "npm:^5.0.7"
-    prettier: "npm:^3.2.5"
-    react: "npm:18.2.0"
-    react-dom: "npm:^18.2.0"
-    react-native: "npm:0.74.3"
-    react-native-gesture-handler: "npm:~2.16.2"
-    react-native-safe-area-context: "npm:4.10.1"
-    react-native-screens: "npm:~3.31.1"
-    react-native-web: "npm:^0.19.11"
-    replicache: "npm:^14.2.2"
-    replicache-react: "npm:^5.0.1"
-    tsx: "npm:^4.15.7"
-    typescript: "npm:^5.5.2"
-    typescript-eslint: "npm:^7.13.1"
-    vercel: "npm:^34.2.8"
-    zod: "npm:^3.23.8"
-  languageName: unknown
-  linkType: soft
 
 "appdirsjs@npm:^1.2.4":
   version: 1.2.7
@@ -9256,18 +9311,6 @@ __metadata:
   checksum: 10c0/328051c526d840f137492ff870b782785666880e5a3df14abe9d04a843b1bfbb07139bf6496ada7958f97b482044cd6021d95db57e46f96b598b36e19c7da93c
   languageName: node
   linkType: hard
-
-"emails@workspace:projects/emails":
-  version: 0.0.0-use.local
-  resolution: "emails@workspace:projects/emails"
-  dependencies:
-    "@react-email/components": "npm:^0.0.14"
-    "@types/react": "npm:18.2.x"
-    prettier: "npm:^3.2.5"
-    react: "npm:18.2.0"
-    react-email: "npm:^2.1.2"
-  languageName: unknown
-  linkType: soft
 
 "emoji-regex@npm:^8.0.0":
   version: 8.0.0
@@ -15035,6 +15078,20 @@ __metadata:
   languageName: node
   linkType: hard
 
+"pg-cloudflare@npm:^1.1.1":
+  version: 1.1.1
+  resolution: "pg-cloudflare@npm:1.1.1"
+  checksum: 10c0/a68b957f755be6af813d68ccaf4c906a000fd2ecb362cd281220052cc9e2f6c26da3b88792742387008c30b3bf0d2fa3a0eff04aeb8af4414023c99ae78e07bd
+  languageName: node
+  linkType: hard
+
+"pg-connection-string@npm:^2.6.4":
+  version: 2.6.4
+  resolution: "pg-connection-string@npm:2.6.4"
+  checksum: 10c0/0d0b617df0fc6507bf6a94bdcd56c7a305788a1402d69bff9773350947c8f525d6d8136128065370749a3325e99658ae40fbdcce620fb8e60126181f0591a6a6
+  languageName: node
+  linkType: hard
+
 "pg-int8@npm:1.0.1":
   version: 1.0.1
   resolution: "pg-int8@npm:1.0.1"
@@ -15049,10 +15106,32 @@ __metadata:
   languageName: node
   linkType: hard
 
-"pg-protocol@npm:*":
+"pg-pool@npm:^3.6.2":
+  version: 3.6.2
+  resolution: "pg-pool@npm:3.6.2"
+  peerDependencies:
+    pg: ">=8.0"
+  checksum: 10c0/14c524549490954b5e48457a4b808df8f619f6deeb3b395b0cd184a8f4ed65a9273fe0697ba0341a41d6745af197f1437eb1cf51fff0cbbf5b0fb3852ebe5392
+  languageName: node
+  linkType: hard
+
+"pg-protocol@npm:*, pg-protocol@npm:^1.6.1":
   version: 1.6.1
   resolution: "pg-protocol@npm:1.6.1"
   checksum: 10c0/7eadef4010ac0a3925c460be7332ca4098a5c6d5181725a62193fcfa800000ae6632d98d814f3989b42cf5fdc3b45e34c714a1959d29174e81e30730e140ae5f
+  languageName: node
+  linkType: hard
+
+"pg-types@npm:^2.1.0":
+  version: 2.2.0
+  resolution: "pg-types@npm:2.2.0"
+  dependencies:
+    pg-int8: "npm:1.0.1"
+    postgres-array: "npm:~2.0.0"
+    postgres-bytea: "npm:~1.0.0"
+    postgres-date: "npm:~1.0.4"
+    postgres-interval: "npm:^1.1.0"
+  checksum: 10c0/ab3f8069a323f601cd2d2279ca8c425447dab3f9b61d933b0601d7ffc00d6200df25e26a4290b2b0783b59278198f7dd2ed03e94c4875797919605116a577c65
   languageName: node
   linkType: hard
 
@@ -15068,6 +15147,37 @@ __metadata:
     postgres-interval: "npm:^3.0.0"
     postgres-range: "npm:^1.1.1"
   checksum: 10c0/780fccda2f3fa2a34e85a72e8e7dadb7d88fbe71ce88f126cb3313f333ad836d02488ec4ff3d94d0c1e5846f735d6e6c6281f8059e6b8919d2180429acaec3e2
+  languageName: node
+  linkType: hard
+
+"pg@npm:^8.12.0":
+  version: 8.12.0
+  resolution: "pg@npm:8.12.0"
+  dependencies:
+    pg-cloudflare: "npm:^1.1.1"
+    pg-connection-string: "npm:^2.6.4"
+    pg-pool: "npm:^3.6.2"
+    pg-protocol: "npm:^1.6.1"
+    pg-types: "npm:^2.1.0"
+    pgpass: "npm:1.x"
+  peerDependencies:
+    pg-native: ">=3.0.1"
+  dependenciesMeta:
+    pg-cloudflare:
+      optional: true
+  peerDependenciesMeta:
+    pg-native:
+      optional: true
+  checksum: 10c0/973e49b5e7327c42fc62806efa8c824159ab7a0b676cefe6eeb51a59b6e226587911ec27697f36c18d69e58a7f4f0b76d0829364087194d13ed431ab7c9c417a
+  languageName: node
+  linkType: hard
+
+"pgpass@npm:1.x":
+  version: 1.0.5
+  resolution: "pgpass@npm:1.0.5"
+  dependencies:
+    split2: "npm:^4.1.0"
+  checksum: 10c0/5ea6c9b2de04c33abb08d33a2dded303c4a3c7162a9264519cbe85c0a9857d712463140ba42fad0c7cd4b21f644dd870b45bb2e02fcbe505b4de0744fd802c1d
   languageName: node
   linkType: hard
 
@@ -15246,10 +15356,24 @@ __metadata:
   languageName: node
   linkType: hard
 
+"postgres-array@npm:~2.0.0":
+  version: 2.0.0
+  resolution: "postgres-array@npm:2.0.0"
+  checksum: 10c0/cbd56207e4141d7fbf08c86f2aebf21fa7064943d3f808ec85f442ff94b48d891e7a144cc02665fb2de5dbcb9b8e3183a2ac749959e794b4a4cfd379d7a21d08
+  languageName: node
+  linkType: hard
+
 "postgres-array@npm:~3.0.1":
   version: 3.0.2
   resolution: "postgres-array@npm:3.0.2"
   checksum: 10c0/644aa071f67a66a59f641f8e623887d2b915bc102a32643e2aa8b54c11acd343c5ad97831ea444dd37bd4b921ba35add4aa2cb0c6b76700a8252c2324aeba5b4
+  languageName: node
+  linkType: hard
+
+"postgres-bytea@npm:~1.0.0":
+  version: 1.0.0
+  resolution: "postgres-bytea@npm:1.0.0"
+  checksum: 10c0/febf2364b8a8953695cac159eeb94542ead5886792a9627b97e33f6b5bb6e263bc0706ab47ec221516e79fbd6b2452d668841830fb3b49ec6c0fc29be61892ce
   languageName: node
   linkType: hard
 
@@ -15262,10 +15386,26 @@ __metadata:
   languageName: node
   linkType: hard
 
+"postgres-date@npm:~1.0.4":
+  version: 1.0.7
+  resolution: "postgres-date@npm:1.0.7"
+  checksum: 10c0/0ff91fccc64003e10b767fcfeefb5eaffbc522c93aa65d5051c49b3c4ce6cb93ab091a7d22877a90ad60b8874202c6f1d0f935f38a7235ed3b258efd54b97ca9
+  languageName: node
+  linkType: hard
+
 "postgres-date@npm:~2.1.0":
   version: 2.1.0
   resolution: "postgres-date@npm:2.1.0"
   checksum: 10c0/00a7472c10788f6b0d08d24108bf1eb80858de1bd6317740198a564918ea4a69b80c98148167b92ae688abd606483020d0de0dd3a36f3ea9a3e26bbeef3464f4
+  languageName: node
+  linkType: hard
+
+"postgres-interval@npm:^1.1.0":
+  version: 1.2.0
+  resolution: "postgres-interval@npm:1.2.0"
+  dependencies:
+    xtend: "npm:^4.0.0"
+  checksum: 10c0/c1734c3cb79e7f22579af0b268a463b1fa1d084e742a02a7a290c4f041e349456f3bee3b4ee0bb3f226828597f7b76deb615c1b857db9a742c45520100456272
   languageName: node
   linkType: hard
 
@@ -15280,13 +15420,6 @@ __metadata:
   version: 1.1.4
   resolution: "postgres-range@npm:1.1.4"
   checksum: 10c0/254494ef81df208e0adeae6b66ce394aba37914ea14c7ece55a45fb6691b7db04bee74c825380a47c887a9f87158fd3d86f758f9cc60b76d3a38ce5aca7912e8
-  languageName: node
-  linkType: hard
-
-"postgres@npm:^3.4.4":
-  version: 3.4.4
-  resolution: "postgres@npm:3.4.4"
-  checksum: 10c0/5c01a1501a1cb8851d981b1949bffd0a0a82ac5fd8453c410fdf4d6c0f91d01e69a42b30da2d08a77a00d6ddac0ea6ce58a1aa0dd6bd3f76e9220b1176bdfe60
   languageName: node
   linkType: hard
 
@@ -16953,6 +17086,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"split2@npm:^4.1.0":
+  version: 4.2.0
+  resolution: "split2@npm:4.2.0"
+  checksum: 10c0/b292beb8ce9215f8c642bb68be6249c5a4c7f332fc8ecadae7be5cbdf1ea95addc95f0459ef2e7ad9d45fd1064698a097e4eb211c83e772b49bc0ee423e91534
+  languageName: node
+  linkType: hard
+
 "split@npm:^1.0.1":
   version: 1.0.1
   resolution: "split@npm:1.0.1"
@@ -17025,18 +17165,6 @@ __metadata:
   checksum: 10c0/3c5322565667543486ec7fd30fdf5a61b463225cba3daae754f745f94d4a9425c72c2cd2daa105cafcf0e897c5859c52e326d7b57e4069a9473aff2f2a03305a
   languageName: node
   linkType: hard
-
-"static@workspace:projects/static":
-  version: 0.0.0-use.local
-  resolution: "static@workspace:projects/static"
-  dependencies:
-    "@types/node": "npm:^20.12.12"
-    ts-node: "npm:^10.9.2"
-    typescript: "npm:^5.5.2"
-    vercel: "npm:^34.2.8"
-    yargs: "npm:^17.7.2"
-  languageName: unknown
-  linkType: soft
 
 "statuses@npm:2.0.1":
   version: 2.0.1
@@ -18770,7 +18898,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ws@npm:^8.12.1, ws@npm:^8.17.0":
+"ws@npm:^8.12.1, ws@npm:^8.17.0, ws@npm:^8.17.1":
   version: 8.17.1
   resolution: "ws@npm:8.17.1"
   peerDependencies:
@@ -18851,7 +18979,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"xtend@npm:~4.0.1":
+"xtend@npm:^4.0.0, xtend@npm:~4.0.1":
   version: 4.0.2
   resolution: "xtend@npm:4.0.2"
   checksum: 10c0/366ae4783eec6100f8a02dff02ac907bf29f9a00b82ac0264b4d8b832ead18306797e283cf19de776538babfdcb2101375ec5646b59f08c52128ac4ab812ed0e
