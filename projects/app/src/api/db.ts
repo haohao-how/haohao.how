@@ -5,42 +5,43 @@ import z from "zod";
 import * as schema from "./schema.js";
 
 const env = z.object({ DATABASE_URL: z.string() }).parse(process.env);
-const IS_NEON = env.DATABASE_URL.includes("neon.tech");
+const IS_NEON = env.DATABASE_URL.includes(`neon.tech`);
 
 let Pool: typeof PgPool;
 if (IS_NEON) {
-  Pool = (await import("@neondatabase/serverless")).Pool;
-  const { neonConfig } = await import("@neondatabase/serverless");
-  const { default: ws } = await import("ws");
+  Pool = (await import(`@neondatabase/serverless`)).Pool;
+  const { neonConfig } = await import(`@neondatabase/serverless`);
+  const { default: ws } = await import(`ws`);
   neonConfig.webSocketConstructor = ws;
 } else {
-  Pool = (await import("pg")).default.Pool;
+  Pool = (await import(`pg`)).default.Pool;
 }
 
 export type Drizzle = NodePgDatabase<typeof schema>;
 export type TransactionBodyFn<R> = (db: Drizzle) => Promise<R>;
 
-export async function createPool(): Promise<PgPool> {
+export function createPool(): PgPool {
   const pool = new Pool({ connectionString: env.DATABASE_URL });
 
   // the pool will emit an error on behalf of any idle clients
   // it contains if a backend error or network partition happens
-  pool.on("error", (err) => {
-    console.error("Unexpected error on idle pool client", err);
+  pool.on(`error`, (err) => {
+    // eslint-disable-next-line no-console
+    console.error(`Unexpected error on idle pool client`, err);
   });
 
   return pool;
 }
 
 async function withDrizzleAndPool<R>(
-  f: (db: Drizzle) => R,
+  f: (db: Drizzle) => Promise<R>,
   pool: PgPool,
 ): Promise<R> {
   const client = await pool.connect();
 
   try {
     await client.query(
-      "SET SESSION CHARACTERISTICS AS TRANSACTION ISOLATION LEVEL SERIALIZABLE",
+      `SET SESSION CHARACTERISTICS AS TRANSACTION ISOLATION LEVEL SERIALIZABLE`,
     );
     const db = drizzle(client, { schema });
     return await f(db);
@@ -49,8 +50,8 @@ async function withDrizzleAndPool<R>(
   }
 }
 
-export async function withDrizzle<R>(f: (db: Drizzle) => R) {
-  const pool = await createPool();
+export async function withDrizzle<R>(f: (db: Drizzle) => Promise<R>) {
+  const pool = createPool();
   try {
     return withDrizzleAndPool(f, pool);
   } finally {
@@ -70,21 +71,21 @@ async function transactWithExecutor<R>(
         await db.execute(sql`commit`);
         return r;
       } catch (e) {
-        console.log(`caught error ${e} - rolling back`);
+        // eslint-disable-next-line no-console
+        console.log(`caught error - rolling back`, e);
         await db.execute(sql`rollback`);
         throw e;
       }
     } catch (e) {
       if (shouldRetryTransaction(e)) {
-        console.log(
-          `Retrying transaction due to error ${e} - attempt number ${i}`,
-        );
+        // eslint-disable-next-line no-console
+        console.log(`Retrying transaction due to error (attempt ${i})`, e);
         continue;
       }
       throw e;
     }
   }
-  throw new Error("Tried to execute transaction too many times. Giving up.");
+  throw new Error(`Tried to execute transaction too many times. Giving up.`);
 }
 
 // Because we are using SERIALIZABLE isolation level, we need to be prepared to retry transactions.
@@ -92,9 +93,9 @@ async function transactWithExecutor<R>(
 function shouldRetryTransaction(err: unknown) {
   // TODO: use zod to decode
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const code = typeof err === "object" ? String((err as any).code) : null;
-  return code === "40001" || code === "40P01";
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access
+  const code = typeof err === `object` ? String((err as any).code) : null;
+  return code === `40001` || code === `40P01`;
 }
 
 /**

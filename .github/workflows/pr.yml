@@ -53,7 +53,7 @@ jobs:
           auto-install: true
 
       - name: 🚀 Migrate test database
-        run: moon run api:dbMigrate
+        run: moon run app:dbMigrate
         env:
           DATABASE_URL: ${{ steps.create-branch.outputs.db_url }}
 
@@ -64,31 +64,6 @@ jobs:
           branch: ${{ env.NEON_BRANCH_NAME }}
           api_key: ${{ secrets.NEON_API_KEY }}
         if: ${{ always() }}
-
-  api-vercel:
-    runs-on: ubuntu-latest
-    env:
-      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID_API }}
-    steps:
-      - name: 🏗 Clone repo
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: 📦 Install dependencies
-        uses: moonrepo/setup-toolchain@v0.3.1
-        with:
-          auto-install: true
-
-      - name: 🔑 Fetch Vercel secrets
-        run: moon run api:vercel -- pull --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
-
-      - name: 🚀 Build Project Artifacts
-        run: moon run api:vercel -- build --token=${{ secrets.VERCEL_TOKEN }}
-
-      # - name: 🚀 Deploy Project Artifacts to Vercel
-      #   run: moon run api:vercel -- deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }}
 
   app-vercel:
     runs-on: ubuntu-latest
@@ -114,8 +89,8 @@ jobs:
         env:
           EXPO_PUBLIC_REPLICACHE_LICENSE_KEY: ${{ secrets.EXPO_PUBLIC_REPLICACHE_LICENSE_KEY }}
 
-      # - name: 🚀 Deploy Project Artifacts to Vercel
-      #   run: moon run app:vercel -- deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }}
+      - name: 🚀 Deploy Project Artifacts to Vercel
+        run: moon run app:vercel -- deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }}
 
   static-vercel:
     runs-on: ubuntu-latest
@@ -139,5 +114,5 @@ jobs:
       - name: 🚀 Build Project Artifacts
         run: moon run static:vercel -- build --token=${{ secrets.VERCEL_TOKEN }}
 
-      # - name: 🚀 Deploy Project Artifacts to Vercel
-      #   run: moon run static:vercel -- deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }}
+      - name: 🚀 Deploy Project Artifacts to Vercel
+        run: moon run static:vercel -- deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }}

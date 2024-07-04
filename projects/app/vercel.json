@@ -1,16 +1,18 @@
 {
-  "buildCommand": "moon run export -- -p web",
+  "buildCommand": "moon run build-web",
   "outputDirectory": "dist",
-  "devCommand": "moon run dev-web",
+  "devCommand": "moon run dev",
+  "functions": {
+    "api/index.js": {
+      "runtime": "@vercel/node@3.0.11",
+      "includeFiles": "dist/server/**"
+    }
+  },
   "cleanUrls": true,
   "rewrites": [
     {
-      "source": "/api/:path*",
-      "destination": "https://api.haohao.how/:path*"
-    },
-    {
-      "source": "/:path*",
-      "destination": "/"
+      "source": "/(.*)",
+      "destination": "/api/index.js"
     }
   ]
 }
