@@ -1,5 +1,5 @@
 {
-  "buildCommand": "moon run export -- -p web",
+  "buildCommand": "moon run build-web",
   "outputDirectory": "dist",
   "devCommand": "moon run dev",
   "functions": {

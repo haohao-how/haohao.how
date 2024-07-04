@@ -61,8 +61,6 @@ export function ReplicacheProvider({ children }: React.PropsWithChildren) {
     [],
   );
 
-  // use react-query to wait for the promise??
-
   return (
     <ReplicacheContext.Provider value={rep}>
       {children}

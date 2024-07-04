@@ -2,7 +2,7 @@
   "name": "@haohaohow/app",
   "version": "1.0.0",
   "main": "./src/main.js",
-  "type": "commonjs",
+  "type": "module",
   "dependencies": {
     "@expo/metro-runtime": "^3.2.1",
     "@expo/server": "^0.4.3",
@@ -54,6 +54,7 @@
     "@babel/core": "^7.20.0",
     "@eslint/eslintrc": "^3.0.2",
     "@stylistic/eslint-plugin": "^2.2.2",
+    "@types/babel__core": "7.20.x",
     "@types/color": "^3",
     "@types/eslint": "^8",
     "@types/eslint__js": "^8.42.3",
