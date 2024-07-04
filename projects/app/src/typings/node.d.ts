@@ -12,6 +12,7 @@ declare global {
     // sync with `env.ts`.
     interface ProcessEnv {
       EXPO_PUBLIC_REPLICACHE_LICENSE_KEY?: string;
+      NEON_DATABASE_URL?: string;
     }
   }
 }

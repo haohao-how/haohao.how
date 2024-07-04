@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { z } from "zod";
 
 import { Drizzle, transact } from "./db.js";
@@ -18,7 +19,8 @@ const pushRequestSchema = z.object({
 });
 
 export async function push(userID: string, requestBody: unknown) {
-  console.log("Processing push", JSON.stringify(requestBody, null, ""));
+  // eslint-disable-next-line no-console
+  console.log(`Processing push`, JSON.stringify(requestBody, null, ``));
 
   const push = pushRequestSchema.parse(requestBody);
 
@@ -32,7 +34,7 @@ export async function push(userID: string, requestBody: unknown) {
     }
   }
 
-  console.log("Processed all mutations in", Date.now() - t0);
+  console.log(`Processed all mutations in`, Date.now() - t0);
 }
 
 // Implements the push algorithm from
@@ -44,15 +46,15 @@ async function processMutation(
   // 1: `let errorMode = false`. In JS, we implement this step naturally
   // as a param. In case of failure, caller will call us again with `true`.
   errorMode: boolean,
-): Promise<unknown> {
+): Promise<void> {
   // 2: beginTransaction
-  return await transact(async (db) => {
+  await transact(async (db) => {
     // let affected: Affected = {listIDs: [], userIDs: []};
 
     console.log(
-      "Processing mutation",
-      errorMode ? "errorMode" : "",
-      JSON.stringify(mutation, null, ""),
+      `Processing mutation`,
+      errorMode ? `errorMode` : ``,
+      JSON.stringify(mutation, null, ``),
     );
 
     // 3: `getClientGroup(body.clientGroupID)`
@@ -91,7 +93,8 @@ async function processMutation(
       } catch (e) {
         // 10(ii)(a-c): log error, abort, and retry
         console.error(
-          `Error executing mutation: ${JSON.stringify(mutation)}: ${e}`,
+          `Error executing mutation: ${JSON.stringify(mutation)}`,
+          e,
         );
         throw e;
       }
@@ -107,22 +110,22 @@ async function processMutation(
     await putClientGroup(db, clientGroup);
     await putClient(db, nextClient);
 
-    console.log("Processed mutation in", Date.now() - t1);
+    console.log(`Processed mutation in`, Date.now() - t1);
     // return affected;
   });
 }
 
-export type ClientRecord = {
+export interface ClientRecord {
   id: string;
   clientGroupID: string;
   lastMutationID: number;
-};
+}
 
-export type ClientGroupRecord = {
+export interface ClientGroupRecord {
   id: string;
   userID: string;
   cvrVersion: number;
-};
+}
 
 export async function putClient(db: Drizzle, client: ClientRecord) {
   const { id, clientGroupID, lastMutationID } = client;
@@ -173,7 +176,7 @@ export async function getClientGroup(
   }
 
   if (r.userId !== userID) {
-    throw new Error("Authorization error - user does not own client group");
+    throw new Error(`Authorization error - user does not own client group`);
   }
 
   return {
@@ -195,14 +198,14 @@ export async function getClient(
   if (!r) {
     return {
       id: clientId,
-      clientGroupID: "",
+      clientGroupID: ``,
       lastMutationID: 0,
     };
   }
 
   if (r.clientGroupId !== clientGroupId) {
     throw new Error(
-      "Authorization error - client does not belong to client group",
+      `Authorization error - client does not belong to client group`,
     );
   }
 
@@ -213,6 +216,7 @@ export async function getClient(
   };
 }
 
+// eslint-disable-next-line @typescript-eslint/require-await
 async function mutate(
   db: Drizzle,
   userID: string,
@@ -221,5 +225,5 @@ async function mutate(
   db;
   userID;
   mutation;
-  throw new Error("not yet implemented");
+  throw new Error(`not yet implemented`);
 }

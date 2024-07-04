@@ -2461,15 +2461,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@expo/server@npm:^0.4.0":
-  version: 0.4.2
-  resolution: "@expo/server@npm:0.4.2"
+"@expo/server@npm:^0.4.0, @expo/server@npm:^0.4.3":
+  version: 0.4.3
+  resolution: "@expo/server@npm:0.4.3"
   dependencies:
     "@remix-run/node": "npm:^2.7.2"
     abort-controller: "npm:^3.0.0"
     debug: "npm:^4.3.4"
     source-map-support: "npm:~0.5.21"
-  checksum: 10c0/866dce78be9393f3b31bec5366689a146853f737b8843c92fd0d59e000fede2a83b539ae25d889497e3c9954d450effc4a148a4e11ed5433e87bbba9055373e5
+  checksum: 10c0/8719f400b6aae978e7d52315f7c074130a4369c90aa7cf1944bcaa49e4f3563206f9f033612082de1ce85a010357c5eb5d98135d1a95d446ac44ebc241a37122
   languageName: node
   linkType: hard
 
@@ -2570,35 +2570,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@haohaohow/api@workspace:projects/api":
-  version: 0.0.0-use.local
-  resolution: "@haohaohow/api@workspace:projects/api"
-  dependencies:
-    "@haohaohow/lib": "workspace:*"
-    "@neondatabase/serverless": "npm:^0.9.4"
-    "@types/lodash": "npm:4.17.x"
-    "@types/node": "npm:^20.12.12"
-    "@types/pg": "npm:^8 <=8.12.x"
-    "@types/react": "npm:18.2.x"
-    "@types/react-dom": "npm:18.2.x"
-    "@types/ws": "npm:^8 <=8.17.x"
-    drizzle-kit: "npm:^0.22.7"
-    drizzle-orm: "npm:^0.31.2"
-    lodash: "npm:^4.17.21"
-    nanoid: "npm:^5.0.7"
-    next: "npm:^14.2.4"
-    pg: "npm:^8.12.0"
-    prettier: "npm:^3.2.5"
-    react: "npm:~18.2.0"
-    react-dom: "npm:~18.2.0"
-    tsx: "npm:^4.15.7"
-    typescript: "npm:^5.5.2"
-    vercel: "npm:^34.2.8"
-    ws: "npm:^8.17.1"
-    zod: "npm:^3.23.8"
-  languageName: unknown
-  linkType: soft
-
 "@haohaohow/app@workspace:projects/app":
   version: 0.0.0-use.local
   resolution: "@haohaohow/app@workspace:projects/app"
@@ -2606,7 +2577,9 @@ __metadata:
     "@babel/core": "npm:^7.20.0"
     "@eslint/eslintrc": "npm:^3.0.2"
     "@expo/metro-runtime": "npm:^3.2.1"
+    "@expo/server": "npm:^0.4.3"
     "@haohaohow/lib": "workspace:*"
+    "@neondatabase/serverless": "npm:^0.9.4"
     "@react-native-replicache/deep-freeze": "npm:^1.1.0"
     "@react-navigation/native": "npm:^6.1.17"
     "@react-navigation/stack": "npm:^6.3.29"
@@ -2616,10 +2589,14 @@ __metadata:
     "@types/eslint": "npm:^8"
     "@types/eslint__js": "npm:^8.42.3"
     "@types/lodash": "npm:4.17.x"
+    "@types/pg": "npm:^8 <=8.12.x"
     "@types/react-dom": "npm:18.2.x"
+    "@types/ws": "npm:^8 <=8.17.x"
     "@typescript-eslint/utils": "npm:^7.13.1"
     color: "npm:^4.2.3"
     date-fns: "npm:^3.6.0"
+    drizzle-kit: "npm:^0.22.7"
+    drizzle-orm: "npm:^0.31.2"
     eslint: "npm:^8.57.0"
     eslint-plugin-deprecation: "npm:^3.0.0"
     eslint-plugin-import: "npm:^2.29.1"
@@ -2646,6 +2623,7 @@ __metadata:
     hanzi: "patch:hanzi@npm%3A2.1.5#~/.yarn/patches/hanzi-npm-2.1.5-506390bb41.patch"
     lodash: "npm:^4.17.21"
     nanoid: "npm:^5.0.7"
+    pg: "npm:^8.12.0"
     prettier: "npm:^3.2.5"
     react: "npm:~18.2.0"
     react-dom: "npm:~18.2.0"
@@ -2654,12 +2632,13 @@ __metadata:
     react-native-safe-area-context: "npm:4.10.1"
     react-native-screens: "npm:~3.31.1"
     react-native-web: "npm:^0.19.11"
-    replicache: "npm:^14.2.2"
+    replicache: "patch:replicache@npm%3A14.2.2#~/.yarn/patches/replicache-npm-14.2.2-d99f6a2b5c.patch"
     replicache-react: "npm:^5.0.1"
     tsx: "npm:^4.15.7"
     typescript: "npm:^5.5.2"
     typescript-eslint: "npm:^7.13.1"
     vercel: "npm:^34.2.8"
+    ws: "npm:^8.17.1"
     zod: "npm:^3.23.8"
   languageName: unknown
   linkType: soft
@@ -9042,9 +9021,9 @@ __metadata:
   linkType: hard
 
 "detect-libc@npm:^2.0.0":
-  version: 2.0.2
-  resolution: "detect-libc@npm:2.0.2"
-  checksum: 10c0/a9f4ffcd2701525c589617d98afe5a5d0676c8ea82bcc4ed6f3747241b79f781d36437c59a5e855254c864d36a3e9f8276568b6b531c28d6e53b093a15703f11
+  version: 2.0.3
+  resolution: "detect-libc@npm:2.0.3"
+  checksum: 10c0/88095bda8f90220c95f162bf92cad70bd0e424913e655c20578600e35b91edc261af27531cf160a331e185c0ced93944bc7e09939143225f56312d7fd800fdb7
   languageName: node
   linkType: hard
 
@@ -14237,7 +14216,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"next@npm:^14.1.0, next@npm:^14.2.4":
+"next@npm:^14.1.0":
   version: 14.2.4
   resolution: "next@npm:14.2.4"
   dependencies:
@@ -16296,7 +16275,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"replicache@npm:^14.2.2":
+"replicache@npm:14.2.2":
   version: 14.2.2
   resolution: "replicache@npm:14.2.2"
   dependencies:
@@ -16307,6 +16286,20 @@ __metadata:
   bin:
     replicache: out/cli.cjs
   checksum: 10c0/6448b6b68a249044ad9be6077a7b2537f9e67e0400b20e2ea7bd5354337b1aaad36b6ff616150259ae13686d65039e0385d06d09f75e291703af77f1bdc462fa
+  languageName: node
+  linkType: hard
+
+"replicache@patch:replicache@npm%3A14.2.2#~/.yarn/patches/replicache-npm-14.2.2-d99f6a2b5c.patch":
+  version: 14.2.2
+  resolution: "replicache@patch:replicache@npm%3A14.2.2#~/.yarn/patches/replicache-npm-14.2.2-d99f6a2b5c.patch::version=14.2.2&hash=47f5bb"
+  dependencies:
+    "@badrap/valita": "npm:^0.3.0"
+    "@rocicorp/lock": "npm:^1.0.3"
+    "@rocicorp/logger": "npm:^5.2.1"
+    "@rocicorp/resolver": "npm:^1.0.1"
+  bin:
+    replicache: out/cli.cjs
+  checksum: 10c0/dbb08be58c08380f4479bd23263f05423a6624d57a78a5ff3dbfbcbcfa11bf396be93dafd0e64125c99c6d4c88b99d96fe837cd81fd021985e9f0bf413239877
   languageName: node
   linkType: hard
 

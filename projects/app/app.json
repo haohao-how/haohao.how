@@ -44,6 +44,7 @@
     },
     "web": {
       "bundler": "metro",
+      "output": "server",
       "favicon": "./src/assets/favicon.png"
     },
     "extra": {

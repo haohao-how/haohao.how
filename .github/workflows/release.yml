@@ -20,34 +20,9 @@ jobs:
           auto-install: true
 
       - name: 🚀 Migrate database
-        run: moon run api:dbMigrate
+        run: moon run app:dbMigrate
         env:
           DATABASE_URL: ${{ secrets.NEON_DATABASE_URL }}
-
-  api-vercel:
-    runs-on: ubuntu-latest
-    env:
-      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID_API }}
-    steps:
-      - name: 🏗 Clone repo
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: 📦 Install dependencies
-        uses: moonrepo/setup-toolchain@v0.3.1
-        with:
-          auto-install: true
-
-      - name: 🔑 Fetch Vercel secrets
-        run: moon run api:vercel -- pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
-
-      - name: 🚀 Build project artifacts
-        run: moon run api:vercel -- build --prod --token=${{ secrets.VERCEL_TOKEN }}
-
-      - name: 🚀 Publish artifacts
-        run: moon run api:vercel -- deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}
 
   app-vercel:
     runs-on: ubuntu-latest
