@@ -1,7 +1,9 @@
 tasks:
   dev:
-    command: yarn vercel dev
+    command: yarn next dev
     local: true
+  build:
+    command: yarn next build
   test:
     command: node --test --import tsx '**/*.test.ts'
   test-watch:

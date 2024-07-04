@@ -1,6 +1,9 @@
 {
   "name": "@haohaohow/lib",
   "type": "module",
+  "exports": {
+    "./*": "./src/*.ts"
+  },
   "dependencies": {
     "lodash": "^4.17.21",
     "nanoid": "^5.0.7",

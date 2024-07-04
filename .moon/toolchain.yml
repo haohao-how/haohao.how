@@ -16,4 +16,4 @@ typescript:
   rootOptionsConfigFileName: tsconfig.base
   routeOutDirToCache: true
   syncProjectReferences: true
-  syncProjectReferencesToPaths: true
+  syncProjectReferencesToPaths: false
