@@ -1,18 +1,17 @@
 {
   "buildCommand": "moon run build-web",
-  "outputDirectory": "dist",
+  "outputDirectory": "dist/client",
   "devCommand": "moon run dev",
   "functions": {
-    "api/index.js": {
-      "runtime": "@vercel/node@3.0.11",
+    "api/index.cjs": {
+      "runtime": "@vercel/node@3.2.1",
       "includeFiles": "dist/server/**"
     }
   },
-  "cleanUrls": true,
   "rewrites": [
     {
       "source": "/(.*)",
-      "destination": "/api/index.js"
+      "destination": "/api/index.cjs"
     }
   ]
 }

@@ -1,0 +1,13 @@
+diff --git a/build/src/start/server/metro/MetroBundlerDevServer.js b/build/src/start/server/metro/MetroBundlerDevServer.js
+index fe69b710faa885c5b0f1284c7c58183b513bc6cf..d8f8fbb617caebe33895911752c2b0454fbbdf81 100644
+--- a/build/src/start/server/metro/MetroBundlerDevServer.js
++++ b/build/src/start/server/metro/MetroBundlerDevServer.js
+@@ -174,7 +174,7 @@ class MetroBundlerDevServer extends _bundlerDevServer.BundlerDevServer {
+         for (const route of manifest.apiRoutes){
+             const filepath = _path().default.join(appDir, route.file);
+             const contents = await this.bundleApiRoute(filepath);
+-            const artifactFilename = _path().default.join(outputDir, _path().default.relative(appDir, filepath.replace(/\.[tj]sx?$/, ".js")));
++            const artifactFilename = _path().default.join(outputDir, _path().default.relative(appDir, filepath.replace(/\.[tj]sx?$/, ".cjs")));
+             if (contents) {
+                 let src = contents.src;
+                 if (includeSourceMaps && contents.map) {
