@@ -1,8 +1,9 @@
 {
-  "name": "static",
+  "name": "@haohaohow/static",
   "private": true,
   "devDependencies": {
     "@types/node": "^20.12.12",
+    "prettier": "^3.2.5",
     "ts-node": "^10.9.2",
     "typescript": "^5.5.2",
     "vercel": "^34.2.8",

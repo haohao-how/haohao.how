@@ -1,5 +1,5 @@
 import { iterTake } from "@/util/collections";
-import { invariant } from "@/util/invariant";
+import { invariant } from "@haohaohow/lib/invariant";
 import {
   IndexDefinitions,
   ReadonlyJSONValue,

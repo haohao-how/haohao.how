@@ -1,7 +1,7 @@
 import { indexes } from "@/data/marshal";
 import { mutators } from "@/data/mutators";
 import { replicacheLicenseKey } from "@/env";
-import { invariant } from "@/util/invariant";
+import { invariant } from "@haohaohow/lib/invariant";
 import {
   createContext,
   useContext,

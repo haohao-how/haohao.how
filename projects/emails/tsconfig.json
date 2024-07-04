@@ -10,12 +10,10 @@
     "jsx": "react",
     "module": "esnext",
     "moduleResolution": "bundler",
-    "noEmit": true,
     "noPropertyAccessFromIndexSignature": true,
     "outDir": "../../.moon/cache/types/projects/emails",
     "resolveJsonModule": true,
     "rootDirs": ["."],
-    "skipLibCheck": true,
     "sourceMap": true,
     "target": "esnext",
     "verbatimModuleSyntax": true

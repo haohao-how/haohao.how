@@ -1,7 +1,6 @@
 tasks:
   lint:
-    command: eslint .
-    platform: node
+    command: yarn eslint .
     inputs:
       # Config files anywhere within the project
       - "src/**/*.{js,mjs,json,ts,tsx}"

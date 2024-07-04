@@ -1,0 +1,22 @@
+{
+  "extends": "../../tsconfig.base",
+  "compilerOptions": {
+    "composite": true,
+    "allowJs": true,
+    "baseUrl": ".",
+    "lib": ["ESNext"],
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "outDir": "../../.moon/cache/types/projects/lib",
+    "target": "ESNext"
+  },
+  "include": [
+    "**/*.ts",
+    "**/*.tsx",
+    "**/*.mts",
+    "**/*.js",
+    "**/*.cjs",
+    "**/*.mjs"
+  ],
+  "exclude": ["dist", "node_modules"]
+}

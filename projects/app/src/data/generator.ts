@@ -1,6 +1,6 @@
 import { characterLookupByHanzi } from "@/dictionary/characters";
 import { wordLookupByHanzi } from "@/dictionary/words";
-import { invariant } from "@/util/invariant";
+import { invariant } from "@haohaohow/lib/invariant";
 import shuffle from "lodash/shuffle";
 import { Question, QuestionType, Skill, SkillType } from "./model";
 

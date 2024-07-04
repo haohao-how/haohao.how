@@ -1,10 +1,10 @@
 {
-  "name": "emails",
+  "name": "@haohaohow/emails",
   "private": true,
   "type": "module",
   "dependencies": {
     "@react-email/components": "^0.0.14",
-    "react": "18.2.0",
+    "react": "~18.2.0",
     "react-email": "^2.1.2"
   },
   "devDependencies": {

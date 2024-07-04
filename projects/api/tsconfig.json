@@ -1,27 +1,41 @@
 {
-  "extends": "../../tsconfig.base",
+  "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "allowJs": true,
-    "baseUrl": ".",
     "lib": ["ESNext"],
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
-    "noEmit": true,
-    "outDir": "../../.moon/cache/types/projects/api",
-    "paths": {
-      "@/*": ["api/*"]
-    },
-    "skipLibCheck": true,
     "target": "ESNext",
-    "types": ["node"]
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "preserve",
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "outDir": "../../.moon/cache/types/projects/api"
   },
   "include": [
-    "**/*.ts",
-    "**/*.tsx",
-    "**/*.mts",
-    "**/*.js",
-    "**/*.cjs",
-    "**/*.mjs"
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "src/**/*.mts",
+    "src/**/*.js",
+    "src/**/*.cjs",
+    "src/**/*.mjs",
+    "*.ts",
+    "*.tsx",
+    "*.mts",
+    "*.js",
+    "*.cjs",
+    "*.mjs",
+    ".next/types/**/*.ts"
   ],
-  "exclude": ["dist", "node_modules"]
+  "exclude": ["dist", "node_modules"],
+  "references": [
+    {
+      "path": "../lib"
+    }
+  ]
 }

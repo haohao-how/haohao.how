@@ -1,8 +1,9 @@
 tasks:
   dev:
-    command: vercel dev
-    platform: node
+    command: yarn next dev
     local: true
+  build:
+    command: yarn next build
   test:
     command: node --test --import tsx '**/*.test.ts'
   test-watch:
@@ -12,16 +13,17 @@ tasks:
     command: npx sentry-expo-upload-sourcemaps dist
     local: true
   dbGenerate:
-    command: drizzle-kit generate
-    platform: node
+    command: yarn drizzle-kit generate
     local: true
   dbMigrate:
-    command: tsx ./src/bin/migrate.ts
-    platform: node
+    command: yarn tsx ./src/bin/migrate.ts
     local: true
     options:
       cache: false
       envFile: .env.local
+
+dependsOn:
+  - lib
 
 tags:
   - prettier

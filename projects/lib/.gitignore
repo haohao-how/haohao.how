@@ -1,4 +1,2 @@
 .vercel
 .env*.local
-.next/
-.swc/

@@ -1,0 +1,10 @@
+tasks:
+  test:
+    command: node --test --import tsx '**/*.test.ts'
+  test-watch:
+    command: node --test --watch --import tsx '**/*.test.ts'
+    local: true
+
+tags:
+  - prettier
+  - typescript
