@@ -4,6 +4,8 @@
   "packageRules": [
     {
       "matchManagers": ["npm"],
+      "minimumReleaseAge": "3 days",
+      "internalChecksFilter": "strict",
       "enabled": false
     },
     {

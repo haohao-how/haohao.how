@@ -26,6 +26,10 @@ tasks:
     command: yarn constraints
     inputs:
       - "@group(yarnConfig)"
+  renovate-check:
+    command: npx --yes --package renovate -- renovate-config-validator
+    inputs:
+      - renovate.json
 
 tags:
   - prettier
