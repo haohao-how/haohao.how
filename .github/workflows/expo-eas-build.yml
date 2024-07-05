@@ -21,7 +21,7 @@ on:
           - production
 
 jobs:
-  update:
+  app-eas-build:
     name: EAS Build
     runs-on: ubuntu-latest
     steps:
@@ -33,7 +33,8 @@ jobs:
       - uses: ./.github/actions/setup-tools
 
       - name: 🚀 Build app
-        run: moon run app:yarnRun -- eas build --profile=${{ inputs.profile }} --platform=${{ inputs.platform }} --non-interactive
+        run: npx eas-cli@10.1.1 build --profile=${{ inputs.profile }} --platform=${{ inputs.platform }} --non-interactive
+        working-directory: projects/app
         env:
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
           EXPO_PUBLIC_REPLICACHE_LICENSE_KEY: ${{ secrets.EXPO_PUBLIC_REPLICACHE_LICENSE_KEY }}

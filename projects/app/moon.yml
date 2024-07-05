@@ -48,7 +48,7 @@ tasks:
   buildVercelExpoSentry:
     command: |
       rsync -a --delete @group(buildVercelExpoOutdir) @group(buildVercelExpoSentryOutdir) &&
-      yarn sentry-cli sourcemaps inject @group(buildVercelExpoSentryOutdir)
+      npx @sentry/cli@2.32.1 sourcemaps inject @group(buildVercelExpoSentryOutdir)
     options:
       shell: true
     deps:
@@ -65,7 +65,7 @@ tasks:
       cache: false
 
   dbGenerate:
-    command: yarn drizzle-kit generate
+    command: npx drizzle-kit@0.22.7 generate
     local: true
 
   dbMigrate:
@@ -89,7 +89,7 @@ tasks:
       persistent: false
 
   deployEasUpdateEas:
-    command: yarn eas update --skip-bundler --input-dir @group(buildEasUpdateOutdir) --auto --non-interactive
+    command: npx eas-cli@10.1.1 update --skip-bundler --input-dir @group(buildEasUpdateOutdir) --auto --non-interactive
     deps:
       - buildEasUpdate
     local: true
@@ -114,8 +114,8 @@ tasks:
 
   deployVercelVercel:
     command: |
-      yarn vercel build --prod &&
-      yarn vercel deploy --prebuilt --prod --token=$VERCEL_TOKEN
+      npx vercel@34.3.0 build --prod &&
+      npx vercel@34.3.0 deploy --prebuilt --prod --token=$VERCEL_TOKEN
     options:
       shell: true
       persistent: false
@@ -126,7 +126,7 @@ tasks:
     local: true
 
   deployVercelSentry:
-    command: yarn sentry-cli sourcemaps upload -o haohaohow -p app @group(buildVercelOutdir)
+    command: npx @sentry/cli@2.32.1 sourcemaps upload -o haohaohow -p app @group(buildVercelOutdir)
     deps:
       - buildVercel
     local: true
@@ -138,7 +138,7 @@ tasks:
     local: true
 
   expoDoctor:
-    command: yarn expo-doctor
+    command: npx expo-doctor@1.6.1
     options:
       # This checks the latest version of dependencies from the internet, so it
       # can't cache purely off local filesystem. It's important cache is

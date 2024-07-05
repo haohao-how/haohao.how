@@ -28,7 +28,7 @@ tasks:
     inputs:
       - "@group(yarnConfig)"
   renovate-check:
-    command: yarn renovate-config-validator
+    command: npx --yes -p renovate@37.424.1 renovate-config-validator
     inputs:
       - renovate.json
 
