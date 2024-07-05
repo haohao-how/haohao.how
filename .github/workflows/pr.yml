@@ -73,7 +73,8 @@ jobs:
       - uses: ./.github/actions/setup-tools
 
       - name: 🔑 Fetch Vercel secrets
-        run: moon run app:yarnRun -- vercel pull --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
+        run: npx vercel@34.3.0 pull --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
+        working-directory: projects/app
 
       - name: 🚀 Build and deploy
         run: moon run app:deployVercel
@@ -96,7 +97,8 @@ jobs:
       - uses: ./.github/actions/setup-tools
 
       - name: 🔑 Fetch Vercel secrets
-        run: moon run static:yarnRun -- vercel pull --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
+        run: npx vercel@34.3.0 pull --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
+        working-directory: projects/static
 
       - name: 🚀 Build and deploy
         run: moon run static:deploy

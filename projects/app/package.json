@@ -51,7 +51,6 @@
   "devDependencies": {
     "@babel/core": "^7.20.0",
     "@eslint/eslintrc": "^3.0.2",
-    "@sentry/cli": "^2.32.1",
     "@stylistic/eslint-plugin": "^2.2.2",
     "@types/babel__core": "7.20.x",
     "@types/color": "^3",
@@ -62,20 +61,15 @@
     "@types/react-dom": "18.2.x",
     "@types/ws": "^8 <=8.17.x",
     "@typescript-eslint/utils": "^7.13.1",
-    "drizzle-kit": "^0.22.7",
-    "eas-cli": "^10.1.1",
+    "drizzle-kit": "^0.22.8",
     "eslint": "^8.57.0",
     "eslint-plugin-deprecation": "^3.0.0",
     "eslint-plugin-import": "^2.29.1",
     "eslint-plugin-react": "^7.34.3",
     "eslint-plugin-react-hooks": "^4.6.2",
-    "expo-doctor": "^1.6.1",
     "globals": "^15.0.0",
-    "prettier": "^3.2.5",
-    "sentry-expo-upload-sourcemaps": "^5.24.1",
     "tsx": "^4.15.7",
-    "typescript": "^5.5.2",
-    "vercel": "^34.3.0"
+    "typescript": "^5.5.2"
   },
   "private": true,
   "expo": {
