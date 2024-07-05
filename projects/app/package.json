@@ -5,7 +5,6 @@
   "type": "module",
   "dependencies": {
     "@expo/metro-runtime": "^3.2.1",
-    "@expo/server": "^0.4.3",
     "@haohaohow/lib": "workspace:*",
     "@neondatabase/serverless": "^0.9.4",
     "@react-native-replicache/deep-freeze": "^1.1.0",

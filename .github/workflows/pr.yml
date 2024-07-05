@@ -76,6 +76,9 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Enable Corepack
+        run: corepack enable
+
       - name: 📦 Install dependencies
         uses: moonrepo/setup-toolchain@v0.3.1
         with:

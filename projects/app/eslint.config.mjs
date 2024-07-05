@@ -36,7 +36,7 @@ export default tseslint.config(
 
   {
     // config with just ignores is the replacement for `.eslintignore`
-    ignores: [`.expo/`, `dist/`, `node_modules/`],
+    ignores: [`.expo/`, `.vercel/`, `dist/`, `node_modules/`],
   },
 
   // extends ...

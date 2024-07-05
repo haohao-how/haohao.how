@@ -1,1 +1,4 @@
 /drizzle/meta
+/api/*.json
+/api/*.yaml
+/.vercel
