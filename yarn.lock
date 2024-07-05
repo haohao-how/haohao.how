@@ -2719,7 +2719,7 @@ __metadata:
     react-native-safe-area-context: "npm:4.10.1"
     react-native-screens: "npm:~3.31.1"
     react-native-web: "npm:^0.19.11"
-    replicache: "patch:replicache@npm%3A14.2.2#~/.yarn/patches/replicache-npm-14.2.2-d99f6a2b5c.patch"
+    replicache: "npm:^14.2.2"
     replicache-react: "npm:^5.0.1"
     tsx: "npm:^4.15.7"
     typescript: "npm:^5.5.2"
@@ -16403,7 +16403,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"replicache@npm:14.2.2":
+"replicache@npm:^14.2.2":
   version: 14.2.2
   resolution: "replicache@npm:14.2.2"
   dependencies:
@@ -16414,20 +16414,6 @@ __metadata:
   bin:
     replicache: out/cli.cjs
   checksum: 10c0/6448b6b68a249044ad9be6077a7b2537f9e67e0400b20e2ea7bd5354337b1aaad36b6ff616150259ae13686d65039e0385d06d09f75e291703af77f1bdc462fa
-  languageName: node
-  linkType: hard
-
-"replicache@patch:replicache@npm%3A14.2.2#~/.yarn/patches/replicache-npm-14.2.2-d99f6a2b5c.patch":
-  version: 14.2.2
-  resolution: "replicache@patch:replicache@npm%3A14.2.2#~/.yarn/patches/replicache-npm-14.2.2-d99f6a2b5c.patch::version=14.2.2&hash=47f5bb"
-  dependencies:
-    "@badrap/valita": "npm:^0.3.0"
-    "@rocicorp/lock": "npm:^1.0.3"
-    "@rocicorp/logger": "npm:^5.2.1"
-    "@rocicorp/resolver": "npm:^1.0.1"
-  bin:
-    replicache: out/cli.cjs
-  checksum: 10c0/dbb08be58c08380f4479bd23263f05423a6624d57a78a5ff3dbfbcbcfa11bf396be93dafd0e64125c99c6d4c88b99d96fe837cd81fd021985e9f0bf413239877
   languageName: node
   linkType: hard
 
