@@ -5,7 +5,7 @@ on:
   pull_request:
 
 jobs:
-  moon-ci:
+  root:
     runs-on: ubuntu-latest
     steps:
       - name: 🏗 Clone repo
@@ -15,11 +15,9 @@ jobs:
 
       - uses: ./.github/actions/setup-tools
 
-      - run: moon ci
-        env:
-          CHROMATIC_PROJECT_TOKEN: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
+      - run: moon check root
 
-  database:
+  app:
     runs-on: ubuntu-latest
     env:
       # Format: 'github_test_pr_' <run_id> [ ':' <run_attempt> ]
@@ -28,6 +26,8 @@ jobs:
       # slightly shorter and cleaner when there is no re-run.
       NEON_BRANCH_NAME: github_test_pr_${{ github.run_id }}${{ github.run_attempt != '1' && format(':{0}', github.run_attempt) || '' }}
       NEON_DATABASE_NAME: hao
+      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID_APP }}
     steps:
       - name: 🏗 Clone repo
         uses: actions/checkout@v4
@@ -36,7 +36,7 @@ jobs:
 
       - name: 🏗 Create database branch for running tests
         uses: neondatabase/create-branch-action@v5
-        id: create-branch
+        id: create-neon-branch
         with:
           api_key: ${{ secrets.NEON_API_KEY }}
           branch_name: ${{ env.NEON_BRANCH_NAME }}
@@ -46,24 +46,30 @@ jobs:
 
       - uses: ./.github/actions/setup-tools
 
-      - name: 🚀 Migrate test database
-        run: moon run app:dbMigrate
-        env:
-          DATABASE_URL: ${{ steps.create-branch.outputs.db_url }}
+      - run: moon check app
 
-      - name: 🗑️ Delete database branch
-        uses: neondatabase/delete-branch-action@v3
+      - run: moon run app:dbMigrate
+        env:
+          DATABASE_URL: ${{ steps.create-neon-branch.outputs.db_url }}
+
+      - name: 🚀 Preview deployment
+        run: |
+          npx vercel@34.3.0 pull --cwd projects/app --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
+          moon run app:deployVercel
+        env:
+          EXPO_PUBLIC_REPLICACHE_LICENSE_KEY: ${{ secrets.EXPO_PUBLIC_REPLICACHE_LICENSE_KEY }}
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+
+      - uses: neondatabase/delete-branch-action@v3
         with:
           project_id: ${{ secrets.NEON_PROJECT_ID }}
           branch: ${{ env.NEON_BRANCH_NAME }}
           api_key: ${{ secrets.NEON_API_KEY }}
         if: ${{ always() }}
 
-  app-vercel:
+  emails:
     runs-on: ubuntu-latest
-    env:
-      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID_APP }}
     steps:
       - name: 🏗 Clone repo
         uses: actions/checkout@v4
@@ -72,18 +78,21 @@ jobs:
 
       - uses: ./.github/actions/setup-tools
 
-      - name: 🔑 Fetch Vercel secrets
-        run: npx vercel@34.3.0 pull --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
-        working-directory: projects/app
+      - run: moon check emails
 
-      - name: 🚀 Build and deploy
-        run: moon run app:deployVercel
-        env:
-          EXPO_PUBLIC_REPLICACHE_LICENSE_KEY: ${{ secrets.EXPO_PUBLIC_REPLICACHE_LICENSE_KEY }}
-          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
-          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+  lib:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 🏗 Clone repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-  static-vercel:
+      - uses: ./.github/actions/setup-tools
+
+      - run: moon check lib
+
+  static:
     runs-on: ubuntu-latest
     env:
       VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
@@ -96,11 +105,11 @@ jobs:
 
       - uses: ./.github/actions/setup-tools
 
-      - name: 🔑 Fetch Vercel secrets
-        run: npx vercel@34.3.0 pull --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
-        working-directory: projects/static
+      - run: moon check static
 
-      - name: 🚀 Build and deploy
-        run: moon run static:deploy
+      - name: 🚀 Preview deployment
+        run: |
+          npx vercel@34.3.0 pull --cwd projects/static --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
+          moon run static:deploy
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
