@@ -13,10 +13,7 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: 📦 Install dependencies
-        uses: moonrepo/setup-toolchain@v0.3.1
-        with:
-          auto-install: true
+      - uses: ./.github/actions/setup-tools
 
       - run: moon ci
         env:
@@ -47,10 +44,7 @@ jobs:
           project_id: ${{ secrets.NEON_PROJECT_ID }}
           username: ${{ secrets.NEON_USERNAME }}
 
-      - name: 📦 Install dependencies
-        uses: moonrepo/setup-toolchain@v0.3.1
-        with:
-          auto-install: true
+      - uses: ./.github/actions/setup-tools
 
       - name: 🚀 Migrate test database
         run: moon run app:dbMigrate
@@ -76,13 +70,7 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Enable Corepack
-        run: corepack enable
-
-      - name: 📦 Install dependencies
-        uses: moonrepo/setup-toolchain@v0.3.1
-        with:
-          auto-install: true
+      - uses: ./.github/actions/setup-tools
 
       - name: 🔑 Fetch Vercel secrets
         run: moon run app:vercel -- pull --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
@@ -106,10 +94,7 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: 📦 Install dependencies
-        uses: moonrepo/setup-toolchain@v0.3.1
-        with:
-          auto-install: true
+      - uses: ./.github/actions/setup-tools
 
       - name: 🔑 Fetch Vercel secrets
         run: moon run static:vercel -- pull --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
