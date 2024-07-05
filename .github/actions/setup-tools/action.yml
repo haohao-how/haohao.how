@@ -1,0 +1,16 @@
+name: 📦 Install dependencies
+runs:
+  using: composite
+  steps:
+    # Necessary to run pnpm as part of building the projects/app/api functions
+    # for Vercel, because it includes a patch on one of the dependencies. It
+    # uses pnpm because Vercel only supports Yarn 1 which doesn't have patch
+    # support.
+    - name: Enable Corepack
+      shell: bash
+      run: corepack enable
+
+    - name: 📦 Install Moon toolchain
+      uses: moonrepo/setup-toolchain@v0.3.1
+      with:
+        auto-install: true
