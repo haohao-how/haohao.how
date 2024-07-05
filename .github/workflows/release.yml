@@ -35,18 +35,12 @@ jobs:
       - uses: ./.github/actions/setup-tools
 
       - name: 🔑 Fetch Vercel secrets
-        run: moon run app:vercel -- pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
+        run: moon run app:yarnRun -- vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
 
-      - name: 🚀 Build project artifacts
-        run: moon run app:vercel -- build --prod --token=${{ secrets.VERCEL_TOKEN }}
+      - name: 🚀 Build and deploy
+        run: moon run app:deployVercel
         env:
           EXPO_PUBLIC_REPLICACHE_LICENSE_KEY: ${{ secrets.EXPO_PUBLIC_REPLICACHE_LICENSE_KEY }}
-
-      - name: 🚀 Publish artifacts
-        run: |
-          moon run app:vercel -- deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}
-          moon run app:upload-sentry-source-maps
-        env:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
 
   static-vercel:
@@ -63,15 +57,14 @@ jobs:
       - uses: ./.github/actions/setup-tools
 
       - name: 🔑 Fetch Vercel secrets
-        run: moon run static:vercel -- pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
+        run: moon run static:yarnRun -- vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
 
-      - name: 🚀 Build artifacts
-        run: moon run static:vercel -- build --prod --token=${{ secrets.VERCEL_TOKEN }}
+      - name: 🚀 Build and deploy
+        run: moon run static:deploy
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
 
-      - name: 🚀 Publish artifacts
-        run: moon run static:vercel -- deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}
-
-  eas-update:
+  app-eas-update:
     runs-on: ubuntu-latest
     steps:
       - name: 🏗 Clone repo
@@ -81,11 +74,9 @@ jobs:
 
       - uses: ./.github/actions/setup-tools
 
-      - name: 🚀 Publish update
-        run: |
-          moon run app:eas -- update --auto --non-interactive
-          moon run app:upload-sentry-source-maps
+      - name: 🚀 Build and deploy
+        run: moon run app:deployEasUpdate
         env:
-          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
           EXPO_PUBLIC_REPLICACHE_LICENSE_KEY: ${{ secrets.EXPO_PUBLIC_REPLICACHE_LICENSE_KEY }}
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}

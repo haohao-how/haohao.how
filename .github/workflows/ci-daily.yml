@@ -12,12 +12,13 @@ jobs:
     steps:
       - name: 🏗 Clone repo
         uses: actions/checkout@v4
-        # Intentionally omit `fetch-depth: 0` to force all targets to be run
-        # instead of some being skipped due to `moon run <…> --affected`
-        # behavior.
+        with:
+          fetch-depth: 0
 
       - uses: ./.github/actions/setup-tools
 
-      - run: moon ci
+      # Don't use `moon ci` because it will only run tasks with inputs that have
+      # changed since the last commit.
+      - run: moon check -u --all
         env:
           CHROMATIC_PROJECT_TOKEN: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}

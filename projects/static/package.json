@@ -6,7 +6,7 @@
     "prettier": "^3.2.5",
     "ts-node": "^10.9.2",
     "typescript": "^5.5.2",
-    "vercel": "^34.2.8",
+    "vercel": "^34.3.0",
     "yargs": "^17.7.2"
   }
 }

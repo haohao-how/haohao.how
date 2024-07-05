@@ -1,36 +1,68 @@
+fileGroups:
+  sentryCliEnv:
+    - $SENTRY_*
+  expoCliEnv:
+    - "$EXPO_*"
+  # WARNING: these must end in trialing slash to be rsync
+  buildVercelExpoOutdir:
+    - dist/.cache/vercel-expo/
+  buildVercelExpoSentryOutdir:
+    - dist/.cache/vercel-expo-sentry/
+  buildVercelOutdir:
+    - dist/vercel/
+  buildEasUpdateOutdir:
+    - dist/eas/
+
 tasks:
-  dev:
-    command: yarn expo start --web
-    local: true
-
-  expo-doctor:
-    command: npx --yes expo-doctor
-    options:
-      # expo-doctor checks the latest version of dependencies from the internet,
-      # so it can't cache purely off local filesystem. It's important cache is
-      # disabled otherwise the daily CI won't run this.
-      cache: false
-
-  eas:
-    command: npx --yes eas-cli@latest
-    local: true
-
   build:
-    command: yarn expo export
-    inputs:
-      - "*.{json,js}"
-      - "api/**/*"
-      - "assets/**/*"
-      - "public/**/*"
-      - "src/**/*"
-    outputs:
-      - "dist/"
+    deps:
+      - buildEasUpdate
+      - buildVercel
 
-  build-web:
-    extends: build
-    args: "-p web"
+  buildEasUpdate:
+    command: yarn expo export -p ios -p android --source-maps --output-dir @group(buildEasUpdateOutdir)
+    outputs:
+      - "@group(buildEasUpdateOutdir)"
+
+  buildVercel:
+    # Copy to final destination.
+    command: rsync -a --delete @group(buildVercelExpoSentryOutdir) @group(buildVercelOutdir)
+    deps:
+      - buildVercelExpoSentry
+    outputs:
+      - "@group(buildVercelOutdir)"
+
+  buildVercelExpo:
+    command: |
+      rm -rf @group(buildVercelExpoOutdir) &&
+      yarn expo export -p web --source-maps --output-dir @group(buildVercelExpoOutdir)
     options:
-      runInCI: false
+      shell: true
+    inputs:
+      - "@group(expoCliEnv)"
+      - "*.{json,js}"
+      - "{api,assets,public,src}/**/*"
+    outputs:
+      - "@group(buildVercelExpoOutdir)"
+
+  buildVercelExpoSentry:
+    command: |
+      rsync -a --delete @group(buildVercelExpoOutdir) @group(buildVercelExpoSentryOutdir) &&
+      yarn sentry-cli sourcemaps inject @group(buildVercelExpoSentryOutdir)
+    options:
+      shell: true
+    deps:
+      - buildVercelExpo
+    outputs:
+      - "@group(buildVercelExpoSentryOutdir)"
+    inputs:
+      - "@group(sentryCliEnv)"
+
+  expoGenerateTypes:
+    # The recommended command from https://docs.expo.dev/router/reference/typed-routes/#type-generation
+    command: yarn expo customize tsconfig.json
+    options:
+      cache: false
 
   dbGenerate:
     command: yarn drizzle-kit generate
@@ -40,29 +72,96 @@ tasks:
     command: yarn tsx ./src/bin/dbMigrate.ts
     local: true
     options:
-      cache: false
       envFile: .env.local
 
-  expo-generate-types:
-    # The recommended command from https://docs.expo.dev/router/reference/typed-routes/#type-generation
-    command: yarn expo customize tsconfig.json
+  deploy:
+    deps:
+      - deployEasUpdate
+      - deployVercel
+    local: true
+
+  deployEasUpdate:
+    deps:
+      - deployEasUpdateEas
+      - deployEasUpdateSentry
+    local: true
     options:
+      persistent: false
+
+  deployEasUpdateEas:
+    command: yarn eas update --skip-bundler --input-dir @group(buildEasUpdateOutdir) --auto --non-interactive
+    deps:
+      - buildEasUpdate
+    local: true
+    options:
+      persistent: false
+
+  deployEasUpdateSentry:
+    command: npx sentry-expo-upload-sourcemaps @group(buildEasUpdateOutdir)
+    deps:
+      - buildEasUpdate
+    local: true
+    options:
+      persistent: false
+
+  deployVercel:
+    deps:
+      - deployVercelVercel
+      - deployVercelSentry
+    local: true
+    options:
+      persistent: false
+
+  deployVercelVercel:
+    command: |
+      yarn vercel build --prod &&
+      yarn vercel deploy --prebuilt --prod --token=$VERCEL_TOKEN
+    options:
+      shell: true
+      persistent: false
+    inputs:
+      - $VERCEL_TOKEN
+    deps:
+      - buildVercel
+    local: true
+
+  deployVercelSentry:
+    command: yarn sentry-cli sourcemaps upload -o haohaohow -p app @group(buildVercelOutdir)
+    deps:
+      - buildVercel
+    local: true
+    options:
+      persistent: false
+
+  dev:
+    command: yarn expo start --web
+    local: true
+
+  expoDoctor:
+    command: yarn expo-doctor
+    options:
+      # This checks the latest version of dependencies from the internet, so it
+      # can't cache purely off local filesystem. It's important cache is
+      # disabled otherwise the daily CI won't run this.
       cache: false
 
   test:
-    command: node --test --import tsx "**/*.test.ts"
+    command: node --test --import tsx "src/**/*.test.ts"
+    inputs:
+      - "src"
+      - "*.{json,cjs,js,ts}"
+    options:
+      envFile: .env.test
 
-  test-watch:
+  testWatch:
     command: node --test --watch --import tsx "**/*.test.ts"
     local: true
+    options:
+      envFile: .env.test
 
   typecheck:
     deps:
-      - expo-generate-types
-
-  upload-sentry-source-maps:
-    command: npx sentry-expo-upload-sourcemaps dist
-    local: true
+      - expoGenerateTypes
 
 dependsOn:
   - lib
@@ -71,4 +170,3 @@ tags:
   - eslint
   - prettier
   - typescript
-  - vercel

@@ -15,7 +15,6 @@ tasks:
   chromatic:
     command: yarn chromatic --storybook-build-dir=storybook-static --exit-zero-on-changes
     inputs:
-      - "storybook-static/**/*"
       - "*.*"
       - "$CHROMATIC_PROJECT_TOKEN"
     deps:

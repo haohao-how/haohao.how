@@ -1,5 +1,0 @@
-tasks:
-  # Allows running `vercel` in a project context, using for CI scripts.
-  vercel:
-    command: yarn vercel
-    local: true

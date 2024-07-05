@@ -7,6 +7,7 @@ fileGroups:
     - "package.json"
     - "projects/*/package.json"
     - "yarn.config.cjs"
+    - "yarn.lock"
 
 tasks:
   prettier-check:
@@ -27,7 +28,7 @@ tasks:
     inputs:
       - "@group(yarnConfig)"
   renovate-check:
-    command: npx --yes --package renovate -- renovate-config-validator
+    command: yarn renovate-config-validator
     inputs:
       - renovate.json
 

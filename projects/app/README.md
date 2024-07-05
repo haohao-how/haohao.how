@@ -10,12 +10,12 @@
 Add the iPhone (https://docs.expo.dev/build/internal-distribution/#configure-app-signing):
 
 ```sh
-moon run app:eas -- device:create
-moon run app:eas -- device:rename
+moon run app:yarnRun -- eas device:create
+moon run app:yarnRun -- eas device:rename
 ```
 
 Add the device to the provisioning profile:
 
 ```
-moon run app:eas -- build --profile=preview --platform=ios
+moon run app:yarnRun -- eas build --profile=preview --platform=ios
 ```
