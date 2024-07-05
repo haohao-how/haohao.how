@@ -45,13 +45,13 @@
     "replicache": "^14.2.2",
     "replicache-react": "^5.0.1",
     "typescript-eslint": "^7.13.1",
-    "vercel": "^34.2.8",
     "ws": "^8.17.1",
     "zod": "^3.23.8"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
     "@eslint/eslintrc": "^3.0.2",
+    "@sentry/cli": "^2.32.1",
     "@stylistic/eslint-plugin": "^2.2.2",
     "@types/babel__core": "7.20.x",
     "@types/color": "^3",
@@ -68,10 +68,13 @@
     "eslint-plugin-import": "^2.29.1",
     "eslint-plugin-react": "^7.34.3",
     "eslint-plugin-react-hooks": "^4.6.2",
+    "expo-doctor": "^1.6.1",
     "globals": "^15.0.0",
     "prettier": "^3.2.5",
+    "sentry-expo-upload-sourcemaps": "^5.24.1",
     "tsx": "^4.15.7",
-    "typescript": "^5.5.2"
+    "typescript": "^5.5.2",
+    "vercel": "^34.3.0"
   },
   "private": true,
   "expo": {

@@ -6,7 +6,18 @@ tasks:
       NODE_OPTIONS: --no-warnings=ExperimentalWarning
     local: true
 
+  vercel:
+    command: yarn vercel
+    local: true
+
+  deploy:
+    command: |
+      yarn vercel build --prod &&
+      yarn vercel deploy --prebuilt --prod --token=$VERCEL_TOKEN
+    options:
+      shell: true
+    local: true
+
 tags:
   - prettier
   - typescript
-  - vercel
