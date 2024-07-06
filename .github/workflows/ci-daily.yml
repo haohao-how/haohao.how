@@ -5,6 +5,7 @@ on:
     # Run at 7 AM AEST, some tests check if packages are up to date (e.g. `expo
     # doctor`). Without a schedule then random pull requests can fail.
     - cron: 0 17 * * *
+  workflow_dispatch:
 
 jobs:
   moon-ci:
@@ -12,8 +13,6 @@ jobs:
     steps:
       - name: 🏗 Clone repo
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
       - uses: ./.github/actions/setup-tools
 
