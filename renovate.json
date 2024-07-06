@@ -4,30 +4,28 @@
   "packageRules": [
     {
       "matchManagers": ["npm"],
-      "minimumReleaseAge": "3 days",
-      "internalChecksFilter": "strict",
+      "matchDepTypes": ["dependencies"],
       "enabled": false
     },
     {
       "matchManagers": ["npm"],
       "matchDepTypes": ["devDependencies"],
-      "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
-      "automerge": true
+      "matchUpdateTypes": ["major"],
+      "enabled": false
     },
     {
-      "matchManagers": ["npm"],
+      "matchDatasources": ["npm"],
+      "minimumReleaseAge": "3 days",
+      "internalChecksFilter": "strict"
+    },
+    {
+      "matchDatasources": ["npm"],
       "matchDepPatterns": ["@types/*"],
       "rangeStrategy": "in-range-only"
     },
     {
-      "matchDepNames": ["moonrepo/moon"],
       "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
       "automerge": true
-    },
-    {
-      "matchManagers": ["npm"],
-      "matchDepTypes": ["devDependencies"],
-      "enabled": true
     }
   ],
   "customManagers": [
@@ -51,7 +49,7 @@
         "^projects/[^/]+/[^/]+.ya?ml$"
       ],
       "matchStrings": [
-        "(npx|npm exec)( -[-a-z]+?)* (?<depName>(@[a-z0-9-~][a-z0-9-._~]*\\/)?[a-z0-9-~][a-z0-9-._~]*)@(?<currentValue>[^ ]+)\\s"
+        "(npx|npm exec|yarn dlx)( -[-a-z]+?)* (?<depName>(@[a-z0-9-~][a-z0-9-._~]*\\/)?[a-z0-9-~][a-z0-9-._~]*)@(?<currentValue>[^ ]+)\\s"
       ],
       "datasourceTemplate": "npm"
     }
