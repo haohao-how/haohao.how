@@ -5,19 +5,7 @@ on:
   pull_request:
 
 jobs:
-  root:
-    runs-on: ubuntu-latest
-    steps:
-      - name: 🏗 Clone repo
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - uses: ./.github/actions/setup-tools
-
-      - run: moon check root
-
-  app:
+  app-preview:
     runs-on: ubuntu-latest
     env:
       # Format: 'github_test_pr_' <run_id> [ ':' <run_attempt> ]
@@ -46,8 +34,6 @@ jobs:
 
       - uses: ./.github/actions/setup-tools
 
-      - run: moon check app
-
       - run: moon run app:dbMigrate
         env:
           DATABASE_URL: ${{ steps.create-neon-branch.outputs.db_url }}
@@ -68,31 +54,7 @@ jobs:
           api_key: ${{ secrets.NEON_API_KEY }}
         if: ${{ always() }}
 
-  emails:
-    runs-on: ubuntu-latest
-    steps:
-      - name: 🏗 Clone repo
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - uses: ./.github/actions/setup-tools
-
-      - run: moon check emails
-
-  lib:
-    runs-on: ubuntu-latest
-    steps:
-      - name: 🏗 Clone repo
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - uses: ./.github/actions/setup-tools
-
-      - run: moon check lib
-
-  static:
+  static-preview:
     runs-on: ubuntu-latest
     env:
       VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
@@ -105,11 +67,31 @@ jobs:
 
       - uses: ./.github/actions/setup-tools
 
-      - run: moon check static
-
       - name: 🚀 Preview deployment
         run: |
           npx vercel@34.3.0 pull --cwd projects/static --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
           moon run static:deploy
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+
+  moon-ci:
+    runs-on: ubuntu-latest
+    env:
+      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID_STATIC }}
+    strategy:
+      matrix:
+        index: [0, 1]
+    steps:
+      - name: 🏗 Clone repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: ./.github/actions/setup-tools
+
+      - run: moon ci --color --job ${{ matrix.index }} --jobTotal 2
+
+      - name: 🧾 Results
+        uses: appthrust/moon-ci-retrospect@v0
+        if: ${{ always() }}
