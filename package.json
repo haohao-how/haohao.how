@@ -8,7 +8,6 @@
     "@types/semver": "7.5.x",
     "@yarnpkg/doctor": "^4.0.2",
     "@yarnpkg/types": "^4.0.0",
-    "prettier": "^3.2.5",
     "semver": "^7.5.0",
     "typescript": "^5.5.2"
   },

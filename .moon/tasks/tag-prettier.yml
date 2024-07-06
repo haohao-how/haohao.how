@@ -1,6 +1,6 @@
 tasks:
   prettier:
-    command: npx prettier@3.3.2 --write --check .
+    command: npx -y prettier@3.3.2 --write --check .
     local: true
   prettier-check:
-    command: npx prettier@3.3.2 --check .
+    command: npx -y prettier@3.3.2 --check .
