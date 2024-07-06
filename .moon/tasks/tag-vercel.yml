@@ -8,7 +8,6 @@ tasks:
       - $VERCEL_*
       - $HHH_VERCEL_PREVIEW # Use to turn on "preview" mode.
       - $HHH_VERCEL_PROD # Use to turn on "production" mode.
-    local: true
     options:
-      persistent: false
+      runInCI: false
       shell: true
