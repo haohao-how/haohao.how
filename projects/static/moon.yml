@@ -6,7 +6,8 @@ tasks:
       NODE_OPTIONS: --no-warnings=ExperimentalWarning
     inputs:
       - src/**/*
-    local: true
+    options:
+      runInCI: false
 
   deploy:
     inputs:

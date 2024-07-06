@@ -71,53 +71,55 @@ tasks:
 
   dbGenerate:
     command: npx -y drizzle-kit@0.22.8 generate
-    local: true
+    options:
+      runInCI: false
 
   dbMigrate:
     command: yarn tsx ./src/bin/dbMigrate.ts
     inputs:
       - drizzle/**/*
-    local: true
     options:
       envFile: .env.local
+      runInCI: false
 
   deploy:
     deps:
       - deployEasUpdate
       - deployVercel
-    local: true
+    options:
+      runInCI: false
 
   deployEasUpdate:
     deps:
       - deployEasUpdateEas
       - deployEasUpdateSentry
-    local: true
     options:
       persistent: false
+      runInCI: false
 
   deployEasUpdateEas:
     command: npx -y eas-cli@10.1.1 update --skip-bundler --input-dir @group(buildEasUpdateOutdir) --auto --non-interactive
     deps:
       - buildEasUpdate
-    local: true
     options:
       persistent: false
+      runInCI: false
 
   deployEasUpdateSentry:
     command: npx -y sentry-expo-upload-sourcemaps @group(buildEasUpdateOutdir)
     deps:
       - buildEasUpdate
-    local: true
     options:
       persistent: false
+      runInCI: false
 
   deployVercel:
     deps:
       - deployVercelVercel
       - deployVercelSentry
-    local: true
     options:
       persistent: false
+      runInCI: false
 
   deployVercelVercel:
     deps:
@@ -127,9 +129,9 @@ tasks:
     command: npx -y @sentry/cli@2.32.1 sourcemaps upload -o haohaohow -p app @group(buildVercelOutdir)
     deps:
       - buildVercel
-    local: true
     options:
       persistent: false
+      runInCI: false
 
   dev:
     command: yarn expo start --web

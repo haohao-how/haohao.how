@@ -1,6 +1,7 @@
 tasks:
   prettier:
     command: npx -y prettier@3.3.2 --write --check .
-    local: true
+    options:
+      runInCI: false
   prettier-check:
     command: npx -y prettier@3.3.2 --check .

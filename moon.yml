@@ -20,9 +20,6 @@ tasks:
     command: yarn doctor .
     inputs:
       - "@group(yarnConfig)"
-  node-version:
-    command: node --version
-    local: true
   yarn-constraints:
     command: yarn constraints
     inputs:
