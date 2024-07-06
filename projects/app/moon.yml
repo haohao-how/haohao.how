@@ -65,7 +65,7 @@ tasks:
       cache: false
 
   dbGenerate:
-    command: npx drizzle-kit@0.22.7 generate
+    command: npx drizzle-kit@0.22.8 generate
     local: true
 
   dbMigrate:
