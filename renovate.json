@@ -41,6 +41,19 @@
       "matchStrings": [
         ".*?(:|=)\\s+('|\\\")(=?)(?<currentValue>.*)('|\\\")\\s+#\\s+renovate: datasource=(?<datasource>.+?) depName=(?<depName>.+?)( versioning=(?<versioning>.*?))?( extractVersion=(?<extractVersion>.*?))?\\n"
       ]
+    },
+    {
+      "customType": "regex",
+      "description": "Update pinned npx packages",
+      "fileMatch": [
+        "^.moon/.*.ya?ml$",
+        "^.github/.*.ya?ml$",
+        "^projects/[^/]+/[^/]+.ya?ml$"
+      ],
+      "matchStrings": [
+        "/(?:npx|npm exec)(?: -[-a-z]+?)* (?<depName>(?:@[a-z0-9-~][a-z0-9-._~]*\\/)?[a-z0-9-~][a-z0-9-._~]*)@(?<currentValue>[^ ]+)\\s/"
+      ],
+      "datasourceTemplate": "npm"
     }
   ]
 }
