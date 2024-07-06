@@ -51,7 +51,7 @@
         "^projects/[^/]+/[^/]+.ya?ml$"
       ],
       "matchStrings": [
-        "(?:npx|npm exec)(?: -[-a-z]+?)* (?<depName>(?:@[a-z0-9-~][a-z0-9-._~]*\\/)?[a-z0-9-~][a-z0-9-._~]*)@(?<currentValue>[^ ]+)\\s"
+        "(npx|npm exec)( -[-a-z]+?)* (?<depName>(@[a-z0-9-~][a-z0-9-._~]*\\/)?[a-z0-9-~][a-z0-9-._~]*)@(?<currentValue>[^ ]+)\\s"
       ],
       "datasourceTemplate": "npm"
     }
