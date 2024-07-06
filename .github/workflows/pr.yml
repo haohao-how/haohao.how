@@ -4,6 +4,10 @@ on:
   merge_group:
   pull_request:
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   app-preview:
     runs-on: ubuntu-latest
@@ -34,16 +38,15 @@ jobs:
 
       - uses: ./.github/actions/setup-tools
 
-      - run: moon run app:dbMigrate
+      - run: moon run app:dbMigrate --affected --remote
         env:
           DATABASE_URL: ${{ steps.create-neon-branch.outputs.db_url }}
 
-      - name: 🚀 Preview deployment
-        run: |
-          npx vercel@34.3.0 pull --cwd projects/app --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
-          moon run app:deployVercel
+      - name: 🚀 Deploy to Vercel (preview)
+        run: moon run app:deployVercel --affected --remote
         env:
           EXPO_PUBLIC_REPLICACHE_LICENSE_KEY: ${{ secrets.EXPO_PUBLIC_REPLICACHE_LICENSE_KEY }}
+          HHH_VERCEL_PREVIEW:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
 
@@ -67,11 +70,10 @@ jobs:
 
       - uses: ./.github/actions/setup-tools
 
-      - name: 🚀 Preview deployment
-        run: |
-          npx vercel@34.3.0 pull --cwd projects/static --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
-          moon run static:deploy
+      - name: 🚀 Deploy to Vercel (preview)
+        run: moon run static:deploy --affected --remote
         env:
+          HHH_VERCEL_PREVIEW:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
 
   moon-ci:

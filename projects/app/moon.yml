@@ -13,6 +13,11 @@ fileGroups:
   buildEasUpdateOutdir:
     - dist/eas/
 
+workspace:
+  inheritedTasks:
+    rename:
+      deploy: "deployVercelVercel"
+
 tasks:
   build:
     deps:
@@ -70,6 +75,8 @@ tasks:
 
   dbMigrate:
     command: yarn tsx ./src/bin/dbMigrate.ts
+    inputs:
+      - drizzle/**/*
     local: true
     options:
       envFile: .env.local
@@ -113,17 +120,8 @@ tasks:
       persistent: false
 
   deployVercelVercel:
-    command: |
-      npx vercel@34.3.0 build --prod &&
-      npx vercel@34.3.0 deploy --prebuilt --prod --token=$VERCEL_TOKEN
-    options:
-      shell: true
-      persistent: false
-    inputs:
-      - $VERCEL_TOKEN
     deps:
       - buildVercel
-    local: true
 
   deployVercelSentry:
     command: npx @sentry/cli@2.32.1 sourcemaps upload -o haohaohow -p app @group(buildVercelOutdir)
@@ -170,3 +168,4 @@ tags:
   - eslint
   - prettier
   - typescript
+  - vercel

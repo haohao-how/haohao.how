@@ -5,6 +5,11 @@ on:
     branches:
       - main
 
+concurrency:
+  # Ensure only one build at a time, so that DB migrations, EAS releases, Vercel
+  # deployments, all happen in sequence and results are more deterministic.
+  group: ${{ github.workflow }}-${{ github.ref }}
+
 jobs:
   database:
     runs-on: ubuntu-latest
@@ -17,7 +22,7 @@ jobs:
       - uses: ./.github/actions/setup-tools
 
       - name: 🚀 Migrate database
-        run: moon run app:dbMigrate
+        run: moon run app:dbMigrate --affected --remote
         env:
           DATABASE_URL: ${{ secrets.NEON_DATABASE_URL }}
 
@@ -34,14 +39,11 @@ jobs:
 
       - uses: ./.github/actions/setup-tools
 
-      - name: 🔑 Fetch Vercel secrets
-        run: npx vercel@34.3.0 pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
-        working-directory: projects/app
-
-      - name: 🚀 Build and deploy
-        run: moon run app:deployVercel
+      - name: 🚀 Deploy to Vercel (production)
+        run: moon run app:deployVercel --affected --remote
         env:
           EXPO_PUBLIC_REPLICACHE_LICENSE_KEY: ${{ secrets.EXPO_PUBLIC_REPLICACHE_LICENSE_KEY }}
+          HHH_VERCEL_PROD:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
 
@@ -58,13 +60,10 @@ jobs:
 
       - uses: ./.github/actions/setup-tools
 
-      - name: 🔑 Fetch Vercel secrets
-        run: npx vercel@34.3.0 pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
-        working-directory: projects/static
-
-      - name: 🚀 Build and deploy
-        run: moon run static:deploy
+      - name: 🚀 Deploy to Vercel (production)
+        run: moon run static:deploy --affected --remote
         env:
+          HHH_VERCEL_PROD:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
 
   app-eas-update:
@@ -78,9 +77,8 @@ jobs:
       - uses: ./.github/actions/setup-tools
 
       - name: 🚀 Build and deploy
-        run: moon run app:deployEasUpdate
+        run: moon run app:deployEasUpdate --affected --remote
         env:
           EXPO_PUBLIC_REPLICACHE_LICENSE_KEY: ${{ secrets.EXPO_PUBLIC_REPLICACHE_LICENSE_KEY }}
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
-          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}

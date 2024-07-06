@@ -4,16 +4,15 @@ tasks:
     env:
       # Hide the warning about fs/promises glob
       NODE_OPTIONS: --no-warnings=ExperimentalWarning
+    inputs:
+      - src/**/*
     local: true
 
   deploy:
-    command: |
-      npx vercel@34.3.0 build --prod &&
-      npx vercel@34.3.0 deploy --prebuilt --prod --token=$VERCEL_TOKEN
-    options:
-      shell: true
-    local: true
+    inputs:
+      - public/**/*
 
 tags:
   - prettier
   - typescript
+  - vercel
