@@ -10,9 +10,10 @@
     "moduleResolution": "NodeNext",
     "allowJs": true,
     "esModuleInterop": true,
-    "lib": ["DOM", "ESNext"],
+    "lib": ["ES2022"],
     "noPropertyAccessFromIndexSignature": true,
     "resolveJsonModule": true,
-    "target": "ESNext"
+    "target": "ES2022",
+    "types": ["node"]
   }
 }

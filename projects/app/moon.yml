@@ -68,6 +68,10 @@ tasks:
     command: yarn expo customize tsconfig.json
     options:
       cache: false
+    env:
+      # Fixes: (node:97180) Warning: To load an ES module, set "type": "module"
+      # in the package.json or use the .mjs extension.
+      NODE_OPTIONS: "--import tsx"
 
   dbGenerate:
     command: npx -y drizzle-kit@0.22.8 generate
@@ -75,7 +79,7 @@ tasks:
       runInCI: false
 
   dbMigrate:
-    command: yarn tsx ./src/bin/dbMigrate.ts
+    command: yarn tsx ./bin/dbMigrate.ts
     inputs:
       - drizzle/**/*
     options:
@@ -146,7 +150,7 @@ tasks:
       cache: false
 
   test:
-    command: node --test --import tsx "src/**/*.test.ts"
+    command: node --test --test-reporter=spec --import tsx "src/**/*.test.ts"
     inputs:
       - "src"
       - "*.{json,cjs,js,ts}"

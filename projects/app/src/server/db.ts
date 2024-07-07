@@ -2,25 +2,25 @@ import { sql } from "drizzle-orm";
 import { drizzle, NodePgDatabase } from "drizzle-orm/node-postgres";
 import type { Pool as PgPool } from "pg";
 import z from "zod";
-import * as schema from "./schema.js";
+import * as schema from "./schema";
 
 const env = z.object({ DATABASE_URL: z.string() }).parse(process.env);
 const IS_NEON = env.DATABASE_URL.includes(`neon.tech`);
 
-let Pool: typeof PgPool;
-if (IS_NEON) {
-  Pool = (await import(`@neondatabase/serverless`)).Pool;
-  const { neonConfig } = await import(`@neondatabase/serverless`);
-  const { default: ws } = await import(`ws`);
-  neonConfig.webSocketConstructor = ws;
-} else {
-  Pool = (await import(`pg`)).default.Pool;
-}
-
 export type Drizzle = NodePgDatabase<typeof schema>;
 export type TransactionBodyFn<R> = (db: Drizzle) => Promise<R>;
 
-export function createPool(): PgPool {
+export async function createPool(): Promise<PgPool> {
+  let Pool: typeof PgPool;
+  if (IS_NEON) {
+    Pool = (await import(`@neondatabase/serverless`)).Pool;
+    const { neonConfig } = await import(`@neondatabase/serverless`);
+    const { default: ws } = await import(`ws`);
+    neonConfig.webSocketConstructor = ws;
+  } else {
+    Pool = (await import(`pg`)).default.Pool;
+  }
+
   const pool = new Pool({ connectionString: env.DATABASE_URL });
 
   // the pool will emit an error on behalf of any idle clients
@@ -51,7 +51,7 @@ async function withDrizzleAndPool<R>(
 }
 
 export async function withDrizzle<R>(f: (db: Drizzle) => Promise<R>) {
-  const pool = createPool();
+  const pool = await createPool();
   try {
     return withDrizzleAndPool(f, pool);
   } finally {

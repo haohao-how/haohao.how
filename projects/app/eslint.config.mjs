@@ -18,7 +18,7 @@ export default tseslint.config(
     // note - intentionally uses computed syntax to make it easy to sort the keys
     plugins: {
       [`@typescript-eslint`]: tseslint.plugin,
-      "@stylistic": stylisticPlugin,
+      [`@stylistic`]: stylisticPlugin,
       // ['@typescript-eslint/internal']: tseslintInternalPlugin,
       [`deprecation`]: deprecationPlugin,
       // ['eslint-comments']: eslintCommentsPlugin,
@@ -45,11 +45,7 @@ export default tseslint.config(
 
   // base config
   {
-    extends: [
-      ...compat.config(reactPlugin.configs.recommended),
-      ...compat.config(reactHooksPlugin.configs.recommended),
-    ],
-
+    files: [`{api,src}/**/*.{cjs,js,ts,tsx}`, `*.{cjs,mjs,js,ts}`],
     languageOptions: {
       globals: {
         ...globals.es2020,
@@ -60,7 +56,27 @@ export default tseslint.config(
         project: [`tsconfig.json`],
       },
     },
+  },
 
+  {
+    files: [`bin/**/*`],
+    languageOptions: {
+      globals: {
+        ...globals.es2022,
+        ...globals.node,
+      },
+      parserOptions: {
+        allowAutomaticSingleRunInference: true,
+        project: [`bin/tsconfig.json`],
+      },
+    },
+  },
+
+  {
+    extends: [
+      ...compat.config(reactPlugin.configs.recommended),
+      ...compat.config(reactHooksPlugin.configs.recommended),
+    ],
     settings: {
       react: {
         version: `detect`,
@@ -171,18 +187,6 @@ export default tseslint.config(
       // @stylistic
       //
       "@stylistic/quotes": [`error`, `backtick`],
-    },
-  },
-  {
-    files: [`**/*.js`],
-    extends: [tseslint.configs.disableTypeChecked],
-    rules: {
-      // turn off other type-aware rules
-      "deprecation/deprecation": `off`,
-      "@typescript-eslint/internal/no-poorly-typed-ts-props": `off`,
-
-      // turn off rules that don't apply to JS code
-      "@typescript-eslint/explicit-function-return-type": `off`,
     },
   },
 );
