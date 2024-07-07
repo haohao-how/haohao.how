@@ -1,0 +1,40 @@
+# Example usage:
+#
+# steps:
+#   - uses: ./.github/actions/moon-affected
+#     id: moon-deploy-query
+#     with:
+#       target: static:deploy
+#
+#   - run: yarn install
+#     if: steps.moon-deploy-query.target-affected
+#
+#   - run: moon run static:deploy --color --affected --remote
+#     if: steps.moon-deploy-query.target-affected
+#     env:
+#       HHH_VERCEL_PREVIEW:
+#       VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+#       VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID_STATIC }}
+#       VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+
+name: Query Moon's `--affected` knowledge
+inputs:
+  target: # id of input
+    required: true
+    default: ""
+outputs:
+  target-affected:
+    value: ${{ steps.moon-query.outputs.match == inputs.target }}
+runs:
+  using: composite
+  steps:
+    - id: moon-query
+      run: |
+        ALL_AFFECTED=$(moon query tasks --json --affected | jq '.tasks.[].[] | select(.options.runInCI == true) | .target')
+        echo $ALL_AFFECTED;
+        MATCH=$(echo $ALL_AFFECTED | jq --raw-output 'select(. == "'"$TARGET"'")')
+        echo match=$MATCH;
+        echo "match=$MATCH" >> $GITHUB_OUTPUT
+      env:
+        TARGET: ${{ inputs.target }}
+      shell: bash
