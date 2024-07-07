@@ -13,11 +13,16 @@ jobs:
     steps:
       - name: 🏗 Clone repo
         uses: actions/checkout@v4
+        with:
+          # Only fetch a single commit, so that `moon ci` is forced to run all
+          # tasks rather than just ones based on a diff. (`fetch-depth: 1` is
+          # the default, but since it's critical that it doesn't change)
+          fetch-depth: 1
 
       - uses: ./.github/actions/setup-tools
 
       # Don't use `moon ci` because it will only run tasks with inputs that have
       # changed since the last commit.
-      - run: moon check -u --all
+      - run: moon ci
         env:
           CHROMATIC_PROJECT_TOKEN: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
