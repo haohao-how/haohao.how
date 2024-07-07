@@ -22,7 +22,7 @@ jobs:
       - uses: ./.github/actions/setup-tools
 
       - name: 🚀 Migrate database
-        run: moon run app:dbMigrate --affected --remote
+        run: moon run app:dbMigrate --color --affected --remote
         env:
           DATABASE_URL: ${{ secrets.NEON_DATABASE_URL }}
 
@@ -40,7 +40,7 @@ jobs:
       - uses: ./.github/actions/setup-tools
 
       - name: 🚀 Deploy to Vercel (production)
-        run: moon run app:deployVercel --affected --remote
+        run: moon run app:deployVercel --color --affected --remote
         env:
           EXPO_PUBLIC_REPLICACHE_LICENSE_KEY: ${{ secrets.EXPO_PUBLIC_REPLICACHE_LICENSE_KEY }}
           HHH_VERCEL_PROD:
@@ -61,7 +61,7 @@ jobs:
       - uses: ./.github/actions/setup-tools
 
       - name: 🚀 Deploy to Vercel (production)
-        run: moon run static:deploy --affected --remote
+        run: moon run static:deploy --color --affected --remote
         env:
           HHH_VERCEL_PROD:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
@@ -77,7 +77,7 @@ jobs:
       - uses: ./.github/actions/setup-tools
 
       - name: 🚀 Build and deploy
-        run: moon run app:deployEasUpdate --affected --remote
+        run: moon run app:deployEasUpdate --color --affected --remote
         env:
           EXPO_PUBLIC_REPLICACHE_LICENSE_KEY: ${{ secrets.EXPO_PUBLIC_REPLICACHE_LICENSE_KEY }}
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
