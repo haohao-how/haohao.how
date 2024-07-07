@@ -2667,6 +2667,7 @@ __metadata:
     lodash: "npm:^4.17.21"
     nanoid: "npm:^5.0.7"
     pg: "npm:^8.12.0"
+    prettier: "npm:^3.3.2"
     react: "npm:~18.2.0"
     react-dom: "npm:~18.2.0"
     react-native: "npm:0.74.3"
@@ -2690,6 +2691,7 @@ __metadata:
   dependencies:
     "@react-email/components": "npm:^0.0.14"
     "@types/react": "npm:18.2.x"
+    prettier: "npm:^3.3.2"
     react: "npm:~18.2.0"
     react-email: "npm:^2.1.2"
   languageName: unknown
@@ -2702,6 +2704,7 @@ __metadata:
     "@types/lodash": "npm:4.17.x"
     lodash: "npm:^4.17.21"
     nanoid: "npm:^5.0.7"
+    prettier: "npm:^3.3.2"
     tsx: "npm:^4.15.7"
     typescript: "npm:^5.5.2"
     zod: "npm:^3.23.8"
@@ -2713,6 +2716,7 @@ __metadata:
   resolution: "@haohaohow/static@workspace:projects/static"
   dependencies:
     "@types/node": "npm:^20.12.12"
+    prettier: "npm:^3.3.2"
     ts-node: "npm:^10.9.2"
     typescript: "npm:^5.5.2"
     yargs: "npm:^17.7.2"
@@ -11090,6 +11094,7 @@ __metadata:
     "@types/semver": "npm:7.5.x"
     "@yarnpkg/doctor": "npm:^4.0.2"
     "@yarnpkg/types": "npm:^4.0.0"
+    prettier: "npm:^3.3.2"
     semver: "npm:^7.5.0"
     typescript: "npm:^5.5.2"
   languageName: unknown
@@ -14493,6 +14498,15 @@ __metadata:
   version: 1.2.1
   resolution: "prelude-ls@npm:1.2.1"
   checksum: 10c0/b00d617431e7886c520a6f498a2e14c75ec58f6d93ba48c3b639cf241b54232d90daa05d83a9e9b9fef6baa63cb7e1e4602c2372fea5bc169668401eb127d0cd
+  languageName: node
+  linkType: hard
+
+"prettier@npm:^3.3.2":
+  version: 3.3.2
+  resolution: "prettier@npm:3.3.2"
+  bin:
+    prettier: bin/prettier.cjs
+  checksum: 10c0/39ed27d17f0238da6dd6571d63026566bd790d3d0edac57c285fbab525982060c8f1e01955fe38134ab10f0951a6076da37f015db8173c02f14bc7f0803a384c
   languageName: node
   linkType: hard
 

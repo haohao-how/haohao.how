@@ -7,7 +7,6 @@
     "checkJs": true,
     "lib": ["ESNext"],
     "noPropertyAccessFromIndexSignature": true,
-    "types": [],
     "typeRoots": []
   },
   "include": ["**/*"],

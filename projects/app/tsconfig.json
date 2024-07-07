@@ -6,7 +6,7 @@
     "esModuleInterop": true,
     "jsx": "react-native",
     "lib": ["DOM", "ESNext"],
-    "module": "esnext",
+    "module": "ES2020",
     "moduleResolution": "Bundler",
     "noPropertyAccessFromIndexSignature": true,
     "outDir": "../../.moon/cache/types/projects/app",
@@ -18,12 +18,9 @@
     "target": "ESNext"
   },
   "include": [
-    "**/*.ts",
-    "**/*.tsx",
-    "**/*.mts",
-    "**/*.js",
-    "**/*.cjs",
-    "**/*.mjs",
+    "*",
+    "src/**/*",
+    "api/**/*",
     ".expo/types/**/*.ts",
     "expo-env.d.ts"
   ],

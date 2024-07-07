@@ -1,0 +1,21 @@
+{
+  // "extends": "../tsconfig",
+  "compilerOptions": {
+    "module": "NodeNext",
+    "target": "ESNext",
+    "moduleResolution": "NodeNext",
+    "noEmit": true,
+    "emitDeclarationOnly": false,
+    "strict": true
+    // "rootDir": ".."
+  },
+  "include": [
+    "**/*"
+    // , "../src/**/*"
+  ],
+  "references": [
+    {
+      "path": ".."
+    }
+  ]
+}

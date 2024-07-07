@@ -10,7 +10,7 @@ fileGroups:
     - "yarn.lock"
 
 tasks:
-  prettier-check:
+  prettierCheck:
     args:
       - "'!./projects/**/*'"
   prettier:
@@ -20,11 +20,11 @@ tasks:
     command: yarn doctor .
     inputs:
       - "@group(yarnConfig)"
-  yarn-constraints:
+  yarnConstraints:
     command: yarn constraints
     inputs:
       - "@group(yarnConfig)"
-  renovate-check:
+  renovateCheck:
     command: npx -y -p renovate@37.424.1 renovate-config-validator --strict
     inputs:
       - renovate.json

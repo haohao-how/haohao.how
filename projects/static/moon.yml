@@ -1,6 +1,10 @@
 tasks:
-  generate-speech:
-    command: yarn ts-node-script src/bin/generate-speech.ts
+  deploy:
+    inputs:
+      - public/**/*
+
+  generateSpeech:
+    command: yarn ts-node-script src/bin/generateSpeech.ts
     env:
       # Hide the warning about fs/promises glob
       NODE_OPTIONS: --no-warnings=ExperimentalWarning
@@ -8,10 +12,6 @@ tasks:
       - src/**/*
     options:
       runInCI: false
-
-  deploy:
-    inputs:
-      - public/**/*
 
 tags:
   - prettier
