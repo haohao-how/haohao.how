@@ -27,7 +27,7 @@ jobs:
       # for more information.
       - run: git checkout $(git rev-list -1 HEAD)
 
-      - run: moon ci --base $HHH_EMPTY_GIT_TREE
+      - run: moon ci --color --base $HHH_EMPTY_GIT_TREE
         env:
           CHROMATIC_PROJECT_TOKEN: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
           # Magic "empty" tree https://jiby.tech/post/git-diff-empty-repo/, so
