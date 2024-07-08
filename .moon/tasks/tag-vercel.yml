@@ -11,3 +11,4 @@ tasks:
     options:
       runInCI: false
       shell: true
+    platform: node
