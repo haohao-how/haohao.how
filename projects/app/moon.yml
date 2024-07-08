@@ -63,16 +63,6 @@ tasks:
     outputs:
       - "@group(buildVercelExpoSentryOutdir)"
 
-  expoGenerateTypes:
-    # The recommended command from https://docs.expo.dev/router/reference/typed-routes/#type-generation
-    command: yarn expo customize tsconfig.json
-    options:
-      cache: false
-    env:
-      # Fixes: (node:97180) Warning: To load an ES module, set "type": "module"
-      # in the package.json or use the .mjs extension.
-      NODE_OPTIONS: "--import tsx"
-
   dbGenerate:
     command: npx -y drizzle-kit@0.22.8 generate
     options:
@@ -140,6 +130,12 @@ tasks:
   dev:
     command: yarn expo start --web
     local: true
+    env:
+      # Fixes: (node:97180) Warning: To load an ES module, set "type": "module"
+      # in the package.json or use the .mjs extension.
+      #
+      # Pass $NODE_OPTIONS to support VS Code "JavaScript Debug Terminal".
+      NODE_OPTIONS: $NODE_OPTIONS --import tsx
 
   expoDoctor:
     command: npx -y expo-doctor@1.6.1
@@ -148,6 +144,18 @@ tasks:
       # can't cache purely off local filesystem. It's important cache is
       # disabled otherwise the daily CI won't run this.
       cache: false
+
+  expoGenerateTypes:
+    # The recommended command from https://docs.expo.dev/router/reference/typed-routes/#type-generation
+    command: yarn expo customize tsconfig.json
+    options:
+      cache: false
+    env:
+      # Fixes: (node:97180) Warning: To load an ES module, set "type": "module"
+      # in the package.json or use the .mjs extension.
+      #
+      # Pass $NODE_OPTIONS to support VS Code "JavaScript Debug Terminal".
+      NODE_OPTIONS: $NODE_OPTIONS --import tsx
 
   test:
     command: node --test --test-reporter=spec --import tsx "src/**/*.test.ts"
