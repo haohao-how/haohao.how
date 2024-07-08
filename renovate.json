@@ -52,6 +52,15 @@
         "(npx|npm exec|yarn dlx|pnpm dlx)( -[-a-z]+?)* (?<depName>(@[a-z0-9-~][a-z0-9-._~]*\\/)?[a-z0-9-~][a-z0-9-._~]*)@(?<currentValue>[^ ]+)\\s"
       ],
       "datasourceTemplate": "npm"
+    },
+    {
+      "customType": "regex",
+      "description": "Update Vercel runtimes",
+      "fileMatch": ["/vercel.json$"],
+      "matchStrings": [
+        "\"runtime\": \"(?<depName>(@[a-z0-9-~][a-z0-9-._~]*\\/)?[a-z0-9-~][a-z0-9-._~]*)@(?<currentValue>.+?)\""
+      ],
+      "datasourceTemplate": "npm"
     }
   ]
 }
