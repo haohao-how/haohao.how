@@ -7,7 +7,7 @@ tasks:
     command: yarn ts-node-script src/bin/generateSpeech.ts
     env:
       # Hide the warning about fs/promises glob
-      NODE_OPTIONS: --no-warnings=ExperimentalWarning
+      NODE_OPTIONS: $NODE_OPTIONS --no-warnings=ExperimentalWarning
     inputs:
       - src/**/*
     options:

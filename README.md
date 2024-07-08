@@ -19,6 +19,19 @@ moon app:dev
 
 # Cookbook
 
+## Debugging Expo server
+
+In VS Code open a `JavaScript Debug Terminal` from the command palette
+<kbd>⌘</kbd>+<kbd>Shift</kbd>+<kbd>p</kbd>, then run commands as normal e.g.
+
+```sh
+moon run app:dev
+```
+
+This works because VS Code configures `NODE_OPTIONS` in the terminal to
+`--require` a special `bootloader.js`, so it's important that moon tasks that
+define `NODE_OPTIONS` pass through the existing value.
+
 ## Adding a cross project dependency
 
 Add to `dependsOn:` within `moon.yml`, then run:
