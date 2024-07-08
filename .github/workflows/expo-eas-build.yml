@@ -31,7 +31,6 @@ jobs:
           fetch-depth: 0
 
       - uses: ./.github/actions/setup-tools
-      - run: yarn install
 
       - name: 🚀 Build app
         run: npx -y eas-cli@10.1.1 build --profile=${{ inputs.profile }} --platform=${{ inputs.platform }} --non-interactive
