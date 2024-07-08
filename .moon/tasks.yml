@@ -1,8 +1,2 @@
 implicitInputs:
   - /yarn.lock
-
-tasks:
-  yarnRun:
-    command: yarn run
-    options:
-      runInCI: false

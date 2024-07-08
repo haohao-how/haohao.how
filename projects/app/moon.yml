@@ -2,7 +2,7 @@ fileGroups:
   sentryCliEnv:
     - $SENTRY_*
   expoCliEnv:
-    - "$EXPO_*"
+    - $EXPO_*
   # WARNING: these must end in trialing slash to be rsync
   buildVercelExpoOutdir:
     - dist/.cache/vercel-expo/
@@ -41,12 +41,12 @@ tasks:
     command: |
       rm -rf @group(buildVercelExpoOutdir) &&
       yarn expo export -p web --source-maps --output-dir @group(buildVercelExpoOutdir)
-    options:
-      shell: true
     inputs:
       - "@group(expoCliEnv)"
       - "*.{json,js}"
       - "{api,assets,public,src}/**/*"
+    options:
+      shell: true
     outputs:
       - "@group(buildVercelExpoOutdir)"
 
@@ -54,14 +54,14 @@ tasks:
     command: |
       rsync -a --delete @group(buildVercelExpoOutdir) @group(buildVercelExpoSentryOutdir) &&
       npx -y @sentry/cli@2.32.1 sourcemaps inject @group(buildVercelExpoSentryOutdir)
-    options:
-      shell: true
     deps:
       - buildVercelExpo
-    outputs:
-      - "@group(buildVercelExpoSentryOutdir)"
     inputs:
       - "@group(sentryCliEnv)"
+    options:
+      shell: true
+    outputs:
+      - "@group(buildVercelExpoSentryOutdir)"
 
   expoGenerateTypes:
     # The recommended command from https://docs.expo.dev/router/reference/typed-routes/#type-generation
