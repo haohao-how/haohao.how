@@ -64,7 +64,7 @@ tasks:
       - "@group(buildVercelExpoSentryOutdir)"
 
   dbGenerate:
-    command: npx -y drizzle-kit@0.22.8 generate
+    command: npx -y drizzle-kit@0.23.0 generate
     options:
       runInCI: false
 
