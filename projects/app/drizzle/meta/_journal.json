@@ -8,6 +8,13 @@
       "when": 1719450267323,
       "tag": "0000_cloudy_blindfold",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1726314164221,
+      "tag": "0001_bored_psynapse",
+      "breakpoints": true
     }
   ]
 }

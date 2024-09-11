@@ -17,9 +17,13 @@
     },
     "assetBundlePatterns": ["**/*"],
     "ios": {
+      "config": {
+        "usesNonExemptEncryption": false
+      },
       "supportsTablet": true,
       "bundleIdentifier": "how.haohao.hoa",
-      "associatedDomains": ["applinks:haohao.how"]
+      "associatedDomains": ["applinks:haohao.how"],
+      "usesAppleSignIn": true
     },
     "android": {
       "adaptiveIcon": {
@@ -71,8 +75,10 @@
           "url": "https://sentry.io/"
         }
       ],
+      "expo-apple-authentication",
       "expo-asset",
-      "expo-font"
+      "expo-font",
+      "expo-secure-store"
     ],
     "experiments": {
       "typedRoutes": true
