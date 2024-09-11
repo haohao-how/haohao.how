@@ -135,7 +135,7 @@ tasks:
       # in the package.json or use the .mjs extension.
       #
       # Pass $NODE_OPTIONS to support VS Code "JavaScript Debug Terminal".
-      NODE_OPTIONS: $NODE_OPTIONS --import tsx
+      NODE_OPTIONS: --import tsx $NODE_OPTIONS
 
   expoDoctor:
     command: npx -y expo-doctor@1.6.1
@@ -155,7 +155,7 @@ tasks:
       # in the package.json or use the .mjs extension.
       #
       # Pass $NODE_OPTIONS to support VS Code "JavaScript Debug Terminal".
-      NODE_OPTIONS: $NODE_OPTIONS --import tsx
+      NODE_OPTIONS: --import tsx $NODE_OPTIONS
 
   test:
     command: node --test --test-reporter=spec --import tsx "src/**/*.test.ts"

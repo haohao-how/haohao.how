@@ -15,3 +15,7 @@ runs:
       uses: moonrepo/setup-toolchain@v0.3.1
       with:
         auto-install: true
+
+    - name: Yarn install
+      run: yarn install
+      shell: bash
