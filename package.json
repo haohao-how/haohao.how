@@ -13,7 +13,7 @@
     "typescript": "^5.5.2"
   },
   "engines": {
-    "node": "~22.5.0"
+    "node": "~22.8.0"
   },
   "resolutions": {
     "@testing-library/user-event@npm:14.3.0": "npm:@testing-library/user-event@^14.5.0",
