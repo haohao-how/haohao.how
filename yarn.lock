@@ -1396,6 +1396,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@drizzle-team/brocli@npm:^0.10.1":
+  version: 0.10.1
+  resolution: "@drizzle-team/brocli@npm:0.10.1"
+  checksum: 10c0/64a1678a5a5cf4a16f955175fd6f9df8ff61e5de24473d5c7efa699e8145a54574584bd22f8036c77d0d35666ff97f11a5b006191ca40f5d3deb0006258cd806
+  languageName: node
+  linkType: hard
+
 "@egjs/hammerjs@npm:^2.0.17":
   version: 2.0.17
   resolution: "@egjs/hammerjs@npm:2.0.17"
@@ -2647,7 +2654,7 @@ __metadata:
     "@typescript-eslint/utils": "npm:^7.13.1"
     color: "npm:^4.2.3"
     date-fns: "npm:^3.6.0"
-    drizzle-kit: "npm:^0.23.0"
+    drizzle-kit: "npm:^0.24.0"
     drizzle-orm: "npm:^0.31.2"
     eslint: "npm:^8.57.0"
     eslint-plugin-deprecation: "npm:^3.0.0"
@@ -8737,16 +8744,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"drizzle-kit@npm:^0.23.0":
-  version: 0.23.0
-  resolution: "drizzle-kit@npm:0.23.0"
+"drizzle-kit@npm:^0.24.0":
+  version: 0.24.2
+  resolution: "drizzle-kit@npm:0.24.2"
   dependencies:
+    "@drizzle-team/brocli": "npm:^0.10.1"
     "@esbuild-kit/esm-loader": "npm:^2.5.5"
     esbuild: "npm:^0.19.7"
     esbuild-register: "npm:^3.5.0"
   bin:
     drizzle-kit: bin.cjs
-  checksum: 10c0/9939eeb29f2aa93b73560a9a7df4ebe487c30bddf7e6f0e6ab0550989f0c6afc150f587bf65a9c8c263dea41737b8ce8dcee09f830d6992fe78909f4d3469b12
+  checksum: 10c0/c5416749deaf3c3fc0ce2981dbca6fd100b1f1fcb7c4f0a2c170ab24b5431c792f59d46eed45fc82097de95fb6fdb58adb5fb0dafe0c76ccf879c25362a45635
   languageName: node
   linkType: hard
 
