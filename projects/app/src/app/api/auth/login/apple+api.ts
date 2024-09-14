@@ -73,7 +73,7 @@ export async function POST(request: Request) {
 
   const jwt = parseJWT(body.identityToken);
   const subject = jwt?.subject;
-  invariant(subject !== null && subject !== undefined);
+  invariant(subject != null);
 
   return await withDrizzle(async (db) => {
     const userId = await getOrCreateUser(db, {
