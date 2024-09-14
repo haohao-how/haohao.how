@@ -167,6 +167,9 @@ const Section = ({
       <Link href="/word/手" asChild>
         <CircleButton color={GradientPurple[0]} />
       </Link>
+      <Link href="/login" asChild>
+        <CircleButton color={GradientPurple[0]} />
+      </Link>
       <CircleButton
         color={disabledColor}
         style={{ transform: [{ translateX: -20 }] }}
