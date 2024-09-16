@@ -105,3 +105,14 @@ such that everything in Figma can be exported to the
 1. Press <kbd>Enter</kbd> to accept the pinyin.
 
 Example: to write `hǎo` type <kbd>h</kbd> <kbd>a</kbd> <kbd>o</kbd> <kbd>Tab</kbd> <kbd>Tab</kbd> <kbd>Tab</kbd> <kbd>Enter</kbd>.
+
+## Local development with Sign in with Apple for Web
+
+1. Set `EXPO_TUNNEL_SUBDOMAIN` in `projects/app/.env.local` to something like
+   `haohaohow-<yourname>`.
+1. In [Apple Developer portal](https://developer.apple.com/account/resources/identifiers/list/serviceId) edit the Service ID for the app and click **Configure**.
+1. Click the + button for **Website URLs**, in the **Return URLs** box add
+   `https://<EXPO_TUNNEL_SUBDOMAIN>.ngrok.io/api/auth/login/apple/callback`
+   (replace `<EXPO_TUNNEL_SUBDOMAIN>` with the value you chose).
+1. Save the changes.
+1. Start Expo via `moon run app:dev`.

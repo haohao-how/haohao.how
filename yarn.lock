@@ -2565,6 +2565,7 @@ __metadata:
     "@sentry/react-native": "npm:~5.22.2"
     "@stylistic/eslint-plugin": "npm:^2.2.2"
     "@tanstack/react-query": "npm:^5.56.2"
+    "@types/apple-signin-api": "npm:^1.5.3"
     "@types/babel__core": "npm:7.20.x"
     "@types/color": "npm:^3"
     "@types/eslint": "npm:^8"
@@ -5625,6 +5626,13 @@ __metadata:
   dependencies:
     tslib: "npm:^2.4.0"
   checksum: 10c0/62ec238710453713a207a2cbcfa74ae5bebc5cd4d718dc34370a7fd5263e8213fe7e24436ec6544105331006f6d0806115956bed030672268dad4a3c123e0f2d
+  languageName: node
+  linkType: hard
+
+"@types/apple-signin-api@npm:^1.5.3":
+  version: 1.5.3
+  resolution: "@types/apple-signin-api@npm:1.5.3"
+  checksum: 10c0/830ddb9a3b696b67729b8924084f3719dd85985e6122ba29c0e136cee22255523fdf88dfe4648668ccdb503fdc9543b71e07c5a4771a917ff9357b63d8926ed7
   languageName: node
   linkType: hard
 

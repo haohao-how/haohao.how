@@ -2,7 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import * as SecureStore from "expo-secure-store";
 import { useEffect } from "react";
 import { Platform } from "react-native";
-import { effectWebEventListener } from "./hooks";
+import { windowEventListenerEffect } from "./hooks";
 
 // SecureStore keys must contain only alphanumeric characters, ".", "-", and
 // "_", so the separator is `.`
@@ -34,7 +34,7 @@ export const useClientStorageQuery = (key: string) => {
   // Synchronise localStorage changes from other browser tabs.
   useEffect(
     () =>
-      effectWebEventListener(`storage`, (event) => {
+      windowEventListenerEffect(`storage`, (event) => {
         if (event.storageArea === localStorage && event.key === storageKey) {
           queryClient.setQueryData(queryKey, event.newValue);
         }

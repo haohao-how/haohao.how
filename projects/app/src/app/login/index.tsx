@@ -1,9 +1,12 @@
 import { RectButton } from "@/components/RectButton";
+import { SignInWithAppleButton } from "@/components/SignInWithAppleButton";
 import {
   useClientStorageMutation,
   useClientStorageQuery,
 } from "@/util/clientStorage";
+import { invariant } from "@haohaohow/lib/invariant";
 import * as AppleAuthentication from "expo-apple-authentication";
+import { useCallback } from "react";
 import { Platform, StyleSheet, Text, View } from "react-native";
 import z from "zod";
 
@@ -12,6 +15,54 @@ const SESSION_ID_KEY = `sessionId`;
 export default function LoginPage() {
   const sessionIdQuery = useClientStorageQuery(SESSION_ID_KEY);
   const sessionIdMutation = useClientStorageMutation(SESSION_ID_KEY);
+
+  const createSession = useCallback(
+    async (identityToken: string) => {
+      // eslint-disable-next-line no-console
+      console.log(`creating session using identityToken:`, identityToken);
+
+      // eslint-disable-next-line no-console
+      console.log(`fetching \`/api/auth/login/apple\``);
+      {
+        const res = await fetch(`/api/auth/login/apple`, {
+          method: `POST`,
+          body: JSON.stringify({
+            identityToken,
+          }),
+          headers: {
+            "content-type": `application/json`,
+          },
+        });
+        if (res.ok) {
+          const userSchema = z.object({
+            id: z.string(),
+            name: z.string().optional(),
+          });
+
+          const sessionSchema = z.object({
+            id: z.string(),
+          });
+
+          const responseBodySchema = z.object({
+            session: sessionSchema,
+            user: userSchema,
+          });
+
+          const result = responseBodySchema.safeParse(await res.json());
+
+          if (result.success) {
+            sessionIdMutation.mutate(result.data.session.id);
+          } else {
+            // eslint-disable-next-line no-console
+            console.log(
+              `failed to parse response json ${JSON.stringify(result.error)}`,
+            );
+          }
+        }
+      }
+    },
+    [sessionIdMutation],
+  );
 
   return (
     <View style={styles.container}>
@@ -72,7 +123,6 @@ export default function LoginPage() {
       </RectButton>
 
       <RectButton
-        // eslint-disable-next-line @typescript-eslint/no-misused-promises
         onPressIn={() => {
           sessionIdMutation.mutate(null);
         }}
@@ -84,6 +134,16 @@ export default function LoginPage() {
         </Text>
       </RectButton>
 
+      {Platform.OS === `web` ? (
+        <SignInWithAppleButton
+          clientId="how.haohao.app"
+          onSuccess={(data) => {
+            void createSession(data.authorization.id_token);
+          }}
+          redirectUri={`https://${location.hostname}/api/auth/login/apple/callback`}
+        />
+      ) : null}
+
       {Platform.OS === `ios` ? (
         <AppleAuthentication.AppleAuthenticationButton
           buttonType={AppleAuthentication.AppleAuthenticationButtonType.SIGN_IN}
@@ -92,58 +152,15 @@ export default function LoginPage() {
           style={styles.button}
           // eslint-disable-next-line @typescript-eslint/no-misused-promises
           onPress={async () => {
+            let credential;
             try {
               // eslint-disable-next-line @typescript-eslint/no-unused-vars
-              const credential = await AppleAuthentication.signInAsync({
+              credential = await AppleAuthentication.signInAsync({
                 requestedScopes: [
                   AppleAuthentication.AppleAuthenticationScope.FULL_NAME,
                   AppleAuthentication.AppleAuthenticationScope.EMAIL,
                 ],
               });
-              // signed in
-              // eslint-disable-next-line no-console
-              console.log(`signed in, credential=`, credential);
-              credential.identityToken;
-
-              // eslint-disable-next-line no-console
-              console.log(`fetching \`/api/login/apple\``);
-              {
-                const res = await fetch(`/api/auth/login/apple`, {
-                  method: `POST`,
-                  body: JSON.stringify({
-                    identityToken: credential.identityToken,
-                  }),
-                  headers: {
-                    "content-type": `application/json`,
-                  },
-                });
-                if (res.ok) {
-                  const userSchema = z.object({
-                    id: z.string(),
-                    name: z.string().optional(),
-                  });
-
-                  const sessionSchema = z.object({
-                    id: z.string(),
-                  });
-
-                  const responseBodySchema = z.object({
-                    session: sessionSchema,
-                    user: userSchema,
-                  });
-
-                  const result = responseBodySchema.safeParse(await res.json());
-
-                  if (result.success) {
-                    sessionIdMutation.mutate(result.data.session.id);
-                  } else {
-                    // eslint-disable-next-line no-console
-                    console.log(
-                      `failed to parse response json ${JSON.stringify(result.error)}`,
-                    );
-                  }
-                }
-              }
             } catch (e) {
               const err = z.object({ code: z.string() }).safeParse(e);
               if (err.success) {
@@ -167,7 +184,13 @@ export default function LoginPage() {
                   JSON.stringify(e),
                 );
               }
+
+              return;
             }
+
+            invariant(credential.identityToken != null);
+
+            void createSession(credential.identityToken);
           }}
         />
       ) : null}
