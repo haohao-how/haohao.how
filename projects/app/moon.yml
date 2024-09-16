@@ -128,7 +128,7 @@ tasks:
       runInCI: false
 
   dev:
-    command: yarn expo start --web
+    command: yarn expo start --web --tunnel
     local: true
     env:
       # Fixes: (node:97180) Warning: To load an ES module, set "type": "module"

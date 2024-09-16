@@ -2,7 +2,7 @@ node:
   version: "~22.8.0"
   packageManager: "yarn"
   yarn:
-    version: "4.4.1"
+    version: "4.5.0"
 
 typescript:
   # Prevent Moon from syncing `references` and `compilerOptions.paths` in the
