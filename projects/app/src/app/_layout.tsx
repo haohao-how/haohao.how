@@ -1,9 +1,11 @@
 import { ReplicacheProvider } from "@/components/ReplicacheContext";
+import { trpc } from "@/util/trpc";
 import * as Sentry from "@sentry/react-native";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { httpBatchLink } from "@trpc/client";
 import { Slot, useNavigationContainerRef } from "expo-router";
 import * as Updates from "expo-updates";
-import { useEffect, useMemo } from "react";
+import { useEffect, useState } from "react";
 import { Platform } from "react-native";
 
 // Via the guide: https://docs.expo.dev/guides/using-sentry/
@@ -62,16 +64,36 @@ function RootLayout() {
     routingInstrumentation.registerNavigationContainer(ref);
   }, [ref]);
 
-  const queryClient = useMemo(() => new QueryClient(), []);
+  const [queryClient] = useState(() => new QueryClient());
+
+  const [trpcClient] = useState(() =>
+    trpc.createClient({
+      links: [
+        httpBatchLink({
+          url: `/api/trpc`,
+
+          // You can pass any HTTP headers you wish here
+          // eslint-disable-next-line @typescript-eslint/require-await
+          async headers() {
+            return {
+              // authorization: getAuthCookie(),
+            };
+          },
+        }),
+      ],
+    }),
+  );
 
   // Even though this looks like an no-op layout—it's not, and it ensures the
   // top and bottom of the app have the correct color.
   return (
-    <QueryClientProvider client={queryClient}>
-      <ReplicacheProvider>
-        <Slot />
-      </ReplicacheProvider>
-    </QueryClientProvider>
+    <trpc.Provider client={trpcClient} queryClient={queryClient}>
+      <QueryClientProvider client={queryClient}>
+        <ReplicacheProvider>
+          <Slot />
+        </ReplicacheProvider>
+      </QueryClientProvider>
+    </trpc.Provider>
   );
 }
 

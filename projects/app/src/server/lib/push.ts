@@ -1,8 +1,8 @@
 /* eslint-disable no-console */
 import { z } from "zod";
 
+import { replicacheClient, replicacheClientGroup } from "../schema.js";
 import { Drizzle, transact } from "./db.js";
-import { replicacheClient, replicacheClientGroup } from "./schema.js";
 
 const mutationSchema = z.object({
   id: z.number(),

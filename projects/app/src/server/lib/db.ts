@@ -2,7 +2,7 @@ import { sql } from "drizzle-orm";
 import { drizzle, NodePgDatabase } from "drizzle-orm/node-postgres";
 import type { Pool as PgPool } from "pg";
 import z from "zod";
-import * as schema from "./schema";
+import * as schema from "../schema";
 
 const env = z.object({ DATABASE_URL: z.string() }).parse(process.env);
 const IS_NEON = env.DATABASE_URL.includes(`neon.tech`);

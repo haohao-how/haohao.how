@@ -1,6 +1,6 @@
 import { drizzle } from "drizzle-orm/node-postgres";
 import { migrate } from "drizzle-orm/node-postgres/migrator";
-import { createPool } from "../src/server/db.js";
+import { createPool } from "../src/server/lib/db.js";
 import * as schema from "../src/server/schema.js";
 
 const pool = await createPool();

@@ -1,4 +1,4 @@
-import { withDrizzle } from "@/server/db";
+import { withDrizzle } from "@/server/lib/db";
 import { user } from "@/server/schema";
 import { invariant } from "@haohaohow/lib/invariant";
 import { count } from "drizzle-orm";
