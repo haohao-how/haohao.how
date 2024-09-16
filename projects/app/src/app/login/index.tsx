@@ -4,6 +4,7 @@ import {
   useClientStorageMutation,
   useClientStorageQuery,
 } from "@/util/clientStorage";
+import { trpc } from "@/util/trpc";
 import { invariant } from "@haohaohow/lib/invariant";
 import * as AppleAuthentication from "expo-apple-authentication";
 import { useCallback } from "react";
@@ -15,112 +16,22 @@ const SESSION_ID_KEY = `sessionId`;
 export default function LoginPage() {
   const sessionIdQuery = useClientStorageQuery(SESSION_ID_KEY);
   const sessionIdMutation = useClientStorageMutation(SESSION_ID_KEY);
+  const signInWithAppleMutate = trpc.auth.signInWithApple.useMutation();
 
   const createSession = useCallback(
     async (identityToken: string) => {
-      // eslint-disable-next-line no-console
-      console.log(`creating session using identityToken:`, identityToken);
-
-      // eslint-disable-next-line no-console
-      console.log(`fetching \`/api/auth/login/apple\``);
-      {
-        const res = await fetch(`/api/auth/login/apple`, {
-          method: `POST`,
-          body: JSON.stringify({
-            identityToken,
-          }),
-          headers: {
-            "content-type": `application/json`,
-          },
-        });
-        if (res.ok) {
-          const userSchema = z.object({
-            id: z.string(),
-            name: z.string().optional(),
-          });
-
-          const sessionSchema = z.object({
-            id: z.string(),
-          });
-
-          const responseBodySchema = z.object({
-            session: sessionSchema,
-            user: userSchema,
-          });
-
-          const result = responseBodySchema.safeParse(await res.json());
-
-          if (result.success) {
-            sessionIdMutation.mutate(result.data.session.id);
-          } else {
-            // eslint-disable-next-line no-console
-            console.log(
-              `failed to parse response json ${JSON.stringify(result.error)}`,
-            );
-          }
-        }
-      }
+      const { session } = await signInWithAppleMutate.mutateAsync({
+        identityToken,
+      });
+      sessionIdMutation.mutate(session.id);
     },
-    [sessionIdMutation],
+    [sessionIdMutation, signInWithAppleMutate],
   );
 
   return (
     <View style={styles.container}>
       <Text>Login</Text>
       <Text>Session ID: {sessionIdQuery.data}</Text>
-
-      <RectButton
-        // eslint-disable-next-line @typescript-eslint/no-misused-promises
-        onPressIn={async () => {
-          // // eslint-disable-next-line no-console
-          // console.log(`fetching \`/api/replicache/push\``);
-          // {
-          //   const res = await fetch(`/api/replicache/push`);
-          //   if (res.ok) {
-          //     console.log(await res.text());
-          //   }
-          // }
-          // eslint-disable-next-line no-console
-          console.log(`fetching \`/api/test\``);
-          {
-            const res = await fetch(`/api/test`, {
-              method: `POST`,
-              body: JSON.stringify({ key: `value` }),
-              headers: {
-                "content-type": `application/json`,
-                authorization: `foo`,
-              },
-              // headers: {
-              //   Cookies: `test=foo`,
-              // },
-              // credentials: `include`,
-              // credentials: `omit`,
-            });
-            if (res.ok) {
-              const result = z
-                .object({ sessionId: z.string() })
-                .safeParse(await res.json());
-
-              if (result.success) {
-                sessionIdMutation.mutate(result.data.sessionId);
-                // await SecureStore.setItemAsync(
-                //   SESSION_ID_KEY,
-                //   result.data.sessionId,
-                // );
-              } else {
-                // eslint-disable-next-line no-console
-                console.log(`failed to parse response json`);
-              }
-            }
-          }
-        }}
-        color={`#333`}
-        style={{ height: 50 }}
-      >
-        <Text style={{ fontWeight: `bold`, color: `white`, fontSize: 10 }}>
-          Make API request
-        </Text>
-      </RectButton>
 
       <RectButton
         onPressIn={() => {
