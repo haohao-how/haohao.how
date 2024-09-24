@@ -14,6 +14,7 @@ declare global {
       EXPO_PUBLIC_REPLICACHE_LICENSE_KEY?: string;
       EXPO_PUBLIC_USE_STATIC?: string | boolean; // boolean during static render, string on web
       NEON_DATABASE_URL?: string;
+      NODE_ENV?: string;
     }
   }
 }

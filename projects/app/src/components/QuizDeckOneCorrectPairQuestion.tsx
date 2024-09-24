@@ -1,5 +1,6 @@
 import { OneCorrectPairQuestion } from "@/data/model";
 import { Rating } from "@/util/fsrs";
+import { SizableText } from "@tamagui/text";
 import { Image } from "expo-image";
 import {
   ReactNode,
@@ -21,6 +22,7 @@ import {
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { RectButton } from "./RectButton";
+import { RectButton2 } from "./RectButton2";
 import { PropsOf } from "./types";
 
 const buttonThickness = 4;
@@ -150,15 +152,9 @@ export const QuizDeckOneCorrectPairQuestion = ({
       }
     >
       <View>
-        <Text
-          style={{
-            color: `white`,
-            fontSize: 24,
-            fontWeight: `bold`,
-          }}
-        >
+        <SizableText size="$2" fontWeight="bold">
           {prompt}
-        </Text>
+        </SizableText>
       </View>
       <View
         style={{
@@ -300,7 +296,6 @@ const Skeleton = ({
           <Animated.View
             style={[
               {
-                backgroundColor: `#252E34`,
                 paddingLeft: quizPaddingLeftRight,
                 paddingRight: quizPaddingLeftRight,
                 paddingTop: contentPaddingTopBottom,
@@ -341,8 +336,6 @@ const SubmitButton = forwardRef<
   View,
   { state: SubmitButtonState } & Pick<PropsOf<typeof RectButton>, `onPress`>
 >(function SubmitButton({ state, onPress }, ref) {
-  let color;
-  let textColor;
   let text;
 
   switch (state) {
@@ -358,45 +351,19 @@ const SubmitButton = forwardRef<
       break;
   }
 
-  switch (state) {
-    case SubmitButtonState.Disabled:
-      color = `#3A464E`;
-      textColor = `#56646C`;
-      break;
-    case SubmitButtonState.Check:
-    case SubmitButtonState.Correct:
-      color = `#A1D151`;
-      textColor = `#161F23`;
-      break;
-    case SubmitButtonState.Incorrect:
-      color = `#CE675F`;
-      textColor = `#161F23`;
-      break;
-  }
-
   return (
-    <RectButton
-      color={color}
-      thickness={state === SubmitButtonState.Disabled ? 0 : undefined}
-      ref={ref}
+    <RectButton2
       style={{ flex: 1 }}
-      borderRadius={12}
+      variant="filled"
+      ref={ref}
+      size="$1"
+      state={state === SubmitButtonState.Disabled ? `disabled` : `normal`}
+      theme={state === SubmitButtonState.Incorrect ? `danger` : `success`}
+      accent
       onPress={state === SubmitButtonState.Disabled ? undefined : onPress}
     >
-      <Text
-        style={[
-          {
-            textTransform: `uppercase`,
-            color: textColor,
-            fontSize: 16,
-            fontWeight: `bold`,
-          },
-          styles.buttonText,
-        ]}
-      >
-        {text}
-      </Text>
-    </RectButton>
+      {text}
+    </RectButton2>
   );
 });
 
@@ -413,24 +380,16 @@ const AnswerButton = ({
     onPress(text);
   }, [onPress, text]);
 
-  const color = selected ? `#232E35` : `#161F23`;
-  const accentColor = selected ? `#5183A4` : `#3A464E`;
-
   return (
-    <RectButton
-      borderWidth={2}
+    <RectButton2
       thickness={buttonThickness}
-      color={color}
-      accentColor={accentColor}
       onPress={handlePress}
+      size="$2"
       style={{ flex: 1 }}
+      accent={selected}
     >
-      <View style={{ justifyContent: `center` }}>
-        <Text style={[{ color: `white`, fontSize: 20 }, styles.buttonText]}>
-          {text}
-        </Text>
-      </View>
-    </RectButton>
+      {text}
+    </RectButton2>
   );
 };
 

@@ -1,4 +1,5 @@
-import { RectButton } from "@/components/RectButton";
+import { RectButton2 } from "@/components/RectButton2";
+import { RootView } from "@/components/RootView";
 import { SignInWithAppleButton } from "@/components/SignInWithAppleButton";
 import {
   useClientStorageMutation,
@@ -6,9 +7,10 @@ import {
 } from "@/util/clientStorage";
 import { trpc } from "@/util/trpc";
 import { invariant } from "@haohaohow/lib/invariant";
+import { SizableText } from "@tamagui/text";
 import * as AppleAuthentication from "expo-apple-authentication";
 import { useCallback } from "react";
-import { Platform, StyleSheet, Text, View } from "react-native";
+import { Platform, StyleSheet } from "react-native";
 import z from "zod";
 
 const SESSION_ID_KEY = `sessionId`;
@@ -29,21 +31,18 @@ export default function LoginPage() {
   );
 
   return (
-    <View style={styles.container}>
-      <Text>Login</Text>
-      <Text>Session ID: {sessionIdQuery.data}</Text>
+    <RootView style={styles.container}>
+      <SizableText>Login</SizableText>
+      <SizableText>Session ID: {sessionIdQuery.data}</SizableText>
 
-      <RectButton
+      <RectButton2
         onPressIn={() => {
           sessionIdMutation.mutate(null);
         }}
-        color={`#333`}
         style={{ height: 50 }}
       >
-        <Text style={{ fontWeight: `bold`, color: `white`, fontSize: 10 }}>
-          Logout
-        </Text>
-      </RectButton>
+        Logout
+      </RectButton2>
 
       {Platform.OS === `web` ? (
         <SignInWithAppleButton
@@ -105,7 +104,7 @@ export default function LoginPage() {
           }}
         />
       ) : null}
-    </View>
+    </RootView>
   );
 }
 

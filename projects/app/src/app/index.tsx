@@ -11,12 +11,13 @@ import { Skill, SkillType } from "@/data/model";
 import { addHanziSkill } from "@/data/mutators";
 import { characterLookupByHanzi } from "@/dictionary/characters";
 import * as Sentry from "@sentry/react-native";
+import { SizableText } from "@tamagui/text";
 import { useFonts } from "expo-font";
 import { Link } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { StatusBar as ExpoStatusBar } from "expo-status-bar";
 import { useCallback, useEffect } from "react";
-import { ColorValue, ScrollView, StyleSheet, Text, View } from "react-native";
+import { ColorValue, ScrollView, StyleSheet, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function IndexPage() {
@@ -69,7 +70,6 @@ export default function IndexPage() {
 
   return (
     <RootView
-      backgroundColor="tomato"
       onLayout={onLayoutRootView}
       style={[styles.container, { paddingTop: insets.top }]}
     >
@@ -88,9 +88,9 @@ export default function IndexPage() {
               flexDirection: `row`,
             }}
           >
-            <Text style={[{ fontFamily: `MaShanZheng-Regular` }, styles.text]}>
+            <SizableText fontFamily="$chinese" size="$72">
               好好好
-            </Text>
+            </SizableText>
           </View>
           <View
             style={{
@@ -186,9 +186,5 @@ const styles = StyleSheet.create({
     alignItems: `center`,
     gap: 12,
     justifyContent: `center`,
-  },
-  text: {
-    color: `white`,
-    fontSize: 72,
   },
 });

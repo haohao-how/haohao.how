@@ -6,7 +6,7 @@ import { StyleSheet } from "react-native";
 
 export default function LearnPage() {
   return (
-    <RootView backgroundColor="red" style={styles.container}>
+    <RootView style={styles.container}>
       <Link href="/" asChild>
         <CircleButton color="purple" />
       </Link>
