@@ -1,10 +1,17 @@
 import { MultipleChoiceQuestion } from "@/data/model";
 import { Rating } from "@/util/fsrs";
+import { View } from "@tamagui/core";
 import { Asset } from "expo-asset";
 import { Audio } from "expo-av";
 import chunk from "lodash/chunk";
-import { forwardRef, useCallback, useEffect, useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import {
+  ElementRef,
+  forwardRef,
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
+import { StyleSheet, Text } from "react-native";
 import { RectButton } from "./RectButton";
 import { PropsOf } from "./types";
 
@@ -145,7 +152,7 @@ export const QuizDeckMultipleChoiceQuestion = ({
 };
 
 const SubmitButton = forwardRef<
-  View,
+  ElementRef<typeof RectButton>,
   { disabled: boolean } & Pick<PropsOf<typeof RectButton>, `onPress`>
 >(function SubmitButton({ disabled, ...rectButtonProps }, ref) {
   const color = disabled ? `#3A464E` : `#A1D151`;

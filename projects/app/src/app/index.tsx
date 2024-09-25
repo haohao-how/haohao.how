@@ -11,13 +11,14 @@ import { Skill, SkillType } from "@/data/model";
 import { addHanziSkill } from "@/data/mutators";
 import { characterLookupByHanzi } from "@/dictionary/characters";
 import * as Sentry from "@sentry/react-native";
+import { View } from "@tamagui/core";
 import { SizableText } from "@tamagui/text";
 import { useFonts } from "expo-font";
 import { Link } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { StatusBar as ExpoStatusBar } from "expo-status-bar";
 import { useCallback, useEffect } from "react";
-import { ColorValue, ScrollView, StyleSheet, View } from "react-native";
+import { ColorValue, ScrollView, StyleSheet } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function IndexPage() {

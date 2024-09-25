@@ -1,7 +1,6 @@
 import { styled, Theme, ThemeName, View } from "@tamagui/core";
 import { SizableText } from "@tamagui/text";
-import { forwardRef } from "react";
-import type { View as RNView } from "react-native";
+import { ElementRef, forwardRef } from "react";
 import { Pressable, ViewProps } from "react-native";
 import { PropsOf } from "./types";
 import { hapticImpactIfMobile } from "./util";
@@ -22,83 +21,84 @@ export type RectButton2Props = {
   children?: ViewProps[`children`];
 } & Omit<PropsOf<typeof Pressable>, `children`>;
 
-export const RectButton2 = forwardRef<RNView, RectButton2Props>(
-  function RectButton2(
-    {
-      theme,
-      thickness = 4,
-      children,
-      variant = `outline`,
-      accent,
-      state = `normal`,
-      size = `$1`,
-      ...pressableProps
-    },
-    ref,
-  ) {
-    const borderWidth = variant === `outline` ? 2 : 0;
+export const RectButton2 = forwardRef<
+  ElementRef<typeof Pressable>,
+  RectButton2Props
+>(function RectButton2(
+  {
+    theme,
+    thickness = 4,
+    children,
+    variant = `outline`,
+    accent,
+    state = `normal`,
+    size = `$1`,
+    ...pressableProps
+  },
+  ref,
+) {
+  const borderWidth = variant === `outline` ? 2 : 0;
 
-    // The border contributes to the same *thickness* appearance, so to avoid
-    // doubling up, we subtract it.
-    thickness = thickness - borderWidth;
+  // The border contributes to the same *thickness* appearance, so to avoid
+  // doubling up, we subtract it.
+  thickness = thickness - borderWidth;
 
-    if (state === `disabled`) {
-      thickness = 0;
-    }
+  if (state === `disabled`) {
+    thickness = 0;
+  }
 
-    if (state === `disabled`) {
-      accent = false;
-    }
+  if (state === `disabled`) {
+    accent = false;
+  }
 
-    return (
-      <Theme name={theme}>
-        <Pressable
-          {...pressableProps}
-          onPressIn={(e) => {
-            hapticImpactIfMobile();
-            pressableProps.onPressIn?.(e);
-          }}
-          ref={ref}
-        >
-          {({ pressed }) => (
-            <BottomLayer
-              style={{
-                flexGrow: 1,
-                flexShrink: 1,
-                opacity: state === `disabled` ? 0.5 : undefined,
-              }}
-              size={size}
+  return (
+    <Theme name={theme}>
+      <Pressable
+        {...pressableProps}
+        onPressIn={(e) => {
+          hapticImpactIfMobile();
+          pressableProps.onPressIn?.(e);
+        }}
+        ref={ref}
+      >
+        {({ pressed }) => (
+          <BottomLayer
+            style={{
+              flexGrow: 1,
+              flexShrink: 1,
+              opacity: state === `disabled` ? 0.5 : undefined,
+            }}
+            size={size}
+            accent={accent}
+            variant={variant}
+          >
+            <TopLayer
+              // top surface
+              borderWidth={borderWidth}
               accent={accent}
               variant={variant}
+              size={size}
+              style={[
+                {
+                  flexGrow: 1,
+                  flexShrink: 1,
+                  alignItems: `center`,
+                  justifyContent: `center`,
+                  transform: [{ translateY: pressed ? 0 : -thickness }],
+                  transformOrigin: `top`,
+                },
+              ]}
             >
-              <TopLayer
-                // top surface
-                borderWidth={borderWidth}
-                accent={accent}
-                variant={variant}
-                size={size}
-                style={[
-                  {
-                    flexGrow: 1,
-                    flexShrink: 1,
-                    alignItems: `center`,
-                    justifyContent: `center`,
-                    transform: [{ translateY: pressed ? 0 : -thickness }],
-                    transformOrigin: `top`,
-                  },
-                ]}
-              >
-                <ButtonText variant={variant} accent={accent} size={size}>
-                  {children}
-                </ButtonText>
-              </TopLayer>
-            </BottomLayer>
-          )}
-        </Pressable>
-      </Theme>
-    );
-  },
-);
+              <ButtonText variant={variant} accent={accent} size={size}>
+                {children}
+              </ButtonText>
+            </TopLayer>
+          </BottomLayer>
+        )}
+      </Pressable>
+    </Theme>
+  );
+});
 
 const variants = {
   accent: { ":boolean": () => ({}) },

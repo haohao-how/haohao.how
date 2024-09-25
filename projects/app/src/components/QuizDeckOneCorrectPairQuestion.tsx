@@ -1,8 +1,10 @@
 import { OneCorrectPairQuestion } from "@/data/model";
 import { Rating } from "@/util/fsrs";
+import { View } from "@tamagui/core";
 import { SizableText } from "@tamagui/text";
 import { Image } from "expo-image";
 import {
+  ElementRef,
   ReactNode,
   forwardRef,
   useCallback,
@@ -17,7 +19,6 @@ import {
   StyleProp,
   StyleSheet,
   Text,
-  View,
   ViewStyle,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -333,7 +334,7 @@ enum SubmitButtonState {
 }
 
 const SubmitButton = forwardRef<
-  View,
+  ElementRef<typeof RectButton2>,
   { state: SubmitButtonState } & Pick<PropsOf<typeof RectButton>, `onPress`>
 >(function SubmitButton({ state, onPress }, ref) {
   let text;

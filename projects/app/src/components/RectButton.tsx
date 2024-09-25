@@ -1,6 +1,7 @@
+import { View } from "@tamagui/core";
 import Color from "color";
-import { forwardRef, useMemo } from "react";
-import { ColorValue, Pressable, View, ViewProps } from "react-native";
+import { ElementRef, forwardRef, useMemo } from "react";
+import { ColorValue, Pressable, ViewProps } from "react-native";
 import { PropsOf } from "./types";
 import { hapticImpactIfMobile } from "./util";
 
@@ -13,7 +14,10 @@ export type RectButtonProps = {
   children?: ViewProps[`children`];
 } & Omit<PropsOf<typeof Pressable>, `children`>;
 
-export const RectButton = forwardRef<View, RectButtonProps>(function RectButton(
+export const RectButton = forwardRef<
+  ElementRef<typeof Pressable>,
+  RectButtonProps
+>(function RectButton(
   {
     thickness = 4,
     borderRadius = 16,

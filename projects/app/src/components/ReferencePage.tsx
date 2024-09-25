@@ -1,6 +1,7 @@
+import { View } from "@tamagui/core";
 import { StatusBar as ExpoStatusBar } from "expo-status-bar";
 import { ReactElement, ReactNode } from "react";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet } from "react-native";
 import { RootView } from "./RootView";
 
 export const ReferencePage = ({
