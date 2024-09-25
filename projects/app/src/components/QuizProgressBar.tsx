@@ -1,11 +1,7 @@
+import { View } from "@tamagui/core";
 import { LinearGradient } from "expo-linear-gradient";
 import { useEffect, useRef, useState } from "react";
-import {
-  Animated,
-  LayoutChangeEvent,
-  LayoutRectangle,
-  View,
-} from "react-native";
+import { Animated, LayoutChangeEvent, LayoutRectangle } from "react-native";
 import { useEventCallback } from "./util";
 
 export const QuizProgressBar = ({

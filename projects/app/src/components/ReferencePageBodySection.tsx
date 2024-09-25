@@ -1,4 +1,5 @@
-import { StyleSheet, Text, View } from "react-native";
+import { View } from "@tamagui/core";
+import { StyleSheet, Text } from "react-native";
 
 export const ReferencePageBodySection = ({
   title,

@@ -117,6 +117,11 @@ export default tseslint.config(
               message: `Please use \`useSafeAreaInsets\` from \`react-native-safe-area-context\` instead.`,
             },
             {
+              name: `react-native`,
+              importNames: [`View`],
+              message: `Please use \`View\` from \`@tamagui/core\` instead.`,
+            },
+            {
               name: `hanzi`,
               message: `Please use @/dictionary/hanzi instead.`,
             },
