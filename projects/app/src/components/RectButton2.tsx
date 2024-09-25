@@ -5,7 +5,7 @@ import { Pressable, ViewProps } from "react-native";
 import { PropsOf } from "./types";
 import { hapticImpactIfMobile } from "./util";
 
-export type ButtonVariant = `filled` | `outline` | `naked`;
+export type ButtonVariant = `filled` | `outline` | `bare`;
 
 export type ButtonSize = `$1` | `$2`;
 
@@ -30,7 +30,7 @@ export const RectButton2 = forwardRef<
     thickness = 4,
     children,
     variant = `outline`,
-    accent,
+    accent = false,
     state = `normal`,
     size = `$1`,
     ...pressableProps
@@ -89,7 +89,7 @@ export const RectButton2 = forwardRef<
                 },
               ]}
             >
-              <ButtonText variant={variant} accent={accent} size={size}>
+              <ButtonText variant={variant} accent={accent}>
                 {children}
               </ButtonText>
             </TopLayer>
@@ -109,7 +109,7 @@ const variants = {
   variant: {
     filled: {},
     outline: {},
-    naked: {},
+    bare: {},
   } satisfies { [K in ButtonVariant]: unknown },
 } as const;
 
@@ -136,7 +136,7 @@ const BottomLayer = styled(BaseView, {
               backgroundColor: accent ? theme.accent9 : theme.borderColor,
             };
           }
-          case `naked`:
+          case `bare`:
           case undefined: {
             return {};
           }
@@ -147,7 +147,10 @@ const BottomLayer = styled(BaseView, {
 } as const);
 
 const TopLayer = styled(BaseView, {
-  padding: 10,
+  paddingTop: 5,
+  paddingBottom: 5,
+  paddingLeft: 10,
+  paddingRight: 10,
 
   variants: {
     size: {
@@ -168,7 +171,7 @@ const TopLayer = styled(BaseView, {
               borderColor: accent ? theme.accent9 : theme.borderColor,
             };
           }
-          case `naked`:
+          case `bare`:
           case undefined: {
             return {};
           }
@@ -197,7 +200,7 @@ const ButtonText = styled(BaseText, {
           case `outline`: {
             return {};
           }
-          case `naked`:
+          case `bare`:
           case undefined: {
             return {};
           }

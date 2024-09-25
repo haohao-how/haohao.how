@@ -16,8 +16,15 @@ import {
   slate,
   slateDark,
 } from "@tamagui/colors";
-import { createFont, createTamagui, createTokens, isWeb } from "@tamagui/core";
+import {
+  createFont,
+  createTamagui,
+  createTokens,
+  GenericFont,
+  isWeb,
+} from "@tamagui/core";
 import Color from "color";
+import mapValues from "lodash/mapValues";
 
 function suffixObjKeys<
   T extends Record<string, unknown>,
@@ -215,6 +222,7 @@ const lightPalette: typeof darkPalette = {
 const dark = {
   background: darkPalette.slate2,
   borderColor: darkPalette.slate7,
+  borderColor2: darkPalette.slate7,
   color: darkPalette.slate12,
 
   color1: darkPalette.slate1,
@@ -249,6 +257,7 @@ type BaseTheme = typeof dark;
 const light: BaseTheme = {
   background: lightPalette.slate2,
   borderColor: lightPalette.slate7,
+  borderColor2: lightPalette.slate7,
   color: lightPalette.slate12,
 
   color1: lightPalette.slate1,
@@ -278,83 +287,93 @@ const light: BaseTheme = {
   ...lightPalette,
 };
 
+const defaultSizes = {
+  1: 11,
+  2: 12,
+  3: 13,
+  4: 14,
+  5: 16,
+  true: 16,
+  6: 18,
+  7: 20,
+  8: 23,
+  9: 30,
+  10: 46,
+  11: 55,
+  12: 62,
+  13: 72,
+  14: 92,
+  15: 114,
+  16: 134,
+} as const;
+
+function createMainFont<A extends GenericFont>(
+  { size: sizeIn, ...restFont }: Partial<Omit<A, `lineHeight`>> = {},
+  {
+    sizeLineHeight = (size) => size * 1.1,
+    sizeSize = (size) => size,
+  }: {
+    sizeLineHeight?: (fontSize: number) => number;
+    sizeSize?: (size: number) => number;
+  } = {},
+) {
+  const size = mapValues(
+    {
+      ...defaultSizes,
+      ...sizeIn,
+    },
+    sizeSize,
+  );
+
+  return createFont({
+    family: `-apple-system, Inter, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif`,
+    lineHeight: mapValues(size, sizeLineHeight),
+    weight: {
+      4: `300`,
+    },
+    letterSpacing: {
+      4: 0,
+    },
+    size,
+    ...restFont,
+  });
+}
+
 export const config = createTamagui({
   tokens,
   fonts: {
-    title: createFont({
+    title: createMainFont({
       family: isWeb
         ? `ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"`
         : `System`,
-      size: {
-        1: 12 + 20,
-        2: 14 + 30,
-        $true: 12 + 20,
-        // 3: 15 + 20,
-        // ...
-      },
-      lineHeight: {
-        1: 17 + 20,
-        2: 22 + 20,
-        // 3: 25 + 20,
-        // ...
-      },
-      // weight: {
-      //   4: `300`,
-      //   6: `600`,
-      // },
-      // letterSpacing: {
-      //   4: 0,
-      //   8: -1,
-      // },
-
-      // for native only, alternate family based on weight/style
-      // face: {
-      //   // pass in weights as keys
-      //   700: { normal: `InterBold`, italic: `InterBold-Italic` },
-      //   800: { normal: `InterBold`, italic: `InterBold-Italic` },
-      //   900: { normal: `InterBold`, italic: `InterBold-Italic` },
-      // },
     }),
-    body: createFont({
-      family: isWeb
-        ? `ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"`
-        : `System`,
-      size: {
-        1: 16,
-        $true: 16,
-        2: 20,
-        3: 24,
-        72: 72,
-        // 3: 18,
-        // ...
+    body: createMainFont(
+      {
+        family: isWeb
+          ? `ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"`
+          : `System`,
+        weight: {
+          1: `400`,
+          7: `600`,
+        },
+        // for native only, alternate family based on weight/style
+        // face: {
+        //   // pass in weights as keys
+        //   700: { normal: `InterBold`, italic: `InterBold-Italic` },
+        //   800: { normal: `InterBold`, italic: `InterBold-Italic` },
+        //   900: { normal: `InterBold`, italic: `InterBold-Italic` },
+        // },
       },
-      lineHeight: {
-        1: 17,
-        2: 20,
-        3: 24,
-        // 3: 25,
-        // ...
+      {
+        sizeLineHeight: (size) =>
+          Math.round(size * 1.1 + (size >= 12 ? 10 : 4)),
       },
-      weight: {
-        1: `400`,
-      },
-      letterSpacing: {
-        1: 0,
-      },
-
-      // for native only, alternate family based on weight/style
-      // face: {
-      //   // pass in weights as keys
-      //   700: { normal: `InterBold`, italic: `InterBold-Italic` },
-      //   800: { normal: `InterBold`, italic: `InterBold-Italic` },
-      //   900: { normal: `InterBold`, italic: `InterBold-Italic` },
-      // },
-    }),
+    ),
     chinese: createFont({
       family: `MaShanZheng-Regular`,
       size: {
         1: 16,
-        $true: 16,
+        true: 16,
         2: 20,
         3: 24,
         72: 72,
@@ -383,8 +402,8 @@ export const config = createTamagui({
   },
   themes: {
     dark,
-    dark_Button:
-      {} /* fix inferred `theme` option for styled() variants */ as BaseTheme,
+    // dark_Button:
+    //   {} /* fix inferred `theme` option for styled() variants */ as BaseTheme,
     dark_danger: {
       accent1: darkPalette.red1,
       accent2: darkPalette.red2,
@@ -414,7 +433,7 @@ export const config = createTamagui({
       accent12: darkPalette.lime12,
     } as BaseTheme,
     light,
-    light_Button: {} as BaseTheme,
+    // light_Button: {} as BaseTheme,
     light_danger: {
       accent1: lightPalette.red1,
       accent2: lightPalette.red2,

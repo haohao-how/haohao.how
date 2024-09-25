@@ -89,7 +89,7 @@ export default function IndexPage() {
               flexDirection: `row`,
             }}
           >
-            <SizableText fontFamily="$chinese" size="$72">
+            <SizableText fontFamily="$chinese" size="$16">
               好好好
             </SizableText>
           </View>
