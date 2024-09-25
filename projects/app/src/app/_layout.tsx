@@ -1,12 +1,18 @@
 import { ReplicacheProvider } from "@/components/ReplicacheContext";
+import { config as tamaguiConfig } from "@/tamagui.config";
 import { trpc } from "@/util/trpc";
+import {
+  Theme as ReactNavigationTheme,
+  ThemeProvider,
+} from "@react-navigation/native";
 import * as Sentry from "@sentry/react-native";
+import { TamaguiProvider } from "@tamagui/core";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { httpBatchLink } from "@trpc/client";
 import { Slot, useNavigationContainerRef } from "expo-router";
 import * as Updates from "expo-updates";
 import { useEffect, useState } from "react";
-import { Platform } from "react-native";
+import { Platform, useColorScheme } from "react-native";
 
 // Via the guide: https://docs.expo.dev/guides/using-sentry/
 const manifest = Updates.manifest;
@@ -59,6 +65,7 @@ Sentry.configureScope((scope) => {
 function RootLayout() {
   // Capture the NavigationContainer ref and register it with the instrumentation.
   const ref = useNavigationContainerRef();
+  const colorScheme = useColorScheme() ?? undefined;
 
   useEffect(() => {
     routingInstrumentation.registerNavigationContainer(ref);
@@ -84,18 +91,57 @@ function RootLayout() {
     }),
   );
 
-  // Even though this looks like an no-op layout—it's not, and it ensures the
-  // top and bottom of the app have the correct color.
   return (
     <trpc.Provider client={trpcClient} queryClient={queryClient}>
       <QueryClientProvider client={queryClient}>
         <ReplicacheProvider>
-          <Slot />
+          <TamaguiProvider
+            key={
+              // Forces changes to the tamagui theme to be reflected on hot
+              // reload in Expo Go. Without this changes to colors or tokens
+              // don't cause components to re-render because the values are not
+              // passed down using a context, instead they're stored in a module
+              // global in tamagui (see `getConfig()`).
+              //
+              // It works fine without this on web because TamaguiProvider
+              // rewrites the CSS on the page (no need to re-render react
+              // elements).
+              process.env.NODE_ENV !== `production`
+                ? JSON.stringify(tamaguiConfig)
+                : undefined
+            }
+            config={tamaguiConfig}
+            defaultTheme={colorScheme}
+          >
+            <ThemeProvider
+              // Even though this looks like an no-op layout—it's not, and it ensures the
+              // top and bottom of the app have the correct color.
+              value={
+                {
+                  dark: false,
+                  colors: {
+                    background: `transparent`,
+                    // We should never see these colors, instead tamagui should
+                    // have priority.
+                    border: BUG_DETECTOR_COLOR,
+                    card: BUG_DETECTOR_COLOR,
+                    notification: BUG_DETECTOR_COLOR,
+                    primary: BUG_DETECTOR_COLOR,
+                    text: BUG_DETECTOR_COLOR,
+                  },
+                } satisfies ReactNavigationTheme
+              }
+            >
+              <Slot />
+            </ThemeProvider>
+          </TamaguiProvider>
         </ReplicacheProvider>
       </QueryClientProvider>
     </trpc.Provider>
   );
 }
+
+const BUG_DETECTOR_COLOR = `pink`;
 
 // Wrap the Root Layout route component with `Sentry.wrap` to capture gesture info and profiling data.
 export default Sentry.wrap(RootLayout);

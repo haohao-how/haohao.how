@@ -41,7 +41,7 @@ export default function QuizPage() {
   );
 
   return (
-    <RootView backgroundColor="#161F23" style={styles.container}>
+    <RootView style={styles.container}>
       <View
         style={{
           flex: 1,
