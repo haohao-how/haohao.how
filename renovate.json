@@ -3,17 +3,20 @@
   "extends": ["config:recommended"],
   "packageRules": [
     {
+      "description": "Don't update non-dev dependencies, too risky of it breaking something.",
       "matchManagers": ["npm"],
       "matchDepTypes": ["dependencies"],
       "enabled": false
     },
     {
+      "description": "Only non-major (less risky) updates for devDependencies ala tooling.",
       "matchManagers": ["npm"],
       "matchDepTypes": ["devDependencies"],
       "matchUpdateTypes": ["major"],
       "enabled": false
     },
     {
+      "description": "Be conservative and wait a while after a new release to settle (often bugs are found).",
       "matchDatasources": ["npm"],
       "minimumReleaseAge": "3 days",
       "internalChecksFilter": "strict"
