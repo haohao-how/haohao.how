@@ -9,14 +9,11 @@ export type ButtonVariant = `filled` | `outline` | `bare`;
 
 export type ButtonSize = `$1` | `$2`;
 
-type ButtonState = `disabled` | `normal`;
-
 export type RectButton2Props = {
   theme?: ThemeName;
   thickness?: number;
   variant?: ButtonVariant;
   size?: ButtonSize;
-  state?: ButtonState;
   accent?: boolean;
   children?: ViewProps[`children`];
 } & Omit<PropsOf<typeof Pressable>, `children`>;
@@ -31,7 +28,6 @@ export const RectButton2 = forwardRef<
     children,
     variant = `outline`,
     accent = false,
-    state = `normal`,
     size = `$1`,
     ...pressableProps
   },
@@ -43,11 +39,10 @@ export const RectButton2 = forwardRef<
   // doubling up, we subtract it.
   thickness = thickness - borderWidth;
 
-  if (state === `disabled`) {
-    thickness = 0;
-  }
+  const disabled = pressableProps.disabled === true;
 
-  if (state === `disabled`) {
+  if (disabled) {
+    thickness = 0;
     accent = false;
   }
 
@@ -66,7 +61,7 @@ export const RectButton2 = forwardRef<
             style={{
               flexGrow: 1,
               flexShrink: 1,
-              opacity: state === `disabled` ? 0.5 : undefined,
+              opacity: disabled ? 0.5 : undefined,
             }}
             size={size}
             accent={accent}
@@ -84,7 +79,14 @@ export const RectButton2 = forwardRef<
                   flexShrink: 1,
                   alignItems: `center`,
                   justifyContent: `center`,
-                  transform: [{ translateY: pressed ? 0 : -thickness }],
+                  transform: [
+                    {
+                      translateY:
+                        disabled || variant === `bare` || pressed
+                          ? 0
+                          : -thickness,
+                    },
+                  ],
                   transformOrigin: `top`,
                 },
               ]}
@@ -147,10 +149,10 @@ const BottomLayer = styled(BaseView, {
 } as const);
 
 const TopLayer = styled(BaseView, {
-  paddingTop: 5,
-  paddingBottom: 5,
-  paddingLeft: 10,
-  paddingRight: 10,
+  paddingTop: `$1`,
+  paddingBottom: `$1`,
+  paddingLeft: `$3`,
+  paddingRight: `$3`,
 
   variants: {
     size: {
@@ -185,6 +187,9 @@ const BaseText = styled(SizableText, { variants });
 
 const ButtonText = styled(BaseText, {
   userSelect: `none`,
+  fontWeight: `bold`,
+  size: `$3`,
+  textTransform: `uppercase`,
 
   variants: {
     accent: {
@@ -192,15 +197,13 @@ const ButtonText = styled(BaseText, {
         switch (variant) {
           case `filled`: {
             return {
-              color: accent ? theme.background : theme.color,
-              textTransform: `uppercase`,
-              fontWeight: `bold`,
+              color: theme.background,
             };
           }
-          case `outline`: {
-            return {};
+          case `outline`:
+          case `bare`: {
+            return { color: accent ? theme.accent9 : theme.color };
           }
-          case `bare`:
           case undefined: {
             return {};
           }
