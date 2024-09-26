@@ -358,7 +358,7 @@ const SubmitButton = forwardRef<
       variant="filled"
       ref={ref}
       size="$1"
-      state={state === SubmitButtonState.Disabled ? `disabled` : `normal`}
+      disabled={state === SubmitButtonState.Disabled}
       theme={state === SubmitButtonState.Incorrect ? `danger` : `success`}
       accent
       onPress={state === SubmitButtonState.Disabled ? undefined : onPress}
@@ -383,7 +383,6 @@ const AnswerButton = ({
 
   return (
     <RectButton2
-      thickness={buttonThickness}
       onPress={handlePress}
       size="$2"
       style={{ flex: 1 }}
