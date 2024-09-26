@@ -9,43 +9,131 @@ import { ReactNode } from "react";
 export default function DesignSystemPage() {
   return (
     <RootView flexGrow={1}>
-      <XStack>
-        <Heading
-          flexBasis={1}
-          flexGrow={1}
-          background="$color4"
-          padding="$2"
-          theme="light"
-        >
-          RectButton2
-        </Heading>
-        <View
-          flexBasis={1}
-          flexGrow={1}
-          background="$color4"
-          padding="$2"
-          theme="dark"
-        />
-      </XStack>
+      <Section title="Colors">
+        <YStack>
+          <LittleAccentHeader title="default" />
+          <XStack gap="$1" flexWrap="wrap">
+            <AccentSwatches tokenBase="color" />
+          </XStack>
+        </YStack>
 
-      <XStack>
-        <ExamplesStack theme="light">
-          <RectButton2Examples />
-        </ExamplesStack>
+        <YStack theme="danger">
+          <LittleAccentHeader title="danger" />
+          <XStack gap="$1" flexWrap="wrap">
+            <AccentSwatches tokenBase="accent" />
+          </XStack>
+        </YStack>
 
-        <ExamplesStack theme="dark">
-          <RectButton2Examples />
-        </ExamplesStack>
-      </XStack>
+        <YStack theme="success">
+          <LittleAccentHeader title="success" />
+          <XStack gap="$1" flexWrap="wrap">
+            <AccentSwatches tokenBase="accent" />
+          </XStack>
+        </YStack>
+      </Section>
 
+      <Section title="RectButton2">
+        <RectButton2Examples />
+      </Section>
+
+      {/* Fill the rest of the page if it's too tall for the content */}
       <XStack flexGrow={1}>
         <ExamplesStack theme="light" />
-
         <ExamplesStack theme="dark" />
       </XStack>
     </RootView>
   );
 }
+
+const LittleAccentHeader = ({ title }: { title: string }) => (
+  <XStack gap="$2" alignItems="center">
+    <View height={1} backgroundColor="$accent7" flexGrow={1} />
+    <SizableText
+      color="$accent10"
+      fontSize="$2"
+      fontWeight="bold"
+      textTransform="uppercase"
+      textAlign="center"
+    >
+      {title}
+    </SizableText>
+    <View height={1} backgroundColor="$accent7" flexGrow={1} />
+  </XStack>
+);
+
+const AccentSwatches = ({ tokenBase }: { tokenBase: string }) => {
+  return (
+    <>
+      <AccentSwatch tokenBase={tokenBase} index={1} />
+      <AccentSwatch tokenBase={tokenBase} index={2} />
+      <AccentSwatch tokenBase={tokenBase} index={3} />
+      <AccentSwatch tokenBase={tokenBase} index={4} />
+      <AccentSwatch tokenBase={tokenBase} index={5} />
+      <AccentSwatch tokenBase={tokenBase} index={6} />
+      <AccentSwatch tokenBase={tokenBase} index={7} />
+      <AccentSwatch tokenBase={tokenBase} index={8} />
+      <AccentSwatch tokenBase={tokenBase} index={9} />
+      <AccentSwatch tokenBase={tokenBase} index={10} />
+      <AccentSwatch tokenBase={tokenBase} index={11} />
+      <AccentSwatch tokenBase={tokenBase} index={12} />
+    </>
+  );
+};
+
+const AccentSwatch = ({
+  index,
+  tokenBase,
+}: {
+  index: number;
+  tokenBase: string;
+}) => (
+  <YStack gap="$1">
+    <CaptionText
+      {...(index === 10
+        ? {
+            color: `$color11`,
+            fontWeight: `bold`,
+          }
+        : {})}
+    >
+      {index}
+    </CaptionText>
+    <View width={40} height={40} backgroundColor={`$${tokenBase}${index}`} />
+  </YStack>
+);
+
+const Section = ({
+  title,
+  children,
+}: {
+  title: string;
+  children: ReactNode;
+}) => (
+  <>
+    <XStack>
+      <View
+        backgroundColor="$color4"
+        flexBasis={1}
+        flexGrow={1}
+        padding="$2"
+        theme="light"
+      >
+        <Heading>{title}</Heading>
+      </View>
+      <View
+        flexBasis={1}
+        flexGrow={1}
+        backgroundColor="$color4"
+        padding="$2"
+        theme="dark"
+      />
+    </XStack>
+    <XStack>
+      <ExamplesStack theme="light">{children}</ExamplesStack>
+      <ExamplesStack theme="dark">{children}</ExamplesStack>
+    </XStack>
+  </>
+);
 
 const ExamplesStack = styled(XStack, {
   gap: `$2`,
@@ -74,12 +162,16 @@ const ExampleStack = ({
     padding="$2"
     gap="$2"
   >
-    <SizableText size="$1" textAlign="center" color="$color10">
-      {title}
-    </SizableText>
+    <CaptionText>{title}</CaptionText>
     {children}
   </YStack>
 );
+
+const CaptionText = styled(SizableText, {
+  size: `$1`,
+  textAlign: `center`,
+  color: `$color10`,
+});
 
 const RectButton2Variants = (props: Partial<PropsOf<typeof RectButton2>>) => (
   <>
