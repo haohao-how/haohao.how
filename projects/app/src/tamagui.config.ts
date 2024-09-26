@@ -402,8 +402,6 @@ export const config = createTamagui({
   },
   themes: {
     dark,
-    // dark_Button:
-    //   {} /* fix inferred `theme` option for styled() variants */ as BaseTheme,
     dark_danger: {
       accent1: darkPalette.red1,
       accent2: darkPalette.red2,
@@ -417,7 +415,7 @@ export const config = createTamagui({
       accent10: darkPalette.red10,
       accent11: darkPalette.red11,
       accent12: darkPalette.red12,
-    } as BaseTheme,
+    } /* fix inferred `theme` option for styled() variants */ as BaseTheme,
     dark_success: {
       accent1: darkPalette.lime1,
       accent2: darkPalette.lime2,
@@ -433,7 +431,6 @@ export const config = createTamagui({
       accent12: darkPalette.lime12,
     } as BaseTheme,
     light,
-    // light_Button: {} as BaseTheme,
     light_danger: {
       accent1: lightPalette.red1,
       accent2: lightPalette.red2,

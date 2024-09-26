@@ -171,10 +171,12 @@ const Section = ({
       <Link href="/login" asChild>
         <CircleButton color={GradientPurple[0]} />
       </Link>
-      <CircleButton
-        color={disabledColor}
-        style={{ transform: [{ translateX: -20 }] }}
-      />
+      <Link href="/dev/ui" asChild>
+        <CircleButton
+          color={disabledColor}
+          style={{ transform: [{ translateX: -20 }] }}
+        />
+      </Link>
       <CircleButton color={disabledColor} />
       <View style={{ height: 50 }} />
     </>
