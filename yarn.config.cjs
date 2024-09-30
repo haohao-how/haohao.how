@@ -1,3 +1,5 @@
+// @ts-check
+
 /** @type {import('@yarnpkg/types')} */
 const { defineConfig } = require("@yarnpkg/types");
 const semver = require("semver");
@@ -21,10 +23,51 @@ function enforceConsistentDependenciesAcrossTheProject({ Yarn }) {
     for (const otherDependency of Yarn.dependencies({
       ident: dependency.ident,
     })) {
-      if (otherDependency.type === `peerDependencies`) continue;
+      if (
+        otherDependency.type === `peerDependencies` ||
+        otherDependency.workspace === dependency.workspace
+      )
+        continue;
 
       dependency.update(otherDependency.range);
     }
+  }
+}
+
+/**
+ * Yarn constraint function that ensures all packages with a specific scope have
+ * the same non-fuzzy version.
+ *
+ * @param {Context} ctx
+ * @param {string} scope
+ */
+function enforceScopedDependencyVersions({ Yarn }, scope) {
+  // Get all dependencies with the specified scope
+  const scopedDependencies = Yarn.dependencies().filter((dependency) =>
+    dependency.ident.startsWith(scope),
+  );
+
+  // Get the highest version of the scoped dependencies
+  const highestVersion = scopedDependencies
+    .map((dependency) => semver.minVersion(dependency.range))
+    .filter((version) => version != null)
+    .sort(semver.rcompare)[0]
+    ?.toString();
+  invariant(highestVersion != null);
+
+  // Update all dependencies with the specified scope to the unique version
+  for (const dependency of scopedDependencies) {
+    dependency.update(highestVersion);
+  }
+}
+
+/**
+ * @param {boolean} condition
+ * @returns {asserts condition}
+ */
+function invariant(condition) {
+  if (!condition) {
+    throw new Error(`invariant failed`);
   }
 }
 
@@ -112,6 +155,7 @@ function reportRootError({ Yarn }, message) {
 module.exports = defineConfig({
   async constraints(ctx) {
     await enforceConsistentDependenciesAcrossTheProject(ctx);
+    await enforceScopedDependencyVersions(ctx, `@tamagui/`);
     await enforceStrictTypesCompatibility(ctx, {
       "color@^4.2.3": "^3",
       "eslint@^8.57.0": "^8",

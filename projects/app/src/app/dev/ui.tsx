@@ -1,3 +1,4 @@
+import { AnswerButton } from "@/components/AnswerButton";
 import { RectButton2 } from "@/components/RectButton2";
 import { RootView } from "@/components/RootView";
 import { XStack, YStack } from "@/components/Stack";
@@ -9,6 +10,14 @@ import { ReactNode } from "react";
 export default function DesignSystemPage() {
   return (
     <RootView flexGrow={1}>
+      <Section title="AnswerButton">
+        <AnswerButtonExamples />
+      </Section>
+
+      <Section title="RectButton2">
+        <RectButton2Examples />
+      </Section>
+
       <Section title="Colors">
         <YStack>
           <LittleAccentHeader title="default" />
@@ -30,10 +39,6 @@ export default function DesignSystemPage() {
             <AccentSwatches tokenBase="accent" />
           </XStack>
         </YStack>
-      </Section>
-
-      <Section title="RectButton2">
-        <RectButton2Examples />
       </Section>
 
       {/* Fill the rest of the page if it's too tall for the content */}
@@ -215,6 +220,20 @@ const RectButton2Examples = (props: Partial<PropsOf<typeof RectButton2>>) => (
 
     <ExampleStack title="accent (disabled)">
       <RectButton2Variants accent disabled {...props} />
+    </ExampleStack>
+  </>
+);
+
+const AnswerButtonExamples = (props: Partial<PropsOf<typeof AnswerButton>>) => (
+  <>
+    <ExampleStack title="normal">
+      <AnswerButton {...props}>Selectable</AnswerButton>
+    </ExampleStack>
+
+    <ExampleStack title="disabled">
+      <AnswerButton disabled {...props}>
+        Selectable
+      </AnswerButton>
     </ExampleStack>
   </>
 );
