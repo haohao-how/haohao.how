@@ -1,11 +1,12 @@
-import { AnswerButton } from "@/components/AnswerButton";
+import { AnswerButton, AnswerButtonState } from "@/components/AnswerButton";
 import { RectButton2 } from "@/components/RectButton2";
 import { RootView } from "@/components/RootView";
 import { XStack, YStack } from "@/components/Stack";
 import { PropsOf } from "@/components/types";
 import { styled, Theme, View } from "@tamagui/core";
 import { SizableText } from "@tamagui/text";
-import { ReactNode } from "react";
+import shuffle from "lodash/shuffle";
+import { ReactNode, useState } from "react";
 
 export default function DesignSystemPage() {
   return (
@@ -227,7 +228,7 @@ const RectButton2Examples = (props: Partial<PropsOf<typeof RectButton2>>) => (
 const AnswerButtonExamples = (props: Partial<PropsOf<typeof AnswerButton>>) => (
   <>
     <ExampleStack title="normal">
-      <AnswerButton {...props}>Selectable</AnswerButton>
+      <SyncedAnswerButtonExample />
     </ExampleStack>
 
     <ExampleStack title="disabled">
@@ -237,3 +238,32 @@ const AnswerButtonExamples = (props: Partial<PropsOf<typeof AnswerButton>>) => (
     </ExampleStack>
   </>
 );
+
+function SyncedAnswerButtonExample() {
+  const [state, setState] = useState<AnswerButtonState>(`default`);
+  return (
+    <>
+      <AnswerButton
+        state={state}
+        onPress={() => {
+          setState(
+            (prev) =>
+              shuffle(
+                (
+                  [
+                    `selected`,
+                    `success`,
+                    `error`,
+                    `default`,
+                  ] as AnswerButtonState[]
+                ).filter((x) => x !== prev),
+              )[0] ?? `default`,
+          );
+        }}
+      >
+        Primary
+      </AnswerButton>
+      <AnswerButton state={state}>Mirror</AnswerButton>
+    </>
+  );
+}
