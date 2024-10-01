@@ -78,7 +78,7 @@ export default function IndexPage() {
         style={{
           flex: 1,
           width: `100%`,
-          alignItems: `center`,
+          alignItems: `stretch`,
           justifyContent: `center`,
         }}
       >
