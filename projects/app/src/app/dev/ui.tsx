@@ -7,46 +7,52 @@ import { styled, Theme, View } from "@tamagui/core";
 import { SizableText } from "@tamagui/text";
 import shuffle from "lodash/shuffle";
 import { ReactNode, useState } from "react";
+import { ScrollView } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function DesignSystemPage() {
+  const insets = useSafeAreaInsets();
+
   return (
-    <RootView flexGrow={1}>
-      <Section title="AnswerButton">
-        <AnswerButtonExamples />
-      </Section>
+    <RootView flex={1} paddingTop={insets.top}>
+      <ScrollView style={{ flex: 1 }}>
+        <Section title="AnswerButton">
+          <AnswerButtonExamples />
+        </Section>
 
-      <Section title="RectButton2">
-        <RectButton2Examples />
-      </Section>
+        <Section title="RectButton2">
+          <RectButton2Examples />
+        </Section>
 
-      <Section title="Colors">
-        <YStack>
-          <LittleAccentHeader title="default" />
-          <XStack gap="$1" flexWrap="wrap">
-            <AccentSwatches tokenBase="color" />
-          </XStack>
-        </YStack>
+        <Section title="Colors">
+          <YStack>
+            <LittleAccentHeader title="default" />
+            <XStack gap="$1" flexWrap="wrap">
+              <AccentSwatches tokenBase="color" />
+            </XStack>
+          </YStack>
 
-        <YStack theme="danger">
-          <LittleAccentHeader title="danger" />
-          <XStack gap="$1" flexWrap="wrap">
-            <AccentSwatches tokenBase="accent" />
-          </XStack>
-        </YStack>
+          <YStack theme="danger">
+            <LittleAccentHeader title="danger" />
+            <XStack gap="$1" flexWrap="wrap">
+              <AccentSwatches tokenBase="accent" />
+            </XStack>
+          </YStack>
 
-        <YStack theme="success">
-          <LittleAccentHeader title="success" />
-          <XStack gap="$1" flexWrap="wrap">
-            <AccentSwatches tokenBase="accent" />
-          </XStack>
-        </YStack>
-      </Section>
+          <YStack theme="success">
+            <LittleAccentHeader title="success" />
+            <XStack gap="$1" flexWrap="wrap">
+              <AccentSwatches tokenBase="accent" />
+            </XStack>
+          </YStack>
+        </Section>
 
-      {/* Fill the rest of the page if it's too tall for the content */}
-      <XStack flexGrow={1}>
-        <ExamplesStack theme="light" />
-        <ExamplesStack theme="dark" />
-      </XStack>
+        {/* Fill the rest of the page if it's too tall for the content */}
+        <XStack flexGrow={1}>
+          <ExamplesStack theme="light" />
+          <ExamplesStack theme="dark" />
+        </XStack>
+      </ScrollView>
     </RootView>
   );
 }
@@ -142,6 +148,10 @@ const Section = ({
 );
 
 const ExamplesStack = styled(XStack, {
+  justifyContent: `center`,
+  $gtSm: {
+    justifyContent: `flex-start`,
+  },
   gap: `$2`,
   backgroundColor: `$background`,
   padding: `$2`,
