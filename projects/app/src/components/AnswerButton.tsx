@@ -1,4 +1,4 @@
-import { styled, View } from "@tamagui/core";
+import { Theme, View } from "@tamagui/core";
 import { SizableText } from "@tamagui/text";
 import { ElementRef, forwardRef, useEffect, useState } from "react";
 import { Pressable, ViewProps } from "react-native";
@@ -16,22 +16,31 @@ import { hapticImpactIfMobile } from "./util";
 
 export type ButtonSize = `$1` | `$2`;
 
+export type AnswerButtonState = `default` | `selected` | `success` | `error`;
+
 export type AnswerButtonProps = {
   thickness?: number;
   size?: ButtonSize;
-  accent?: boolean;
   children?: ViewProps[`children`];
+  state?: AnswerButtonState;
 } & Omit<PropsOf<typeof Pressable>, `children`>;
 
 export const AnswerButton = forwardRef<
   ElementRef<typeof Pressable>,
   AnswerButtonProps
 >(function AnswerButton(
-  { disabled = false, thickness = 4, children, size = `$1`, ...pressableProps },
+  {
+    disabled = false,
+    thickness = 4,
+    children,
+    state = `default`,
+    size = `$1`,
+    ...pressableProps
+  },
   ref,
 ) {
-  const [selected, setSelected] = useState(false);
-  const [prevSelected, setPrevSelected] = useState(selected);
+  // const [state, setState] = useState<AnswerButtonState>(`default`);
+  const [prevState, setPrevState] = useState(state);
 
   const scale = useSharedValue(1);
   const bgScale = useSharedValue(0.5);
@@ -40,40 +49,64 @@ export const AnswerButton = forwardRef<
   const animationFactor = 1;
 
   useEffect(() => {
-    setPrevSelected(selected);
-  }, [selected]);
+    setPrevState(state);
+  }, [state]);
 
-  const selectedChanged = selected !== prevSelected;
+  const stateChanged = state !== prevState;
+
+  const withScaleAnimation = () =>
+    withSequence(
+      withTiming(0.5, { duration: 0 }),
+      withTiming(1.07, {
+        duration: 200 * animationFactor,
+        easing: Easing.inOut(Easing.quad),
+      }),
+      withTiming(1, {
+        duration: 100 * animationFactor,
+        easing: Easing.out(Easing.quad),
+      }),
+    );
 
   useEffect(() => {
-    if (selectedChanged) {
-      if (selected) {
-        const withScaleAnimation = () =>
-          withSequence(
-            withTiming(0.5, { duration: 0 }),
-            withTiming(1.07, {
-              duration: 200 * animationFactor,
-              easing: Easing.inOut(Easing.quad),
-            }),
-            withTiming(1, {
-              duration: 100 * animationFactor,
-              easing: Easing.out(Easing.quad),
-            }),
+    if (stateChanged) {
+      switch (state) {
+        case `default`:
+          setBgFilled(false);
+          bgScale.value = 0.5;
+          bgOpacity.value = 0;
+          break;
+        case `selected`: {
+          scale.value = withClamp({ min: 1 }, withScaleAnimation());
+          bgScale.value = withClamp({ max: 1 }, withScaleAnimation());
+          bgOpacity.value = withTiming(1, { duration: 100 * animationFactor });
+          break;
+        }
+        case `error`: {
+          scale.value = withClamp({ min: 1 }, withScaleAnimation());
+          bgScale.value = withClamp({ max: 1 }, withScaleAnimation());
+          bgOpacity.value = withTiming(1, { duration: 100 * animationFactor });
+          break;
+        }
+        case `success`: {
+          scale.value = withClamp({ min: scale.value }, withScaleAnimation());
+          bgScale.value = withClamp(
+            { min: bgScale.value, max: 1 },
+            withScaleAnimation(),
           );
-
-        scale.value = withClamp({ min: 1 }, withScaleAnimation());
-        bgScale.value = withClamp({ max: 1 }, withScaleAnimation());
-        bgOpacity.value = withTiming(1, { duration: 100 * animationFactor });
-      } else {
-        setBgFilled(false);
-        bgScale.value = 0.5;
-        bgOpacity.value = 0;
+          bgOpacity.value = withClamp(
+            { min: bgOpacity.value },
+            withTiming(1, { duration: 100 * animationFactor }),
+          );
+          break;
+        }
       }
     }
-  }, [bgOpacity, bgScale, scale, selectedChanged, selected]);
+  }, [bgOpacity, bgScale, scale, stateChanged, state]);
 
   const [bgFilled, setBgFilled] = useState(false);
 
+  // When the background scale reaches 100% update `bgFilled` to make the border
+  // bright.
   useAnimatedReaction(
     () => bgScale.value,
     (currentValue, previousValue) => {
@@ -99,95 +132,89 @@ export const AnswerButton = forwardRef<
   const flat = pressed || disabled;
 
   return (
-    <Pressable
-      {...pressableProps}
-      disabled={disabled}
-      onPressIn={(e) => {
-        setPressed(true);
-        hapticImpactIfMobile();
-        pressableProps.onPressIn?.(e);
-      }}
-      onPressOut={(e) => {
-        setPressed(false);
-        pressableProps.onPressOut?.(e);
-      }}
-      onPress={(e) => {
-        setSelected((old) => !old);
-        pressableProps.onPress?.(e);
-      }}
-      ref={ref}
+    <Theme
+      name={
+        state === `default` || state === `selected`
+          ? undefined
+          : state === `success`
+            ? `success`
+            : `danger`
+      }
     >
-      <Animated.View style={{ transform: [{ scale }] }}>
-        <View
-          borderWidth={borderWidth}
-          borderBottomWidth={borderWidth + (flat ? 0 : thickness)}
-          borderColor={selected && bgFilled ? `$accent9` : `$borderColor`}
-          borderRadius={size === `$1` ? `$3` : `$4`}
-          marginTop={flat ? thickness : 0}
-          paddingTop="$1"
-          paddingBottom="$1"
-          paddingLeft="$3"
-          paddingRight="$3"
-          flexGrow={1}
-          flexShrink={1}
-          alignItems="center"
-          justifyContent="center"
-          transformOrigin="center"
-          opacity={disabled ? 0.5 : undefined}
-        >
-          <Animated.View
-            style={{
-              position: `absolute`,
-              // HACK: fixes border radius on the parent from looking wonky
-              top: 0.5,
-              left: 0.5,
-              right: 0.5,
-              bottom: 0.5,
-              zIndex: -1,
-              opacity: bgOpacity,
-              transform: [{ scale: bgScale }],
-            }}
+      <Pressable
+        {...pressableProps}
+        disabled={disabled}
+        onPressIn={(e) => {
+          setPressed(true);
+          hapticImpactIfMobile();
+          pressableProps.onPressIn?.(e);
+        }}
+        onPressOut={(e) => {
+          setPressed(false);
+          pressableProps.onPressOut?.(e);
+        }}
+        onPress={(e) => {
+          pressableProps.onPress?.(e);
+        }}
+        ref={ref}
+      >
+        <Animated.View style={{ transform: [{ scale }] }}>
+          <View
+            borderWidth={borderWidth}
+            borderBottomWidth={borderWidth + (flat ? 0 : thickness)}
+            borderColor={
+              state !== `default` && bgFilled ? `$accent9` : `$borderColor`
+            }
+            borderRadius={size === `$1` ? `$3` : `$4`}
+            marginTop={flat ? thickness : 0}
+            paddingTop="$1"
+            paddingBottom="$1"
+            paddingLeft="$3"
+            paddingRight="$3"
+            flexGrow={1}
+            flexShrink={1}
+            alignItems="center"
+            justifyContent="center"
+            transformOrigin="center"
+            opacity={disabled ? 0.5 : undefined}
           >
-            <View
-              backgroundColor="$accent4"
-              borderRadius="$2"
+            <Animated.View
               style={{
                 position: `absolute`,
-                top: 0,
-                left: 0,
-                right: 0,
-                bottom: 0,
+                // HACK: fixes border radius on the parent from looking wonky
+                top: 0.5,
+                left: 0.5,
+                right: 0.5,
+                bottom: 0.5,
+                zIndex: -1,
+                opacity: bgOpacity,
+                transform: [{ scale: bgScale }],
               }}
-            />
-          </Animated.View>
-          <ButtonText accent={selected}>{children}</ButtonText>
-        </View>
-      </Animated.View>
-    </Pressable>
+            >
+              <View
+                backgroundColor="$accent4"
+                borderRadius="$2"
+                style={{
+                  position: `absolute`,
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                }}
+              />
+            </Animated.View>
+            <SizableText
+              size="$3"
+              textTransform="uppercase"
+              userSelect="none"
+              fontWeight="bold"
+              color={state !== `default` ? `$accent9` : `$color`}
+            >
+              {children}
+            </SizableText>
+          </View>
+        </Animated.View>
+      </Pressable>
+    </Theme>
   );
-});
-
-const variants = {
-  accent: { ":boolean": () => ({}) },
-  size: {
-    $1: {},
-    $2: {},
-  },
-} as const;
-
-const BaseText = styled(SizableText, { variants });
-
-const ButtonText = styled(BaseText, {
-  userSelect: `none`,
-  fontWeight: `bold`,
-  size: `$3`,
-  textTransform: `uppercase`,
-
-  variants: {
-    accent: {
-      ":boolean": (accent, { theme }) => {
-        return { color: accent ? theme.accent9 : theme.color };
-      },
-    },
-  },
 });
