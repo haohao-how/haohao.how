@@ -75,6 +75,7 @@ export default function IndexPage() {
       style={[styles.container, { paddingTop: insets.top }]}
     >
       <View
+        testID="index-page"
         style={{
           flex: 1,
           width: `100%`,

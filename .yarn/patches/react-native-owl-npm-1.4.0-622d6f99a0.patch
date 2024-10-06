@@ -1,0 +1,13 @@
+diff --git a/dist/cli/build.js b/dist/cli/build.js
+index f9726749784ddf2a8813770effb595302f2aaac2..7d365af0435f35285be439c7ca20e50f3374fc29 100644
+--- a/dist/cli/build.js
++++ b/dist/cli/build.js
+@@ -68,7 +68,7 @@ var buildIOS = function (config, logger) { return __awaiter(void 0, void 0, void
+                 return [4 /*yield*/, execa_1.default.command(buildCommand.join(' '), {
+                         stdio: 'inherit',
+                         env: {
+-                            ENTRY_FILE: exports.ENTRY_FILE,
++                            EXPO_PUBLIC_OWL: "true"
+                         },
+                     })];
+             case 1:
