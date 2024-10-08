@@ -58,6 +58,8 @@ jobs:
         run: |
           yarn expo start --ios --no-dev
         working-directory: ./projects/app
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
 
       - name: Take a screenshot
         run: xcrun simctl io booted screenshot ./screenshot.png
