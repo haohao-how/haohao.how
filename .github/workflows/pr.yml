@@ -59,6 +59,7 @@ jobs:
           yarn expo start --ios --no-dev
         working-directory: ./projects/app
         env:
+          EXPO_DEBUG: 1
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
 
       - name: Take a screenshot
