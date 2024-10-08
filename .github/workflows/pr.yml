@@ -56,7 +56,10 @@ jobs:
 
       - name: Run Expo Go
         run: |
-          yarn expo start --ios --no-dev
+          yarn expo start --ios --no-dev 2>&1 | tee expo.log &
+          echo $! > expo.pid
+          # Wait up to 10 minutes for the iOS Bundled message to appear in the log
+          timeout 600 sh -c 'until grep "iOS Bundled" expo.log; do sleep 1; done'
         working-directory: ./projects/app
         env:
           EXPO_DEBUG: 1
