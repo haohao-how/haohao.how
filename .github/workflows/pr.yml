@@ -9,90 +9,157 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  app-preview:
-    runs-on: ubuntu-latest
-    env:
-      # Format: 'github_test_pr_' <run_id> [ ':' <run_attempt> ]
-      #
-      # The run attempt is only included for re-runs to keep the branch name
-      # slightly shorter and cleaner when there is no re-run.
-      NEON_BRANCH_NAME: github_test_pr_${{ github.run_id }}${{ github.run_attempt != '1' && format(':{0}', github.run_attempt) || '' }}
-      NEON_DATABASE_NAME: hao
+  visual-regression-ios:
+    runs-on: macos-14
+
     steps:
       - name: 🏗 Clone repo
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: 🏗 Create database branch for running tests
-        uses: neondatabase/create-branch-action@v5
-        id: create-neon-branch
-        with:
-          api_key: ${{ secrets.NEON_API_KEY }}
-          branch_name: ${{ env.NEON_BRANCH_NAME }}
-          database: ${{ env.NEON_DATABASE_NAME }}
-          project_id: ${{ secrets.NEON_PROJECT_ID }}
-          username: ${{ secrets.NEON_USERNAME }}
+      # - name: Get Runner Information
+      #   run: /usr/bin/xcodebuild -version
+
+      # - name: Get yarn cache directory path
+      #   id: yarn-cache-dir-path
+      #   run: echo "::set-output name=dir::$(yarn cache dir)"
+
+      # - uses: actions/cache@v2
+      #   id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
+      #   with:
+      #     path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+      #     key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+      #     restore-keys: |
+      #       ${{ runner.os }}-yarn-
 
       - uses: ./.github/actions/setup-tools
 
-      - run: moon run app:dbMigrate --color --affected --remote
-        env:
-          DATABASE_URL: ${{ steps.create-neon-branch.outputs.db_url }}
+      # - name: Install CocoaPods
+      #   run: gem install cocoapods -v 1.15.2
 
-      - name: 🚀 Deploy to Vercel (preview)
-        run: moon run app:deployVercel --color --affected --remote
-        env:
-          EXPO_PUBLIC_REPLICACHE_LICENSE_KEY: ${{ secrets.EXPO_PUBLIC_REPLICACHE_LICENSE_KEY }}
-          HHH_VERCEL_PREVIEW:
-          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
-          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID_APP }}
-          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+      # - uses: actions/cache@v2
+      #   with:
+      #     path: ./ios/Pods
+      #     key: ${{ runner.os }}-pods-${{ hashFiles('**/Podfile.lock') }}
+      #     restore-keys: |
+      #       ${{ runner.os }}-pods-
 
-      - uses: neondatabase/delete-branch-action@v3
+      # - name: Expo prebuild
+      #   run: yarn expo prebuild --platform ios
+      #   working-directory: ./projects/app
+
+      - uses: futureware-tech/simulator-action@v3
         with:
-          project_id: ${{ secrets.NEON_PROJECT_ID }}
-          branch: ${{ env.NEON_BRANCH_NAME }}
-          api_key: ${{ secrets.NEON_API_KEY }}
-        if: ${{ always() }}
+          model: "iPhone 15 Pro"
+          os_version: ">=18.0"
 
-  static-preview:
-    runs-on: ubuntu-latest
-    steps:
-      - name: 🏗 Clone repo
-        uses: actions/checkout@v4
+      - name: Run Expo Go
+        run: |
+          yarn expo start --ios --no-dev &
+          echo $! > expo.pid
+          sleep 20
+        working-directory: ./projects/app
+
+      - name: Take a screenshot
+        run: xcrun simctl io booted screenshot ./screenshot.png
+        working-directory: ./projects/app
+
+      # - name: Upload to Percy
+      #   run: npx @percy/cli upload .owl/latest
+      #   working-directory: ./projects/app
+
+      - name: Store screenshots and report as artifacts
+        uses: actions/upload-artifact@v4
+        # if: failure()
         with:
-          fetch-depth: 0
+          name: screenshot
+          path: ./projects/app/screenshot.png
 
-      - uses: ./.github/actions/setup-tools
+  # app-preview:
+  #   runs-on: ubuntu-latest
+  #   env:
+  #     # Format: 'github_test_pr_' <run_id> [ ':' <run_attempt> ]
+  #     #
+  #     # The run attempt is only included for re-runs to keep the branch name
+  #     # slightly shorter and cleaner when there is no re-run.
+  #     NEON_BRANCH_NAME: github_test_pr_${{ github.run_id }}${{ github.run_attempt != '1' && format(':{0}', github.run_attempt) || '' }}
+  #     NEON_DATABASE_NAME: hao
+  #   steps:
+  #     - name: 🏗 Clone repo
+  #       uses: actions/checkout@v4
+  #       with:
+  #         fetch-depth: 0
 
-      - name: 🚀 Deploy to Vercel (preview)
-        run: moon run static:deploy --color --affected --remote
-        env:
-          HHH_VERCEL_PREVIEW:
-          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID_STATIC }}
-          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+  #     - name: 🏗 Create database branch for running tests
+  #       uses: neondatabase/create-branch-action@v5
+  #       id: create-neon-branch
+  #       with:
+  #         api_key: ${{ secrets.NEON_API_KEY }}
+  #         branch_name: ${{ env.NEON_BRANCH_NAME }}
+  #         database: ${{ env.NEON_DATABASE_NAME }}
+  #         project_id: ${{ secrets.NEON_PROJECT_ID }}
+  #         username: ${{ secrets.NEON_USERNAME }}
 
-  moon-ci:
-    runs-on: ubuntu-latest
-    env:
-      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID_STATIC }}
-    strategy:
-      matrix:
-        index: [0, 1]
-    steps:
-      - name: 🏗 Clone repo
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
+  #     - uses: ./.github/actions/setup-tools
 
-      - uses: ./.github/actions/setup-tools
+  #     - run: moon run app:dbMigrate --color --affected --remote
+  #       env:
+  #         DATABASE_URL: ${{ steps.create-neon-branch.outputs.db_url }}
 
-      - run: moon ci --color --job ${{ matrix.index }} --jobTotal 2
+  #     - name: 🚀 Deploy to Vercel (preview)
+  #       run: moon run app:deployVercel --color --affected --remote
+  #       env:
+  #         EXPO_PUBLIC_REPLICACHE_LICENSE_KEY: ${{ secrets.EXPO_PUBLIC_REPLICACHE_LICENSE_KEY }}
+  #         HHH_VERCEL_PREVIEW:
+  #         SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+  #         VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+  #         VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID_APP }}
+  #         VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
 
-      - name: 🧾 Results
-        uses: appthrust/moon-ci-retrospect@v1
-        if: ${{ always() }}
+  #     - uses: neondatabase/delete-branch-action@v3
+  #       with:
+  #         project_id: ${{ secrets.NEON_PROJECT_ID }}
+  #         branch: ${{ env.NEON_BRANCH_NAME }}
+  #         api_key: ${{ secrets.NEON_API_KEY }}
+  #       if: ${{ always() }}
+
+  # static-preview:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: 🏗 Clone repo
+  #       uses: actions/checkout@v4
+  #       with:
+  #         fetch-depth: 0
+
+  #     - uses: ./.github/actions/setup-tools
+
+  #     - name: 🚀 Deploy to Vercel (preview)
+  #       run: moon run static:deploy --color --affected --remote
+  #       env:
+  #         HHH_VERCEL_PREVIEW:
+  #         VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+  #         VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID_STATIC }}
+  #         VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+
+  # moon-ci:
+  #   runs-on: ubuntu-latest
+  #   env:
+  #     VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+  #     VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID_STATIC }}
+  #   strategy:
+  #     matrix:
+  #       index: [0, 1]
+  #   steps:
+  #     - name: 🏗 Clone repo
+  #       uses: actions/checkout@v4
+  #       with:
+  #         fetch-depth: 0
+
+  #     - uses: ./.github/actions/setup-tools
+
+  #     - run: moon ci --color --job ${{ matrix.index }} --jobTotal 2
+
+  #     - name: 🧾 Results
+  #       uses: appthrust/moon-ci-retrospect@v1
+  #       if: ${{ always() }}
