@@ -56,6 +56,7 @@ jobs:
 
       - name: Run Expo Go
         run: |
+          brew install coreutils
           echo 1
           yarn --version
           echo 2
@@ -64,7 +65,7 @@ jobs:
           echo $! > expo.pid
           echo 4
           # Wait up to 10 minutes for the iOS Bundled message to appear in the log
-          timeout 600 sh -c 'until grep "iOS Bundled" expo.log; do sleep 1; done'
+          gtimeout 600 sh -c 'until grep "iOS Bundled" expo.log; do sleep 1; done'
           echo 5
         working-directory: ./projects/app
         env:
