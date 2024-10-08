@@ -56,9 +56,7 @@ jobs:
 
       - name: Run Expo Go
         run: |
-          yarn expo start --ios --no-dev &
-          echo $! > expo.pid
-          sleep 40
+          yarn expo start --ios --no-dev
         working-directory: ./projects/app
 
       - name: Take a screenshot
