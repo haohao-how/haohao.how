@@ -8,7 +8,7 @@ runs:
     # uses pnpm because Vercel only supports Yarn 1 which doesn't have patch
     # support.
     - name: Enable Corepack
-      run: corepack enable
+      run: corepack enable pnpm
       shell: bash
 
     - name: 📦 Install Moon toolchain
