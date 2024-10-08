@@ -54,6 +54,34 @@ jobs:
           model: "iPhone 15 Pro"
           os_version: ">=18.0"
 
+      - name: Run simple command as script
+        run: |
+          echo 1
+          yarn --version
+
+      - name: Run simple command not as script
+        run: yarn --version
+
+      - name: Run simple command as script in workdir
+        run: |
+          echo 1
+          yarn --version
+        working-directory: ./projects/app
+
+      - name: Run simple command not as script in workdir
+        run: yarn --version
+        working-directory: ./projects/app
+
+      - name: Run simple expo command as script in workdir
+        run: |
+          echo 1
+          yarn expo --version
+        working-directory: ./projects/app
+
+      - name: Run simple expo command not as script in workdir
+        run: yarn expo --version
+        working-directory: ./projects/app
+
       - name: Run Expo Go
         run: |
           brew install coreutils
