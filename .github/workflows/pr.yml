@@ -58,7 +58,7 @@ jobs:
         run: |
           yarn expo start --ios --no-dev &
           echo $! > expo.pid
-          sleep 20
+          sleep 40
         working-directory: ./projects/app
 
       - name: Take a screenshot
