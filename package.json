@@ -32,6 +32,8 @@
     "ts-node@npm:10.9.1": "^10.9.2",
     "undici@npm:5.26.5": "^5.28.4",
     "ws@npm:~8.11.0": "^8.17.0",
-    "@expo/cli@npm:0.18.21": "patch:@expo/cli@npm%3A0.18.21#~/.yarn/patches/@expo-cli-npm-0.18.21-5f35999d26.patch"
+    "@expo/cli@npm:0.18.21": "patch:@expo/cli@npm%3A0.18.21#~/.yarn/patches/@expo-cli-npm-0.18.21-5f35999d26.patch",
+    "metro-runtime@npm:^0.80.3": "patch:metro-runtime@npm%3A0.80.9#~/.yarn/patches/metro-runtime-npm-0.80.9-3f02d2003d.patch",
+    "metro-runtime@npm:0.80.9": "patch:metro-runtime@npm%3A0.80.9#~/.yarn/patches/metro-runtime-npm-0.80.9-3f02d2003d.patch"
   }
 }
