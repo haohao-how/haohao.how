@@ -6,6 +6,10 @@ import { installSymbolAsyncInteratorPolyfill } from "@/polyfill/symbolAsyncItera
 installCryptoPolyfill();
 installSymbolAsyncInteratorPolyfill();
 
+if (process.env.EXPO_PUBLIC_OWL) {
+  require(`react-native-owl/dist/client`).initClient();
+}
+
 // Works around an issue where metro couldn't resolve
 // `node_modules/expo-router/entry`.
 //

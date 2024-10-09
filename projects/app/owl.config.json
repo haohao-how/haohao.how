@@ -1,0 +1,15 @@
+{
+  "ios": {
+    "workspace": "ios/Hao.xcworkspace",
+    "scheme": "Hao",
+    "configuration": "Release",
+    "device": "booted"
+  },
+  "android": {
+    "packageName": "how.haohao.hoa",
+    "buildType": "Release",
+    "quiet": true
+  },
+  "debug": true,
+  "report": true
+}

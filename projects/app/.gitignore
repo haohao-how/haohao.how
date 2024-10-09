@@ -7,6 +7,11 @@ node_modules/
 .expo/
 dist/
 
+# react-native-owl
+.owl/
+ios/
+android/
+
 # Native
 *.orig.*
 *.jks

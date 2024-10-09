@@ -159,6 +159,7 @@ module.exports = defineConfig({
     await enforceStrictTypesCompatibility(ctx, {
       "color@^4.2.3": "^3",
       "eslint@^8.57.0": "^8",
+      "jest@^29.7.0": "^29 <=29.7.x",
       "pg@^8.12.0": "^8 <=8.12.x",
       "ws@^8.17.1": "^8 <=8.17.x",
     });
