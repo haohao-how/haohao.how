@@ -311,7 +311,7 @@ const defaultSizes = {
 function createMainFont<A extends GenericFont>(
   { size: sizeIn, ...restFont }: Partial<Omit<A, `lineHeight`>> = {},
   {
-    sizeLineHeight = (size) => size * 1.1,
+    sizeLineHeight = (size) => Math.round(size * 1.1),
     sizeSize = (size) => size,
   }: {
     sizeLineHeight?: (fontSize: number) => number;
@@ -330,7 +330,7 @@ function createMainFont<A extends GenericFont>(
     family: `-apple-system, Inter, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif`,
     lineHeight: mapValues(size, sizeLineHeight),
     weight: {
-      4: `300`,
+      4: `normal`,
     },
     letterSpacing: {
       4: 0,
@@ -366,16 +366,17 @@ export const config = createTamagui({
       family: isWeb
         ? `ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"`
         : `System`,
+      weight: {
+        1: `normal`,
+        7: `bold`,
+      },
     }),
     body: createMainFont(
       {
         family: isWeb
           ? `ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"`
           : `System`,
-        weight: {
-          1: `400`,
-          7: `600`,
-        },
+
         // for native only, alternate family based on weight/style
         // face: {
         //   // pass in weights as keys
@@ -389,35 +390,8 @@ export const config = createTamagui({
           Math.round(size * 1.1 + (size >= 12 ? 10 : 4)),
       },
     ),
-    chinese: createFont({
+    chinese: createMainFont({
       family: `MaShanZheng-Regular`,
-      size: {
-        1: 16,
-        true: 16,
-        2: 20,
-        3: 24,
-        72: 72,
-      },
-      lineHeight: {
-        1: 17,
-        2: 20,
-        3: 24,
-        72: 72,
-      },
-      weight: {
-        1: `400`,
-      },
-      letterSpacing: {
-        1: 0,
-      },
-
-      // for native only, alternate family based on weight/style
-      // face: {
-      //   // pass in weights as keys
-      //   700: { normal: `InterBold`, italic: `InterBold-Italic` },
-      //   800: { normal: `InterBold`, italic: `InterBold-Italic` },
-      //   900: { normal: `InterBold`, italic: `InterBold-Italic` },
-      // },
     }),
   },
   media: {

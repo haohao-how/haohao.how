@@ -9,7 +9,8 @@ import * as Sentry from "@sentry/react-native";
 import { TamaguiProvider } from "@tamagui/core";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { httpBatchLink } from "@trpc/client";
-import { Slot, useNavigationContainerRef } from "expo-router";
+import { useFonts } from "expo-font";
+import { Slot, SplashScreen, useNavigationContainerRef } from "expo-router";
 import * as Updates from "expo-updates";
 import { useEffect, useState } from "react";
 import { Platform, useColorScheme } from "react-native";
@@ -90,6 +91,23 @@ function RootLayout() {
       ],
     }),
   );
+
+  const [fontsLoaded, fontError] = useFonts({
+    "MaShanZheng-Regular": require(`@/assets/fonts/MaShanZheng-Regular.ttf`),
+    "NotoSerifSC-Medium": require(`@/assets/fonts/NotoSerifSC-Medium.otf`),
+  });
+
+  useEffect(() => {
+    if (fontsLoaded || fontError) {
+      SplashScreen.hideAsync().catch((e: unknown) =>
+        Sentry.captureException(e),
+      );
+    }
+  }, [fontsLoaded, fontError]);
+
+  if (!fontsLoaded && !fontError) {
+    return null;
+  }
 
   return (
     <trpc.Provider client={trpcClient} queryClient={queryClient}>

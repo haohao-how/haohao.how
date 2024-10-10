@@ -3,7 +3,15 @@ import { RectButton2 } from "@/components/RectButton2";
 import { RootView } from "@/components/RootView";
 import { XStack, YStack } from "@/components/Stack";
 import { PropsOf } from "@/components/types";
-import { styled, Theme, View } from "@tamagui/core";
+import { invariant } from "@haohaohow/lib/invariant";
+import {
+  FontSizeTokens,
+  getConfig,
+  styled,
+  Theme,
+  Variable,
+  View,
+} from "@tamagui/core";
 import { SizableText } from "@tamagui/text";
 import shuffle from "lodash/shuffle";
 import { ReactNode, useState } from "react";
@@ -12,6 +20,10 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function DesignSystemPage() {
   const insets = useSafeAreaInsets();
+
+  const fontSizeTokens = Array.from({ length: 16 }).map(
+    (_, i) => `$${i + 1}` as FontSizeTokens,
+  );
 
   return (
     <RootView flex={1} paddingTop={insets.top}>
@@ -22,6 +34,19 @@ export default function DesignSystemPage() {
 
         <Section title="RectButton2">
           <RectButton2Examples />
+        </Section>
+
+        <Section title="Typography">
+          <YStack flex={1} gap="$2">
+            {([`$body`, `$title`, `$chinese`] as const).map((font) => (
+              <YStack key={font}>
+                <LittleAccentHeader title={font} />
+                {fontSizeTokens.map((size) => (
+                  <TypographyExample font={font} size={size} key={size} />
+                ))}
+              </YStack>
+            ))}
+          </YStack>
         </Section>
 
         <Section title="Colors">
@@ -57,21 +82,82 @@ export default function DesignSystemPage() {
   );
 }
 
-const LittleAccentHeader = ({ title }: { title: string }) => (
-  <XStack gap="$2" alignItems="center">
-    <View height={1} backgroundColor="$accent7" flexGrow={1} />
-    <SizableText
-      color="$accent10"
-      fontSize="$2"
-      fontWeight="bold"
-      textTransform="uppercase"
-      textAlign="center"
-    >
-      {title}
-    </SizableText>
-    <View height={1} backgroundColor="$accent7" flexGrow={1} />
-  </XStack>
-);
+const TypographyExample = ({
+  size,
+  font: fontKey,
+}: {
+  size: FontSizeTokens;
+  font: `$body` | `$title` | `$chinese`;
+}) => {
+  const c = getConfig();
+  c.fonts[c.defaultFontToken];
+
+  c.fontsParsed;
+
+  const font = c.fontsParsed[fontKey];
+  invariant(font != null);
+
+  function getVal(v: string | number | Variable | undefined): string | number {
+    if (typeof v === `string` || typeof v === `number`) {
+      return v;
+    }
+    if (typeof v === `undefined`) {
+      return ``;
+    }
+    return v.val as string | number;
+  }
+
+  const fontWeight = getVal(font.weight?.[size]);
+  const fontSize = getVal(font.size[size]);
+  const lineHeight = getVal(font.lineHeight?.[size]);
+
+  return (
+    <YStack flex={1} gap="$1">
+      <SizableText color="$color9" fontSize="$2">
+        <SizableText color="$color11" fontSize="$2" fontWeight="bold">
+          {size}
+        </SizableText>
+        <SizableText color="$color10">
+          {` `}•{` `}
+        </SizableText>
+        {fontSize}px / {lineHeight}px
+        <SizableText color="$color10">
+          {` `}•{` `}
+        </SizableText>
+        {fontWeight}
+      </SizableText>
+
+      <SizableText size={size} numberOfLines={1} flex={1} fontFamily={fontKey}>
+        The quick brown fox jumps over the lazy dog.
+      </SizableText>
+    </YStack>
+  );
+};
+
+const LittleAccentHeader = ({
+  title,
+  accented = true,
+}: {
+  title: string;
+  accented?: boolean;
+}) => {
+  const token = accented ? `$accent` : `$color`;
+  return (
+    <XStack gap="$2" alignItems="center">
+      <View height={1} backgroundColor={token + `7`} flexGrow={1} />
+      <SizableText
+        color={token + `10`}
+        fontSize="$2"
+        fontWeight="bold"
+        textTransform="uppercase"
+        textAlign="center"
+      >
+        {title}
+      </SizableText>
+      <View height={1} backgroundColor={token + `7`} flexGrow={1} />
+    </XStack>
+  );
+};
 
 const AccentSwatches = ({ tokenBase }: { tokenBase: string }) => {
   return (
