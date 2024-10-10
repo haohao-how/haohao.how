@@ -10,31 +10,16 @@ import { marshalSkillStateKey } from "@/data/marshal";
 import { Skill, SkillType } from "@/data/model";
 import { addHanziSkill } from "@/data/mutators";
 import { characterLookupByHanzi } from "@/dictionary/characters";
-import * as Sentry from "@sentry/react-native";
 import { View } from "@tamagui/core";
 import { SizableText } from "@tamagui/text";
-import { useFonts } from "expo-font";
 import { Link } from "expo-router";
-import * as SplashScreen from "expo-splash-screen";
 import { StatusBar as ExpoStatusBar } from "expo-status-bar";
-import { useCallback, useEffect } from "react";
+import { useEffect } from "react";
 import { ColorValue, ScrollView, StyleSheet } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function IndexPage() {
   const insets = useSafeAreaInsets();
-  const [fontsLoaded, fontError] = useFonts({
-    "MaShanZheng-Regular": require(`@/assets/fonts/MaShanZheng-Regular.ttf`),
-    "NotoSerifSC-Medium": require(`@/assets/fonts/NotoSerifSC-Medium.otf`),
-  });
-
-  const onLayoutRootView = useCallback(() => {
-    if (fontsLoaded || fontError) {
-      SplashScreen.hideAsync().catch((e: unknown) =>
-        Sentry.captureException(e),
-      );
-    }
-  }, [fontsLoaded, fontError]);
 
   const r = useReplicache();
 
@@ -65,15 +50,8 @@ export default function IndexPage() {
     });
   }, [r]);
 
-  if (!fontsLoaded && !fontError) {
-    return null;
-  }
-
   return (
-    <RootView
-      onLayout={onLayoutRootView}
-      style={[styles.container, { paddingTop: insets.top }]}
-    >
+    <RootView style={[styles.container, { paddingTop: insets.top }]}>
       <View
         style={{
           flex: 1,
