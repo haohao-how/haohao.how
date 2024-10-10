@@ -139,6 +139,11 @@ tasks:
 
   expoDoctor:
     command: npx -y expo-doctor@1.10.1
+    env:
+      # Don't check that all the expo-* packages are the latest versions. That's
+      # already handled by renovate in a way that doesn't break PR builds when a
+      # new version comes out.
+      EXPO_OFFLINE: "1"
     options:
       # This checks the latest version of dependencies from the internet, so it
       # can't cache purely off local filesystem. It's important cache is
