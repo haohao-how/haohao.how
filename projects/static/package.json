@@ -3,6 +3,7 @@
   "private": true,
   "devDependencies": {
     "@types/node": "^20.12.12",
+    "@types/yargs": "^17 <=17.7.x",
     "prettier": "^3.3.2",
     "ts-node": "^10.9.2",
     "typescript": "^5.5.2",
