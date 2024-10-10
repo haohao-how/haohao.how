@@ -17,6 +17,7 @@
     "@tamagui/colors": "1.112.3",
     "@tamagui/config": "1.112.3",
     "@tamagui/core": "1.112.3",
+    "@tamagui/react-native-media-driver": "1.112.3",
     "@tamagui/text": "1.112.3",
     "@tanstack/react-query": "^5.56.2",
     "@trpc/client": "^11.0.0-rc.502",

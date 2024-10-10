@@ -2799,6 +2799,7 @@ __metadata:
     "@tamagui/colors": "npm:1.112.3"
     "@tamagui/config": "npm:1.112.3"
     "@tamagui/core": "npm:1.112.3"
+    "@tamagui/react-native-media-driver": "npm:1.112.3"
     "@tamagui/text": "npm:1.112.3"
     "@tanstack/react-query": "npm:^5.56.2"
     "@trpc/client": "npm:^11.0.0-rc.502"

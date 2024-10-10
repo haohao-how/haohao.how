@@ -24,6 +24,7 @@ import {
   GenericFont,
   isWeb,
 } from "@tamagui/core";
+import { createMedia } from "@tamagui/react-native-media-driver";
 import Color from "color";
 import mapValues from "lodash/mapValues";
 
@@ -394,7 +395,7 @@ export const config = createTamagui({
       family: `MaShanZheng-Regular`,
     }),
   },
-  media: {
+  media: createMedia({
     xs: { maxWidth: 660 },
     gtXs: { minWidth: 660 + 1 },
     sm: { maxWidth: 860 },
@@ -407,7 +408,7 @@ export const config = createTamagui({
     tall: { minHeight: 820 },
     hoverNone: { hover: `none` },
     pointerCoarse: { pointer: `coarse` },
-  },
+  }),
   themes: {
     dark,
     dark_danger: {
