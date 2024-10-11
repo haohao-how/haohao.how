@@ -1,0 +1,45 @@
+diff --git a/lib/commonjs/views/Stack/Card.js b/lib/commonjs/views/Stack/Card.js
+index 80c49c8dd45bfa6f09ab71e93aacc2d0892581e0..63c2bb72aff64614bf317dd905defe16c9f4c685 100644
+--- a/lib/commonjs/views/Stack/Card.js
++++ b/lib/commonjs/views/Stack/Card.js
+@@ -438,18 +438,18 @@ const styles = _reactNative.StyleSheet.create({
+   },
+   shadow: {
+     position: 'absolute',
+-    shadowRadius: 5,
+-    shadowColor: '#000',
+-    shadowOpacity: 0.3
++    // shadowRadius: 5,
++    // shadowColor: '#000',
++    // shadowOpacity: 0.3
+   },
+   shadowHorizontal: {
+     top: 0,
+     bottom: 0,
+     width: 3,
+-    shadowOffset: {
+-      width: -1,
+-      height: 1
+-    }
++    // shadowOffset: {
++    //   width: -1,
++    //   height: 1
++    // }
+   },
+   shadowLeft: {
+     left: 0
+@@ -461,10 +461,10 @@ const styles = _reactNative.StyleSheet.create({
+     left: 0,
+     right: 0,
+     height: 3,
+-    shadowOffset: {
+-      width: 1,
+-      height: -1
+-    }
++    // shadowOffset: {
++    //   width: 1,
++    //   height: -1
++    // }
+   },
+   shadowTop: {
+     top: 0
