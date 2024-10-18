@@ -138,7 +138,7 @@ tasks:
       NODE_OPTIONS: --import tsx $NODE_OPTIONS
 
   expoDoctor:
-    command: npx -y expo-doctor@1.10.1
+    command: npx -y expo-doctor@1.11.1
     env:
       # Don't check that all the expo-* packages are the latest versions. That's
       # already handled by renovate in a way that doesn't break PR builds when a
