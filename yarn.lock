@@ -2839,7 +2839,7 @@ __metadata:
     "@typescript-eslint/utils": "npm:^7.13.1"
     color: "npm:^4.2.3"
     date-fns: "npm:^3.6.0"
-    drizzle-kit: "npm:^0.25.0"
+    drizzle-kit: "npm:^0.26.0"
     drizzle-orm: "npm:^0.33.0"
     eslint: "npm:^8.57.0"
     eslint-plugin-deprecation: "npm:^3.0.0"
@@ -10119,9 +10119,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"drizzle-kit@npm:^0.25.0":
-  version: 0.25.0
-  resolution: "drizzle-kit@npm:0.25.0"
+"drizzle-kit@npm:^0.26.0":
+  version: 0.26.2
+  resolution: "drizzle-kit@npm:0.26.2"
   dependencies:
     "@drizzle-team/brocli": "npm:^0.10.1"
     "@esbuild-kit/esm-loader": "npm:^2.5.5"
@@ -10129,7 +10129,7 @@ __metadata:
     esbuild-register: "npm:^3.5.0"
   bin:
     drizzle-kit: bin.cjs
-  checksum: 10c0/97bd2e2b3d30717ce99d274456b3eb998e83b34a529d2a5dbaee10658cf2d6154b16d872438d3e8f7fba45d203aeba6b12086a7aa39d6ba196110d1534de6944
+  checksum: 10c0/5c94b92ebc2fa32df5e0192837cb4c677e9864bf2d2bcb1c417f52ddaa0bd61927c703e15b1f6a6c3243d4516375f999415847890ce51bbfba6eeea6df0d8fa3
   languageName: node
   linkType: hard
 
