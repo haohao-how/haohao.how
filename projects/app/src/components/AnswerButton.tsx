@@ -168,7 +168,7 @@ export const AnswerButton = forwardRef<
               <View className="absolute bottom-0 left-0 right-0 top-0 rounded-lg bg-accent-4" />
             </Animated.View>
             <Text
-              className={`select-none text-sm font-bold uppercase ${state !== `default` ? `text-accent-9` : `text-text`}`}
+              className={`select-none text-center text-sm font-bold uppercase ${state !== `default` ? `text-accent-9` : `text-text`}`}
             >
               {children}
             </Text>

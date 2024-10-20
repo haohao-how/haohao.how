@@ -15,7 +15,6 @@ import {
   Easing,
   Platform,
   StyleProp,
-  StyleSheet,
   Text,
   View,
   ViewStyle,
@@ -152,7 +151,7 @@ export const QuizDeckOneCorrectPairQuestion = ({
       }
     >
       <View>
-        <Text className="text-md font-bold">{prompt}</Text>
+        <Text className="text-lg font-bold text-text">{prompt}</Text>
       </View>
       <View
         style={{
@@ -173,7 +172,10 @@ export const QuizDeckOneCorrectPairQuestion = ({
           }}
         >
           {choiceRows.map(({ a, b }, i) => (
-            <View style={styles.answerRow} key={i}>
+            <View
+              className="flex-1 flex-row items-stretch justify-stretch gap-[28px]"
+              key={i}
+            >
               {a !== undefined ? (
                 <AnswerButton
                   text={a}
@@ -354,9 +356,10 @@ const SubmitButton = forwardRef<
       style={{ flex: 1 }}
       variant="filled"
       ref={ref}
-      size="$1"
       disabled={state === SubmitButtonState.Disabled}
-      theme={state === SubmitButtonState.Incorrect ? `danger` : `success`}
+      className={
+        state === SubmitButtonState.Incorrect ? `danger-theme` : `success-theme`
+      }
       accent
       onPress={state === SubmitButtonState.Disabled ? undefined : onPress}
     >
@@ -379,31 +382,8 @@ const AnswerButton = ({
   }, [onPress, text]);
 
   return (
-    <RectButton2
-      onPress={handlePress}
-      size="$2"
-      style={{ flex: 1 }}
-      accent={selected}
-    >
+    <RectButton2 onPress={handlePress} accent={selected} className="flex-1">
       {text}
     </RectButton2>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    gap: 8,
-    alignItems: `center`,
-    justifyContent: `center`,
-  },
-  answerRow: {
-    flex: 1,
-    flexDirection: `row`,
-    alignItems: `stretch`,
-    gap: 28,
-  },
-  buttonText: {
-    userSelect: `none`,
-  },
-});
