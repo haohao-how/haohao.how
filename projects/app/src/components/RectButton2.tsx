@@ -9,10 +9,8 @@ export type ButtonVariant = `filled` | `outline` | `bare`;
 export type ButtonSize = `$1` | `$2`;
 
 export type RectButton2Props = {
-  theme?: `success` | `danger`;
   thickness?: number;
   variant?: ButtonVariant;
-  size?: ButtonSize;
   accent?: boolean;
   children?: ViewProps[`children`];
 } & Omit<PropsOf<typeof Pressable>, `children`>;
@@ -22,12 +20,10 @@ export const RectButton2 = forwardRef<
   RectButton2Props
 >(function RectButton2(
   {
-    theme,
     thickness = 3,
     children,
     variant = `outline`,
     accent = false,
-    size = `$1`,
     ...pressableProps
   },
   ref,
@@ -46,68 +42,44 @@ export const RectButton2 = forwardRef<
   }
 
   return (
-    <View
-      className={
-        theme === `success`
-          ? `success-theme`
-          : theme === `danger`
-            ? `danger-theme`
-            : undefined
-      }
+    <Pressable
+      {...pressableProps}
+      onPressIn={(e) => {
+        hapticImpactIfMobile();
+        pressableProps.onPressIn?.(e);
+      }}
+      ref={ref}
     >
-      <Pressable
-        {...pressableProps}
-        onPressIn={(e) => {
-          hapticImpactIfMobile();
-          pressableProps.onPressIn?.(e);
-        }}
-        ref={ref}
-      >
-        {({ pressed }) => (
+      {({ pressed }) => (
+        <View className={bottomLayer({ accent, variant, disabled })}>
           <View
-            className={bottomLayer({ accent, size, variant })}
-            style={{
-              flexGrow: 1,
-              flexShrink: 1,
-              opacity: disabled ? 0.5 : undefined,
-            }}
+            className={topLayer({ accent, variant })}
+            style={[
+              {
+                borderWidth,
+                transform: [
+                  {
+                    translateY:
+                      disabled || variant === `bare` || pressed
+                        ? 0
+                        : -thickness,
+                  },
+                ],
+                transformOrigin: `top`,
+              },
+            ]}
           >
-            <View
-              className={topLayer({ accent, size, variant })}
-              style={[
-                {
-                  borderWidth,
-                  flexGrow: 1,
-                  flexShrink: 1,
-                  alignItems: `center`,
-                  justifyContent: `center`,
-                  transform: [
-                    {
-                      translateY:
-                        disabled || variant === `bare` || pressed
-                          ? 0
-                          : -thickness,
-                    },
-                  ],
-                  transformOrigin: `top`,
-                },
-              ]}
-            >
-              <Text className={baseText({ variant, accent })}>{children}</Text>
-            </View>
+            <Text className={baseText({ variant, accent })}>{children}</Text>
           </View>
-        )}
-      </Pressable>
-    </View>
+        </View>
+      )}
+    </Pressable>
   );
 });
 
 const bottomLayer = tv({
+  base: `flex-1 rounded-lg`,
   variants: {
-    size: {
-      $1: `rounded-lg`,
-      $2: `rounded-xl`,
-    },
     variant: {
       filled: ``,
       outline: ``,
@@ -115,6 +87,9 @@ const bottomLayer = tv({
     },
     accent: {
       true: ``,
+    },
+    disabled: {
+      true: `opacity-50`,
     },
   },
   compoundVariants: [
@@ -142,12 +117,8 @@ const bottomLayer = tv({
 });
 
 const topLayer = tv({
-  base: `px-3 py-1`,
+  base: `px-3 py-1 flex-1 items-center justify-center rounded-lg`,
   variants: {
-    size: {
-      $1: `rounded-lg`,
-      $2: `rounded-xl`,
-    },
     variant: {
       filled: ``,
       outline: ``,

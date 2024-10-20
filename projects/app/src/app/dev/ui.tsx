@@ -329,6 +329,12 @@ const RectButton2Examples = (props: Partial<PropsOf<typeof RectButton2>>) => (
     <ExampleStack title="accent (disabled)">
       <RectButton2Variants accent disabled {...props} />
     </ExampleStack>
+
+    <ExampleStack title="fill width">
+      <View className="w-[300px] gap-2 border-2 border-dashed border-primary-8">
+        <RectButton2Variants {...props} />
+      </View>
+    </ExampleStack>
   </>
 );
 
@@ -342,6 +348,15 @@ const AnswerButtonExamples = (props: Partial<PropsOf<typeof AnswerButton>>) => (
       <AnswerButton disabled {...props}>
         Selectable
       </AnswerButton>
+    </ExampleStack>
+
+    <ExampleStack title="fill width">
+      <View className="w-[300px] gap-2 border-2 border-dashed border-primary-8">
+        <SyncedAnswerButtonExample />
+        <AnswerButton disabled {...props}>
+          Selectable
+        </AnswerButton>
+      </View>
     </ExampleStack>
   </>
 );
