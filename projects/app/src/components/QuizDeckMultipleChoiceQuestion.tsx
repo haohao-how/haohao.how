@@ -1,6 +1,5 @@
 import { MultipleChoiceQuestion } from "@/data/model";
 import { Rating } from "@/util/fsrs";
-import { View } from "@tamagui/core";
 import { Asset } from "expo-asset";
 import { Audio } from "expo-av";
 import chunk from "lodash/chunk";
@@ -11,7 +10,7 @@ import {
   useEffect,
   useState,
 } from "react";
-import { StyleSheet, Text } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import { RectButton } from "./RectButton";
 import { PropsOf } from "./types";
 

@@ -1,0 +1,150 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.dark-theme {
+  --color-primary-1: var(--color-slate-dark-1);
+  --color-primary-2: var(--color-slate-dark-2);
+  --color-primary-3: var(--color-slate-dark-3);
+  --color-primary-4: var(--color-slate-dark-4);
+  --color-primary-5: var(--color-slate-dark-5);
+  --color-primary-6: var(--color-slate-dark-6);
+  --color-primary-7: var(--color-slate-dark-7);
+  --color-primary-8: var(--color-slate-dark-8);
+  --color-primary-9: var(--color-slate-dark-9);
+  --color-primary-10: var(--color-slate-dark-10);
+  --color-primary-11: var(--color-slate-dark-11);
+  --color-primary-12: var(--color-slate-dark-12);
+  --color-accent-1: var(--color-cyan-dark-1);
+  --color-accent-2: var(--color-cyan-dark-2);
+  --color-accent-3: var(--color-cyan-dark-3);
+  --color-accent-4: var(--color-cyan-dark-4);
+  --color-accent-5: var(--color-cyan-dark-5);
+  --color-accent-6: var(--color-cyan-dark-6);
+  --color-accent-7: var(--color-cyan-dark-7);
+  --color-accent-8: var(--color-cyan-dark-8);
+  --color-accent-9: var(--color-cyan-dark-9);
+  --color-accent-10: var(--color-cyan-dark-10);
+  --color-accent-11: var(--color-cyan-dark-11);
+  --color-accent-12: var(--color-cyan-dark-12);
+  --color-red-1: var(--color-red-dark-1);
+  --color-red-2: var(--color-red-dark-2);
+  --color-red-3: var(--color-red-dark-3);
+  --color-red-4: var(--color-red-dark-4);
+  --color-red-5: var(--color-red-dark-5);
+  --color-red-6: var(--color-red-dark-6);
+  --color-red-7: var(--color-red-dark-7);
+  --color-red-8: var(--color-red-dark-8);
+  --color-red-9: var(--color-red-dark-9);
+  --color-red-10: var(--color-red-dark-10);
+  --color-red-11: var(--color-red-dark-11);
+  --color-red-12: var(--color-red-dark-12);
+  --color-lime-1: var(--color-lime-dark-1);
+  --color-lime-2: var(--color-lime-dark-2);
+  --color-lime-3: var(--color-lime-dark-3);
+  --color-lime-4: var(--color-lime-dark-4);
+  --color-lime-5: var(--color-lime-dark-5);
+  --color-lime-6: var(--color-lime-dark-6);
+  --color-lime-7: var(--color-lime-dark-7);
+  --color-lime-8: var(--color-lime-dark-8);
+  --color-lime-9: var(--color-lime-dark-9);
+  --color-lime-10: var(--color-lime-dark-10);
+  --color-lime-11: var(--color-lime-dark-11);
+  --color-lime-12: var(--color-lime-dark-12);
+  @apply text-text;
+}
+
+.light-theme {
+  --color-primary-1: var(--color-slate-light-1);
+  --color-primary-2: var(--color-slate-light-2);
+  --color-primary-3: var(--color-slate-light-3);
+  --color-primary-4: var(--color-slate-light-4);
+  --color-primary-5: var(--color-slate-light-5);
+  --color-primary-6: var(--color-slate-light-6);
+  --color-primary-7: var(--color-slate-light-7);
+  --color-primary-8: var(--color-slate-light-8);
+  --color-primary-9: var(--color-slate-light-9);
+  --color-primary-10: var(--color-slate-light-10);
+  --color-primary-11: var(--color-slate-light-11);
+  --color-primary-12: var(--color-slate-light-12);
+  --color-accent-1: var(--color-cyan-light-1);
+  --color-accent-2: var(--color-cyan-light-2);
+  --color-accent-3: var(--color-cyan-light-3);
+  --color-accent-4: var(--color-cyan-light-4);
+  --color-accent-5: var(--color-cyan-light-5);
+  --color-accent-6: var(--color-cyan-light-6);
+  --color-accent-7: var(--color-cyan-light-7);
+  --color-accent-8: var(--color-cyan-light-8);
+  --color-accent-9: var(--color-cyan-light-9);
+  --color-accent-10: var(--color-cyan-light-10);
+  --color-accent-11: var(--color-cyan-light-11);
+  --color-accent-12: var(--color-cyan-light-12);
+  --color-red-1: var(--color-red-light-1);
+  --color-red-2: var(--color-red-light-2);
+  --color-red-3: var(--color-red-light-3);
+  --color-red-4: var(--color-red-light-4);
+  --color-red-5: var(--color-red-light-5);
+  --color-red-6: var(--color-red-light-6);
+  --color-red-7: var(--color-red-light-7);
+  --color-red-8: var(--color-red-light-8);
+  --color-red-9: var(--color-red-light-9);
+  --color-red-10: var(--color-red-light-10);
+  --color-red-11: var(--color-red-light-11);
+  --color-red-12: var(--color-red-light-12);
+  --color-lime-1: var(--color-lime-light-1);
+  --color-lime-2: var(--color-lime-light-2);
+  --color-lime-3: var(--color-lime-light-3);
+  --color-lime-4: var(--color-lime-light-4);
+  --color-lime-5: var(--color-lime-light-5);
+  --color-lime-6: var(--color-lime-light-6);
+  --color-lime-7: var(--color-lime-light-7);
+  --color-lime-8: var(--color-lime-light-8);
+  --color-lime-9: var(--color-lime-light-9);
+  --color-lime-10: var(--color-lime-light-10);
+  --color-lime-11: var(--color-lime-light-11);
+  --color-lime-12: var(--color-lime-light-12);
+}
+
+.danger-theme {
+  --color-accent-1: var(--color-red-1);
+  --color-accent-2: var(--color-red-2);
+  --color-accent-3: var(--color-red-3);
+  --color-accent-4: var(--color-red-4);
+  --color-accent-5: var(--color-red-5);
+  --color-accent-6: var(--color-red-6);
+  --color-accent-7: var(--color-red-7);
+  --color-accent-8: var(--color-red-8);
+  --color-accent-9: var(--color-red-9);
+  --color-accent-10: var(--color-red-10);
+  --color-accent-11: var(--color-red-11);
+  --color-accent-12: var(--color-red-12);
+}
+
+.success-theme {
+  --color-accent-1: var(--color-lime-1);
+  --color-accent-2: var(--color-lime-2);
+  --color-accent-3: var(--color-lime-3);
+  --color-accent-4: var(--color-lime-4);
+  --color-accent-5: var(--color-lime-5);
+  --color-accent-6: var(--color-lime-6);
+  --color-accent-7: var(--color-lime-7);
+  --color-accent-8: var(--color-lime-8);
+  --color-accent-9: var(--color-lime-9);
+  --color-accent-10: var(--color-lime-10);
+  --color-accent-11: var(--color-lime-11);
+  --color-accent-12: var(--color-lime-12);
+}
+
+body {
+  @apply bg-background;
+}
+
+:root {
+  @apply light-theme;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    @apply dark-theme;
+  }
+}

@@ -8,11 +8,10 @@ import {
   TransitionPresets,
   createStackNavigator,
 } from "@react-navigation/stack";
-import { View } from "@tamagui/core";
 import { router } from "expo-router";
 import sortBy from "lodash/sortBy";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Animated, Text } from "react-native";
+import { Animated, Text, View } from "react-native";
 import { CloseButton } from "./CloseButton";
 import { QuizDeckMultipleChoiceQuestion } from "./QuizDeckMultipleChoiceQuestion";
 import { QuizDeckOneCorrectPairQuestion } from "./QuizDeckOneCorrectPairQuestion";

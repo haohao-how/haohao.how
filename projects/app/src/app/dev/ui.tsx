@@ -1,32 +1,17 @@
 import { AnswerButton, AnswerButtonState } from "@/components/AnswerButton";
 import { RectButton2 } from "@/components/RectButton2";
-import { RootView } from "@/components/RootView";
-import { XStack, YStack } from "@/components/Stack";
 import { PropsOf } from "@/components/types";
-import { invariant } from "@haohaohow/lib/invariant";
-import {
-  FontSizeTokens,
-  getConfig,
-  styled,
-  Theme,
-  Variable,
-  View,
-} from "@tamagui/core";
-import { SizableText } from "@tamagui/text";
 import shuffle from "lodash/shuffle";
 import { ReactNode, useState } from "react";
-import { ScrollView } from "react-native";
+import { ScrollView, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { tv } from "tailwind-variants";
 
 export default function DesignSystemPage() {
   const insets = useSafeAreaInsets();
 
-  const fontSizeTokens = Array.from({ length: 16 }).map(
-    (_, i) => `$${i + 1}` as FontSizeTokens,
-  );
-
   return (
-    <RootView flex={1} paddingTop={insets.top}>
+    <View style={{ flex: 1, paddingTop: insets.top }}>
       <ScrollView style={{ flex: 1 }}>
         <Section title="AnswerButton">
           <AnswerButtonExamples />
@@ -37,167 +22,230 @@ export default function DesignSystemPage() {
         </Section>
 
         <Section title="Typography">
-          <YStack flex={1} gap="$2">
-            {([`$body`, `$title`, `$chinese`] as const).map((font) => (
-              <YStack key={font}>
-                <LittleAccentHeader title={font} />
-                {fontSizeTokens.map((size) => (
-                  <TypographyExample font={font} size={size} key={size} />
-                ))}
-              </YStack>
+          <View className="flex-column flex-1 gap-2">
+            {([`body`, `title`, `chinese`] as const).map((family) => (
+              <View className="flex-column" key={family}>
+                <LittlePrimaryHeader title={family} />
+                <TypographyExample family={family} size="xs" />
+                <TypographyExample family={family} size="sm" />
+                <TypographyExample family={family} size="base" />
+                <TypographyExample family={family} size="lg" />
+                <TypographyExample family={family} size="xl" />
+                <TypographyExample family={family} size="2xl" />
+              </View>
             ))}
-          </YStack>
+          </View>
         </Section>
 
         <Section title="Colors">
-          <YStack>
-            <LittleAccentHeader title="default" />
-            <XStack gap="$1" flexWrap="wrap">
-              <AccentSwatches tokenBase="color" />
-            </XStack>
-          </YStack>
+          <View className="flex-column">
+            <LittlePrimaryHeader title="primary" />
+            <View className="flex-row flex-wrap gap-1">
+              <PrimarySwatches />
+            </View>
+          </View>
 
-          <YStack theme="danger">
+          <View className="flex-column">
+            <LittleAccentHeader title="accent" />
+            <View className="flex-row flex-wrap gap-1">
+              <AccentSwatches />
+            </View>
+          </View>
+
+          <View className={`danger-theme flex-column`}>
             <LittleAccentHeader title="danger" />
-            <XStack gap="$1" flexWrap="wrap">
-              <AccentSwatches tokenBase="accent" />
-            </XStack>
-          </YStack>
+            <View className="flex-row flex-wrap gap-1">
+              <AccentSwatches />
+            </View>
+          </View>
 
-          <YStack theme="success">
+          <View className={`danger-success flex-column`}>
             <LittleAccentHeader title="success" />
-            <XStack gap="$1" flexWrap="wrap">
-              <AccentSwatches tokenBase="accent" />
-            </XStack>
-          </YStack>
+            <View className="flex-row flex-wrap gap-1">
+              <AccentSwatches />
+            </View>
+          </View>
         </Section>
 
         {/* Fill the rest of the page if it's too tall for the content */}
-        <XStack flexGrow={1}>
-          <ExamplesStack theme="light" />
-          <ExamplesStack theme="dark" />
-        </XStack>
+        <View className="flex-1 flex-row">
+          <View className={`light-theme ${examplesStackClassName}`} />
+          <View className={`dark-theme ${examplesStackClassName}`} />
+        </View>
       </ScrollView>
-    </RootView>
+    </View>
   );
 }
 
+const typography = tv({
+  base: `text-primary-12`,
+
+  variants: {
+    size: {
+      xs: `text-xs`,
+      sm: `text-sm`,
+      base: `text-base`,
+      lg: `text-lg`,
+      xl: `text-xl`,
+      "2xl": `text-2xl`,
+    },
+    family: {
+      body: `font-body`,
+      title: `font-title`,
+      chinese: `font-chinese`,
+    },
+  },
+});
+
 const TypographyExample = ({
   size,
-  font: fontKey,
+  family,
 }: {
-  size: FontSizeTokens;
-  font: `$body` | `$title` | `$chinese`;
+  size: `xs` | `sm` | `base` | `lg` | `xl` | `2xl`;
+  family: `body` | `title` | `chinese`;
 }) => {
-  const c = getConfig();
-  c.fonts[c.defaultFontToken];
-
-  c.fontsParsed;
-
-  const font = c.fontsParsed[fontKey];
-  invariant(font != null);
-
-  function getVal(v: string | number | Variable | undefined): string | number {
-    if (typeof v === `string` || typeof v === `number`) {
-      return v;
-    }
-    if (typeof v === `undefined`) {
-      return ``;
-    }
-    return v.val as string | number;
-  }
-
-  const fontWeight = getVal(font.weight?.[size]);
-  const fontSize = getVal(font.size[size]);
-  const lineHeight = getVal(font.lineHeight?.[size]);
-
   return (
-    <YStack flex={1} gap="$1">
-      <SizableText color="$color9" fontSize="$2">
-        <SizableText color="$color11" fontSize="$2" fontWeight="bold">
-          {size}
-        </SizableText>
-        <SizableText color="$color10">
-          {` `}•{` `}
-        </SizableText>
-        {fontSize}px / {lineHeight}px
-        <SizableText color="$color10">
-          {` `}•{` `}
-        </SizableText>
-        {fontWeight}
-      </SizableText>
+    <View className="flex-column">
+      <Text className="font-xs text-primary-9">
+        <Text className="text-xs font-bold text-primary-11">{size}</Text>
+      </Text>
 
-      <SizableText size={size} numberOfLines={1} flex={1} fontFamily={fontKey}>
+      <Text className={typography({ size, family })} numberOfLines={1}>
         The quick brown fox jumps over the lazy dog.
-      </SizableText>
-    </YStack>
+      </Text>
+    </View>
   );
 };
 
-const LittleAccentHeader = ({
-  title,
-  accented = true,
-}: {
-  title: string;
-  accented?: boolean;
-}) => {
-  const token = accented ? `$accent` : `$color`;
+const LittlePrimaryHeader = ({ title }: { title: string }) => {
   return (
-    <XStack gap="$2" alignItems="center">
-      <View height={1} backgroundColor={token + `7`} flexGrow={1} />
-      <SizableText
-        color={token + `10`}
-        fontSize="$2"
-        fontWeight="bold"
-        textTransform="uppercase"
-        textAlign="center"
-      >
+    <View className="flex-row items-center gap-2">
+      <View className="h-[1px] flex-grow bg-primary-7" />
+      <Text className="text-center text-xs font-bold uppercase text-primary-10">
         {title}
-      </SizableText>
-      <View height={1} backgroundColor={token + `7`} flexGrow={1} />
-    </XStack>
+      </Text>
+      <View className="h-[1px] flex-grow bg-primary-7" />
+    </View>
   );
 };
 
-const AccentSwatches = ({ tokenBase }: { tokenBase: string }) => {
+const LittleAccentHeader = ({ title }: { title: string }) => {
+  return (
+    <View className="flex-row items-center gap-2">
+      <View className="h-[1px] flex-grow bg-accent-7" />
+      <Text className="text-center text-xs font-bold uppercase text-accent-10">
+        {title}
+      </Text>
+      <View className="h-[1px] flex-grow bg-accent-7" />
+    </View>
+  );
+};
+
+const PrimarySwatches = () => {
   return (
     <>
-      <AccentSwatch tokenBase={tokenBase} index={1} />
-      <AccentSwatch tokenBase={tokenBase} index={2} />
-      <AccentSwatch tokenBase={tokenBase} index={3} />
-      <AccentSwatch tokenBase={tokenBase} index={4} />
-      <AccentSwatch tokenBase={tokenBase} index={5} />
-      <AccentSwatch tokenBase={tokenBase} index={6} />
-      <AccentSwatch tokenBase={tokenBase} index={7} />
-      <AccentSwatch tokenBase={tokenBase} index={8} />
-      <AccentSwatch tokenBase={tokenBase} index={9} />
-      <AccentSwatch tokenBase={tokenBase} index={10} />
-      <AccentSwatch tokenBase={tokenBase} index={11} />
-      <AccentSwatch tokenBase={tokenBase} index={12} />
+      <PrimarySwatch index={1} />
+      <PrimarySwatch index={2} />
+      <PrimarySwatch index={3} />
+      <PrimarySwatch index={4} />
+      <PrimarySwatch index={5} />
+      <PrimarySwatch index={6} />
+      <PrimarySwatch index={7} />
+      <PrimarySwatch index={8} />
+      <PrimarySwatch index={9} />
+      <PrimarySwatch index={10} />
+      <PrimarySwatch index={11} />
+      <PrimarySwatch index={12} />
+    </>
+  );
+};
+const AccentSwatches = () => {
+  return (
+    <>
+      <AccentSwatch index={1} />
+      <AccentSwatch index={2} />
+      <AccentSwatch index={3} />
+      <AccentSwatch index={4} />
+      <AccentSwatch index={5} />
+      <AccentSwatch index={6} />
+      <AccentSwatch index={7} />
+      <AccentSwatch index={8} />
+      <AccentSwatch index={9} />
+      <AccentSwatch index={10} />
+      <AccentSwatch index={11} />
+      <AccentSwatch index={12} />
     </>
   );
 };
 
-const AccentSwatch = ({
-  index,
-  tokenBase,
-}: {
-  index: number;
-  tokenBase: string;
-}) => (
-  <YStack gap="$1">
-    <CaptionText
-      {...(index === 10
-        ? {
-            color: `$color11`,
-            fontWeight: `bold`,
-          }
-        : {})}
-    >
-      {index}
-    </CaptionText>
-    <View width={40} height={40} backgroundColor={`$${tokenBase}${index}`} />
-  </YStack>
+const captionLabel = tv({
+  base: `text-primary-9 text-xs text-center`,
+  variants: {
+    highlighted: {
+      true: `text-primary-11 font-bold`,
+    },
+  },
+});
+
+const accentRect = tv({
+  base: `h-[40px] w-[40px]`,
+  variants: {
+    index: {
+      1: `bg-accent-1`,
+      2: `bg-accent-2`,
+      3: `bg-accent-3`,
+      4: `bg-accent-4`,
+      5: `bg-accent-5`,
+      6: `bg-accent-6`,
+      7: `bg-accent-7`,
+      8: `bg-accent-8`,
+      9: `bg-accent-9`,
+      10: `bg-accent-10`,
+      11: `bg-accent-11`,
+      12: `bg-accent-12`,
+    },
+  },
+});
+
+const AccentSwatch = ({ index }: { index: number }) => (
+  <View className="flex-column flex-wrap gap-1">
+    <Text className={captionLabel({ highlighted: index === 10 })}>{index}</Text>
+    <View
+      className={accentRect({
+        index: index as 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12,
+      })}
+    />
+  </View>
+);
+const primaryRect = tv({
+  base: `h-[40px] w-[40px]`,
+  variants: {
+    index: {
+      1: `bg-primary-1`,
+      2: `bg-primary-2`,
+      3: `bg-primary-3`,
+      4: `bg-primary-4`,
+      5: `bg-primary-5`,
+      6: `bg-primary-6`,
+      7: `bg-primary-7`,
+      8: `bg-primary-8`,
+      9: `bg-primary-9`,
+      10: `bg-primary-10`,
+      11: `bg-primary-11`,
+      12: `bg-primary-12`,
+    },
+  },
+});
+
+const PrimarySwatch = ({ index }: { index: number }) => (
+  <View className="flex-column flex-wrap gap-1">
+    <Text className={captionLabel({ highlighted: index === 10 })}>{index}</Text>
+    <View
+      className={primaryRect({
+        index: index as 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12,
+      })}
+    />
+  </View>
 );
 
 const Section = ({
@@ -208,47 +256,22 @@ const Section = ({
   children: ReactNode;
 }) => (
   <>
-    <XStack>
-      <View
-        backgroundColor="$color4"
-        flexBasis={1}
-        flexGrow={1}
-        padding="$2"
-        theme="light"
-      >
-        <Heading>{title}</Heading>
+    <View className="flex-row">
+      <View className={`light-theme flex-1 bg-primary-4 p-2`}>
+        <Text className="text-2xl">{title}</Text>
       </View>
-      <View
-        flexBasis={1}
-        flexGrow={1}
-        backgroundColor="$color4"
-        padding="$2"
-        theme="dark"
-      />
-    </XStack>
-    <XStack>
-      <ExamplesStack theme="light">{children}</ExamplesStack>
-      <ExamplesStack theme="dark">{children}</ExamplesStack>
-    </XStack>
+      <View className={`dark-theme flex-1 bg-primary-4 p-2`} />
+    </View>
+    <View className="flex-row">
+      <View className={`light-theme ${examplesStackClassName}`}>
+        {children}
+      </View>
+      <View className={`dark-theme ${examplesStackClassName}`}>{children}</View>
+    </View>
   </>
 );
 
-const ExamplesStack = styled(XStack, {
-  justifyContent: `center`,
-  $gtSm: {
-    justifyContent: `flex-start`,
-  },
-  gap: `$2`,
-  backgroundColor: `$background`,
-  padding: `$2`,
-  flex: 1,
-  flexBasis: 1,
-  flexWrap: `wrap`,
-});
-
-const Heading = styled(SizableText, {
-  size: `$9`,
-});
+const examplesStackClassName = `bg-background flex-1 shrink basis-1 flex-row flex-wrap justify-center gap-2 p-2 sm:justify-start`;
 
 const ExampleStack = ({
   children,
@@ -257,23 +280,11 @@ const ExampleStack = ({
   children: ReactNode;
   title: string;
 }) => (
-  <YStack
-    backgroundColor={0.5}
-    borderColor="$borderColor"
-    borderRadius="$2"
-    padding="$2"
-    gap="$2"
-  >
-    <CaptionText>{title}</CaptionText>
+  <View className="radius-2 gap-2 p-2">
+    <Text className="text-center text-xs text-primary-10">{title}</Text>
     {children}
-  </YStack>
+  </View>
 );
-
-const CaptionText = styled(SizableText, {
-  size: `$1`,
-  textAlign: `center`,
-  color: `$color10`,
-});
 
 const RectButton2Variants = (props: Partial<PropsOf<typeof RectButton2>>) => (
   <>
@@ -299,17 +310,17 @@ const RectButton2Examples = (props: Partial<PropsOf<typeof RectButton2>>) => (
       <RectButton2Variants accent {...props} />
     </ExampleStack>
 
-    <Theme name="success">
+    <View className="success-theme">
       <ExampleStack title="success">
         <RectButton2Variants accent {...props} />
       </ExampleStack>
-    </Theme>
+    </View>
 
-    <Theme name="danger">
+    <View className="danger-theme">
       <ExampleStack title="danger">
         <RectButton2Variants accent {...props} />
       </ExampleStack>
-    </Theme>
+    </View>
 
     <ExampleStack title="normal (disabled)">
       <RectButton2Variants disabled {...props} />

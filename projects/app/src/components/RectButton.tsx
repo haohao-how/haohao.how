@@ -1,7 +1,6 @@
-import { View } from "@tamagui/core";
 import Color from "color";
 import { ElementRef, forwardRef, useMemo } from "react";
-import { ColorValue, Pressable, ViewProps } from "react-native";
+import { ColorValue, Pressable, View, ViewProps } from "react-native";
 import { PropsOf } from "./types";
 import { hapticImpactIfMobile } from "./util";
 

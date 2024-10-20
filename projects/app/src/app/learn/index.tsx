@@ -1,17 +1,16 @@
 import { CircleButton } from "@/components/CircleButton";
-import { RootView } from "@/components/RootView";
 import { Link } from "expo-router";
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet } from "react-native";
+import { StyleSheet, View } from "react-native";
 
 export default function LearnPage() {
   return (
-    <RootView style={styles.container}>
+    <View style={styles.container}>
       <Link href="/" asChild>
         <CircleButton color="purple" />
       </Link>
       <StatusBar style="auto" />
-    </RootView>
+    </View>
   );
 }
 

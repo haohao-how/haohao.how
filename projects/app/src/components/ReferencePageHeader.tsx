@@ -1,6 +1,5 @@
-import { View } from "@tamagui/core";
 import { LinearGradient } from "expo-linear-gradient";
-import { StyleSheet, Text } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { CloseButton } from "./CloseButton";
 

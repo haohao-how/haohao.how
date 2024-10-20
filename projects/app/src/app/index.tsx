@@ -1,6 +1,5 @@
 import { CircleButton } from "@/components/CircleButton";
 import { useReplicache } from "@/components/ReplicacheContext";
-import { RootView } from "@/components/RootView";
 import {
   SectionHeaderButton,
   SectionHeaderButtonProps,
@@ -10,12 +9,10 @@ import { marshalSkillStateKey } from "@/data/marshal";
 import { Skill, SkillType } from "@/data/model";
 import { addHanziSkill } from "@/data/mutators";
 import { characterLookupByHanzi } from "@/dictionary/characters";
-import { View } from "@tamagui/core";
-import { SizableText } from "@tamagui/text";
 import { Link } from "expo-router";
 import { StatusBar as ExpoStatusBar } from "expo-status-bar";
 import { useEffect } from "react";
-import { ColorValue, ScrollView, StyleSheet } from "react-native";
+import { ColorValue, ScrollView, StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function IndexPage() {
@@ -51,7 +48,7 @@ export default function IndexPage() {
   }, [r]);
 
   return (
-    <RootView style={[styles.container, { paddingTop: insets.top }]}>
+    <View style={[styles.container, { paddingTop: insets.top }]}>
       <View
         style={{
           flex: 1,
@@ -67,9 +64,7 @@ export default function IndexPage() {
               flexDirection: `row`,
             }}
           >
-            <SizableText fontFamily="$chinese" size="$16">
-              好好好
-            </SizableText>
+            <Text className="font-chinese text-xl text-text">好好好</Text>
           </View>
           <View
             style={{
@@ -113,7 +108,7 @@ export default function IndexPage() {
         </ScrollView>
       </View>
       <ExpoStatusBar style="auto" />
-    </RootView>
+    </View>
   );
 }
 
