@@ -1,10 +1,8 @@
 import { QuizDeck } from "@/components/QuizDeck";
 import { RectButton } from "@/components/RectButton";
 import { useQueryOnce } from "@/components/ReplicacheContext";
-import { RootView } from "@/components/RootView";
 import { generateQuestionForSkill } from "@/data/generator";
 import { IndexName, indexScan } from "@/data/marshal";
-import { View } from "@tamagui/core";
 import { formatDuration } from "date-fns/formatDuration";
 import { interval } from "date-fns/interval";
 import { intervalToDuration } from "date-fns/intervalToDuration";
@@ -12,7 +10,7 @@ import { router } from "expo-router";
 import { StatusBar as ExpoStatusBar } from "expo-status-bar";
 import shuffle from "lodash/shuffle";
 import take from "lodash/take";
-import { StyleSheet, Text } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function QuizPage() {
@@ -42,7 +40,7 @@ export default function QuizPage() {
   );
 
   return (
-    <RootView style={styles.container}>
+    <View style={styles.container}>
       <View
         style={{
           flex: 1,
@@ -103,7 +101,7 @@ export default function QuizPage() {
         </View>
         <ExpoStatusBar style="auto" />
       </View>
-    </RootView>
+    </View>
   );
 }
 

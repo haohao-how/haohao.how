@@ -1,7 +1,6 @@
-import { styled, Theme, ThemeName, View } from "@tamagui/core";
-import { SizableText } from "@tamagui/text";
 import { ElementRef, forwardRef } from "react";
-import { Pressable, ViewProps } from "react-native";
+import { Pressable, Text, View, ViewProps } from "react-native";
+import { tv } from "tailwind-variants";
 import { PropsOf } from "./types";
 import { hapticImpactIfMobile } from "./util";
 
@@ -10,7 +9,7 @@ export type ButtonVariant = `filled` | `outline` | `bare`;
 export type ButtonSize = `$1` | `$2`;
 
 export type RectButton2Props = {
-  theme?: ThemeName;
+  theme?: `success` | `danger`;
   thickness?: number;
   variant?: ButtonVariant;
   size?: ButtonSize;
@@ -24,7 +23,7 @@ export const RectButton2 = forwardRef<
 >(function RectButton2(
   {
     theme,
-    thickness = 4,
+    thickness = 3,
     children,
     variant = `outline`,
     accent = false,
@@ -47,7 +46,15 @@ export const RectButton2 = forwardRef<
   }
 
   return (
-    <Theme name={theme}>
+    <View
+      className={
+        theme === `success`
+          ? `success-theme`
+          : theme === `danger`
+            ? `danger-theme`
+            : undefined
+      }
+    >
       <Pressable
         {...pressableProps}
         onPressIn={(e) => {
@@ -57,24 +64,19 @@ export const RectButton2 = forwardRef<
         ref={ref}
       >
         {({ pressed }) => (
-          <BottomLayer
+          <View
+            className={bottomLayer({ accent, size, variant })}
             style={{
               flexGrow: 1,
               flexShrink: 1,
               opacity: disabled ? 0.5 : undefined,
             }}
-            size={size}
-            accent={accent}
-            variant={variant}
           >
-            <TopLayer
-              // top surface
-              borderWidth={borderWidth}
-              accent={accent}
-              variant={variant}
-              size={size}
+            <View
+              className={topLayer({ accent, size, variant })}
               style={[
                 {
+                  borderWidth,
                   flexGrow: 1,
                   flexShrink: 1,
                   alignItems: `center`,
@@ -91,124 +93,116 @@ export const RectButton2 = forwardRef<
                 },
               ]}
             >
-              <ButtonText variant={variant} accent={accent}>
-                {children}
-              </ButtonText>
-            </TopLayer>
-          </BottomLayer>
+              <Text className={baseText({ variant, accent })}>{children}</Text>
+            </View>
+          </View>
         )}
       </Pressable>
-    </Theme>
+    </View>
   );
 });
 
-const variants = {
-  accent: { ":boolean": () => ({}) },
-  size: {
-    $1: {},
-    $2: {},
-  },
-  variant: {
-    filled: {},
-    outline: {},
-    bare: {},
-  } satisfies { [K in ButtonVariant]: unknown },
-} as const;
-
-const BaseView = styled(View, { variants });
-
-const BottomLayer = styled(BaseView, {
-  name: `Button`,
-
+const bottomLayer = tv({
   variants: {
     size: {
-      $1: { borderRadius: `$3` },
-      $2: { borderRadius: `$4` },
+      $1: `rounded-lg`,
+      $2: `rounded-xl`,
+    },
+    variant: {
+      filled: ``,
+      outline: ``,
+      bare: ``,
     },
     accent: {
-      ":boolean": (accent, { props: { variant }, theme }) => {
-        switch (variant) {
-          case `filled`: {
-            return {
-              backgroundColor: accent ? theme.accent9 : theme.color8,
-            };
-          }
-          case `outline`: {
-            return {
-              backgroundColor: accent ? theme.accent9 : theme.borderColor,
-            };
-          }
-          case `bare`:
-          case undefined: {
-            return {};
-          }
-        }
-      },
+      true: ``,
     },
   },
-} as const);
-
-const TopLayer = styled(BaseView, {
-  paddingTop: `$1`,
-  paddingBottom: `$1`,
-  paddingLeft: `$3`,
-  paddingRight: `$3`,
-
-  variants: {
-    size: {
-      $1: { borderRadius: `$3` },
-      $2: { borderRadius: `$4` },
+  compoundVariants: [
+    {
+      variant: `filled`,
+      accent: true,
+      class: `bg-accent-9`,
     },
-    accent: {
-      ":boolean": (accent, { props: { variant }, theme }) => {
-        switch (variant) {
-          case `filled`: {
-            return {
-              backgroundColor: accent ? theme.accent10 : theme.color9,
-            };
-          }
-          case `outline`: {
-            return {
-              backgroundColor: accent ? theme.accent4 : theme.background,
-              borderColor: accent ? theme.accent9 : theme.borderColor,
-            };
-          }
-          case `bare`:
-          case undefined: {
-            return {};
-          }
-        }
-      },
+    {
+      variant: `filled`,
+      accent: false,
+      class: `bg-primary-8`,
     },
-  },
+    {
+      variant: `outline`,
+      accent: true,
+      class: `bg-accent-9`,
+    },
+    {
+      variant: `outline`,
+      accent: false,
+      class: `bg-primary-7`,
+    },
+  ],
 });
 
-const BaseText = styled(SizableText, { variants });
-
-const ButtonText = styled(BaseText, {
-  userSelect: `none`,
-  fontWeight: `bold`,
-  size: `$3`,
-  textTransform: `uppercase`,
-
+const topLayer = tv({
+  base: `px-3 py-1`,
   variants: {
+    size: {
+      $1: `rounded-lg`,
+      $2: `rounded-xl`,
+    },
+    variant: {
+      filled: ``,
+      outline: ``,
+      bare: ``,
+    },
     accent: {
-      ":boolean": (accent, { props: { variant }, theme }) => {
-        switch (variant) {
-          case `filled`: {
-            return {
-              color: theme.background,
-            };
-          }
-          case `outline`:
-          case `bare`: {
-            return { color: accent ? theme.accent9 : theme.color };
-          }
-          case undefined: {
-            return {};
-          }
-        }
-      },
+      true: ``,
     },
   },
+  compoundVariants: [
+    {
+      variant: `filled`,
+      accent: true,
+      class: `bg-accent-10`,
+    },
+    {
+      variant: `filled`,
+      accent: false,
+      class: `bg-primary-9`,
+    },
+    {
+      variant: `outline`,
+      accent: true,
+      class: `bg-accent-4 border-accent-9`,
+    },
+    {
+      variant: `outline`,
+      accent: false,
+      class: `bg-primary-2 border-primary-7`,
+    },
+  ],
+});
+
+const baseText = tv({
+  base: `font-bold select-none text-sm uppercase`,
+  variants: {
+    variant: {
+      filled: ``,
+      outline: ``,
+      bare: ``,
+    },
+    accent: {
+      true: ``,
+    },
+  },
+  compoundVariants: [
+    {
+      variant: [`outline`, `bare`],
+      accent: true,
+      class: `text-accent-9`,
+    },
+    {
+      variant: [`outline`, `bare`],
+      accent: false,
+      class: `text-primary-12`,
+    },
+  ],
 });

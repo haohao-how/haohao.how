@@ -1,7 +1,5 @@
-import { Theme, View } from "@tamagui/core";
-import { SizableText } from "@tamagui/text";
 import { ElementRef, forwardRef, useEffect, useState } from "react";
-import { Pressable, ViewProps } from "react-native";
+import { Pressable, Text, View, ViewProps } from "react-native";
 import Animated, {
   Easing,
   runOnJS,
@@ -19,7 +17,6 @@ export type ButtonSize = `$1` | `$2`;
 export type AnswerButtonState = `default` | `selected` | `success` | `error`;
 
 export type AnswerButtonProps = {
-  thickness?: number;
   size?: ButtonSize;
   children?: ViewProps[`children`];
   state?: AnswerButtonState;
@@ -31,7 +28,6 @@ export const AnswerButton = forwardRef<
 >(function AnswerButton(
   {
     disabled = false,
-    thickness = 4,
     children,
     state = `default`,
     size = `$1`,
@@ -122,23 +118,17 @@ export const AnswerButton = forwardRef<
     [bgScale.value],
   );
 
-  const borderWidth = 2;
-
-  // The border contributes to the same *thickness* appearance, so to avoid
-  // doubling up, we subtract it.
-  thickness = thickness - borderWidth;
-
   const [pressed, setPressed] = useState(false);
   const flat = pressed || disabled;
 
   return (
-    <Theme
-      name={
+    <View
+      className={
         state === `default` || state === `selected`
           ? undefined
           : state === `success`
-            ? `success`
-            : `danger`
+            ? `success-theme`
+            : `danger-theme`
       }
     >
       <Pressable
@@ -160,23 +150,7 @@ export const AnswerButton = forwardRef<
       >
         <Animated.View style={{ transform: [{ scale }] }}>
           <View
-            borderWidth={borderWidth}
-            borderBottomWidth={borderWidth + (flat ? 0 : thickness)}
-            borderColor={
-              state !== `default` && bgFilled ? `$accent9` : `$borderColor`
-            }
-            borderRadius={size === `$1` ? `$3` : `$4`}
-            marginTop={flat ? thickness : 0}
-            paddingTop="$1"
-            paddingBottom="$1"
-            paddingLeft="$3"
-            paddingRight="$3"
-            flexGrow={1}
-            flexShrink={1}
-            alignItems="center"
-            justifyContent="center"
-            transformOrigin="center"
-            opacity={disabled ? 0.5 : undefined}
+            className={`${disabled ? `opacity-50` : ``} origin-center ${flat ? `mt-[2px]` : `border-b-4`} ${size === `$1` ? `rounded-lg` : `rounded-xl`} align-center flex-1 justify-center border-2 px-3 py-1 ${state !== `default` && bgFilled ? `border-accent-9` : `border-primary-7`}`}
           >
             <Animated.View
               style={{
@@ -191,30 +165,16 @@ export const AnswerButton = forwardRef<
                 transform: [{ scale: bgScale }],
               }}
             >
-              <View
-                backgroundColor="$accent4"
-                borderRadius="$2"
-                style={{
-                  position: `absolute`,
-                  top: 0,
-                  left: 0,
-                  right: 0,
-                  bottom: 0,
-                }}
-              />
+              <View className="absolute bottom-0 left-0 right-0 top-0 rounded-lg bg-accent-4" />
             </Animated.View>
-            <SizableText
-              size="$3"
-              textTransform="uppercase"
-              userSelect="none"
-              fontWeight="bold"
-              color={state !== `default` ? `$accent9` : `$color`}
+            <Text
+              className={`select-none text-sm font-bold uppercase ${state !== `default` ? `text-accent-9` : `text-text`}`}
             >
               {children}
-            </SizableText>
+            </Text>
           </View>
         </Animated.View>
       </Pressable>
-    </Theme>
+    </View>
   );
 });

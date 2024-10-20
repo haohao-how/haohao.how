@@ -155,7 +155,7 @@ function reportRootError({ Yarn }, message) {
 module.exports = defineConfig({
   async constraints(ctx) {
     await enforceConsistentDependenciesAcrossTheProject(ctx);
-    await enforceScopedDependencyVersions(ctx, `@tamagui/`);
+    await enforceScopedDependencyVersions(ctx, `@trpc/`);
     await enforceStrictTypesCompatibility(ctx, {
       "color@^4.2.3": "^3",
       "eslint@^8.57.0": "^8",

@@ -7,7 +7,7 @@ index 2dc0c618aae0d3f6d21dd7991ccc180fee879891..754a72600fad34d04bf1bdc3277bc6db
  function shouldPrintRequireCycle(modules) {
    const regExps =
 -    global[__METRO_GLOBAL_PREFIX__ + "__requireCycleIgnorePatterns"];
-+    global[__METRO_GLOBAL_PREFIX__ + "__requireCycleIgnorePatterns"] ?? [/(^|\/|\\)node_modules($|\/|\\)/];;
++    global[__METRO_GLOBAL_PREFIX__ + "__requireCycleIgnorePatterns"] ?? [/(^|\/|\\)node_modules($|\/|\\)/];
    if (!Array.isArray(regExps)) {
      return true;
    }

@@ -1,8 +1,6 @@
-import { View } from "@tamagui/core";
 import { StatusBar as ExpoStatusBar } from "expo-status-bar";
 import { ReactElement, ReactNode } from "react";
-import { StyleSheet } from "react-native";
-import { RootView } from "./RootView";
+import { StyleSheet, View } from "react-native";
 
 export const ReferencePage = ({
   header,
@@ -12,13 +10,13 @@ export const ReferencePage = ({
   body: ReactNode;
 }) => {
   return (
-    <RootView style={styles.root}>
+    <View style={styles.root}>
       {header}
 
       <View style={styles.body}>{body}</View>
 
       <ExpoStatusBar style="auto" />
-    </RootView>
+    </View>
   );
 };
 

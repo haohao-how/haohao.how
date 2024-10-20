@@ -1,7 +1,5 @@
 import { OneCorrectPairQuestion } from "@/data/model";
 import { Rating } from "@/util/fsrs";
-import { View } from "@tamagui/core";
-import { SizableText } from "@tamagui/text";
 import { Image } from "expo-image";
 import {
   ElementRef,
@@ -19,6 +17,7 @@ import {
   StyleProp,
   StyleSheet,
   Text,
+  View,
   ViewStyle,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -153,9 +152,7 @@ export const QuizDeckOneCorrectPairQuestion = ({
       }
     >
       <View>
-        <SizableText size="$2" fontWeight="bold">
-          {prompt}
-        </SizableText>
+        <Text className="text-md font-bold">{prompt}</Text>
       </View>
       <View
         style={{
