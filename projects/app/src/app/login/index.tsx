@@ -8,7 +8,7 @@ import { trpc } from "@/util/trpc";
 import { invariant } from "@haohaohow/lib/invariant";
 import * as AppleAuthentication from "expo-apple-authentication";
 import { useCallback } from "react";
-import { Platform, StyleSheet, Text, View } from "react-native";
+import { Platform, Text, View } from "react-native";
 import z from "zod";
 
 const SESSION_ID_KEY = `sessionId`;
@@ -29,7 +29,7 @@ export default function LoginPage() {
   );
 
   return (
-    <View style={styles.container}>
+    <View className="flex-1 items-center justify-center gap-[10px]">
       <Text>Login</Text>
       <Text>Session ID: {sessionIdQuery.data}</Text>
 
@@ -57,7 +57,7 @@ export default function LoginPage() {
           buttonType={AppleAuthentication.AppleAuthenticationButtonType.SIGN_IN}
           buttonStyle={AppleAuthentication.AppleAuthenticationButtonStyle.BLACK}
           cornerRadius={5}
-          style={styles.button}
+          className="h-[44px] w-[200px]"
           // eslint-disable-next-line @typescript-eslint/no-misused-promises
           onPress={async () => {
             let credential;
@@ -105,16 +105,3 @@ export default function LoginPage() {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: `center`,
-    justifyContent: `center`,
-    gap: 10,
-  },
-  button: {
-    width: 200,
-    height: 44,
-  },
-});

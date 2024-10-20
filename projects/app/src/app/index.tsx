@@ -12,7 +12,7 @@ import { characterLookupByHanzi } from "@/dictionary/characters";
 import { Link } from "expo-router";
 import { StatusBar as ExpoStatusBar } from "expo-status-bar";
 import { useEffect } from "react";
-import { ColorValue, ScrollView, StyleSheet, Text, View } from "react-native";
+import { ColorValue, ScrollView, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function IndexPage() {
@@ -48,7 +48,10 @@ export default function IndexPage() {
   }, [r]);
 
   return (
-    <View style={[styles.container, { paddingTop: insets.top }]}>
+    <View
+      className="flex-1 items-center justify-center gap-[12px]"
+      style={{ paddingTop: insets.top }}
+    >
       <View
         style={{
           flex: 1,
@@ -155,12 +158,3 @@ const Section = ({
     </>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: `center`,
-    gap: 12,
-    justifyContent: `center`,
-  },
-});
