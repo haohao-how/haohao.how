@@ -10,7 +10,7 @@ import { router } from "expo-router";
 import { StatusBar as ExpoStatusBar } from "expo-status-bar";
 import shuffle from "lodash/shuffle";
 import take from "lodash/take";
-import { StyleSheet, Text, View } from "react-native";
+import { Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function QuizPage() {
@@ -40,7 +40,7 @@ export default function QuizPage() {
   );
 
   return (
-    <View style={styles.container}>
+    <View className="flex-1 items-center justify-center gap-[8px]">
       <View
         style={{
           flex: 1,
@@ -119,12 +119,3 @@ const GoHomeButton = () => (
     </RectButton>
   </View>
 );
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    gap: 8,
-    alignItems: `center`,
-    justifyContent: `center`,
-  },
-});

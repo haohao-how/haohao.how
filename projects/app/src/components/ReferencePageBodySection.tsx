@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from "react-native";
+import { Text, View } from "react-native";
 
 export const ReferencePageBodySection = ({
   title,
@@ -8,37 +8,15 @@ export const ReferencePageBodySection = ({
   children: string;
 }) => {
   return (
-    <View style={styles.container}>
-      <View style={styles.containerInner}>
+    <View className="flex-row justify-center">
+      <View className="flex-shrink flex-grow-0 basis-[500px] gap-[4px]">
         <View>
-          <Text style={styles.titleText}>{title}</Text>
+          <Text className="text-lg text-primary-10">{title}</Text>
         </View>
         <View>
-          <Text style={styles.bodyText}>{children}</Text>
+          <Text className="text-xl text-primary-12">{children}</Text>
         </View>
       </View>
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flexDirection: `row`,
-    justifyContent: `center`,
-  },
-
-  containerInner: {
-    gap: 4,
-    flexShrink: 1,
-    flexGrow: 0,
-    flexBasis: 500,
-  },
-  titleText: {
-    color: `#868686`,
-    fontSize: 16,
-  },
-  bodyText: {
-    color: `#353F38`,
-    fontSize: 18,
-  },
-});

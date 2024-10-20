@@ -10,7 +10,7 @@ import {
   useEffect,
   useState,
 } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { Text, View } from "react-native";
 import { RectButton } from "./RectButton";
 import { PropsOf } from "./types";
 
@@ -131,7 +131,7 @@ export const QuizDeckMultipleChoiceQuestion = ({
         </Text>
       </View>
       {choicesRows.map((choicesRow, i) => (
-        <View style={styles.answerRow} key={i}>
+        <View className="flex-1 flex-row items-stretch gap-[16px]" key={i}>
           {choicesRow.map((choice, i) => (
             <AnswerButton
               text={choice}
@@ -165,17 +165,15 @@ const SubmitButton = forwardRef<
       {...(disabled ? null : rectButtonProps)}
     >
       <Text
-        style={[
-          {
-            textTransform: `uppercase`,
-            color: textColor,
-            fontSize: 16,
-            fontWeight: `bold`,
-            paddingBottom: 4,
-            paddingTop: 4,
-          },
-          styles.buttonText,
-        ]}
+        className="select-none"
+        style={{
+          textTransform: `uppercase`,
+          color: textColor,
+          fontSize: 16,
+          fontWeight: `bold`,
+          paddingBottom: 4,
+          paddingTop: 4,
+        }}
       >
         Check
       </Text>
@@ -209,28 +207,10 @@ const AnswerButton = ({
       style={{ flex: 1 }}
     >
       <View style={{ justifyContent: `center` }}>
-        <Text style={[{ color: `white`, fontSize: 80 }, styles.buttonText]}>
+        <Text className="select-none" style={{ color: `white`, fontSize: 80 }}>
           {text}
         </Text>
       </View>
     </RectButton>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    gap: 8,
-    alignItems: `center`,
-    justifyContent: `center`,
-  },
-  answerRow: {
-    flex: 1,
-    flexDirection: `row`,
-    alignItems: `stretch`,
-    gap,
-  },
-  buttonText: {
-    userSelect: `none`,
-  },
-});

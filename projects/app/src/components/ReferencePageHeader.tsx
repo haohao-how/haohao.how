@@ -1,5 +1,5 @@
 import { LinearGradient } from "expo-linear-gradient";
-import { StyleSheet, Text, View } from "react-native";
+import { Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { CloseButton } from "./CloseButton";
 
@@ -22,56 +22,21 @@ export const ReferencePageHeader = ({
         end={{ x: 0, y: 1 }}
         style={{ paddingTop: insets.top }}
       >
-        <View style={styles.title}>
-          <Text style={styles.titleText}>{title ?? `⁉️`}</Text>
+        <View className="h-[250px] items-center justify-center">
+          <Text className="font-roboto text-[60px] text-[white]">
+            {title ?? `⁉️`}
+          </Text>
         </View>
-        <View
-          style={[
-            styles.closeButton,
-            {
-              top: insets.top,
-              left: 16,
-            },
-          ]}
-        >
+        <View className="absolute left-[16px]" style={{ top: insets.top }}>
           <CloseButton href="/" tintColor="white" />
         </View>
       </LinearGradient>
 
-      <View style={styles.subtitle}>
-        <Text style={styles.subtitleText}>{subtitle ?? ``}</Text>
+      <View className="h-[52px] items-center justify-center bg-primary-5">
+        <Text className="font-roboto text-[23px] text-text">
+          {subtitle ?? ``}
+        </Text>
       </View>
     </>
   );
 };
-
-const styles = StyleSheet.create({
-  closeButton: {
-    position: `absolute`,
-  },
-
-  subtitle: {
-    backgroundColor: `#20293A`,
-    alignItems: `center`,
-    justifyContent: `center`,
-    height: 52,
-  },
-
-  subtitleText: {
-    color: `white`,
-    fontSize: 23,
-    fontFamily: `Roboto`,
-  },
-
-  title: {
-    alignItems: `center`,
-    height: 250,
-    justifyContent: `center`,
-  },
-
-  titleText: {
-    color: `white`,
-    fontSize: 60,
-    fontFamily: `Roboto`,
-  },
-});

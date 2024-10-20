@@ -1,4 +1,4 @@
-import { StyleSheet, Text } from "react-native";
+import { Text } from "react-native";
 import { RectButton } from "./RectButton";
 import { PropsOf } from "./types";
 
@@ -21,29 +21,12 @@ export function SectionHeaderButton({
       borderRadius={rectButtonProps.borderRadius ?? 10}
       color={rectButtonProps.color ?? `#333`}
     >
-      <Text
-        style={[
-          styles.text,
-          {
-            fontSize: 10,
-            opacity: 0.8,
-            textTransform: `uppercase`,
-            marginBottom: 5,
-          },
-        ]}
-      >
+      <Text className="mb-[5px] select-none self-start text-xs font-bold uppercase text-[white] opacity-80">
         {title}
       </Text>
-      <Text style={styles.text}>{subtitle}</Text>
+      <Text className="select-none self-start font-bold text-[white]">
+        {subtitle}
+      </Text>
     </RectButton>
   );
 }
-
-const styles = StyleSheet.create({
-  text: {
-    userSelect: `none`,
-    color: `white`,
-    fontWeight: `bold`,
-    alignSelf: `flex-start`,
-  },
-});
