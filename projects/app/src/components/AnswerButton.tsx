@@ -9,31 +9,27 @@ import Animated, {
   withSequence,
   withTiming,
 } from "react-native-reanimated";
+import { tv } from "tailwind-variants";
 import { PropsOf } from "./types";
 import { hapticImpactIfMobile } from "./util";
-
-export type ButtonSize = `$1` | `$2`;
 
 export type AnswerButtonState = `default` | `selected` | `success` | `error`;
 
 export type AnswerButtonProps = {
-  size?: ButtonSize;
   children?: ViewProps[`children`];
   state?: AnswerButtonState;
   className?: string;
-  flexGrow?: boolean;
-} & Omit<PropsOf<typeof Pressable>, `children`>;
+  disabled?: boolean;
+} & Omit<PropsOf<typeof Pressable>, `children` | `disabled`>;
 
 export const AnswerButton = forwardRef<
   ElementRef<typeof Pressable>,
   AnswerButtonProps
 >(function AnswerButton(
   {
-    flexGrow = false,
     disabled = false,
     children,
     state = `default`,
-    size = `$1`,
     className,
     ...pressableProps
   },
@@ -123,13 +119,9 @@ export const AnswerButton = forwardRef<
   );
 
   const [pressed, setPressed] = useState(false);
-  const flat = pressed || disabled;
 
   return (
-    <Animated.View
-      style={{ transform: [{ scale }] }}
-      className={`${flexGrow ? `flex-grow` : ``} ${className ?? ``} `}
-    >
+    <Animated.View style={{ transform: [{ scale }] }} className={className}>
       <Pressable
         {...pressableProps}
         disabled={disabled}
@@ -146,13 +138,13 @@ export const AnswerButton = forwardRef<
           pressableProps.onPress?.(e);
         }}
         ref={ref}
-        className={`${
-          state === `default` || state === `selected`
-            ? undefined
-            : state === `success`
-              ? `success-theme`
-              : `danger-theme`
-        } ${className} ${flexGrow ? `flex-grow` : ``} ${disabled ? `opacity-50` : ``} ${flat ? `mt-[2px]` : `border-b-4`} ${size === `$1` ? `rounded-lg` : `rounded-xl`} align-center select-none justify-center border-2 px-3 py-1 ${state !== `default` && bgFilled ? `border-accent-9` : `border-primary-7`}`}
+        className={pressable({
+          flat: pressed || disabled,
+          disabled,
+          state,
+          filled: state !== `default` && bgFilled,
+          className,
+        })}
       >
         <Animated.View
           style={{
@@ -169,12 +161,43 @@ export const AnswerButton = forwardRef<
         >
           <View className="absolute bottom-0 left-0 right-0 top-0 rounded-lg bg-accent-4" />
         </Animated.View>
-        <Text
-          className={`${state !== `default` ? `text-accent-9` : `text-text`} text-center text-sm font-bold uppercase`}
-        >
-          {children}
-        </Text>
+        <Text className={text({ state })}>{children}</Text>
       </Pressable>
     </Animated.View>
   );
+});
+
+const text = tv({
+  base: `text-center text-sm font-bold uppercase text-text`,
+  variants: {
+    state: {
+      default: `text-text`,
+      selected: `text-accent-9`,
+      success: `text-accent-9`,
+      error: `text-accent-9`,
+    },
+  },
+});
+
+const pressable = tv({
+  base: `align-center select-none justify-center border-2 px-3 py-1 rounded-lg`,
+  variants: {
+    state: {
+      default: ``,
+      selected: `success-theme`,
+      success: ``,
+      error: `danger-theme`,
+    },
+    disabled: {
+      true: `opacity-50 select-none cursor-default`,
+    },
+    flat: {
+      true: `mt-[2px]`,
+      false: `border-b-4`,
+    },
+    filled: {
+      true: `border-accent-9`,
+      false: `border-primary-7`,
+    },
+  },
 });

@@ -14,7 +14,7 @@ export default function DesignSystemPage() {
   return (
     <View style={{ flex: 1, paddingTop: insets.top }}>
       <View className="flex-row p-2">
-        <Link href="/" className="">
+        <Link href="/" asChild>
           <Text className="text-text hover:underline">Home</Text>
         </Link>
       </View>
@@ -348,14 +348,29 @@ const RectButton2Examples = (props: Partial<PropsOf<typeof RectButton2>>) => (
 const AnswerButtonExamples = (props: Partial<PropsOf<typeof AnswerButton>>) => (
   <View className="flex-1">
     <View className="flex-row flex-wrap">
-      <ExampleStack title="normal">
-        <SyncedAnswerButtonExample />
+      <ExampleStack title="state">
+        <AnswerButton state="default" {...props}>
+          default
+        </AnswerButton>
+        <AnswerButton state="error" {...props}>
+          error
+        </AnswerButton>
+        <AnswerButton state="selected" {...props}>
+          selected
+        </AnswerButton>
+        <AnswerButton state="success" {...props}>
+          success
+        </AnswerButton>
       </ExampleStack>
 
       <ExampleStack title="disabled">
         <AnswerButton disabled {...props}>
-          Selectable
+          Disabled
         </AnswerButton>
+      </ExampleStack>
+
+      <ExampleStack title="synced">
+        <SyncedAnswerButtonExample />
       </ExampleStack>
     </View>
 
