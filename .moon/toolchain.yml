@@ -2,7 +2,7 @@ node:
   version: "~22.10.0" # renovate: datasource=npm depName=node
   packageManager: "yarn"
   yarn:
-    version: "4.5.0"
+    version: "4.5.1" # renovate: datasource=npm depName=yarn
 
 typescript:
   # Prevent Moon from syncing `references` and `compilerOptions.paths` in the
