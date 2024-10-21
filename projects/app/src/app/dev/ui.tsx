@@ -1,6 +1,7 @@
 import { AnswerButton, AnswerButtonState } from "@/components/AnswerButton";
 import { RectButton2 } from "@/components/RectButton2";
 import { PropsOf } from "@/components/types";
+import { Link } from "expo-router";
 import shuffle from "lodash/shuffle";
 import { ReactNode, useState } from "react";
 import { ScrollView, Text, View } from "react-native";
@@ -12,6 +13,11 @@ export default function DesignSystemPage() {
 
   return (
     <View style={{ flex: 1, paddingTop: insets.top }}>
+      <View className="flex-row p-2">
+        <Link href="/" className="">
+          <Text className="text-text hover:underline">Home</Text>
+        </Link>
+      </View>
       <ScrollView style={{ flex: 1 }}>
         <Section title="AnswerButton">
           <AnswerButtonExamples />
@@ -39,30 +45,72 @@ export default function DesignSystemPage() {
 
         <Section title="Colors">
           <View className="flex-column">
-            <LittlePrimaryHeader title="primary" />
+            <LittlePrimaryHeader title="slate" />
             <View className="flex-row flex-wrap gap-1">
-              <PrimarySwatches />
+              <ColorSwatch className="bg-slate-1" index={1} />
+              <ColorSwatch className="bg-slate-2" index={2} />
+              <ColorSwatch className="bg-slate-3" index={3} />
+              <ColorSwatch className="bg-slate-4" index={4} />
+              <ColorSwatch className="bg-slate-5" index={5} />
+              <ColorSwatch className="bg-slate-6" index={6} />
+              <ColorSwatch className="bg-slate-7" index={7} />
+              <ColorSwatch className="bg-slate-8" index={8} />
+              <ColorSwatch className="bg-slate-9" index={9} />
+              <ColorSwatch className="bg-slate-10" index={10} />
+              <ColorSwatch className="bg-slate-11" index={11} />
+              <ColorSwatch className="bg-slate-12" index={12} />
             </View>
           </View>
 
           <View className="flex-column">
-            <LittleAccentHeader title="accent" />
+            <LittlePrimaryHeader title="cyan" />
             <View className="flex-row flex-wrap gap-1">
-              <AccentSwatches />
+              <ColorSwatch className="bg-cyan-1" index={1} />
+              <ColorSwatch className="bg-cyan-2" index={2} />
+              <ColorSwatch className="bg-cyan-3" index={3} />
+              <ColorSwatch className="bg-cyan-4" index={4} />
+              <ColorSwatch className="bg-cyan-5" index={5} />
+              <ColorSwatch className="bg-cyan-6" index={6} />
+              <ColorSwatch className="bg-cyan-7" index={7} />
+              <ColorSwatch className="bg-cyan-8" index={8} />
+              <ColorSwatch className="bg-cyan-9" index={9} />
+              <ColorSwatch className="bg-cyan-10" index={10} />
+              <ColorSwatch className="bg-cyan-11" index={11} />
+              <ColorSwatch className="bg-cyan-12" index={12} />
             </View>
           </View>
-
-          <View className={`danger-theme flex-column`}>
-            <LittleAccentHeader title="danger" />
+          <View className="flex-column">
+            <LittlePrimaryHeader title="red" />
             <View className="flex-row flex-wrap gap-1">
-              <AccentSwatches />
+              <ColorSwatch className="bg-red-1" index={1} />
+              <ColorSwatch className="bg-red-2" index={2} />
+              <ColorSwatch className="bg-red-3" index={3} />
+              <ColorSwatch className="bg-red-4" index={4} />
+              <ColorSwatch className="bg-red-5" index={5} />
+              <ColorSwatch className="bg-red-6" index={6} />
+              <ColorSwatch className="bg-red-7" index={7} />
+              <ColorSwatch className="bg-red-8" index={8} />
+              <ColorSwatch className="bg-red-9" index={9} />
+              <ColorSwatch className="bg-red-10" index={10} />
+              <ColorSwatch className="bg-red-11" index={11} />
+              <ColorSwatch className="bg-red-12" index={12} />
             </View>
           </View>
-
-          <View className={`danger-success flex-column`}>
-            <LittleAccentHeader title="success" />
+          <View className="flex-column">
+            <LittlePrimaryHeader title="lime" />
             <View className="flex-row flex-wrap gap-1">
-              <AccentSwatches />
+              <ColorSwatch className="bg-lime-1" index={1} />
+              <ColorSwatch className="bg-lime-2" index={2} />
+              <ColorSwatch className="bg-lime-3" index={3} />
+              <ColorSwatch className="bg-lime-4" index={4} />
+              <ColorSwatch className="bg-lime-5" index={5} />
+              <ColorSwatch className="bg-lime-6" index={6} />
+              <ColorSwatch className="bg-lime-7" index={7} />
+              <ColorSwatch className="bg-lime-8" index={8} />
+              <ColorSwatch className="bg-lime-9" index={9} />
+              <ColorSwatch className="bg-lime-10" index={10} />
+              <ColorSwatch className="bg-lime-11" index={11} />
+              <ColorSwatch className="bg-lime-12" index={12} />
             </View>
           </View>
         </Section>
@@ -119,62 +167,13 @@ const TypographyExample = ({
 
 const LittlePrimaryHeader = ({ title }: { title: string }) => {
   return (
-    <View className="flex-row items-center gap-2">
+    <View className="mb-2 mt-4 flex-row items-center gap-2">
       <View className="h-[1px] flex-grow bg-primary-7" />
       <Text className="text-center text-xs font-bold uppercase text-primary-10">
         {title}
       </Text>
       <View className="h-[1px] flex-grow bg-primary-7" />
     </View>
-  );
-};
-
-const LittleAccentHeader = ({ title }: { title: string }) => {
-  return (
-    <View className="flex-row items-center gap-2">
-      <View className="h-[1px] flex-grow bg-accent-7" />
-      <Text className="text-center text-xs font-bold uppercase text-accent-10">
-        {title}
-      </Text>
-      <View className="h-[1px] flex-grow bg-accent-7" />
-    </View>
-  );
-};
-
-const PrimarySwatches = () => {
-  return (
-    <>
-      <PrimarySwatch index={1} />
-      <PrimarySwatch index={2} />
-      <PrimarySwatch index={3} />
-      <PrimarySwatch index={4} />
-      <PrimarySwatch index={5} />
-      <PrimarySwatch index={6} />
-      <PrimarySwatch index={7} />
-      <PrimarySwatch index={8} />
-      <PrimarySwatch index={9} />
-      <PrimarySwatch index={10} />
-      <PrimarySwatch index={11} />
-      <PrimarySwatch index={12} />
-    </>
-  );
-};
-const AccentSwatches = () => {
-  return (
-    <>
-      <AccentSwatch index={1} />
-      <AccentSwatch index={2} />
-      <AccentSwatch index={3} />
-      <AccentSwatch index={4} />
-      <AccentSwatch index={5} />
-      <AccentSwatch index={6} />
-      <AccentSwatch index={7} />
-      <AccentSwatch index={8} />
-      <AccentSwatch index={9} />
-      <AccentSwatch index={10} />
-      <AccentSwatch index={11} />
-      <AccentSwatch index={12} />
-    </>
   );
 };
 
@@ -187,64 +186,16 @@ const captionLabel = tv({
   },
 });
 
-const accentRect = tv({
-  base: `h-[40px] w-[40px]`,
-  variants: {
-    index: {
-      1: `bg-accent-1`,
-      2: `bg-accent-2`,
-      3: `bg-accent-3`,
-      4: `bg-accent-4`,
-      5: `bg-accent-5`,
-      6: `bg-accent-6`,
-      7: `bg-accent-7`,
-      8: `bg-accent-8`,
-      9: `bg-accent-9`,
-      10: `bg-accent-10`,
-      11: `bg-accent-11`,
-      12: `bg-accent-12`,
-    },
-  },
-});
-
-const AccentSwatch = ({ index }: { index: number }) => (
+const ColorSwatch = ({
+  index,
+  className,
+}: {
+  index: number;
+  className?: string;
+}) => (
   <View className="flex-column flex-wrap gap-1">
     <Text className={captionLabel({ highlighted: index === 10 })}>{index}</Text>
-    <View
-      className={accentRect({
-        index: index as 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12,
-      })}
-    />
-  </View>
-);
-const primaryRect = tv({
-  base: `h-[40px] w-[40px]`,
-  variants: {
-    index: {
-      1: `bg-primary-1`,
-      2: `bg-primary-2`,
-      3: `bg-primary-3`,
-      4: `bg-primary-4`,
-      5: `bg-primary-5`,
-      6: `bg-primary-6`,
-      7: `bg-primary-7`,
-      8: `bg-primary-8`,
-      9: `bg-primary-9`,
-      10: `bg-primary-10`,
-      11: `bg-primary-11`,
-      12: `bg-primary-12`,
-    },
-  },
-});
-
-const PrimarySwatch = ({ index }: { index: number }) => (
-  <View className="flex-column flex-wrap gap-1">
-    <Text className={captionLabel({ highlighted: index === 10 })}>{index}</Text>
-    <View
-      className={primaryRect({
-        index: index as 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12,
-      })}
-    />
+    <View className={`h-[40px] w-[40px] ${className ?? ``}`} />
   </View>
 );
 
@@ -257,10 +208,10 @@ const Section = ({
 }) => (
   <>
     <View className="flex-row">
-      <View className={`light-theme flex-1 bg-primary-4 p-2`}>
+      <View className="light-theme flex-1 bg-primary-4 p-2">
         <Text className="text-2xl">{title}</Text>
       </View>
-      <View className={`dark-theme flex-1 bg-primary-4 p-2`} />
+      <View className="dark-theme flex-1 bg-primary-4 p-2" />
     </View>
     <View className="flex-row">
       <View className={`light-theme ${examplesStackClassName}`}>
@@ -280,7 +231,7 @@ const ExampleStack = ({
   children: ReactNode;
   title: string;
 }) => (
-  <View className="radius-2 gap-2 p-2">
+  <View className="items-center gap-2 p-2">
     <Text className="text-center text-xs text-primary-10">{title}</Text>
     {children}
   </View>
@@ -301,67 +252,228 @@ const RectButton2Variants = (props: Partial<PropsOf<typeof RectButton2>>) => (
 );
 
 const RectButton2Examples = (props: Partial<PropsOf<typeof RectButton2>>) => (
-  <>
-    <ExampleStack title="normal">
-      <RectButton2Variants {...props} />
-    </ExampleStack>
-
-    <ExampleStack title="accent">
-      <RectButton2Variants accent {...props} />
-    </ExampleStack>
-
-    <View className="success-theme">
-      <ExampleStack title="success">
-        <RectButton2Variants accent {...props} />
-      </ExampleStack>
-    </View>
-
-    <View className="danger-theme">
-      <ExampleStack title="danger">
-        <RectButton2Variants accent {...props} />
-      </ExampleStack>
-    </View>
-
-    <ExampleStack title="normal (disabled)">
-      <RectButton2Variants disabled {...props} />
-    </ExampleStack>
-
-    <ExampleStack title="accent (disabled)">
-      <RectButton2Variants accent disabled {...props} />
-    </ExampleStack>
-
-    <ExampleStack title="fill width">
-      <View className="w-[300px] gap-2 border-2 border-dashed border-primary-8">
+  <View className="flex-1">
+    <View className="flex-row flex-wrap">
+      <ExampleStack title="normal">
         <RectButton2Variants {...props} />
+      </ExampleStack>
+
+      <ExampleStack title="normal (disabled)">
+        <RectButton2Variants disabled {...props} />
+      </ExampleStack>
+    </View>
+
+    <LittlePrimaryHeader title="accent" />
+
+    <View className="flex-row flex-wrap">
+      <ExampleStack title="normal">
+        <RectButton2Variants accent {...props} />
+      </ExampleStack>
+
+      <View className="success-theme">
+        <ExampleStack title="success">
+          <RectButton2Variants accent {...props} />
+        </ExampleStack>
       </View>
-    </ExampleStack>
-  </>
+
+      <View className="danger-theme">
+        <ExampleStack title="danger">
+          <RectButton2Variants accent {...props} />
+        </ExampleStack>
+      </View>
+
+      <ExampleStack title="(disabled)">
+        <RectButton2Variants accent disabled {...props} />
+      </ExampleStack>
+    </View>
+
+    <LittlePrimaryHeader title="flex-column" />
+
+    <View className="flex-row flex-wrap">
+      <ExampleStack title="items-start">
+        <View className="flex-column w-[120px] items-start gap-2 border-2 border-dashed border-primary-8">
+          <RectButton2Variants {...props} />
+        </View>
+      </ExampleStack>
+
+      <ExampleStack title="items-center">
+        <View className="flex-column w-[120px] items-center gap-2 border-2 border-dashed border-primary-8">
+          <RectButton2Variants {...props} />
+        </View>
+      </ExampleStack>
+
+      <ExampleStack title="items-stretch">
+        <View className="flex-column w-[120px] items-stretch gap-2 border-2 border-dashed border-primary-8">
+          <RectButton2Variants {...props} />
+        </View>
+      </ExampleStack>
+
+      <ExampleStack title="items-end">
+        <View className="flex-column w-[120px] items-end gap-2 border-2 border-dashed border-primary-8">
+          <RectButton2Variants {...props} />
+        </View>
+      </ExampleStack>
+    </View>
+
+    <LittlePrimaryHeader title="flex-row" />
+
+    <View className="flex-row flex-wrap">
+      <ExampleStack title="items-start">
+        <View className="h-[100px] flex-row items-start gap-2 border-2 border-dashed border-primary-8">
+          <RectButton2Variants {...props} />
+        </View>
+      </ExampleStack>
+
+      <ExampleStack title="items-center">
+        <View className="h-[100px] flex-row items-center gap-2 border-2 border-dashed border-primary-8">
+          <RectButton2Variants {...props} />
+        </View>
+      </ExampleStack>
+
+      <ExampleStack title="items-stretch">
+        <View className="h-[100px] flex-row items-stretch gap-2 border-2 border-dashed border-primary-8">
+          <RectButton2Variants {...props} />
+        </View>
+      </ExampleStack>
+
+      <ExampleStack title="items-end">
+        <View className="h-[100px] flex-row items-end gap-2 border-2 border-dashed border-primary-8">
+          <RectButton2Variants {...props} />
+        </View>
+      </ExampleStack>
+    </View>
+  </View>
 );
 
 const AnswerButtonExamples = (props: Partial<PropsOf<typeof AnswerButton>>) => (
-  <>
-    <ExampleStack title="normal">
-      <SyncedAnswerButtonExample />
-    </ExampleStack>
-
-    <ExampleStack title="disabled">
-      <AnswerButton disabled {...props}>
-        Selectable
-      </AnswerButton>
-    </ExampleStack>
-
-    <ExampleStack title="fill width">
-      <View className="w-[300px] gap-2 border-2 border-dashed border-primary-8">
+  <View className="flex-1">
+    <View className="flex-row flex-wrap">
+      <ExampleStack title="normal">
         <SyncedAnswerButtonExample />
+      </ExampleStack>
+
+      <ExampleStack title="disabled">
         <AnswerButton disabled {...props}>
           Selectable
         </AnswerButton>
-      </View>
-    </ExampleStack>
-  </>
+      </ExampleStack>
+    </View>
+
+    <LittlePrimaryHeader title="flex-column" />
+
+    <View className="flex-row flex-wrap">
+      <ExampleStack title="items-start">
+        <View className="flex-column h-[120px] w-[120px] items-start gap-2 border-2 border-dashed border-primary-8">
+          <SyncedAnswerButtonExample />
+        </View>
+      </ExampleStack>
+
+      <ExampleStack title="items-center">
+        <View className="flex-column h-[120px] w-[120px] items-center gap-2 border-2 border-dashed border-primary-8">
+          <SyncedAnswerButtonExample />
+        </View>
+      </ExampleStack>
+
+      <ExampleStack title="items-stretch">
+        <View className="flex-column h-[120px] w-[120px] gap-2 border-2 border-dashed border-primary-8">
+          <SyncedAnswerButtonExample />
+        </View>
+      </ExampleStack>
+
+      <ExampleStack title="items-end">
+        <View className="flex-column h-[120px] w-[120px] items-end gap-2 border-2 border-dashed border-primary-8">
+          <SyncedAnswerButtonExample />
+        </View>
+      </ExampleStack>
+    </View>
+
+    <LittlePrimaryHeader title="flex-column + flex-1" />
+
+    <View className="flex-row flex-wrap">
+      <ExampleStack title="items-start">
+        <View className="flex-column h-[120px] w-[120px] items-start gap-2 border-2 border-dashed border-primary-8">
+          <SyncedAnswerButtonExample className="flex-1" />
+        </View>
+      </ExampleStack>
+
+      <ExampleStack title="items-center">
+        <View className="flex-column h-[120px] w-[120px] items-center gap-2 border-2 border-dashed border-primary-8">
+          <SyncedAnswerButtonExample className="flex-1" />
+        </View>
+      </ExampleStack>
+
+      <ExampleStack title="items-stretch">
+        <View className="flex-column h-[120px] w-[120px] gap-2 border-2 border-dashed border-primary-8">
+          <SyncedAnswerButtonExample className="flex-1" />
+        </View>
+      </ExampleStack>
+
+      <ExampleStack title="items-end">
+        <View className="flex-column h-[120px] w-[120px] items-end gap-2 border-2 border-dashed border-primary-8">
+          <SyncedAnswerButtonExample className="flex-1" />
+        </View>
+      </ExampleStack>
+    </View>
+
+    <LittlePrimaryHeader title="flex-row" />
+
+    <View className="flex-row flex-wrap">
+      <ExampleStack title="items-start">
+        <View className="h-[100px] w-[200px] flex-row items-start gap-2 border-2 border-dashed border-primary-8">
+          <SyncedAnswerButtonExample />
+        </View>
+      </ExampleStack>
+
+      <ExampleStack title="items-center">
+        <View className="h-[100px] w-[200px] flex-row items-center gap-2 border-2 border-dashed border-primary-8">
+          <SyncedAnswerButtonExample />
+        </View>
+      </ExampleStack>
+
+      <ExampleStack title="items-stretch">
+        <View className="h-[100px] w-[200px] flex-row gap-2 border-2 border-dashed border-primary-8">
+          <SyncedAnswerButtonExample />
+        </View>
+      </ExampleStack>
+
+      <ExampleStack title="items-end">
+        <View className="h-[100px] w-[200px] flex-row items-end gap-2 border-2 border-dashed border-primary-8">
+          <SyncedAnswerButtonExample />
+        </View>
+      </ExampleStack>
+    </View>
+
+    <LittlePrimaryHeader title="flex-row + flex-1" />
+
+    <View className="flex-row flex-wrap">
+      <ExampleStack title="items-start">
+        <View className="h-[100px] w-[200px] flex-row items-start gap-2 border-2 border-dashed border-primary-8">
+          <SyncedAnswerButtonExample className="flex-1" />
+        </View>
+      </ExampleStack>
+
+      <ExampleStack title="items-center">
+        <View className="h-[100px] w-[200px] flex-row items-center gap-2 border-2 border-dashed border-primary-8">
+          <SyncedAnswerButtonExample className="flex-1" />
+        </View>
+      </ExampleStack>
+
+      <ExampleStack title="items-stretch">
+        <View className="h-[100px] w-[200px] flex-row gap-2 border-2 border-dashed border-primary-8">
+          <SyncedAnswerButtonExample className="flex-1" />
+        </View>
+      </ExampleStack>
+
+      <ExampleStack title="items-end">
+        <View className="h-[100px] w-[200px] flex-row items-end gap-2 border-2 border-dashed border-primary-8">
+          <SyncedAnswerButtonExample className="flex-1" />
+        </View>
+      </ExampleStack>
+    </View>
+  </View>
 );
 
-function SyncedAnswerButtonExample() {
+function SyncedAnswerButtonExample(props: PropsOf<typeof AnswerButton>) {
   const [state, setState] = useState<AnswerButtonState>(`default`);
   return (
     <>
@@ -382,10 +494,13 @@ function SyncedAnswerButtonExample() {
               )[0] ?? `default`,
           );
         }}
+        {...props}
       >
         Primary
       </AnswerButton>
-      <AnswerButton state={state}>Mirror</AnswerButton>
+      <AnswerButton state={state} {...props}>
+        Mirror
+      </AnswerButton>
     </>
   );
 }
