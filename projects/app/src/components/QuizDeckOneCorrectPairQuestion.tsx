@@ -20,6 +20,7 @@ import {
   ViewStyle,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { AnswerButton } from "./AnswerButton";
 import { RectButton } from "./RectButton";
 import { RectButton2 } from "./RectButton2";
 import { PropsOf } from "./types";
@@ -172,12 +173,9 @@ export const QuizDeckOneCorrectPairQuestion = ({
           }}
         >
           {choiceRows.map(({ a, b }, i) => (
-            <View
-              className="flex-1 flex-row items-stretch justify-stretch gap-[28px]"
-              key={i}
-            >
+            <View className="flex-1 flex-row gap-[28px]" key={i}>
               {a !== undefined ? (
-                <AnswerButton
+                <AnswerButton2
                   text={a}
                   selected={a === selectedAChoice}
                   onPress={setSelectedAChoice}
@@ -186,7 +184,7 @@ export const QuizDeckOneCorrectPairQuestion = ({
                 <View />
               )}
               {b !== undefined ? (
-                <AnswerButton
+                <AnswerButton2
                   text={b}
                   selected={b === selectedBChoice}
                   onPress={setSelectedBChoice}
@@ -368,7 +366,7 @@ const SubmitButton = forwardRef<
   );
 });
 
-const AnswerButton = ({
+const AnswerButton2 = ({
   selected,
   text,
   onPress,
@@ -382,8 +380,12 @@ const AnswerButton = ({
   }, [onPress, text]);
 
   return (
-    <RectButton2 onPress={handlePress} accent={selected} className="flex-1">
+    <AnswerButton
+      onPress={handlePress}
+      state={selected ? `selected` : `default`}
+      className="flex-1"
+    >
       {text}
-    </RectButton2>
+    </AnswerButton>
   );
 };

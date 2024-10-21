@@ -78,7 +78,7 @@ export const RectButton2 = forwardRef<
 });
 
 const bottomLayer = tv({
-  base: `flex-1 rounded-lg`,
+  base: `rounded-lg`,
   variants: {
     variant: {
       filled: ``,
@@ -117,7 +117,7 @@ const bottomLayer = tv({
 });
 
 const topLayer = tv({
-  base: `px-3 py-1 flex-1 items-center justify-center rounded-lg`,
+  base: `px-3 py-1 items-center justify-center rounded-lg`,
   variants: {
     variant: {
       filled: ``,

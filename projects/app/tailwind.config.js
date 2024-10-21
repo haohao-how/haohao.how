@@ -41,6 +41,36 @@ module.exports = {
         12: `rgb(var(--color-accent-12) / <alpha-value>)`,
       },
 
+      cyan: {
+        1: `rgb(var(--color-cyan-1) / <alpha-value>)`,
+        2: `rgb(var(--color-cyan-2) / <alpha-value>)`,
+        3: `rgb(var(--color-cyan-3) / <alpha-value>)`,
+        4: `rgb(var(--color-cyan-4) / <alpha-value>)`,
+        5: `rgb(var(--color-cyan-5) / <alpha-value>)`,
+        6: `rgb(var(--color-cyan-6) / <alpha-value>)`,
+        7: `rgb(var(--color-cyan-7) / <alpha-value>)`,
+        8: `rgb(var(--color-cyan-8) / <alpha-value>)`,
+        9: `rgb(var(--color-cyan-9) / <alpha-value>)`,
+        10: `rgb(var(--color-cyan-10) / <alpha-value>)`,
+        11: `rgb(var(--color-cyan-11) / <alpha-value>)`,
+        12: `rgb(var(--color-cyan-12) / <alpha-value>)`,
+      },
+
+      slate: {
+        1: `rgb(var(--color-slate-1) / <alpha-value>)`,
+        2: `rgb(var(--color-slate-2) / <alpha-value>)`,
+        3: `rgb(var(--color-slate-3) / <alpha-value>)`,
+        4: `rgb(var(--color-slate-4) / <alpha-value>)`,
+        5: `rgb(var(--color-slate-5) / <alpha-value>)`,
+        6: `rgb(var(--color-slate-6) / <alpha-value>)`,
+        7: `rgb(var(--color-slate-7) / <alpha-value>)`,
+        8: `rgb(var(--color-slate-8) / <alpha-value>)`,
+        9: `rgb(var(--color-slate-9) / <alpha-value>)`,
+        10: `rgb(var(--color-slate-10) / <alpha-value>)`,
+        11: `rgb(var(--color-slate-11) / <alpha-value>)`,
+        12: `rgb(var(--color-slate-12) / <alpha-value>)`,
+      },
+
       red: {
         1: `rgb(var(--color-red-1) / <alpha-value>)`,
         2: `rgb(var(--color-red-2) / <alpha-value>)`,
@@ -86,11 +116,6 @@ module.exports = {
       // Set a default value on the `:root` element
       addBase({
         ":root": {
-          // "--color-primary": `255 0 0`,
-          // "--color-background": module.exports.theme.colors.slateLight[2],
-
-          ///---
-
           "--color-lime-light-1": `252 253 250`,
           "--color-lime-light-2": `247 252 240`,
           "--color-lime-light-3": `238 250 220`,

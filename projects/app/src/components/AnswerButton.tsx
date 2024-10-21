@@ -20,6 +20,8 @@ export type AnswerButtonProps = {
   size?: ButtonSize;
   children?: ViewProps[`children`];
   state?: AnswerButtonState;
+  className?: string;
+  flexGrow?: boolean;
 } & Omit<PropsOf<typeof Pressable>, `children`>;
 
 export const AnswerButton = forwardRef<
@@ -27,10 +29,12 @@ export const AnswerButton = forwardRef<
   AnswerButtonProps
 >(function AnswerButton(
   {
+    flexGrow = false,
     disabled = false,
     children,
     state = `default`,
     size = `$1`,
+    className,
     ...pressableProps
   },
   ref,
@@ -122,14 +126,9 @@ export const AnswerButton = forwardRef<
   const flat = pressed || disabled;
 
   return (
-    <View
-      className={
-        state === `default` || state === `selected`
-          ? undefined
-          : state === `success`
-            ? `success-theme`
-            : `danger-theme`
-      }
+    <Animated.View
+      style={{ transform: [{ scale }] }}
+      className={`${flexGrow ? `flex-grow` : ``} ${className ?? ``} `}
     >
       <Pressable
         {...pressableProps}
@@ -147,34 +146,35 @@ export const AnswerButton = forwardRef<
           pressableProps.onPress?.(e);
         }}
         ref={ref}
+        className={`${
+          state === `default` || state === `selected`
+            ? undefined
+            : state === `success`
+              ? `success-theme`
+              : `danger-theme`
+        } ${className} ${flexGrow ? `flex-grow` : ``} ${disabled ? `opacity-50` : ``} ${flat ? `mt-[2px]` : `border-b-4`} ${size === `$1` ? `rounded-lg` : `rounded-xl`} align-center select-none justify-center border-2 px-3 py-1 ${state !== `default` && bgFilled ? `border-accent-9` : `border-primary-7`}`}
       >
-        <Animated.View style={{ transform: [{ scale }] }}>
-          <View
-            className={`${disabled ? `opacity-50` : ``} origin-center ${flat ? `mt-[2px]` : `border-b-4`} ${size === `$1` ? `rounded-lg` : `rounded-xl`} align-center flex-1 justify-center border-2 px-3 py-1 ${state !== `default` && bgFilled ? `border-accent-9` : `border-primary-7`}`}
-          >
-            <Animated.View
-              style={{
-                position: `absolute`,
-                // HACK: fixes border radius on the parent from looking wonky
-                top: 0.5,
-                left: 0.5,
-                right: 0.5,
-                bottom: 0.5,
-                zIndex: -1,
-                opacity: bgOpacity,
-                transform: [{ scale: bgScale }],
-              }}
-            >
-              <View className="absolute bottom-0 left-0 right-0 top-0 rounded-lg bg-accent-4" />
-            </Animated.View>
-            <Text
-              className={`select-none text-center text-sm font-bold uppercase ${state !== `default` ? `text-accent-9` : `text-text`}`}
-            >
-              {children}
-            </Text>
-          </View>
+        <Animated.View
+          style={{
+            position: `absolute`,
+            // HACK: fixes border radius on the parent from looking wonky
+            top: 0.5,
+            left: 0.5,
+            right: 0.5,
+            bottom: 0.5,
+            zIndex: -1,
+            opacity: bgOpacity,
+            transform: [{ scale: bgScale }],
+          }}
+        >
+          <View className="absolute bottom-0 left-0 right-0 top-0 rounded-lg bg-accent-4" />
         </Animated.View>
+        <Text
+          className={`${state !== `default` ? `text-accent-9` : `text-text`} text-center text-sm font-bold uppercase`}
+        >
+          {children}
+        </Text>
       </Pressable>
-    </View>
+    </Animated.View>
   );
 });
