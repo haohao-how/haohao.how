@@ -1,5 +1,6 @@
 import { ReplicacheProvider } from "@/components/ReplicacheContext";
 import { trpc } from "@/util/trpc";
+import "@expo/match-media";
 import {
   Theme as ReactNavigationTheme,
   ThemeProvider,

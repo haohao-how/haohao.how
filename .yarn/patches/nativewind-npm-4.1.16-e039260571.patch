@@ -1,0 +1,20 @@
+diff --git a/dist/tailwind/web.js b/dist/tailwind/web.js
+index affd98a32817093841ba8b719c5b3563d1fce82a..0b24c3b8ae7aa4040ae178eb578cef18ac642efb 100644
+--- a/dist/tailwind/web.js
++++ b/dist/tailwind/web.js
+@@ -10,6 +10,7 @@ const verify_1 = require("./verify");
+ const prop_modifier_1 = require("./prop-modifier");
+ const switch_1 = require("./switch");
+ const common_1 = require("./common");
++const safe_area_1 = require("./safe-area");
+ const preset = {
+     content: [],
+     theme: {
+@@ -29,6 +30,7 @@ const preset = {
+     },
+     plugins: [
+         (0, plugin_1.default)(({ addVariant }) => addVariant("web", "&")),
++        safe_area_1.safeArea,
+         color_1.color,
+         dark_mode_1.darkModeAtRule,
+         verify_1.verify,

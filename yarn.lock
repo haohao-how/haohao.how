@@ -2346,6 +2346,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@expo/match-media@npm:^0.4.0":
+  version: 0.4.0
+  resolution: "@expo/match-media@npm:0.4.0"
+  dependencies:
+    css-mediaquery: "npm:^0.1.2"
+  peerDependencies:
+    expo: "*"
+    expo-screen-orientation: "*"
+  checksum: 10c0/a135e8e9f688958c4b5cbcb0aa396f93b97086a460b96f24eeab59e3ae4e2bc15e4d9468121843889371f6da5dc085ebdb4381c27523f6df4f31e92ff3b596ef
+  languageName: node
+  linkType: hard
+
 "@expo/metro-config@npm:0.18.11":
   version: 0.18.11
   resolution: "@expo/metro-config@npm:0.18.11"
@@ -2617,6 +2629,7 @@ __metadata:
   dependencies:
     "@babel/core": "npm:^7.20.0"
     "@eslint/eslintrc": "npm:^3.0.2"
+    "@expo/match-media": "npm:^0.4.0"
     "@expo/metro-runtime": "npm:~3.2.3"
     "@haohaohow/lib": "workspace:*"
     "@lucia-auth/adapter-drizzle": "npm:^1.1.0"
@@ -2663,6 +2676,7 @@ __metadata:
     expo-linear-gradient: "npm:^13.0.2"
     expo-linking: "npm:~6.3.1"
     expo-router: "npm:~3.5.23"
+    expo-screen-orientation: "npm:^7.0.5"
     expo-secure-store: "npm:~13.0.2"
     expo-splash-screen: "npm:~0.27.6"
     expo-sqlite: "npm:~14.0.6"
@@ -2675,7 +2689,7 @@ __metadata:
     lucia: "npm:^3.2.0"
     moti: "npm:^0.29.0"
     nanoid: "npm:^5.0.7"
-    nativewind: "npm:^4"
+    nativewind: "patch:nativewind@npm%3A4.1.16#~/.yarn/patches/nativewind-npm-4.1.16-e039260571.patch"
     oslo: "npm:^1.2.1"
     pg: "npm:^8.12.0"
     prettier: "npm:^3.3.2"
@@ -2688,6 +2702,7 @@ __metadata:
     react-native-safe-area-context: "npm:4.10.5"
     react-native-screens: "npm:~3.31.1"
     react-native-web: "npm:^0.19.11"
+    react-responsive: "npm:^10.0.0"
     replicache: "npm:^14.2.2"
     replicache-react: "npm:^5.0.1"
     tailwind-variants: "npm:^0.2.1"
@@ -8864,6 +8879,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"css-mediaquery@npm:^0.1.2":
+  version: 0.1.2
+  resolution: "css-mediaquery@npm:0.1.2"
+  checksum: 10c0/b7825a78f52ce8a8198e004fcad0d7be1d3c9a0463ecd05ba31a0f2c94fb81468ad6f4d7bf715a6ca775696e7a17500c2a339b5216a6d0f789cbf78f9454d048
+  languageName: node
+  linkType: hard
+
 "cssesc@npm:^3.0.0":
   version: 3.0.0
   resolution: "cssesc@npm:3.0.0"
@@ -10674,6 +10696,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"expo-screen-orientation@npm:^7.0.5":
+  version: 7.0.5
+  resolution: "expo-screen-orientation@npm:7.0.5"
+  peerDependencies:
+    expo: "*"
+  checksum: 10c0/888a06fa519d9943ce77e8602de59d2ff40133feb1ff393473d83bce1c5e752a4ee15802bfe835834c21d0ce7dafa21e5a3b256a81aae2f3be2310d886cc0a97
+  languageName: node
+  linkType: hard
+
 "expo-secure-store@npm:~13.0.2":
   version: 13.0.2
   resolution: "expo-secure-store@npm:13.0.2"
@@ -11888,10 +11919,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"hyphenate-style-name@npm:^1.0.3":
-  version: 1.0.4
-  resolution: "hyphenate-style-name@npm:1.0.4"
-  checksum: 10c0/b19c3e2cd1dc426f6f893752fec08140abf79058a1b6238422e45373ed81389f02e1a2ba2ef4e9b2430d4e900a0f5ba12307de82320604e81ac1b722abd2ee62
+"hyphenate-style-name@npm:^1.0.0, hyphenate-style-name@npm:^1.0.3":
+  version: 1.1.0
+  resolution: "hyphenate-style-name@npm:1.1.0"
+  checksum: 10c0/bfe88deac2414a41a0d08811e277c8c098f23993d6a1eb17f14a0f11b54c4d42865a63d3cfe1914668eefb9a188e2de58f38b55a179a238fd1fef606893e194f
   languageName: node
   linkType: hard
 
@@ -13504,6 +13535,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"matchmediaquery@npm:^0.4.2":
+  version: 0.4.2
+  resolution: "matchmediaquery@npm:0.4.2"
+  dependencies:
+    css-mediaquery: "npm:^0.1.2"
+  checksum: 10c0/5a2d2621e18882f0a2854b830c9bf0b8e5d766cce680bd841274a37035429dc587bdf6093e70a5d04915a3f76f9e0cb2adf8582ef0dab2f56977dd5dbc88f58e
+  languageName: node
+  linkType: hard
+
 "md-to-react-email@npm:5.0.2":
   version: 5.0.2
   resolution: "md-to-react-email@npm:5.0.2"
@@ -14126,7 +14166,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"nativewind@npm:^4":
+"nativewind@npm:4.1.16":
   version: 4.1.16
   resolution: "nativewind@npm:4.1.16"
   dependencies:
@@ -14136,6 +14176,19 @@ __metadata:
   peerDependencies:
     tailwindcss: ">3.3.0"
   checksum: 10c0/7d6a6eb27b7ea9d03d0bd15bd1525fd14ac908786b8fb7f391a36eb9bf041d1ce43bfa9fc2d6f667ebf114d020de1857cac0314c04c66a5575bb33b95fa10ad6
+  languageName: node
+  linkType: hard
+
+"nativewind@patch:nativewind@npm%3A4.1.16#~/.yarn/patches/nativewind-npm-4.1.16-e039260571.patch":
+  version: 4.1.16
+  resolution: "nativewind@patch:nativewind@npm%3A4.1.16#~/.yarn/patches/nativewind-npm-4.1.16-e039260571.patch::version=4.1.16&hash=843b84"
+  dependencies:
+    comment-json: "npm:^4.2.5"
+    debug: "npm:^4.3.7"
+    react-native-css-interop: "npm:0.1.15"
+  peerDependencies:
+    tailwindcss: ">3.3.0"
+  checksum: 10c0/5375de643237830fcb7cbb6120f034f1a2b6b94f0807f9dfd1c76faa0741b341981ac0053e34a2d8a061a7e1e3ad5858c37c30624c0bbd5ebc644251846d5d9e
   languageName: node
   linkType: hard
 
@@ -15465,7 +15518,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prop-types@npm:^15.6.2, prop-types@npm:^15.7.2, prop-types@npm:^15.8.1":
+"prop-types@npm:^15.6.1, prop-types@npm:^15.6.2, prop-types@npm:^15.7.2, prop-types@npm:^15.8.1":
   version: 15.8.1
   resolution: "prop-types@npm:15.8.1"
   dependencies:
@@ -15962,6 +16015,20 @@ __metadata:
     "@types/react":
       optional: true
   checksum: 10c0/4952657e6a7b9d661d4ad4dfcef81b9c7fa493e35164abff99c35c0b27b3d172ef7ad70c09416dc44dd14ff2e6b38a5ec7da27e27e90a15cbad36b8fd2fd8054
+  languageName: node
+  linkType: hard
+
+"react-responsive@npm:^10.0.0":
+  version: 10.0.0
+  resolution: "react-responsive@npm:10.0.0"
+  dependencies:
+    hyphenate-style-name: "npm:^1.0.0"
+    matchmediaquery: "npm:^0.4.2"
+    prop-types: "npm:^15.6.1"
+    shallow-equal: "npm:^3.1.0"
+  peerDependencies:
+    react: ">=16.8.0"
+  checksum: 10c0/d22932a4029183897d35908a3b9e8a5be65c975405127b8509df989d52a3c061ea3d88139cef8014fb2392317ee706616291e1cf982064599ecc78abe191d083
   languageName: node
   linkType: hard
 
@@ -16737,6 +16804,13 @@ __metadata:
   dependencies:
     kind-of: "npm:^6.0.2"
   checksum: 10c0/7bab09613a1b9f480c85a9823aebec533015579fa055ba6634aa56ba1f984380670eaf33b8217502931872aa1401c9fcadaa15f9f604d631536df475b05bcf1e
+  languageName: node
+  linkType: hard
+
+"shallow-equal@npm:^3.1.0":
+  version: 3.1.0
+  resolution: "shallow-equal@npm:3.1.0"
+  checksum: 10c0/57079f8741a86b25229b58b86df5d503414aca324e486ec7ddb2423db65914c80c8282149ef66a6803092847dc0d840da8fc338ea5027bbf4fc877f944df9bf6
   languageName: node
   linkType: hard
 

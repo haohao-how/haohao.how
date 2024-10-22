@@ -28,9 +28,9 @@ export default function DesignSystemPage() {
         </Section>
 
         <Section title="Typography">
-          <View className="flex-column flex-1 gap-2">
+          <View className="flex-1 gap-2">
             {([`body`, `title`, `chinese`] as const).map((family) => (
-              <View className="flex-column" key={family}>
+              <View key={family}>
                 <LittlePrimaryHeader title={family} />
                 <TypographyExample family={family} size="xs" />
                 <TypographyExample family={family} size="sm" />
@@ -44,7 +44,7 @@ export default function DesignSystemPage() {
         </Section>
 
         <Section title="Colors">
-          <View className="flex-column">
+          <View>
             <LittlePrimaryHeader title="slate" />
             <View className="flex-row flex-wrap gap-1">
               <ColorSwatch className="bg-slate-1" index={1} />
@@ -62,7 +62,7 @@ export default function DesignSystemPage() {
             </View>
           </View>
 
-          <View className="flex-column">
+          <View>
             <LittlePrimaryHeader title="cyan" />
             <View className="flex-row flex-wrap gap-1">
               <ColorSwatch className="bg-cyan-1" index={1} />
@@ -79,7 +79,7 @@ export default function DesignSystemPage() {
               <ColorSwatch className="bg-cyan-12" index={12} />
             </View>
           </View>
-          <View className="flex-column">
+          <View>
             <LittlePrimaryHeader title="red" />
             <View className="flex-row flex-wrap gap-1">
               <ColorSwatch className="bg-red-1" index={1} />
@@ -96,7 +96,7 @@ export default function DesignSystemPage() {
               <ColorSwatch className="bg-red-12" index={12} />
             </View>
           </View>
-          <View className="flex-column">
+          <View>
             <LittlePrimaryHeader title="lime" />
             <View className="flex-row flex-wrap gap-1">
               <ColorSwatch className="bg-lime-1" index={1} />
@@ -153,7 +153,7 @@ const TypographyExample = ({
   family: `body` | `title` | `chinese`;
 }) => {
   return (
-    <View className="flex-column">
+    <View>
       <Text className="font-xs text-primary-9">
         <Text className="text-xs font-bold text-primary-11">{size}</Text>
       </Text>
@@ -193,7 +193,7 @@ const ColorSwatch = ({
   index: number;
   className?: string;
 }) => (
-  <View className="flex-column flex-wrap gap-1">
+  <View className="flex-wrap gap-1">
     <Text className={captionLabel({ highlighted: index === 10 })}>{index}</Text>
     <View className={`h-[40px] w-[40px] ${className ?? ``}`} />
   </View>
@@ -287,29 +287,29 @@ const RectButton2Examples = (props: Partial<PropsOf<typeof RectButton2>>) => (
       </ExampleStack>
     </View>
 
-    <LittlePrimaryHeader title="flex-column" />
+    <LittlePrimaryHeader title="flex-col" />
 
     <View className="flex-row flex-wrap">
       <ExampleStack title="items-start">
-        <View className="flex-column w-[120px] items-start gap-2 border-2 border-dashed border-primary-8">
+        <View className="w-[120px] flex-col items-start gap-2 border-2 border-dashed border-primary-8">
           <RectButton2Variants {...props} />
         </View>
       </ExampleStack>
 
       <ExampleStack title="items-center">
-        <View className="flex-column w-[120px] items-center gap-2 border-2 border-dashed border-primary-8">
+        <View className="w-[120px] flex-col items-center gap-2 border-2 border-dashed border-primary-8">
           <RectButton2Variants {...props} />
         </View>
       </ExampleStack>
 
       <ExampleStack title="items-stretch">
-        <View className="flex-column w-[120px] items-stretch gap-2 border-2 border-dashed border-primary-8">
+        <View className="w-[120px] flex-col items-stretch gap-2 border-2 border-dashed border-primary-8">
           <RectButton2Variants {...props} />
         </View>
       </ExampleStack>
 
       <ExampleStack title="items-end">
-        <View className="flex-column w-[120px] items-end gap-2 border-2 border-dashed border-primary-8">
+        <View className="w-[120px] flex-col items-end gap-2 border-2 border-dashed border-primary-8">
           <RectButton2Variants {...props} />
         </View>
       </ExampleStack>
@@ -374,57 +374,57 @@ const AnswerButtonExamples = (props: Partial<PropsOf<typeof AnswerButton>>) => (
       </ExampleStack>
     </View>
 
-    <LittlePrimaryHeader title="flex-column" />
+    <LittlePrimaryHeader title="flex-col" />
 
     <View className="flex-row flex-wrap">
       <ExampleStack title="items-start">
-        <View className="flex-column h-[120px] w-[120px] items-start gap-2 border-2 border-dashed border-primary-8">
+        <View className="h-[120px] w-[120px] items-start gap-2 border-2 border-dashed border-primary-8">
           <SyncedAnswerButtonExample />
         </View>
       </ExampleStack>
 
       <ExampleStack title="items-center">
-        <View className="flex-column h-[120px] w-[120px] items-center gap-2 border-2 border-dashed border-primary-8">
+        <View className="h-[120px] w-[120px] items-center gap-2 border-2 border-dashed border-primary-8">
           <SyncedAnswerButtonExample />
         </View>
       </ExampleStack>
 
       <ExampleStack title="items-stretch">
-        <View className="flex-column h-[120px] w-[120px] gap-2 border-2 border-dashed border-primary-8">
+        <View className="h-[120px] w-[120px] gap-2 border-2 border-dashed border-primary-8">
           <SyncedAnswerButtonExample />
         </View>
       </ExampleStack>
 
       <ExampleStack title="items-end">
-        <View className="flex-column h-[120px] w-[120px] items-end gap-2 border-2 border-dashed border-primary-8">
+        <View className="h-[120px] w-[120px] items-end gap-2 border-2 border-dashed border-primary-8">
           <SyncedAnswerButtonExample />
         </View>
       </ExampleStack>
     </View>
 
-    <LittlePrimaryHeader title="flex-column + flex-1" />
+    <LittlePrimaryHeader title="flex-col + flex-1" />
 
     <View className="flex-row flex-wrap">
       <ExampleStack title="items-start">
-        <View className="flex-column h-[120px] w-[120px] items-start gap-2 border-2 border-dashed border-primary-8">
+        <View className="h-[120px] w-[120px] items-start gap-2 border-2 border-dashed border-primary-8">
           <SyncedAnswerButtonExample className="flex-1" />
         </View>
       </ExampleStack>
 
       <ExampleStack title="items-center">
-        <View className="flex-column h-[120px] w-[120px] items-center gap-2 border-2 border-dashed border-primary-8">
+        <View className="h-[120px] w-[120px] items-center gap-2 border-2 border-dashed border-primary-8">
           <SyncedAnswerButtonExample className="flex-1" />
         </View>
       </ExampleStack>
 
       <ExampleStack title="items-stretch">
-        <View className="flex-column h-[120px] w-[120px] gap-2 border-2 border-dashed border-primary-8">
+        <View className="h-[120px] w-[120px] gap-2 border-2 border-dashed border-primary-8">
           <SyncedAnswerButtonExample className="flex-1" />
         </View>
       </ExampleStack>
 
       <ExampleStack title="items-end">
-        <View className="flex-column h-[120px] w-[120px] items-end gap-2 border-2 border-dashed border-primary-8">
+        <View className="h-[120px] w-[120px] items-end gap-2 border-2 border-dashed border-primary-8">
           <SyncedAnswerButtonExample className="flex-1" />
         </View>
       </ExampleStack>
