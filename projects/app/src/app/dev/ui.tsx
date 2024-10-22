@@ -315,6 +315,34 @@ const RectButton2Examples = (props: Partial<PropsOf<typeof RectButton2>>) => (
       </ExampleStack>
     </View>
 
+    <LittlePrimaryHeader title="flex-col + flex-1" />
+
+    <View className="flex-row flex-wrap">
+      <ExampleStack title="items-start">
+        <View className="w-[120px] flex-col items-start gap-2 border-2 border-dashed border-primary-8">
+          <RectButton2Variants className="flex-1" {...props} />
+        </View>
+      </ExampleStack>
+
+      <ExampleStack title="items-center">
+        <View className="w-[120px] flex-col items-center gap-2 border-2 border-dashed border-primary-8">
+          <RectButton2Variants className="flex-1" {...props} />
+        </View>
+      </ExampleStack>
+
+      <ExampleStack title="items-stretch">
+        <View className="w-[120px] flex-col items-stretch gap-2 border-2 border-dashed border-primary-8">
+          <RectButton2Variants className="flex-1" {...props} />
+        </View>
+      </ExampleStack>
+
+      <ExampleStack title="items-end">
+        <View className="w-[120px] flex-col items-end gap-2 border-2 border-dashed border-primary-8">
+          <RectButton2Variants className="flex-1" {...props} />
+        </View>
+      </ExampleStack>
+    </View>
+
     <LittlePrimaryHeader title="flex-row" />
 
     <View className="flex-row flex-wrap">
@@ -339,6 +367,34 @@ const RectButton2Examples = (props: Partial<PropsOf<typeof RectButton2>>) => (
       <ExampleStack title="items-end">
         <View className="h-[100px] flex-row items-end gap-2 border-2 border-dashed border-primary-8">
           <RectButton2Variants {...props} />
+        </View>
+      </ExampleStack>
+    </View>
+
+    <LittlePrimaryHeader title="flex-row + flex-1" />
+
+    <View className="flex-row flex-wrap">
+      <ExampleStack title="items-start">
+        <View className="h-[100px] flex-row items-start gap-2 border-2 border-dashed border-primary-8">
+          <RectButton2Variants className="flex-1" {...props} />
+        </View>
+      </ExampleStack>
+
+      <ExampleStack title="items-center">
+        <View className="h-[100px] flex-row items-center gap-2 border-2 border-dashed border-primary-8">
+          <RectButton2Variants className="flex-1" {...props} />
+        </View>
+      </ExampleStack>
+
+      <ExampleStack title="items-stretch">
+        <View className="h-[100px] flex-row items-stretch gap-2 border-2 border-dashed border-primary-8">
+          <RectButton2Variants className="flex-1" {...props} />
+        </View>
+      </ExampleStack>
+
+      <ExampleStack title="items-end">
+        <View className="h-[100px] flex-row items-end gap-2 border-2 border-dashed border-primary-8">
+          <RectButton2Variants className="flex-1" {...props} />
         </View>
       </ExampleStack>
     </View>
