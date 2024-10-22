@@ -35,7 +35,6 @@ export const AnswerButton = forwardRef<
   },
   ref,
 ) {
-  // const [state, setState] = useState<AnswerButtonState>(`default`);
   const [prevState, setPrevState] = useState(state);
 
   const scale = useSharedValue(1);
@@ -184,8 +183,8 @@ const pressable = tv({
   variants: {
     state: {
       default: ``,
-      selected: `success-theme`,
-      success: ``,
+      selected: ``,
+      success: `success-theme`,
       error: `danger-theme`,
     },
     disabled: {

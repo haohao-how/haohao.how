@@ -48,18 +48,18 @@ export default function IndexPage() {
   }, [r]);
 
   return (
-    <View
-      className="flex-1 flex-col-reverse items-stretch self-stretch lg:flex-row"
-      // style={{ paddingTop: insets.top }}
-    >
+    <View className="flex-1 flex-col-reverse items-stretch self-stretch lg:flex-row">
       <View className="min-w-[200px] flex-row items-center justify-center gap-4 border-t-2 border-primary-4 pt-2 pb-safe-or-2 px-safe-or-4 lg:max-h-full lg:max-w-[200px] lg:flex-col lg:items-start lg:justify-start lg:border-r-2 lg:border-t-0 lg:px-4 lg:pt-4">
-        <Link href="/" className="text-xl font-bold tracking-wide text-text">
+        <Link
+          href="/"
+          className="px-2 py-1 text-2xl font-bold tracking-wide text-primary-10"
+        >
           {isLg ? `haohaohow` : `好`}
         </Link>
 
         <Link
           href="/dev/ui"
-          className="text-xl font-bold tracking-wide text-text"
+          className="items-center rounded-md px-2 py-1 text-xl font-bold tracking-wide text-text hover:bg-primary-4 lg:self-stretch"
         >
           ui
         </Link>
