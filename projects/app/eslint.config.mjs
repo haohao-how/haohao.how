@@ -5,6 +5,7 @@ import stylisticPlugin from "@stylistic/eslint-plugin";
 import deprecationPlugin from "eslint-plugin-deprecation";
 import importPlugin from "eslint-plugin-import";
 import reactPlugin from "eslint-plugin-react";
+import reactCompilerPlugin from "eslint-plugin-react-compiler";
 import reactHooksPlugin from "eslint-plugin-react-hooks";
 import globals from "globals";
 import tseslint from "typescript-eslint";
@@ -17,6 +18,7 @@ export default tseslint.config(
   {
     // note - intentionally uses computed syntax to make it easy to sort the keys
     plugins: {
+      [`react-compiler`]: reactCompilerPlugin,
       [`@typescript-eslint`]: tseslint.plugin,
       [`@stylistic`]: stylisticPlugin,
       // ['@typescript-eslint/internal']: tseslintInternalPlugin,
@@ -87,7 +89,10 @@ export default tseslint.config(
       // Expo or react-native or metro or something handles this, so there's no
       // need to import React.
       "react/react-in-jsx-scope": `off`,
+
       "react/no-children-prop": [`error`, { allowFunctions: true }],
+
+      "react-compiler/react-compiler": `error`,
 
       // make sure we're not leveraging any deprecated APIs
       "deprecation/deprecation": `error`,
