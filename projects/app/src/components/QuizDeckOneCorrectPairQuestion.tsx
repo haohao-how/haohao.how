@@ -7,7 +7,6 @@ import {
   forwardRef,
   useCallback,
   useEffect,
-  useRef,
   useState,
 } from "react";
 import {
@@ -226,7 +225,7 @@ const Skeleton = ({
   const contentInsetBottom = submitButtonInsetBottom + 5 + submitButtonHeight;
   const contentPaddingTopBottom = 20;
 
-  const slideInAnim = useRef(new Animated.Value(0)).current;
+  const [slideInAnim] = useState(() => new Animated.Value(0));
   const hasToast = toast !== null;
 
   useEffect(() => {

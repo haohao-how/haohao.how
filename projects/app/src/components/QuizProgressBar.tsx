@@ -1,5 +1,5 @@
 import { LinearGradient } from "expo-linear-gradient";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Animated,
   LayoutChangeEvent,
@@ -16,7 +16,7 @@ export const QuizProgressBar = ({
   colors: string[];
 }) => {
   const [layout, setLayout] = useState<LayoutRectangle>();
-  const widthAnim = useRef(new Animated.Value(0)).current;
+  const [widthAnim] = useState(() => new Animated.Value(0));
 
   const handleLayout = useEventCallback((x: LayoutChangeEvent) => {
     setLayout(x.nativeEvent.layout);

@@ -16,8 +16,6 @@ export function hapticImpactIfMobile() {
 }
 
 type VoidFunction = (...args: never[]) => void;
-// Avoid allocating empty arrays unnecessarily
-const emptyArray = [] as const;
 
 /**
  * Similar to `useCallback` but offers better memoization for event handlers.
@@ -34,25 +32,20 @@ export function useEventCallback<TCallback extends VoidFunction>(
   callback: TCallback,
 ): TCallback {
   // Keep track of the latest callback
-  const latestRef = useRef<TCallback>(
-    useEventCallback_shouldNotBeInvokedBeforeMount as TCallback,
-  );
+  const latestRef = useRef(shouldNotBeInvokedBeforeMount as TCallback);
 
   useInsertionEffect(() => {
     latestRef.current = callback;
   }, [callback]);
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  return useCallback(
-    function (...args) {
-      // Avoid `this` referring to the ref when invoking the function.
-      latestRef.current.apply(undefined, args);
-    } as TCallback,
-    emptyArray,
-  );
+  // @ts-expect-error: it's fine
+  return useCallback((...args) => {
+    // Avoid `this` referring to the ref when invoking the function.
+    latestRef.current.apply(undefined, args);
+  }, []);
 }
 
-function useEventCallback_shouldNotBeInvokedBeforeMount() {
+function shouldNotBeInvokedBeforeMount() {
   throw new Error(
     `invoking useEvent before mounting violates the rules of React`,
   );
