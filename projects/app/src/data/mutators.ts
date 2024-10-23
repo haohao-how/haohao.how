@@ -1,24 +1,26 @@
 import { nextReview, Rating, UpcomingReview } from "@/util/fsrs";
 import { invariant } from "@haohaohow/lib/invariant";
 import { MutatorDefs, Replicache } from "replicache";
-import { z } from "zod";
 import {
   MarshaledSkillId,
   MarshaledSkillStateKey,
   MarshaledSkillStateValue,
   marshalSkillId,
+  marshalSkillReviewKey,
+  marshalSkillReviewValue,
   marshalSkillStateKey,
   marshalSkillStateValue,
   Timestamp,
+  unmarshalSkillReviewJson,
   unmarshalSkillStateJson,
 } from "./marshal";
 import { HanziSkill, SrsType } from "./model";
 
-// Schema
+// Schema v2
 //
-// Version 2
-//
-// Version 1
+// Skill Review: sr/<skillId>/<timestamp> { r: Rating }
+
+// Schema v1
 //
 // Skill "current state", the current state of a skill.
 //
@@ -80,7 +82,11 @@ export const mutators = {
       n: nowTimestamp,
     }: { s: MarshaledSkillId; r: Rating; n: Timestamp },
   ) {
-    await tx.set(`sr/${skillId}/${nowTimestamp}`, { r: rating });
+    // Save a record of the review.
+    await tx.set(
+      marshalSkillReviewKey(skillId, nowTimestamp),
+      marshalSkillReviewValue({ rating }),
+    );
 
     // TODO: perf? batch these?
     const reviews = await tx
@@ -93,9 +99,8 @@ export const mutators = {
     // TODO: add invariant for debug mode
 
     let state: UpcomingReview | null = null;
-    for (const [key, value] of reviews) {
-      const date = new Date(z.coerce.number().parse(key.split(`/`)[2]));
-      const { r: rating } = z.object({ r: z.nativeEnum(Rating) }).parse(value);
+    for (const review of reviews) {
+      const [[, date], { rating }] = unmarshalSkillReviewJson(review);
       state = nextReview(state, rating, date);
     }
 

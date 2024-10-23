@@ -1,3 +1,5 @@
+import { Rating } from "@/util/fsrs";
+
 export enum SrsType {
   Null,
   FsrsFourPointFive,
@@ -22,6 +24,10 @@ export interface SkillState {
   /** When null, it means it's never been reviewed. */
   srs: SrsState | null;
   due: Date;
+}
+
+export interface SkillReview {
+  rating: Rating;
 }
 
 export enum SkillType {
