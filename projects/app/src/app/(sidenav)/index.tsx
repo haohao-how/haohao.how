@@ -10,14 +10,10 @@ import { Skill, SkillType } from "@/data/model";
 import { addHanziSkill } from "@/data/mutators";
 import { characterLookupByHanzi } from "@/dictionary/characters";
 import { Link } from "expo-router";
-import { StatusBar as ExpoStatusBar } from "expo-status-bar";
 import { useEffect } from "react";
-import { ColorValue, ScrollView, View } from "react-native";
-import { useMediaQuery } from "react-responsive";
+import { ColorValue, View } from "react-native";
 
 export default function IndexPage() {
-  const isLg = useMediaQuery({ minWidth: 1024 });
-
   const r = useReplicache();
 
   useEffect(() => {
@@ -48,59 +44,38 @@ export default function IndexPage() {
   }, [r]);
 
   return (
-    <View className="flex-1 flex-col-reverse items-stretch self-stretch lg:flex-row">
-      <View className="min-w-[200px] flex-row items-center justify-center gap-4 border-t-2 border-primary-4 pt-2 pb-safe-or-2 px-safe-or-4 lg:max-h-full lg:max-w-[200px] lg:flex-col lg:items-start lg:justify-start lg:border-r-2 lg:border-t-0 lg:px-4 lg:pt-4">
-        <Link
-          href="/"
-          className="px-2 py-1 text-2xl font-bold tracking-wide text-primary-10"
-        >
-          {isLg ? `haohaohow` : `好`}
-        </Link>
-
-        <Link
-          href="/dev/ui"
-          className="items-center rounded-md px-2 py-1 text-xl font-bold tracking-wide text-text hover:bg-primary-4 lg:self-stretch"
-        >
-          ui
-        </Link>
-      </View>
-      <ScrollView
-        className="flex-1"
-        contentContainerClassName="pt-safe-offset-4 px-safe-or-4 items-center gap-[10px] padding-[10px]"
-      >
-        <Section
-          title="Section 4, Unit 1"
-          subtitle="Chat over dinner, communicate travel issues, describe people, talk about people"
-          color="#53ADF0"
-        />
-        <Section
-          title="Section 4, Unit 2"
-          subtitle="Identify tableware, describe health issues, refer to body parts, refer to colors"
-          color="#EF8CCD"
-        />
-        <Section
-          title="Section 4, Unit 3"
-          subtitle="Ask someone out, shop for clothes, talk about the weather, discuss sport events"
-          color="#78C93D"
-        />
-        <Section
-          title="Section 4, Unit 4"
-          subtitle="Talk about seasons, describe travel needs, make plans, talk about hobbies"
-          color="#F19B38"
-        />
-        <Section
-          title="Section 4, Unit 5"
-          subtitle="Communicate at school, talk about habits, express feelings, describe the environment"
-          color="#E95952"
-        />
-        <Section
-          title="Section 4, Unit 6"
-          subtitle="Learn useful phrases, discuss communication, refer to business documents, tell time"
-          color="#78C93D"
-        />
-      </ScrollView>
-      <ExpoStatusBar style="auto" />
-    </View>
+    <>
+      <Section
+        title="Section 4, Unit 1"
+        subtitle="Chat over dinner, communicate travel issues, describe people, talk about people"
+        color="#53ADF0"
+      />
+      <Section
+        title="Section 4, Unit 2"
+        subtitle="Identify tableware, describe health issues, refer to body parts, refer to colors"
+        color="#EF8CCD"
+      />
+      <Section
+        title="Section 4, Unit 3"
+        subtitle="Ask someone out, shop for clothes, talk about the weather, discuss sport events"
+        color="#78C93D"
+      />
+      <Section
+        title="Section 4, Unit 4"
+        subtitle="Talk about seasons, describe travel needs, make plans, talk about hobbies"
+        color="#F19B38"
+      />
+      <Section
+        title="Section 4, Unit 5"
+        subtitle="Communicate at school, talk about habits, express feelings, describe the environment"
+        color="#E95952"
+      />
+      <Section
+        title="Section 4, Unit 6"
+        subtitle="Learn useful phrases, discuss communication, refer to business documents, tell time"
+        color="#78C93D"
+      />
+    </>
   );
 }
 

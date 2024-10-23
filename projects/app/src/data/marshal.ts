@@ -1,4 +1,5 @@
 import { iterTake } from "@/util/collections";
+import { Rating } from "@/util/fsrs";
 import { invariant } from "@haohaohow/lib/invariant";
 import {
   IndexDefinitions,
@@ -8,6 +9,7 @@ import {
 import z from "zod";
 import {
   Skill,
+  SkillReview as SkillReviewValue,
   SkillState as SkillStateValue,
   SkillType,
   SrsState,
@@ -142,16 +144,39 @@ export const unmarshalSkillStateValue = (
 });
 
 //
+// Skill Review
+//
+const MarshaledSkillReviewValue = z.object({
+  /** rating */
+  r: z.nativeEnum(Rating),
+});
+export type MarshaledSkillReviewValue = z.infer<
+  typeof MarshaledSkillReviewValue
+>;
+
+export const marshalSkillReviewValue = (
+  x: SkillReviewValue,
+): MarshaledSkillReviewValue => ({
+  r: x.rating,
+});
+
+export const unmarshalSkillReviewValue = (
+  v: MarshaledSkillReviewValue,
+): SkillReviewValue => ({
+  rating: v.r,
+});
+
+//
 // Public API, these don't expose the compressed shape in their types so the
 // implementation shouldn't leak into the rest of the code.
 //
 
-// Skill
+// Skill State
 export const unmarshalSkillStateJson = ([key, value]: readonly [
   key: string,
   value: OpaqueJSON,
 ]): [Skill, SkillStateValue] => [
-  parseSkillStateKey(key),
+  unmarshalSkillStateKey(key),
   MarshaledSkillStateValue.transform(unmarshalSkillStateValue).parse(value),
 ];
 export const marshalSkillStateJson = ([skill, state]: readonly [
@@ -163,7 +188,47 @@ export const marshalSkillStateJson = ([skill, state]: readonly [
     marshalSkillStateValue(state) as OpaqueJSON,
   ] as const;
 
+//
+// Skill Review (`sr/${skillId}/${nowTimestamp}`)
+//
+export type SkillReviewKey = [Skill, Date];
+export const unmarshalSkillReviewJson = ([key, value]: readonly [
+  key: string,
+  value: OpaqueJSON,
+]): [SkillReviewKey, SkillReviewValue] => [
+  unmarshalSkillReviewKey(key),
+  MarshaledSkillReviewValue.transform(unmarshalSkillReviewValue).parse(value),
+];
+export const marshalSkillReviewJson = ([[skillId, timestamp], state]: readonly [
+  SkillReviewKey,
+  SkillReviewValue,
+]) =>
+  [
+    marshalSkillReviewKey(skillId, timestamp),
+    marshalSkillReviewValue(state) as OpaqueJSON,
+  ] as const;
+export const skillReviewPrefix = `sr/`;
+export const marshalSkillReviewKey = (
+  skill: Skill | MarshaledSkillId,
+  date: Date | Timestamp,
+): MarshaledSkillReviewKey => {
+  return `${skillReviewPrefix}${marshalSkillId(skill)}/${typeof date === `number` ? date : date.getTime()}` as MarshaledSkillReviewKey;
+};
+export const unmarshalSkillReviewKey = (x: string): [Skill, Date] => {
+  const result = x.match(/^sr\/(.+)\/(.+)$/);
+  invariant(result !== null);
+  const [, skillId, timestamp] = result;
+  invariant(skillId !== undefined);
+  invariant(timestamp !== undefined);
+  return [
+    unmarshalSkillId(skillId),
+    new Date(z.coerce.number().parse(timestamp)),
+  ];
+};
+
+//
 // SrsState
+//
 export const unmarshalSrsStateJson = (value: OpaqueJSON): SrsState | null =>
   MarshaledSrsState.transform(unmarshalSrsState).parse(value);
 export const marshalSrsStateJson = (x: SrsState | null) =>
@@ -172,28 +237,14 @@ export const marshalSrsStateJson = (x: SrsState | null) =>
 // Skill ID e.g. `he:好`
 export type MarshaledSkillId = string & z.BRAND<`SkillId`>;
 
-// Skill state key e.g. `s/he:好`
-export type MarshaledSkillStateKey = string & z.BRAND<`SkillStateKey`>;
-
-export const marshalSkillId = (x: Skill) =>
-  `${SkillTypeMarshal[x.type]}:${x.hanzi}` as MarshaledSkillId;
-
-export const marshalSkillStateKey = (x: Skill | MarshaledSkillId) => {
-  const id = typeof x === `string` ? x : marshalSkillId(x);
-  return `${skillStatePrefix}${id}` as MarshaledSkillStateKey;
-};
-
 export const skillStatePrefix = `s/`;
 
-export const parseSkillStateKey = (x: string): Skill => {
-  const result = x.match(/^s\/(.+)$/);
-  invariant(result !== null);
-  const [, skillId] = result;
-  invariant(skillId !== undefined);
-  return parseSkillId(skillId);
-};
+export const marshalSkillId = (x: Skill | MarshaledSkillId) =>
+  typeof x === `string`
+    ? x
+    : (`${SkillTypeMarshal[x.type]}:${x.hanzi}` as MarshaledSkillId);
 
-export const parseSkillId = (x: string): Skill => {
+export const unmarshalSkillId = (x: string): Skill => {
   const result = x.match(/^(.+?):(.+)$/);
   invariant(result !== null);
   const [, marshaledSkillType, rest] = result;
@@ -206,6 +257,22 @@ export const parseSkillId = (x: string): Skill => {
     type: skillType,
     hanzi: rest,
   };
+};
+export type MarshaledSkillReviewKey = string & z.BRAND<`SkillReviewKey`>;
+
+// Skill state key e.g. `s/he:好`
+export type MarshaledSkillStateKey = string & z.BRAND<`SkillStateKey`>;
+
+export const marshalSkillStateKey = (x: Skill | MarshaledSkillId) => {
+  return `${skillStatePrefix}${marshalSkillId(x)}` as MarshaledSkillStateKey;
+};
+
+export const unmarshalSkillStateKey = (x: string): Skill => {
+  const result = x.match(/^s\/(.+)$/);
+  invariant(result !== null);
+  const [, skillId] = result;
+  invariant(skillId !== undefined);
+  return unmarshalSkillId(skillId);
 };
 
 export type Timestamp = number;
