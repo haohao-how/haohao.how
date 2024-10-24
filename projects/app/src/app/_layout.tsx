@@ -9,8 +9,10 @@ import * as Sentry from "@sentry/react-native";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { httpBatchLink } from "@trpc/client";
 import { useFonts } from "expo-font";
+import { Image } from "expo-image";
 import { Slot, SplashScreen, useNavigationContainerRef } from "expo-router";
 import * as Updates from "expo-updates";
+import { remapProps } from "nativewind";
 import { useEffect, useState } from "react";
 import { Platform, useColorScheme, View } from "react-native";
 import "../global.css";
@@ -62,6 +64,9 @@ Sentry.configureScope((scope) => {
     );
   }
 });
+
+// NativeWind adapters for third party components
+remapProps(Image, { className: `style` });
 
 function RootLayout() {
   // Capture the NavigationContainer ref and register it with the instrumentation.
@@ -140,7 +145,7 @@ function RootLayout() {
                   ? dark
                     ? `dark-theme`
                     : `light-theme`
-                  : undefined
+                  : ``
               } flex-1 bg-background`}
             >
               <Slot />

@@ -26,7 +26,7 @@ export function generateQuestionForSkill(skill: Skill): Question {
 
       return {
         type: QuestionType.OneCorrectPair,
-        prompt: `Translate this`,
+        prompt: `Match a radical with its name`,
         groupA: shuffle([skill.hanzi, ...wrongHanzi]),
         groupB: shuffle([english.name, ...wrongEnglish]),
         answer: [skill.hanzi, english.name],
