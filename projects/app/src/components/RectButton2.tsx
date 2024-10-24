@@ -82,12 +82,12 @@ const pressable = tv({
     {
       variant: `filled`,
       accent: true,
-      class: `bg-accent-10 border-accent-9`,
+      class: `bg-accent-10 hover:bg-accent-11 border-accent-9`,
     },
     {
       variant: `filled`,
       accent: false,
-      class: `bg-primary-10 border-primary-9`,
+      class: `bg-primary-10 hover:bg-primary-11 border-primary-9`,
     },
     {
       variant: `filled`,

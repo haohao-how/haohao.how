@@ -150,15 +150,7 @@ export const QuizDeck = ({
       </View>
 
       {currentQuestion?.flag === QuestionFlag.WeakWord ? (
-        <View
-          style={{
-            flexDirection: `row`,
-            alignItems: `center`,
-            gap: 10,
-            paddingLeft: 16,
-            paddingRight: 16,
-          }}
-        >
+        <View className="flex-row items-center gap-[10px] px-[16px]">
           {/* <Image
               source={require("@/assets/target-red.svg")}
               style={{ flexShrink: 1, width: 33, height: 30 }}

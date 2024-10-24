@@ -19,6 +19,7 @@ export type AnswerButtonProps = {
   children?: ViewProps[`children`];
   state?: AnswerButtonState;
   className?: string;
+  textClassName?: string;
   disabled?: boolean;
 } & Omit<PropsOf<typeof Pressable>, `children` | `disabled`>;
 
@@ -31,6 +32,7 @@ export const AnswerButton = forwardRef<
     children,
     state = `default`,
     className,
+    textClassName,
     ...pressableProps
   },
   ref,
@@ -160,14 +162,16 @@ export const AnswerButton = forwardRef<
         >
           <View className="absolute bottom-0 left-0 right-0 top-0 rounded-lg bg-accent-4" />
         </Animated.View>
-        <Text className={text({ state })}>{children}</Text>
+        <Text className={text({ state, className: textClassName })}>
+          {children}
+        </Text>
       </Pressable>
     </Animated.View>
   );
 });
 
 const text = tv({
-  base: `text-center text-sm font-bold uppercase text-text`,
+  base: `text-center text-sm font-bold text-text`,
   variants: {
     state: {
       default: `text-text`,
@@ -179,7 +183,7 @@ const text = tv({
 });
 
 const pressable = tv({
-  base: `align-center select-none justify-center border-2 px-3 py-1 rounded-lg`,
+  base: `items-center select-none justify-center border-2 px-3 py-1 rounded-lg`,
   variants: {
     state: {
       default: ``,

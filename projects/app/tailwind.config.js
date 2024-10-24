@@ -124,6 +124,10 @@ module.exports = {
         title: `ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"`,
         roboto: `Roboto`,
       },
+
+      spacing: {
+        "quiz-px": `16px`,
+      },
     },
   },
   plugins: [
@@ -154,7 +158,7 @@ module.exports = {
           "--color-lime-dark-8": `8 103 22`,
           "--color-lime-dark-9": `15 213 42`,
           "--color-lime-dark-10": `19 240 66`,
-          "--color-lime-dark-11": `13 190 34`,
+          "--color-lime-dark-11": `47 245 89`,
           "--color-lime-dark-12": `23 251 221`,
 
           "--color-red-light-1": `255 252 252`,
