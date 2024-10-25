@@ -66,12 +66,27 @@ export const QuizDeck = ({
     [questionStateMap, questions.length],
   );
 
-  const currentQuestion = useMemo((): Question | undefined => {
+  const [currentQuestion, flag] = useMemo((): [
+    Question | undefined,
+    QuestionFlag | undefined,
+  ] => {
     const remainingQuestions = questions
       .map((q) => [q, questionStateMap.get(q)] as const)
       .filter(([, state]) => state?.type !== QuestionStateType.Correct);
     const [x] = sortBy(remainingQuestions, ([, s]) => s?.attempts ?? 0);
-    return x?.[0];
+
+    const q = x?.[0];
+    if (q == null) {
+      return [undefined, undefined];
+    }
+
+    const flag =
+      q.type === QuestionType.OneCorrectPair &&
+      (questionStateMap.get(q)?.attempts ?? 0) > 0
+        ? QuestionFlag.PreviousMistake
+        : undefined;
+
+    return [q, flag];
   }, [questions, questionStateMap]);
 
   // This is the engine that moves the quiz forward.
@@ -199,6 +214,7 @@ export const QuizDeck = ({
                   return (
                     <QuizDeckOneCorrectPairQuestion
                       question={currentQuestion}
+                      flag={flag}
                       onComplete={onComplete}
                     />
                   );

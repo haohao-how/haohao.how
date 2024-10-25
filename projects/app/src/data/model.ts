@@ -57,6 +57,7 @@ export type Skill = HanziSkill;
 
 export enum QuestionFlag {
   WeakWord,
+  PreviousMistake,
 }
 
 export enum QuestionType {

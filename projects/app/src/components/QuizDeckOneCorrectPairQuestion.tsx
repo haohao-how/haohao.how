@@ -1,4 +1,4 @@
-import { OneCorrectPairQuestion } from "@/data/model";
+import { OneCorrectPairQuestion, QuestionFlag } from "@/data/model";
 import { Rating } from "@/util/fsrs";
 import { Image } from "expo-image";
 import {
@@ -38,9 +38,11 @@ export const QuizDeckOneCorrectPairQuestion = ({
     groupB,
     missingAnswers,
   },
+  flag,
   onComplete,
 }: {
   question: OneCorrectPairQuestion;
+  flag?: QuestionFlag;
   onComplete: (rating: Rating) => void;
 }) => {
   const [selectedAChoice, setSelectedAChoice] = useState<string>();
@@ -168,6 +170,13 @@ export const QuizDeckOneCorrectPairQuestion = ({
         />
       }
     >
+      {flag === QuestionFlag.PreviousMistake ? (
+        <View className="warning-theme">
+          <Text className="text-md font-bold uppercase text-accent-10">
+            Previous mistake
+          </Text>
+        </View>
+      ) : null}
       <View>
         <Text className="text-lg font-bold text-text">{prompt}</Text>
       </View>

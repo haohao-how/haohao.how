@@ -75,6 +75,18 @@
   --color-lime-10: var(--color-lime-dark-10);
   --color-lime-11: var(--color-lime-dark-11);
   --color-lime-12: var(--color-lime-dark-12);
+  --color-amber-1: var(--color-amber-dark-1);
+  --color-amber-2: var(--color-amber-dark-2);
+  --color-amber-3: var(--color-amber-dark-3);
+  --color-amber-4: var(--color-amber-dark-4);
+  --color-amber-5: var(--color-amber-dark-5);
+  --color-amber-6: var(--color-amber-dark-6);
+  --color-amber-7: var(--color-amber-dark-7);
+  --color-amber-8: var(--color-amber-dark-8);
+  --color-amber-9: var(--color-amber-dark-9);
+  --color-amber-10: var(--color-amber-dark-10);
+  --color-amber-11: var(--color-amber-dark-11);
+  --color-amber-12: var(--color-amber-dark-12);
   @apply text-text;
 }
 
@@ -163,6 +175,18 @@
   --color-lime-10: var(--color-lime-light-10);
   --color-lime-11: var(--color-lime-light-11);
   --color-lime-12: var(--color-lime-light-12);
+  --color-amber-1: var(--color-amber-light-1);
+  --color-amber-2: var(--color-amber-light-2);
+  --color-amber-3: var(--color-amber-light-3);
+  --color-amber-4: var(--color-amber-light-4);
+  --color-amber-5: var(--color-amber-light-5);
+  --color-amber-6: var(--color-amber-light-6);
+  --color-amber-7: var(--color-amber-light-7);
+  --color-amber-8: var(--color-amber-light-8);
+  --color-amber-9: var(--color-amber-light-9);
+  --color-amber-10: var(--color-amber-light-10);
+  --color-amber-11: var(--color-amber-light-11);
+  --color-amber-12: var(--color-amber-light-12);
 }
 
 .danger-theme {
@@ -193,6 +217,21 @@
   --color-accent-10: var(--color-lime-10);
   --color-accent-11: var(--color-lime-11);
   --color-accent-12: var(--color-lime-12);
+}
+
+.warning-theme {
+  --color-accent-1: var(--color-amber-1);
+  --color-accent-2: var(--color-amber-2);
+  --color-accent-3: var(--color-amber-3);
+  --color-accent-4: var(--color-amber-4);
+  --color-accent-5: var(--color-amber-5);
+  --color-accent-6: var(--color-amber-6);
+  --color-accent-7: var(--color-amber-7);
+  --color-accent-8: var(--color-amber-8);
+  --color-accent-9: var(--color-amber-9);
+  --color-accent-10: var(--color-amber-10);
+  --color-accent-11: var(--color-amber-11);
+  --color-accent-12: var(--color-amber-12);
 }
 
 body {
