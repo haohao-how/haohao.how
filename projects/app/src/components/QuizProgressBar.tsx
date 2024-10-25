@@ -32,12 +32,7 @@ export const QuizProgressBar = ({
 
   return (
     <View
-      style={{
-        backgroundColor: `#3A464E`,
-        height: 16,
-        flex: 1,
-        borderRadius: 8,
-      }}
+      className="h-[16px] flex-1 rounded-[8px] bg-primary-7"
       onLayout={handleLayout}
     >
       <Animated.View
@@ -68,18 +63,7 @@ export const QuizProgressBar = ({
           }}
         />
         {/* Highlight accent */}
-        <View
-          style={{
-            backgroundColor: `white`,
-            opacity: 0.2,
-            height: 5,
-            left: 8,
-            right: 8,
-            top: 4,
-            borderRadius: 2,
-            position: `absolute`,
-          }}
-        />
+        <View className="absolute inset-x-[8px] top-[4px] h-[5px] rounded-[2px] bg-[white] opacity-20" />
       </Animated.View>
     </View>
   );
