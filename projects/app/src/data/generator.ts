@@ -1,4 +1,4 @@
-import { characterLookupByHanzi } from "@/dictionary/characters";
+import { Character, characterLookupByHanzi } from "@/dictionary/characters";
 import { wordLookupByHanzi } from "@/dictionary/words";
 import { invariant } from "@haohaohow/lib/invariant";
 import shuffle from "lodash/shuffle";
@@ -28,8 +28,16 @@ export function generateQuestionForSkill(skill: Skill): Question {
         type: QuestionType.OneCorrectPair,
         prompt: `Match a radical with its name`,
         groupA: shuffle([skill.hanzi, ...wrongHanzi]),
-        groupB: shuffle([english.name, ...wrongEnglish]),
+        groupB: shuffle([english.name, ...wrongEnglish.map((x) => x.name)]),
         answer: [skill.hanzi, english.name],
+        hint: characterLookupByHanzi.get(skill.hanzi)?.mnemonic,
+        missingAnswers: [
+          ...wrongHanzi.map((h) => {
+            const w = wordLookupByHanzi.get(h);
+            return w != null ? ([h, w.name] as const) : null;
+          }),
+          ...wrongEnglish.map((x) => [x.char, x.name] as const),
+        ].filter((x) => x != null),
         skill,
       };
     }
@@ -53,8 +61,8 @@ function getOtherHanzi(hanzi: string, count: number): string[] {
   return [...result];
 }
 
-function getOtherNonMatchingEnglishTranslations(hanzis: string[]): string[] {
-  const result = new Set<string>();
+function getOtherNonMatchingEnglishTranslations(hanzis: string[]): Character[] {
+  const result = new Set<Character>();
   const forbidden = new Set(
     hanzis.flatMap((h): string[] => {
       const char = characterLookupByHanzi.get(h);
@@ -71,7 +79,7 @@ function getOtherNonMatchingEnglishTranslations(hanzis: string[]): string[] {
   while (result.size < hanzis.length) {
     for (const c of shuffle([...characterLookupByHanzi.values()])) {
       if (!forbidden.has(c.name)) {
-        result.add(c.name);
+        result.add(c);
       }
       if (result.size === hanzis.length) {
         break;

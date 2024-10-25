@@ -33,8 +33,10 @@ export const QuizDeckOneCorrectPairQuestion = ({
   question: {
     prompt,
     answer: [answerA, answerB],
+    hint,
     groupA,
     groupB,
+    missingAnswers,
   },
   onComplete,
 }: {
@@ -72,13 +74,13 @@ export const QuizDeckOneCorrectPairQuestion = ({
       toast={
         showResult ? (
           <View
-            className={`flex-1 gap-[12px] ${isCorrect ? `success-theme` : `danger-theme`}`}
+            className={`flex-1 gap-[12px] ${isCorrect ? `success-theme` : `danger-theme`} bg-primary-5 px-quiz-px pt-3 pb-safe-offset-[84px]`}
           >
             {isCorrect ? (
               <View className="flex-row items-center gap-[8px]">
                 <Image
                   source={require(`@/assets/icons/check-circled-filled.svg`)}
-                  className="h-[32px] w-[32px] shrink"
+                  style={{ height: 32, width: 32, flexShrink: 1 }}
                   // Blocked on https://discord.com/channels/968718419904057416/1298775941652414545
                   tintColor="#ABD063"
                 />
@@ -89,7 +91,7 @@ export const QuizDeckOneCorrectPairQuestion = ({
                 <View className="flex-row items-center gap-[8px]">
                   <Image
                     source={require(`@/assets/icons/close-circled-filled.svg`)}
-                    className="h-[32px] w-[32px] shrink"
+                    style={{ height: 32, width: 32, flexShrink: 1 }}
                     // Blocked on https://discord.com/channels/968718419904057416/1298775941652414545
                     tintColor="#CE675F"
                   />
@@ -100,8 +102,51 @@ export const QuizDeckOneCorrectPairQuestion = ({
                 <Text className="text-xl font-bold leading-none text-accent-10">
                   Correct answer:
                 </Text>
-                <Text className="text-xl leading-none text-accent-10">
-                  {answerA} ({answerB})
+                <View className="flex-row items-center gap-2">
+                  <Text className="border-[1px] border-dashed border-accent-10 px-1 text-xl text-accent-10">
+                    {answerA}
+                  </Text>
+                  <Text className="text-xl leading-none text-accent-10">
+                    ({answerB})
+                  </Text>
+                </View>
+                {hint ? (
+                  <Text className="text-md leading-snug text-accent-10">
+                    <Text className="font-bold">Hint:</Text> {hint}
+                  </Text>
+                ) : null}
+                <Text className="text-md leading-snug text-accent-10">
+                  <Text className="font-bold">Your answer:</Text>
+                  {` `}
+                  <Text className="font-bold">
+                    {(() => {
+                      const a = missingAnswers?.find(
+                        (x) => x[0] === selectedAChoice,
+                      );
+                      return a ? (
+                        <>
+                          {a[0]} <Text className="font-normal">({a[1]})</Text>
+                        </>
+                      ) : (
+                        <>{selectedAChoice}</>
+                      );
+                    })()}
+                  </Text>
+                  {` `}+{` `}
+                  <Text className="font-bold">
+                    {(() => {
+                      const a = missingAnswers?.find(
+                        (x) => x[1] === selectedBChoice,
+                      );
+                      return a ? (
+                        <>
+                          {a[0]} <Text className="font-normal">({a[1]})</Text>
+                        </>
+                      ) : (
+                        <>{selectedBChoice}</>
+                      );
+                    })()}
+                  </Text>
                 </Text>
               </>
             )}
@@ -144,7 +189,11 @@ export const QuizDeckOneCorrectPairQuestion = ({
                   text={a}
                   isRadical
                   selected={a === selectedAChoice}
-                  onPress={setSelectedAChoice}
+                  onPress={(text) => {
+                    if (!showResult) {
+                      setSelectedAChoice(text);
+                    }
+                  }}
                 />
               ) : (
                 <View />
@@ -153,7 +202,11 @@ export const QuizDeckOneCorrectPairQuestion = ({
                 <AnswerButton2
                   text={b}
                   selected={b === selectedBChoice}
-                  onPress={setSelectedBChoice}
+                  onPress={(text) => {
+                    if (!showResult) {
+                      setSelectedBChoice(text);
+                    }
+                  }}
                 />
               ) : (
                 <View />
@@ -190,7 +243,6 @@ const Skeleton = ({
   const submitButtonHeight = 44;
   const submitButtonInsetBottom = insets.bottom + 20;
   const contentInsetBottom = submitButtonInsetBottom + 5 + submitButtonHeight;
-  const contentPaddingTopBottom = 20;
 
   const [slideInAnim] = useState(() => new Animated.Value(0));
   const hasToast = toast !== null;
@@ -248,19 +300,8 @@ const Skeleton = ({
         {children}
       </View>
       {toast !== null ? (
-        <View className="absolute inset-x-0 bottom-0 px-quiz-px">
-          <Animated.View
-            className="bg-accent-10"
-            style={[
-              {
-                paddingTop: contentPaddingTopBottom,
-                paddingBottom: contentInsetBottom + contentPaddingTopBottom,
-              },
-              slideInStyle,
-            ]}
-          >
-            {toast}
-          </Animated.View>
+        <View className="absolute inset-x-0 bottom-0">
+          <Animated.View style={slideInStyle}>{toast}</Animated.View>
         </View>
       ) : null}
       <View
