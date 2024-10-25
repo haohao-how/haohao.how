@@ -126,7 +126,7 @@ const text = tv({
   base: `font-bold select-none text-sm uppercase`,
   variants: {
     variant: {
-      filled: ``,
+      filled: `text-primary-2`,
       outline: ``,
       bare: ``,
     },
