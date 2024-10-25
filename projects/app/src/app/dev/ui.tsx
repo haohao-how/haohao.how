@@ -113,6 +113,23 @@ export default function DesignSystemPage() {
               <ColorSwatch className="bg-lime-12" index={12} />
             </View>
           </View>
+          <View>
+            <LittlePrimaryHeader title="amber" />
+            <View className="flex-row flex-wrap gap-1">
+              <ColorSwatch className="bg-amber-1" index={1} />
+              <ColorSwatch className="bg-amber-2" index={2} />
+              <ColorSwatch className="bg-amber-3" index={3} />
+              <ColorSwatch className="bg-amber-4" index={4} />
+              <ColorSwatch className="bg-amber-5" index={5} />
+              <ColorSwatch className="bg-amber-6" index={6} />
+              <ColorSwatch className="bg-amber-7" index={7} />
+              <ColorSwatch className="bg-amber-8" index={8} />
+              <ColorSwatch className="bg-amber-9" index={9} />
+              <ColorSwatch className="bg-amber-10" index={10} />
+              <ColorSwatch className="bg-amber-11" index={11} />
+              <ColorSwatch className="bg-amber-12" index={12} />
+            </View>
+          </View>
         </Section>
 
         {/* Fill the rest of the page if it's too tall for the content */}
