@@ -78,6 +78,8 @@ export interface OneCorrectPairQuestion {
   groupA: readonly string[];
   groupB: readonly string[];
   answer: readonly [groupA: string, groupB: string];
+  hint?: string;
+  missingAnswers?: readonly (readonly [groupA: string, groupB: string])[];
   flag?: QuestionFlag;
   skill: Skill;
 }
