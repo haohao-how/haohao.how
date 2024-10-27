@@ -223,17 +223,6 @@ export const QuizDeckOneCorrectPairQuestion = ({
             </View>
           ))}
         </View>
-        {/* <View
-          style={{
-            position: "absolute",
-            bottom: 100,
-            left: 0,
-            backgroundColor: "purple",
-            width: 50,
-            height: 50,
-            zIndex: 1000,
-          }}
-        ></View> */}
       </View>
     </Skeleton>
   );

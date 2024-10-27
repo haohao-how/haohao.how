@@ -87,7 +87,13 @@ const pressable = tv({
     {
       variant: `filled`,
       accent: false,
-      class: `bg-primary-10 hover:bg-primary-11 border-primary-9`,
+      class: `bg-primary-10 border-primary-9`,
+    },
+    {
+      variant: `filled`,
+      accent: false,
+      disabled: false,
+      class: `hover:bg-primary-11 hover:border-primary-10`,
     },
     {
       variant: `filled`,
@@ -108,6 +114,12 @@ const pressable = tv({
       variant: `outline`,
       accent: false,
       class: `border-primary-7`,
+    },
+    {
+      variant: `outline`,
+      accent: false,
+      disabled: false,
+      class: `hover:border-primary-8`,
     },
     {
       variant: `outline`,

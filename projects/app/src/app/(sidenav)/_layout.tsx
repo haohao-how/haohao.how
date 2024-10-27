@@ -17,6 +17,13 @@ export default function SideNavLayout() {
         </Link>
 
         <Link
+          href="/learn/radicals"
+          className="items-center rounded-md px-2 py-1 text-xl font-bold tracking-wide text-text hover:bg-primary-4 lg:self-stretch"
+        >
+          Radicals
+        </Link>
+
+        <Link
           href="/dev/ui"
           className="items-center rounded-md px-2 py-1 text-xl font-bold tracking-wide text-text hover:bg-primary-4 lg:self-stretch"
         >

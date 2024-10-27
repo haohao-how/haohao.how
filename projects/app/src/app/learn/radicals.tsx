@@ -11,11 +11,8 @@ import { StatusBar as ExpoStatusBar } from "expo-status-bar";
 import shuffle from "lodash/shuffle";
 import take from "lodash/take";
 import { Text, View } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-export default function QuizPage() {
-  const insets = useSafeAreaInsets();
-
+export default function RadicalsPage() {
   const questions = useQueryOnce(async (tx) => {
     const now = new Date();
 
@@ -41,15 +38,7 @@ export default function QuizPage() {
 
   return (
     <View className="flex-1 items-center justify-center gap-[8px]">
-      <View
-        style={{
-          flex: 1,
-          width: `100%`,
-          flexDirection: `row`,
-          justifyContent: `center`,
-          paddingTop: insets.top + 20,
-        }}
-      >
+      <View className="w-full flex-1 flex-row justify-center pt-safe-offset-[20px]">
         <View
           style={{
             maxWidth: 600,

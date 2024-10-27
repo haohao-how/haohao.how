@@ -90,9 +90,7 @@ const Section = ({
       <View className="flex-1 self-stretch lg:self-center">
         <SectionHeaderButton title={title} subtitle={subtitle} color={color} />
       </View>
-      <Link href="/learn/quiz" asChild>
-        <CircleButton color={color} />
-      </Link>
+      <CircleButton color={color} />
       <Link href="/learn" asChild>
         <CircleButton
           color={disabledColor}
