@@ -158,11 +158,17 @@ export const AnswerButton = forwardRef<
             zIndex: -1,
             opacity: bgOpacity,
             transform: [{ scale: bgScale }],
+            pointerEvents: `none`,
           }}
         >
-          <View className="absolute bottom-0 left-0 right-0 top-0 rounded-lg bg-accent-4" />
+          <View className="pointer-events-none absolute bottom-0 left-0 right-0 top-0 rounded-lg bg-accent-4" />
         </Animated.View>
-        <Text className={text({ state, className: textClassName })}>
+        <Text
+          className={text({
+            state,
+            className: textClassName,
+          })}
+        >
           {children}
         </Text>
       </Pressable>
@@ -203,4 +209,16 @@ const pressable = tv({
       false: `border-primary-7`,
     },
   },
+  compoundVariants: [
+    {
+      disabled: false,
+      filled: true,
+      class: `hover:bg-accent-10`,
+    },
+    {
+      disabled: false,
+      filled: false,
+      class: `hover:hover:border-primary-8`,
+    },
+  ],
 });
