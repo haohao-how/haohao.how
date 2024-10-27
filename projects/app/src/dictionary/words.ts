@@ -235,7 +235,7 @@ const wordData: WordDatum[] = [
 ];
 
 // Transform data into an easier shape to work with.
-const words = wordData.map(
+export const words = wordData.map(
   ({ text: char, names, pronunciations, mnemonic, characters: radicals }) => {
     const [name, ...altNames] = names;
     invariant(name !== undefined, `expected at least one name`);

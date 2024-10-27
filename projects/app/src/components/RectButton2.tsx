@@ -11,6 +11,7 @@ export type RectButton2Props = {
   accent?: boolean;
   children?: ViewProps[`children`];
   className?: string;
+  textClassName?: string;
 } & Omit<PropsOf<typeof Pressable>, `children`>;
 
 export const RectButton2 = forwardRef<
@@ -22,6 +23,7 @@ export const RectButton2 = forwardRef<
     variant = `outline`,
     accent = false,
     className,
+    textClassName,
     ...pressableProps
   },
   ref,
@@ -55,7 +57,9 @@ export const RectButton2 = forwardRef<
         disabled,
       })}
     >
-      <Text className={text({ variant, accent })}>{children}</Text>
+      <Text className={text({ variant, accent, class: textClassName })}>
+        {children}
+      </Text>
     </Pressable>
   );
 });
