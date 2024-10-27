@@ -7,7 +7,6 @@ import { formatDuration } from "date-fns/formatDuration";
 import { interval } from "date-fns/interval";
 import { intervalToDuration } from "date-fns/intervalToDuration";
 import { router } from "expo-router";
-import { StatusBar as ExpoStatusBar } from "expo-status-bar";
 import shuffle from "lodash/shuffle";
 import take from "lodash/take";
 import { Text, View } from "react-native";
@@ -37,59 +36,51 @@ export default function RadicalsPage() {
   );
 
   return (
-    <View className="flex-1 items-center justify-center gap-[8px]">
-      <View className="w-full flex-1 flex-row justify-center pt-safe-offset-[20px]">
+    <View className="flex-1 items-center pt-safe-offset-[20px]">
+      {questions.loading ? (
+        <View className="my-auto">
+          <Text className="text-text">Loading…</Text>
+        </View>
+      ) : questions.error ? (
+        <Text className="text-text">Oops something broken</Text>
+      ) : questions.data.length > 0 ? (
+        <View className="w-full max-w-[600px] flex-1 items-stretch">
+          <QuizDeck
+            questions={questions.data}
+            onNext={(success) => {
+              if (success) {
+              }
+            }}
+          />
+        </View>
+      ) : (
         <View
           style={{
-            maxWidth: 600,
             flex: 1,
+            gap: 16,
+            alignItems: `center`,
+            justifyContent: `center`,
+            paddingLeft: 20,
+            paddingRight: 20,
           }}
         >
-          {questions.loading ? (
-            <Text>Loading…</Text>
-          ) : questions.error ? (
-            <Text>Oops something broken</Text>
-          ) : questions.data.length > 0 ? (
-            <QuizDeck
-              questions={questions.data}
-              onNext={(success) => {
-                if (success) {
-                }
-              }}
-            />
-          ) : (
-            <View
-              style={{
-                flex: 1,
-                gap: 16,
-                alignItems: `center`,
-                justifyContent: `center`,
-                paddingLeft: 20,
-                paddingRight: 20,
-              }}
-            >
-              <Text
-                style={{ color: `white`, fontSize: 30, textAlign: `center` }}
-              >
-                👏 You’re all caught up on your reviews!
-              </Text>
-              <GoHomeButton />
-              {nextSkillState.loading ||
-              nextSkillState.data === undefined ? null : (
-                <Text style={{ color: `#AAA`, textAlign: `center` }}>
-                  Next review in{` `}
-                  {formatDuration(
-                    intervalToDuration(
-                      interval(new Date(), nextSkillState.data.due),
-                    ),
-                  )}
-                </Text>
+          <Text style={{ color: `white`, fontSize: 30, textAlign: `center` }}>
+            👏 You’re all caught up on your reviews!
+          </Text>
+          <GoHomeButton />
+          {nextSkillState.loading ||
+          nextSkillState.data === undefined ? null : (
+            <Text style={{ color: `#AAA`, textAlign: `center` }}>
+              Next review in{` `}
+              {formatDuration(
+                intervalToDuration(
+                  interval(new Date(), nextSkillState.data.due),
+                ),
               )}
-            </View>
+            </Text>
           )}
         </View>
-        <ExpoStatusBar style="auto" />
-      </View>
+      )}
     </View>
   );
 }

@@ -6,7 +6,7 @@ function LearnLayout() {
   // top and bottom of the app have the correct color.
   return (
     <Stack screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="quiz" />
+      <Stack.Screen name="radicals" />
     </Stack>
   );
 }

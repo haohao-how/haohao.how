@@ -3,7 +3,7 @@ import { IndexName, indexScan, unmarshalSkillReviewJson } from "@/data/marshal";
 import { Rating } from "@/util/fsrs";
 import reverse from "lodash/reverse";
 import sortBy from "lodash/sortBy";
-import { Text, View } from "react-native";
+import { ScrollView, Text, View } from "react-native";
 
 export default function HistoryPage() {
   const start = Date.now();
@@ -24,41 +24,46 @@ export default function HistoryPage() {
   const renderTime = Date.now() - start;
 
   return (
-    <View className="flex-row gap-2">
-      <View>
-        <Text className="text-text">
-          Render time {Math.round(renderTime)}ms
-        </Text>
-      </View>
-      <View className="flex-1 items-center justify-center gap-[10px]">
-        <Text className="text-xl text-text">upcoming</Text>
+    <ScrollView
+      className="flex-1"
+      contentContainerClassName="pt-safe-offset-4 px-safe-or-4 items-center gap-[10px] padding-[10px]"
+    >
+      <View className="flex-row gap-2">
+        <View>
+          <Text className="text-text">
+            Render time {Math.round(renderTime)}ms
+          </Text>
+        </View>
+        <View className="flex-1 items-center gap-[10px]">
+          <Text className="text-xl text-text">upcoming</Text>
 
-        {data?.map(([key, value], i) => (
-          <View key={i}>
-            <Text className="text-text">
-              {key.hanzi}: {value.due.toISOString()}
-            </Text>
-          </View>
-        ))}
-      </View>
+          {data?.map(([key, value], i) => (
+            <View key={i}>
+              <Text className="text-text">
+                {key.hanzi}: {value.due.toISOString()}
+              </Text>
+            </View>
+          ))}
+        </View>
 
-      <View>
-        <Text className="self-center text-xl text-text">history</Text>
+        <View>
+          <Text className="self-center text-xl text-text">history</Text>
 
-        {skillReviews?.map(([key, value], i) => (
-          <View key={i}>
-            <Text className="text-text">
-              {value.rating === Rating.Again
-                ? `❌`
-                : value.rating === Rating.Good
-                  ? `✅`
-                  : value.rating}
-              {` `}
-              {key[0].hanzi}: {key[1].toISOString()}
-            </Text>
-          </View>
-        ))}
+          {skillReviews?.map(([key, value], i) => (
+            <View key={i}>
+              <Text className="text-text">
+                {value.rating === Rating.Again
+                  ? `❌`
+                  : value.rating === Rating.Good
+                    ? `✅`
+                    : value.rating}
+                {` `}
+                {key[0].hanzi}: {key[1].toISOString()}
+              </Text>
+            </View>
+          ))}
+        </View>
       </View>
-    </View>
+    </ScrollView>
   );
 }
