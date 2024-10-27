@@ -11,7 +11,7 @@ import { addHanziSkill } from "@/data/mutators";
 import { characterLookupByHanzi } from "@/dictionary/characters";
 import { Link } from "expo-router";
 import { useEffect } from "react";
-import { ColorValue, View } from "react-native";
+import { ColorValue, ScrollView, View } from "react-native";
 
 export default function IndexPage() {
   const r = useReplicache();
@@ -44,7 +44,10 @@ export default function IndexPage() {
   }, [r]);
 
   return (
-    <>
+    <ScrollView
+      className="flex-1"
+      contentContainerClassName="pt-safe-offset-4 px-safe-or-4 items-center gap-[10px] padding-[10px]"
+    >
       <Section
         title="Section 4, Unit 1"
         subtitle="Chat over dinner, communicate travel issues, describe people, talk about people"
@@ -75,7 +78,7 @@ export default function IndexPage() {
         subtitle="Learn useful phrases, discuss communication, refer to business documents, tell time"
         color="#78C93D"
       />
-    </>
+    </ScrollView>
   );
 }
 

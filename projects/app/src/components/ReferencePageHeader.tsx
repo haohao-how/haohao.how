@@ -27,7 +27,7 @@ export const ReferencePageHeader = ({
             {title ?? `⁉️`}
           </Text>
         </View>
-        <View className="absolute left-[16px]" style={{ top: insets.top }}>
+        <View className="absolute left-[16px] top-safe-or-[16px]">
           <CloseButton href="/" tintColor="white" />
         </View>
       </LinearGradient>

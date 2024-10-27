@@ -1,6 +1,6 @@
 import { Link, Slot } from "expo-router";
 import { StatusBar } from "expo-status-bar";
-import { ScrollView, View } from "react-native";
+import { View } from "react-native";
 import { useMediaQuery } from "react-responsive";
 
 export default function SideNavLayout() {
@@ -24,6 +24,20 @@ export default function SideNavLayout() {
         </Link>
 
         <Link
+          href="/radical/尸"
+          className="items-center rounded-md px-2 py-1 text-xl font-bold tracking-wide text-text hover:bg-primary-4 lg:self-stretch"
+        >
+          尸 radical
+        </Link>
+
+        <Link
+          href="/word/山"
+          className="items-center rounded-md px-2 py-1 text-xl font-bold tracking-wide text-text hover:bg-primary-4 lg:self-stretch"
+        >
+          山 word
+        </Link>
+
+        <Link
           href="/dev/ui"
           className="items-center rounded-md px-2 py-1 text-xl font-bold tracking-wide text-text hover:bg-primary-4 lg:self-stretch"
         >
@@ -37,12 +51,7 @@ export default function SideNavLayout() {
           History
         </Link>
       </View>
-      <ScrollView
-        className="flex-1"
-        contentContainerClassName="pt-safe-offset-4 px-safe-or-4 items-center gap-[10px] padding-[10px]"
-      >
-        <Slot />
-      </ScrollView>
+      <Slot />
       <StatusBar style="auto" />
     </View>
   );
