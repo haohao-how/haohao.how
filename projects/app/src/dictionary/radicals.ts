@@ -234,7 +234,7 @@ const radicalData: RadicalDatum[] = [
 ];
 
 // Transform data into an easier shape to work with.
-const radicals = radicalData.map(
+export const radicals = radicalData.map(
   ({ chars, names, pronunciations, mnemonic }) => {
     const [char, ...charAlts] = chars;
     invariant(char !== undefined, `expected at least one character`);

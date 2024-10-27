@@ -20,28 +20,20 @@ export default function SideNavLayout() {
           href="/learn/radicals"
           className="items-center rounded-md px-2 py-1 text-xl font-bold tracking-wide text-text hover:bg-primary-4 lg:self-stretch"
         >
+          Practice
+        </Link>
+
+        <Link
+          href="/explore/radicals"
+          className="items-center rounded-md px-2 py-1 text-xl font-bold tracking-wide text-text hover:bg-primary-4 lg:self-stretch"
+        >
           Radicals
         </Link>
-
         <Link
-          href="/radical/尸"
+          href="/explore/words"
           className="items-center rounded-md px-2 py-1 text-xl font-bold tracking-wide text-text hover:bg-primary-4 lg:self-stretch"
         >
-          尸 radical
-        </Link>
-
-        <Link
-          href="/word/山"
-          className="items-center rounded-md px-2 py-1 text-xl font-bold tracking-wide text-text hover:bg-primary-4 lg:self-stretch"
-        >
-          山 word
-        </Link>
-
-        <Link
-          href="/dev/ui"
-          className="items-center rounded-md px-2 py-1 text-xl font-bold tracking-wide text-text hover:bg-primary-4 lg:self-stretch"
-        >
-          UI
+          Words
         </Link>
 
         <Link
@@ -49,6 +41,13 @@ export default function SideNavLayout() {
           className="items-center rounded-md px-2 py-1 text-xl font-bold tracking-wide text-text hover:bg-primary-4 lg:self-stretch"
         >
           History
+        </Link>
+
+        <Link
+          href="/dev/ui"
+          className="items-center rounded-md px-2 py-1 text-xl font-bold tracking-wide text-text hover:bg-primary-4 lg:self-stretch"
+        >
+          UI
         </Link>
       </View>
       <Slot />
