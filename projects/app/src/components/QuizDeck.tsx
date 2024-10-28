@@ -42,12 +42,7 @@ interface Navigation {
 
 type QuestionStateMap = Map<Question, QuestionState>;
 
-export const QuizDeck = ({
-  questions,
-}: {
-  questions: readonly Question[];
-  onNext: (success: boolean) => void;
-}) => {
+export const QuizDeck = ({ questions }: { questions: readonly Question[] }) => {
   const theme = useTheme();
   const navigationRef = useRef<Navigation>();
   const [questionStateMap, setQuestionStateMap] = useState<
@@ -66,8 +61,9 @@ export const QuizDeck = ({
     [questionStateMap, questions.length],
   );
 
-  const [currentQuestion, flag] = useMemo((): [
+  const [currentQuestion, attempts, flag] = useMemo((): [
     Question | undefined,
+    number | undefined,
     QuestionFlag | undefined,
   ] => {
     const remainingQuestions = questions
@@ -77,16 +73,16 @@ export const QuizDeck = ({
 
     const q = x?.[0];
     if (q == null) {
-      return [undefined, undefined];
+      return [undefined, undefined, undefined];
     }
 
+    const attempts = questionStateMap.get(q)?.attempts ?? 0;
     const flag =
-      q.type === QuestionType.OneCorrectPair &&
-      (questionStateMap.get(q)?.attempts ?? 0) > 0
+      q.type === QuestionType.OneCorrectPair && attempts > 0
         ? QuestionFlag.PreviousMistake
         : undefined;
 
-    return [q, flag];
+    return [q, attempts, flag];
   }, [questions, questionStateMap]);
 
   // This is the engine that moves the quiz forward.
@@ -97,13 +93,17 @@ export const QuizDeck = ({
       navigationRef.current?.replace(ScreenName);
     }
 
+    // Required as a dependency because we need to push the screen even if it's
+    // the same question.
+    attempts;
+
     // There's no next deck item, bail.
     if (currentQuestion === undefined) {
       setTimeout(() => {
         router.push(`/`);
       }, 500);
     }
-  }, [currentQuestion, isFirstQuestion]);
+  }, [currentQuestion, attempts, isFirstQuestion]);
 
   const r = useReplicache();
 
