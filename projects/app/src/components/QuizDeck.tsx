@@ -10,6 +10,9 @@ import {
   TransitionPresets,
   createStackNavigator,
 } from "@react-navigation/stack";
+import { useQuery } from "@tanstack/react-query";
+import { Asset } from "expo-asset";
+import { Image } from "expo-image";
 import { router } from "expo-router";
 import sortBy from "lodash/sortBy";
 import { useMemo, useRef, useState } from "react";
@@ -109,6 +112,16 @@ export const QuizDeck = ({ questions }: { questions: readonly Question[] }) => {
       );
     },
   );
+
+  // Prefetch images
+  useQuery({
+    queryKey: [QuizDeck.name, `prefetch`],
+    queryFn: () =>
+      cacheImages([
+        require(`@/assets/icons/check-circled-filled.svg`),
+        require(`@/assets/icons/close-circled-filled.svg`),
+      ]),
+  });
 
   return (
     <View
@@ -220,4 +233,13 @@ function forHorizontalIOS({
       opacity: opacityUnfocused,
     },
   };
+}
+
+function cacheImages(images: (string | number)[]) {
+  return images.map((image) => {
+    if (typeof image === `string`) {
+      return Image.prefetch(image);
+    }
+    return Asset.fromModule(image).downloadAsync();
+  });
 }
