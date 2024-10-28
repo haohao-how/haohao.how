@@ -1,6 +1,8 @@
 import { Question, QuestionFlag, QuestionType } from "@/data/model";
 import { saveSkillRating } from "@/data/mutators";
+import { readonlyMapSet } from "@/util/collections";
 import { Rating } from "@/util/fsrs";
+import { StackNavigationFor } from "@/util/types";
 import { NavigationContainer, useTheme } from "@react-navigation/native";
 import {
   StackCardInterpolatedStyle,
@@ -10,7 +12,7 @@ import {
 } from "@react-navigation/stack";
 import { router } from "expo-router";
 import sortBy from "lodash/sortBy";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { Animated, View } from "react-native";
 import { CloseButton } from "./CloseButton";
 import { QuizDeckMultipleChoiceQuestion } from "./QuizDeckMultipleChoiceQuestion";
@@ -32,24 +34,24 @@ enum QuestionStateType {
   Incorrect,
 }
 
-const ScreenName = `screen`;
+const Stack = createStackNavigator<{
+  // init: never;
+  question: {
+    question: Question;
+    flag?: QuestionFlag;
+  };
+}>();
 
-const Stack = createStackNavigator();
-
-interface Navigation {
-  replace: (name: string) => void;
-}
-
-type QuestionStateMap = Map<Question, QuestionState>;
+type Navigation = StackNavigationFor<typeof Stack>;
 
 export const QuizDeck = ({ questions }: { questions: readonly Question[] }) => {
   const theme = useTheme();
   const navigationRef = useRef<Navigation>();
   const [questionStateMap, setQuestionStateMap] = useState<
-    Readonly<QuestionStateMap>
+    ReadonlyMap<Question, QuestionState>
   >(() => new Map());
+  const r = useReplicache();
 
-  const isFirstQuestion = questionStateMap.size === 0;
   // The number of questions in a row correctly answered.
   const [streakCount, setStreakCount] = useState(0);
 
@@ -66,79 +68,47 @@ export const QuizDeck = ({ questions }: { questions: readonly Question[] }) => {
     return p / questions.length;
   }, [questionStateMap, questions.length]);
 
-  const [currentQuestion, attempts] = useMemo((): [
-    Question | undefined,
-    number,
-  ] => {
+  const handleNext = useEventCallback(() => {
     const remainingQuestions = questions
       .map((q) => [q, questionStateMap.get(q)] as const)
       .filter(([, state]) => state?.type !== QuestionStateType.Correct);
-    const [x] = sortBy(remainingQuestions, ([, s]) => s?.attempts ?? 0);
+    const [next] = sortBy(remainingQuestions, ([, s]) => s?.attempts ?? 0);
 
-    const q = x?.[0];
-    if (q == null) {
-      return [undefined, 0];
-    }
-
-    const attempts = questionStateMap.get(q)?.attempts ?? 0;
-
-    return [q, attempts];
-  }, [questions, questionStateMap]);
-
-  const flag =
-    attempts > 0 ? QuestionFlag.PreviousMistake : currentQuestion?.flag;
-
-  // This is the engine that moves the quiz forward.
-  useEffect(() => {
-    // The first deck item is automatically rendered, we only need to pump the
-    // navigator for subsequent.
-    if (!isFirstQuestion) {
-      navigationRef.current?.replace(ScreenName);
-    }
-
-    // Required as a dependency because we need to push the screen even if it's
-    // the same question.
-    attempts;
-
-    // There's no next deck item, bail.
-    if (currentQuestion === undefined) {
+    if (next != null) {
+      const [question, state] = next;
+      const attempts = state?.attempts ?? 0;
+      const flag = attempts > 0 ? QuestionFlag.PreviousMistake : question.flag;
+      navigationRef.current?.replace(`question`, { question, flag });
+    } else {
+      // There's no next deck item, bail.
       setTimeout(() => {
         router.push(`/`);
       }, 500);
     }
-  }, [currentQuestion, attempts, isFirstQuestion]);
+  });
 
-  const r = useReplicache();
+  const handleRating = useEventCallback(
+    (question: Question, rating: Rating) => {
+      const success = rating !== Rating.Again;
 
-  const onComplete = useEventCallback((rating: Rating) => {
-    const success = rating !== Rating.Again;
-
-    if (currentQuestion !== undefined) {
-      if (currentQuestion.type === QuestionType.OneCorrectPair) {
-        saveSkillRating(r, currentQuestion.skill, rating).catch(
-          (e: unknown) => {
-            // eslint-disable-next-line no-console
-            console.error(`failed to update skill`, e);
-          },
-        );
+      if (question.type === QuestionType.OneCorrectPair) {
+        saveSkillRating(r, question.skill, rating).catch((e: unknown) => {
+          // eslint-disable-next-line no-console
+          console.error(`failed to update skill`, e);
+        });
       }
 
       setStreakCount((prev) => (success ? prev + 1 : 0));
-      setQuestionStateMap((prev) => {
-        const next = new Map(prev);
-        const prevState = prev.get(currentQuestion);
-
-        const attempts = (prevState?.attempts ?? 0) + 1;
-        next.set(currentQuestion, {
+      setQuestionStateMap((prev) =>
+        readonlyMapSet(prev, question, {
           type: success
             ? QuestionStateType.Correct
             : QuestionStateType.Incorrect,
-          attempts,
-        });
-        return next;
-      });
-    }
-  });
+          attempts: (prev.get(question)?.attempts ?? 0) + 1,
+        }),
+      );
+    },
+  );
 
   return (
     <View
@@ -168,33 +138,41 @@ export const QuizDeck = ({ questions }: { questions: readonly Question[] }) => {
             ...TransitionPresets.SlideFromRightIOS,
             cardStyleInterpolator: forHorizontalIOS,
           }}
+          screenListeners={({ navigation }) => ({
+            // Hack to get the navigation object.
+            state: () => {
+              navigationRef.current = navigation as Navigation;
+            },
+          })}
         >
           <Stack.Screen
-            name={ScreenName}
-            children={({ navigation }) => {
-              // HACK
-              navigationRef.current = navigation as Navigation;
-
-              // These props are only passed in initially, the element is not re-rendered.
-              switch (currentQuestion?.type) {
+            name="question"
+            initialParams={{ question: questions[0] }}
+            children={({
+              route: {
+                params: { question, flag },
+              },
+            }) => {
+              switch (question.type) {
                 case QuestionType.MultipleChoice:
                   return (
                     <QuizDeckMultipleChoiceQuestion
-                      question={currentQuestion}
-                      onComplete={onComplete}
+                      question={question}
+                      onNext={handleNext}
+                      onRating={handleRating}
                     />
                   );
                 case QuestionType.OneCorrectPair:
                   return (
                     <QuizDeckOneCorrectPairQuestion
-                      question={currentQuestion}
+                      question={question}
                       flag={flag}
-                      onComplete={onComplete}
+                      onNext={handleNext}
+                      onRating={handleRating}
                     />
                   );
-                case undefined:
                 default:
-                  return null;
+                  question satisfies never;
               }
             }}
           />

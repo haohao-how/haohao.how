@@ -5,6 +5,7 @@ import {
   ElementRef,
   ReactNode,
   forwardRef,
+  memo,
   useCallback,
   useEffect,
   useMemo,
@@ -29,221 +30,231 @@ import { PropsOf } from "./types";
 const buttonThickness = 4;
 const gap = 12;
 
-export const QuizDeckOneCorrectPairQuestion = ({
-  question: {
-    prompt,
-    answer: [answerA, answerB],
-    hint,
-    groupA,
-    groupB,
-    missingAnswers,
-  },
-  flag,
-  onComplete,
-}: {
-  question: OneCorrectPairQuestion;
-  flag?: QuestionFlag;
-  onComplete: (rating: Rating) => void;
-}) => {
-  const [selectedAChoice, setSelectedAChoice] = useState<string>();
-  const [selectedBChoice, setSelectedBChoice] = useState<string>();
-  const [rating, setRating] = useState<Rating>();
+export const QuizDeckOneCorrectPairQuestion = memo(
+  function QuizDeckOneCorrectPairQuestion({
+    question,
+    flag,
+    onNext,
+    onRating,
+  }: {
+    question: OneCorrectPairQuestion;
+    flag?: QuestionFlag;
+    onNext: () => void;
+    onRating: (question: OneCorrectPairQuestion, rating: Rating) => void;
+  }) {
+    const {
+      prompt,
+      answer: [answerA, answerB],
+      hint,
+      groupA,
+      groupB,
+      missingAnswers,
+    } = question;
+    const [selectedAChoice, setSelectedAChoice] = useState<string>();
+    const [selectedBChoice, setSelectedBChoice] = useState<string>();
+    const [rating, setRating] = useState<Rating>();
 
-  const choiceRowCount = Math.max(groupA.length, groupB.length);
-  const choiceRows: { a: string | undefined; b: string | undefined }[] = [];
+    const choiceRowCount = Math.max(groupA.length, groupB.length);
+    const choiceRows: { a: string | undefined; b: string | undefined }[] = [];
 
-  for (let i = 0; i < choiceRowCount; i++) {
-    choiceRows.push({ a: groupA[i], b: groupB[i] });
-  }
-
-  const handleSubmit = () => {
-    if (rating === undefined) {
-      setRating(
-        selectedAChoice === answerA && selectedBChoice === answerB
-          ? Rating.Good
-          : Rating.Again,
-      );
-    } else {
-      onComplete(rating);
+    for (let i = 0; i < choiceRowCount; i++) {
+      choiceRows.push({ a: groupA[i], b: groupB[i] });
     }
-  };
 
-  const showResult = rating !== undefined;
-  const isCorrect = rating !== Rating.Again;
+    const handleSubmit = () => {
+      if (rating === undefined) {
+        const rating =
+          selectedAChoice === answerA && selectedBChoice === answerB
+            ? Rating.Good
+            : Rating.Again;
+        setRating(rating);
+        onRating(question, rating);
+      } else {
+        onNext();
+      }
+    };
 
-  return (
-    <Skeleton
-      toast={
-        showResult ? (
-          <View
-            className={`flex-1 gap-[12px] ${isCorrect ? `success-theme` : `danger-theme`} bg-primary-5 px-quiz-px pt-3 pb-safe-offset-[84px]`}
-          >
-            {isCorrect ? (
-              <View className="flex-row items-center gap-[8px]">
-                <Image
-                  source={require(`@/assets/icons/check-circled-filled.svg`)}
-                  style={{ height: 32, width: 32, flexShrink: 1 }}
-                  // Blocked on https://discord.com/channels/968718419904057416/1298775941652414545
-                  tintColor="#ABD063"
-                />
-                <Text className="text-2xl font-bold text-accent-10">Nice!</Text>
-              </View>
-            ) : (
-              <>
+    const showResult = rating !== undefined;
+    const isCorrect = rating !== Rating.Again;
+
+    return (
+      <Skeleton
+        toast={
+          showResult ? (
+            <View
+              className={`flex-1 gap-[12px] ${isCorrect ? `success-theme` : `danger-theme`} bg-primary-5 px-quiz-px pt-3 pb-safe-offset-[84px]`}
+            >
+              {isCorrect ? (
                 <View className="flex-row items-center gap-[8px]">
                   <Image
-                    source={require(`@/assets/icons/close-circled-filled.svg`)}
+                    source={require(`@/assets/icons/check-circled-filled.svg`)}
                     style={{ height: 32, width: 32, flexShrink: 1 }}
                     // Blocked on https://discord.com/channels/968718419904057416/1298775941652414545
-                    tintColor="#CE675F"
+                    tintColor="#ABD063"
                   />
                   <Text className="text-2xl font-bold text-accent-10">
-                    Incorrect
+                    Nice!
                   </Text>
                 </View>
-                <Text className="text-xl font-bold leading-none text-accent-10">
-                  Correct answer:
-                </Text>
-                <View className="flex-row items-center gap-2">
-                  <Text className="border-[1px] border-dashed border-accent-10 px-1 text-xl text-accent-10">
-                    {answerA}
+              ) : (
+                <>
+                  <View className="flex-row items-center gap-[8px]">
+                    <Image
+                      source={require(
+                        `@/assets/icons/close-circled-filled.svg`,
+                      )}
+                      style={{ height: 32, width: 32, flexShrink: 1 }}
+                      // Blocked on https://discord.com/channels/968718419904057416/1298775941652414545
+                      tintColor="#CE675F"
+                    />
+                    <Text className="text-2xl font-bold text-accent-10">
+                      Incorrect
+                    </Text>
+                  </View>
+                  <Text className="text-xl font-bold leading-none text-accent-10">
+                    Correct answer:
                   </Text>
-                  <Text className="text-xl leading-none text-accent-10">
-                    ({answerB})
-                  </Text>
-                </View>
-                {hint != null ? (
+                  <View className="flex-row items-center gap-2">
+                    <Text className="border-[1px] border-dashed border-accent-10 px-1 text-xl text-accent-10">
+                      {answerA}
+                    </Text>
+                    <Text className="text-xl leading-none text-accent-10">
+                      ({answerB})
+                    </Text>
+                  </View>
+                  {hint != null ? (
+                    <Text className="text-md leading-snug text-accent-10">
+                      <Text className="font-bold">Hint:</Text> {hint}
+                    </Text>
+                  ) : null}
                   <Text className="text-md leading-snug text-accent-10">
-                    <Text className="font-bold">Hint:</Text> {hint}
+                    <Text className="font-bold">Your answer:</Text>
+                    {` `}
+                    <Text className="font-bold">
+                      {(() => {
+                        const a = missingAnswers?.find(
+                          (x) => x[0] === selectedAChoice,
+                        );
+                        return a ? (
+                          <>
+                            {a[0]} <Text className="font-normal">({a[1]})</Text>
+                          </>
+                        ) : (
+                          <>{selectedAChoice}</>
+                        );
+                      })()}
+                    </Text>
+                    {` `}+{` `}
+                    <Text className="font-bold">
+                      {(() => {
+                        const a = missingAnswers?.find(
+                          (x) => x[1] === selectedBChoice,
+                        );
+                        return a ? (
+                          <>
+                            {a[0]} <Text className="font-normal">({a[1]})</Text>
+                          </>
+                        ) : (
+                          <>{selectedBChoice}</>
+                        );
+                      })()}
+                    </Text>
                   </Text>
-                ) : null}
-                <Text className="text-md leading-snug text-accent-10">
-                  <Text className="font-bold">Your answer:</Text>
-                  {` `}
-                  <Text className="font-bold">
-                    {(() => {
-                      const a = missingAnswers?.find(
-                        (x) => x[0] === selectedAChoice,
-                      );
-                      return a ? (
-                        <>
-                          {a[0]} <Text className="font-normal">({a[1]})</Text>
-                        </>
-                      ) : (
-                        <>{selectedAChoice}</>
-                      );
-                    })()}
-                  </Text>
-                  {` `}+{` `}
-                  <Text className="font-bold">
-                    {(() => {
-                      const a = missingAnswers?.find(
-                        (x) => x[1] === selectedBChoice,
-                      );
-                      return a ? (
-                        <>
-                          {a[0]} <Text className="font-normal">({a[1]})</Text>
-                        </>
-                      ) : (
-                        <>{selectedBChoice}</>
-                      );
-                    })()}
-                  </Text>
-                </Text>
-              </>
-            )}
-          </View>
-        ) : null
-      }
-      submitButton={
-        <SubmitButton
-          state={
-            selectedAChoice === undefined || selectedBChoice === undefined
-              ? SubmitButtonState.Disabled
-              : !showResult
-                ? SubmitButtonState.Check
-                : isCorrect
-                  ? SubmitButtonState.Correct
-                  : SubmitButtonState.Incorrect
-          }
-          onPress={handleSubmit}
-        />
-      }
-    >
-      {flag != null ? (
-        <View className="flex-row items-center gap-[10px]">
-          {flag === QuestionFlag.WeakWord ? (
-            <>
-              {/* <Image
+                </>
+              )}
+            </View>
+          ) : null
+        }
+        submitButton={
+          <SubmitButton
+            state={
+              selectedAChoice === undefined || selectedBChoice === undefined
+                ? SubmitButtonState.Disabled
+                : !showResult
+                  ? SubmitButtonState.Check
+                  : isCorrect
+                    ? SubmitButtonState.Correct
+                    : SubmitButtonState.Incorrect
+            }
+            onPress={handleSubmit}
+          />
+        }
+      >
+        {flag != null ? (
+          <View className="flex-row items-center gap-[10px]">
+            {flag === QuestionFlag.WeakWord ? (
+              <>
+                {/* <Image
               source={require("@/assets/target-red.svg")}
               style={{ flexShrink: 1, width: 33, height: 30 }}
             /> */}
-              <View className="danger-theme">
+                <View className="danger-theme">
+                  <Text className="text-md font-bold uppercase text-accent-10">
+                    Weak word
+                  </Text>
+                </View>
+              </>
+            ) : null}
+            {flag === QuestionFlag.PreviousMistake ? (
+              <View className="warning-theme">
                 <Text className="text-md font-bold uppercase text-accent-10">
-                  Weak word
+                  Previous mistake
                 </Text>
               </View>
-            </>
-          ) : null}
-          {flag === QuestionFlag.PreviousMistake ? (
-            <View className="warning-theme">
-              <Text className="text-md font-bold uppercase text-accent-10">
-                Previous mistake
-              </Text>
-            </View>
-          ) : null}
+            ) : null}
+          </View>
+        ) : null}
+        <View>
+          <Text className="text-lg font-bold text-text">{prompt}</Text>
         </View>
-      ) : null}
-      <View>
-        <Text className="text-lg font-bold text-text">{prompt}</Text>
-      </View>
-      <View className="flex-1 justify-center py-quiz-px">
-        <View
-          className="flex-1"
-          style={{
-            gap: gap + buttonThickness,
-            maxHeight:
-              choiceRowCount * 80 +
-              (choiceRowCount - 1) * gap +
-              buttonThickness,
-          }}
-        >
-          {choiceRows.map(({ a, b }, i) => (
-            <View className="flex-1 flex-row gap-[28px]" key={i}>
-              {a !== undefined ? (
-                <AnswerButton2
-                  text={a}
-                  isRadical
-                  selected={a === selectedAChoice}
-                  onPress={(text) => {
-                    if (!showResult) {
-                      setSelectedAChoice(text);
-                    }
-                  }}
-                />
-              ) : (
-                <View />
-              )}
-              {b !== undefined ? (
-                <AnswerButton2
-                  text={b}
-                  selected={b === selectedBChoice}
-                  onPress={(text) => {
-                    if (!showResult) {
-                      setSelectedBChoice(text);
-                    }
-                  }}
-                />
-              ) : (
-                <View />
-              )}
-            </View>
-          ))}
+        <View className="flex-1 justify-center py-quiz-px">
+          <View
+            className="flex-1"
+            style={{
+              gap: gap + buttonThickness,
+              maxHeight:
+                choiceRowCount * 80 +
+                (choiceRowCount - 1) * gap +
+                buttonThickness,
+            }}
+          >
+            {choiceRows.map(({ a, b }, i) => (
+              <View className="flex-1 flex-row gap-[28px]" key={i}>
+                {a !== undefined ? (
+                  <AnswerButton2
+                    text={a}
+                    isRadical
+                    selected={a === selectedAChoice}
+                    onPress={(text) => {
+                      if (!showResult) {
+                        setSelectedAChoice(text);
+                      }
+                    }}
+                  />
+                ) : (
+                  <View />
+                )}
+                {b !== undefined ? (
+                  <AnswerButton2
+                    text={b}
+                    selected={b === selectedBChoice}
+                    onPress={(text) => {
+                      if (!showResult) {
+                        setSelectedBChoice(text);
+                      }
+                    }}
+                  />
+                ) : (
+                  <View />
+                )}
+              </View>
+            ))}
+          </View>
         </View>
-      </View>
-    </Skeleton>
-  );
-};
+      </Skeleton>
+    );
+  },
+);
 
 const Skeleton = ({
   children,

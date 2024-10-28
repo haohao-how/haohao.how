@@ -11,3 +11,13 @@ export async function iterTake<T>(
   }
   return results;
 }
+
+export function readonlyMapSet<K, V>(
+  map: ReadonlyMap<K, V>,
+  key: K,
+  value: V,
+): ReadonlyMap<K, V> {
+  const copy = new Map(map);
+  copy.set(key, value);
+  return copy;
+}
