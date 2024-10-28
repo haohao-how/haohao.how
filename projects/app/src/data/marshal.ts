@@ -306,7 +306,8 @@ export async function indexScan<
 >(tx: ReadTransaction, indexName: I, limit?: number): Promise<Unmarshaled[]> {
   // Work around https://github.com/rocicorp/replicache/issues/1039
   const iter = tx.scan({ indexName }).entries();
-  const results = limit ? await iterTake(iter, limit) : await iter.toArray();
+  const results =
+    limit != null ? await iterTake(iter, limit) : await iter.toArray();
   const unmarshal = indexUnmarshalers[indexName];
 
   return (

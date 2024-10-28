@@ -186,6 +186,7 @@ export default tseslint.config(
         `error`,
         { requireDefaultForNonUnion: true },
       ],
+      "@typescript-eslint/strict-boolean-expressions": `error`,
 
       //
       // @stylistic
