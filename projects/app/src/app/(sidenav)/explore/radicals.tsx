@@ -32,13 +32,11 @@ export default function RadicalsPage() {
             </Text>
             <View className="flex-row flex-wrap gap-2">
               {characters.map((char, i) => (
-                <View key={i}>
-                  <Link href={`/radical/${char}`} asChild>
-                    <RectButton2 textClassName="text-xl font-normal">
-                      {char}
-                    </RectButton2>
-                  </Link>
-                </View>
+                <Link href={`/radical/${char}`} asChild key={i}>
+                  <RectButton2 textClassName="text-xl font-normal">
+                    {char}
+                  </RectButton2>
+                </Link>
               ))}
             </View>
           </View>
