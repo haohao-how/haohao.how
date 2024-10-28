@@ -45,13 +45,7 @@ export default function RadicalsPage() {
         <Text className="text-text">Oops something broken</Text>
       ) : questions.data.length > 0 ? (
         <View className="w-full max-w-[600px] flex-1 items-stretch">
-          <QuizDeck
-            questions={questions.data}
-            onNext={(success) => {
-              if (success) {
-              }
-            }}
-          />
+          <QuizDeck questions={questions.data} />
         </View>
       ) : (
         <View
