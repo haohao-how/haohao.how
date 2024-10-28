@@ -4,8 +4,11 @@
     "details": [
       {
         "appID": "9GVZK5FM29.how.haohao.hoa",
-        "paths": [
-          "/learn/*"
+        "components": [
+          {
+            "/": "/",
+            "comment": "Only prompt to open the app from the home page, it's too distracting on other pages."
+          }
         ]
       }
     ]
