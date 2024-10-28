@@ -53,13 +53,18 @@ export const QuizDeck = ({ questions }: { questions: readonly Question[] }) => {
   // The number of questions in a row correctly answered.
   const [streakCount, setStreakCount] = useState(0);
 
-  const progress = useMemo(
-    () =>
-      Array.from(questionStateMap.values()).filter(
-        (s) => s.type === QuestionStateType.Correct,
-      ).length / questions.length,
-    [questionStateMap, questions.length],
-  );
+  const progress = useMemo(() => {
+    let p = 0;
+    for (const s of questionStateMap.values()) {
+      if (s.type === QuestionStateType.Correct) {
+        p += 1;
+      } else if (s.attempts > 0) {
+        // Give a diminishing progress for each attempt.
+        p += (Math.log(s.attempts - 0.5) + 1.9) / 8.7;
+      }
+    }
+    return p / questions.length;
+  }, [questionStateMap, questions.length]);
 
   const [currentQuestion, attempts] = useMemo((): [
     Question | undefined,
