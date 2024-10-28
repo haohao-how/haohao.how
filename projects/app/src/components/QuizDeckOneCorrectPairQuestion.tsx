@@ -170,11 +170,28 @@ export const QuizDeckOneCorrectPairQuestion = ({
         />
       }
     >
-      {flag === QuestionFlag.PreviousMistake ? (
-        <View className="warning-theme">
-          <Text className="text-md font-bold uppercase text-accent-10">
-            Previous mistake
-          </Text>
+      {flag != null ? (
+        <View className="flex-row items-center gap-[10px]">
+          {flag === QuestionFlag.WeakWord ? (
+            <>
+              {/* <Image
+              source={require("@/assets/target-red.svg")}
+              style={{ flexShrink: 1, width: 33, height: 30 }}
+            /> */}
+              <View className="danger-theme">
+                <Text className="text-md font-bold uppercase text-accent-10">
+                  Weak word
+                </Text>
+              </View>
+            </>
+          ) : null}
+          {flag === QuestionFlag.PreviousMistake ? (
+            <View className="warning-theme">
+              <Text className="text-md font-bold uppercase text-accent-10">
+                Previous mistake
+              </Text>
+            </View>
+          ) : null}
         </View>
       ) : null}
       <View>

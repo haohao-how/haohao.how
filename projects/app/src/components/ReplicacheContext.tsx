@@ -5,7 +5,7 @@ import { invariant } from "@haohaohow/lib/invariant";
 import {
   createContext,
   useContext,
-  useLayoutEffect,
+  useEffect,
   useMemo,
   useRef,
   useState,
@@ -110,7 +110,7 @@ export function useQueryOnce<QueryRet>(
   const [result, setResult] = useState<Result<QueryRet>>({ loading: true });
   const queryRef = useRef(query);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     r.query(queryRef.current).then(
       (data) => {
         setResult({ loading: false, data, error: false });
