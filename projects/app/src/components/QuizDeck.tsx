@@ -11,7 +11,7 @@ import {
 import { router } from "expo-router";
 import sortBy from "lodash/sortBy";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Animated, Text, View } from "react-native";
+import { Animated, View } from "react-native";
 import { CloseButton } from "./CloseButton";
 import { QuizDeckMultipleChoiceQuestion } from "./QuizDeckMultipleChoiceQuestion";
 import { QuizDeckOneCorrectPairQuestion } from "./QuizDeckOneCorrectPairQuestion";
@@ -61,10 +61,9 @@ export const QuizDeck = ({ questions }: { questions: readonly Question[] }) => {
     [questionStateMap, questions.length],
   );
 
-  const [currentQuestion, attempts, flag] = useMemo((): [
+  const [currentQuestion, attempts] = useMemo((): [
     Question | undefined,
-    number | undefined,
-    QuestionFlag | undefined,
+    number,
   ] => {
     const remainingQuestions = questions
       .map((q) => [q, questionStateMap.get(q)] as const)
@@ -73,17 +72,16 @@ export const QuizDeck = ({ questions }: { questions: readonly Question[] }) => {
 
     const q = x?.[0];
     if (q == null) {
-      return [undefined, undefined, undefined];
+      return [undefined, 0];
     }
 
     const attempts = questionStateMap.get(q)?.attempts ?? 0;
-    const flag =
-      q.type === QuestionType.OneCorrectPair && attempts > 0
-        ? QuestionFlag.PreviousMistake
-        : undefined;
 
-    return [q, attempts, flag];
+    return [q, attempts];
   }, [questions, questionStateMap]);
+
+  const flag =
+    attempts > 0 ? QuestionFlag.PreviousMistake : currentQuestion?.flag;
 
   // This is the engine that moves the quiz forward.
   useEffect(() => {
@@ -144,15 +142,7 @@ export const QuizDeck = ({ questions }: { questions: readonly Question[] }) => {
         gap: gap + buttonThickness,
       }}
     >
-      <View
-        style={{
-          flexDirection: `row`,
-          alignItems: `center`,
-          gap: 24,
-          paddingLeft: 16,
-          paddingRight: 16,
-        }}
-      >
+      <View className="flex-row items-center gap-[24px] px-[16px]">
         <CloseButton href="/" tintColor="#3C464D" />
         <QuizProgressBar
           progress={progress}
@@ -163,27 +153,6 @@ export const QuizDeck = ({ questions }: { questions: readonly Question[] }) => {
           }
         />
       </View>
-
-      {currentQuestion?.flag === QuestionFlag.WeakWord ? (
-        <View className="flex-row items-center gap-[10px] px-[16px]">
-          {/* <Image
-              source={require("@/assets/target-red.svg")}
-              style={{ flexShrink: 1, width: 33, height: 30 }}
-            /> */}
-          <Text
-            style={{
-              color: `#EC5A53`,
-              fontSize: 16,
-              fontWeight: `bold`,
-              textTransform: `uppercase`,
-              textShadowColor: `black`,
-              textShadowRadius: 1,
-            }}
-          >
-            Weak word
-          </Text>
-        </View>
-      ) : null}
 
       <NavigationContainer independent={true} theme={theme}>
         <Stack.Navigator
