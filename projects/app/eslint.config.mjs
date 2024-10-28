@@ -193,4 +193,24 @@ export default tseslint.config(
       "@stylistic/quotes": [`error`, `backtick`],
     },
   },
+
+  // config files
+  {
+    files: [`*.config.*`],
+    rules: {
+      "import/no-default-export": `off`,
+    },
+  },
+
+  // expo-router pages
+  {
+    files: [`src/app/**/*`],
+    ignores: [
+      `**/*+api.*`, // API routes should use named exports
+    ],
+    rules: {
+      "import/no-named-export": `error`, // The only exports should be a default for the page
+      "import/no-default-export": `off`,
+    },
+  },
 );
