@@ -2672,7 +2672,7 @@ __metadata:
     eslint-plugin-deprecation: "npm:^3.0.0"
     eslint-plugin-import: "npm:^2.31.0"
     eslint-plugin-react: "npm:^7.34.3"
-    eslint-plugin-react-compiler: "npm:19.0.0-beta-8a03594-20241020"
+    eslint-plugin-react-compiler: "npm:19.0.0-beta-9ee70a1-20241017"
     eslint-plugin-react-hooks: "npm:^4.6.2"
     expo: "npm:~51.0.37"
     expo-apple-authentication: "npm:^6.4.1"
@@ -10209,9 +10209,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-react-compiler@npm:19.0.0-beta-8a03594-20241020":
-  version: 19.0.0-beta-8a03594-20241020
-  resolution: "eslint-plugin-react-compiler@npm:19.0.0-beta-8a03594-20241020"
+"eslint-plugin-react-compiler@npm:19.0.0-beta-9ee70a1-20241017":
+  version: 19.0.0-beta-9ee70a1-20241017
+  resolution: "eslint-plugin-react-compiler@npm:19.0.0-beta-9ee70a1-20241017"
   dependencies:
     "@babel/core": "npm:^7.24.4"
     "@babel/parser": "npm:^7.24.4"
@@ -10221,7 +10221,7 @@ __metadata:
     zod-validation-error: "npm:^3.0.3"
   peerDependencies:
     eslint: ">=7"
-  checksum: 10c0/550e1c284f44ece70f443580ecdbf45e94bff3a713fa9256954bdeb8d6b4d218c911e4989f2f6f7d45c1c435d8d062e4ecc0e47933def7f103cc8c20498dc249
+  checksum: 10c0/8b77d93feab3e755e465e0cddb97b30da42e02711672cf096faf7bf38a43f86fcbe47ceb19ff49a54915a7ab74387e08275e1d406990ae03f5f4f84ea03fad8b
   languageName: node
   linkType: hard
 
