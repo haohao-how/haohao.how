@@ -112,7 +112,7 @@ export const QuizDeckOneCorrectPairQuestion = ({
                     ({answerB})
                   </Text>
                 </View>
-                {hint ? (
+                {hint != null ? (
                   <Text className="text-md leading-snug text-accent-10">
                     <Text className="font-bold">Hint:</Text> {hint}
                   </Text>
