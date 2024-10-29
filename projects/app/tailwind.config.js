@@ -1,4 +1,5 @@
 // ts-check
+/* eslint-disable @typescript-eslint/unbound-method */
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {

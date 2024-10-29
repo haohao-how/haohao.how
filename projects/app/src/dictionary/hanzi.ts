@@ -19,11 +19,11 @@ function lazyHanzi(): HanziModule {
  * @param name
  * @returns
  */
-function autoStart<K extends keyof HanziModule, T = HanziModule[K]>(
-  name: K,
-): T {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-argument
-  return ((...args: any[]) => lazyHanzi()[name](...(args as [any]))) as T;
+function autoStart<K extends keyof HanziModule>(name: K) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  return ((...args: any[]) =>
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-argument
+    lazyHanzi()[name](...(args as [any]))) as HanziModule[K];
 }
 
 export const preload = () => lazyHanzi();

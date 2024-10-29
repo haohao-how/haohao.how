@@ -215,7 +215,7 @@ export const marshalSkillReviewKey = (
   return `${skillReviewPrefix}${marshalSkillId(skill)}/${typeof date === `number` ? date : date.getTime()}` as MarshaledSkillReviewKey;
 };
 export const unmarshalSkillReviewKey = (x: string): [Skill, Date] => {
-  const result = x.match(/^sr\/(.+)\/(.+)$/);
+  const result = /^sr\/(.+)\/(.+)$/.exec(x);
   invariant(result !== null);
   const [, skillId, timestamp] = result;
   invariant(skillId !== undefined);
@@ -245,7 +245,7 @@ export const marshalSkillId = (x: Skill | MarshaledSkillId) =>
     : (`${SkillTypeMarshal[x.type]}:${x.hanzi}` as MarshaledSkillId);
 
 export const unmarshalSkillId = (x: string): Skill => {
-  const result = x.match(/^(.+?):(.+)$/);
+  const result = /^(.+?):(.+)$/.exec(x);
   invariant(result !== null);
   const [, marshaledSkillType, rest] = result;
   invariant(marshaledSkillType !== undefined);
@@ -268,7 +268,7 @@ export const marshalSkillStateKey = (x: Skill | MarshaledSkillId) => {
 };
 
 export const unmarshalSkillStateKey = (x: string): Skill => {
-  const result = x.match(/^s\/(.+)$/);
+  const result = /^s\/(.+)$/.exec(x);
   invariant(result !== null);
   const [, skillId] = result;
   invariant(skillId !== undefined);

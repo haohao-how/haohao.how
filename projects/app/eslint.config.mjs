@@ -176,7 +176,6 @@ export default tseslint.config(
       //
       // @typescript-eslint
       //
-
       "@typescript-eslint/no-var-requires": `off`,
       "@typescript-eslint/restrict-template-expressions": [
         `error`,
@@ -187,6 +186,10 @@ export default tseslint.config(
         { requireDefaultForNonUnion: true },
       ],
       "@typescript-eslint/strict-boolean-expressions": `error`,
+      "@typescript-eslint/no-import-type-side-effects": `error`,
+      "@typescript-eslint/no-unnecessary-condition": `error`,
+      // Expo/metro stuff still uses require().
+      "@typescript-eslint/no-require-imports": `off`,
 
       //
       // @stylistic
