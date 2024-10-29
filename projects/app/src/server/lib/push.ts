@@ -29,7 +29,7 @@ export async function push(userID: string, requestBody: unknown) {
   for (const mutation of push.mutations) {
     try {
       await processMutation(userID, push.clientGroupID, mutation, false);
-    } catch (e) {
+    } catch {
       await processMutation(userID, push.clientGroupID, mutation, true);
     }
   }
@@ -222,8 +222,11 @@ async function mutate(
   userID: string,
   mutation: Mutation,
 ): Promise<unknown> {
+  // eslint-disable-next-line @typescript-eslint/no-unused-expressions
   db;
+  // eslint-disable-next-line @typescript-eslint/no-unused-expressions
   userID;
+  // eslint-disable-next-line @typescript-eslint/no-unused-expressions
   mutation;
   throw new Error(`not yet implemented`);
 }

@@ -63,7 +63,7 @@
     "replicache-react": "^5.0.1",
     "tailwind-variants": "^0.2.1",
     "tailwindcss": "^3.4.14",
-    "typescript-eslint": "^7.13.1",
+    "typescript-eslint": "^8.12.1",
     "ws": "^8.17.1",
     "zod": "^3.23.8"
   },
@@ -79,7 +79,7 @@
     "@types/pg": "^8 <=8.12.x",
     "@types/react-dom": "18.2.x",
     "@types/ws": "^8 <=8.17.x",
-    "@typescript-eslint/utils": "^7.13.1",
+    "@typescript-eslint/utils": "^8.12.1",
     "drizzle-kit": "^0.26.0",
     "eslint": "^8.57.0",
     "eslint-plugin-deprecation": "^3.0.0",

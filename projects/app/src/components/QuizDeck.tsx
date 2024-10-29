@@ -184,8 +184,6 @@ export const QuizDeck = ({ questions }: { questions: readonly Question[] }) => {
                       onRating={handleRating}
                     />
                   );
-                default:
-                  question satisfies never;
               }
             }}
           />

@@ -139,10 +139,10 @@ export class ExpoSQLiteKVStoreReadImpl implements ExperimentalKVRead {
     return decoded;
   }
 
-  async release(): Promise<void> {
+  release(): void {
     log?.(`KV[${this._txId.toString()}]#release()`);
     if (this._db) {
-      await this._db.execAsync(`ROLLBACK`);
+      this._db.execSync(`ROLLBACK`);
       this._db = null;
     }
     this.onRelease();

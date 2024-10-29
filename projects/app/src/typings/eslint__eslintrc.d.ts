@@ -4,6 +4,7 @@ declare module "@eslint/eslintrc" {
     FlatConfig,
   } from "@typescript-eslint/utils/ts-eslint";
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   declare class FlatCompat {
     constructor(options?: {
       baseDirectory?: string;
@@ -15,6 +16,7 @@ declare module "@eslint/eslintrc" {
     extends(...configsToExtend: string[]): FlatConfig.ConfigArray;
     plugins(...plugins: string[]): FlatConfig.ConfigArray;
   }
+
   declare const exprt: {
     FlatCompat: typeof FlatCompat;
   };

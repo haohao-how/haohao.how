@@ -53,7 +53,7 @@ async function withDrizzleAndPool<R>(
 export async function withDrizzle<R>(f: (db: Drizzle) => Promise<R>) {
   const pool = await createPool();
   try {
-    return withDrizzleAndPool(f, pool);
+    return await withDrizzleAndPool(f, pool);
   } finally {
     await pool.end();
   }
