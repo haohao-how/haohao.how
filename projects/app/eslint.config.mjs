@@ -2,7 +2,6 @@ import url from "node:url";
 
 import { FlatCompat } from "@eslint/eslintrc";
 import stylisticPlugin from "@stylistic/eslint-plugin";
-import deprecationPlugin from "eslint-plugin-deprecation";
 import importPlugin from "eslint-plugin-import";
 import reactPlugin from "eslint-plugin-react";
 import reactCompilerPlugin from "eslint-plugin-react-compiler";
@@ -22,7 +21,6 @@ export default tseslint.config(
       [`@typescript-eslint`]: tseslint.plugin,
       [`@stylistic`]: stylisticPlugin,
       // ['@typescript-eslint/internal']: tseslintInternalPlugin,
-      [`deprecation`]: deprecationPlugin,
       // ['eslint-comments']: eslintCommentsPlugin,
       // ['eslint-plugin']: eslintPluginPlugin,
       [`import`]: importPlugin,
@@ -93,9 +91,6 @@ export default tseslint.config(
       "react/no-children-prop": [`error`, { allowFunctions: true }],
 
       "react-compiler/react-compiler": `error`,
-
-      // make sure we're not leveraging any deprecated APIs
-      "deprecation/deprecation": `error`,
 
       //
       // eslint-base

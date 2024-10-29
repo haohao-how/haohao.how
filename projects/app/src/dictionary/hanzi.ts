@@ -1,4 +1,3 @@
-// eslint-disable-next-line @stylistic/quotes
 type HanziModule = typeof import("hanzi");
 
 let hanzi: HanziModule;

@@ -19,7 +19,6 @@ const pushRequestSchema = z.object({
 });
 
 export async function push(userID: string, requestBody: unknown) {
-  // eslint-disable-next-line no-console
   console.log(`Processing push`, JSON.stringify(requestBody, null, ``));
 
   const push = pushRequestSchema.parse(requestBody);

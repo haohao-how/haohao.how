@@ -136,7 +136,6 @@ export const mutators = {
    *   reviews should be stored individually and re-aggregated to a "current
    *   state" if a review is inserted before the latest.
    */
-  // eslint-disable-next-line deprecation/deprecation
   async updateSkill(
     tx,
     {
@@ -206,7 +205,6 @@ export const mutators = {
    *   wins, but it's not even last write because we don't store the timestamp
    *   of the update).
    */
-  // eslint-disable-next-line deprecation/deprecation
   async addSkill(
     tx,
     {

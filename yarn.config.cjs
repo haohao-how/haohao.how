@@ -158,7 +158,7 @@ module.exports = defineConfig({
     await enforceScopedDependencyVersions(ctx, `@trpc/`);
     await enforceStrictTypesCompatibility(ctx, {
       "color@^4.2.3": "^3",
-      "eslint@^8.57.0": "^8",
+      "eslint@^9.13.0": "^9 <=9.13.x",
       "pg@^8.12.0": "^8 <=8.12.x",
       "ws@^8.17.1": "^8 <=8.17.x",
       "yargs@^17.7.2": "^17 <=17.7.x",
