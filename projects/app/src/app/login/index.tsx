@@ -62,7 +62,6 @@ export default function LoginPage() {
           onPress={async () => {
             let credential;
             try {
-              // eslint-disable-next-line @typescript-eslint/no-unused-vars
               credential = await AppleAuthentication.signInAsync({
                 requestedScopes: [
                   AppleAuthentication.AppleAuthenticationScope.FULL_NAME,
