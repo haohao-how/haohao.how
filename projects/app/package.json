@@ -70,7 +70,7 @@
   "devDependencies": {
     "@babel/core": "^7.20.0",
     "@eslint/eslintrc": "^3.0.2",
-    "@stylistic/eslint-plugin": "^2.2.2",
+    "@stylistic/eslint-plugin": "^2.9.0",
     "@types/babel__core": "7.20.x",
     "@types/color": "^3",
     "@types/eslint": "^8",

@@ -2707,7 +2707,7 @@ __metadata:
     "@react-navigation/native": "npm:^6.1.18"
     "@react-navigation/stack": "patch:@react-navigation/stack@npm%3A6.4.1#~/.yarn/patches/@react-navigation-stack-npm-6.4.1-52dad4e278.patch"
     "@sentry/react-native": "npm:~5.24.3"
-    "@stylistic/eslint-plugin": "npm:^2.2.2"
+    "@stylistic/eslint-plugin": "npm:^2.9.0"
     "@tanstack/react-query": "npm:^5.56.2"
     "@trpc/client": "npm:11.0.0-rc.502"
     "@trpc/react-query": "npm:11.0.0-rc.502"
@@ -5661,7 +5661,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@stylistic/eslint-plugin@npm:^2.2.2":
+"@stylistic/eslint-plugin@npm:^2.9.0":
   version: 2.9.0
   resolution: "@stylistic/eslint-plugin@npm:2.9.0"
   dependencies:
