@@ -1,4 +1,5 @@
 import { invariant } from "@haohaohow/lib/invariant";
+import { mnemonics } from "./radicalMnemonics.gen";
 
 interface RadicalDatum {
   chars: string | string[];
@@ -261,6 +262,11 @@ export const radicals = radicalData.map(
 
     if (mnemonic !== undefined) {
       radical.mnemonic = mnemonic;
+    } else {
+      const lookup = mnemonics.get(char);
+      if (lookup !== undefined) {
+        radical.mnemonic = lookup[0]?.mnemonic;
+      }
     }
 
     return radical;

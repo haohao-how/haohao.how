@@ -59,20 +59,6 @@ export default tseslint.config(
   },
 
   {
-    files: [`bin/**/*`],
-    languageOptions: {
-      globals: {
-        ...globals.es2022,
-        ...globals.node,
-      },
-      parserOptions: {
-        allowAutomaticSingleRunInference: true,
-        project: [`bin/tsconfig.json`],
-      },
-    },
-  },
-
-  {
     extends: [
       ...compat.config(reactPlugin.configs.recommended),
       ...compat.config(reactHooksPlugin.configs.recommended),
@@ -190,6 +176,24 @@ export default tseslint.config(
       // @stylistic
       //
       "@stylistic/quotes": [`error`, `backtick`],
+    },
+  },
+
+  // bin scripts
+  {
+    files: [`bin/**/*`],
+    languageOptions: {
+      globals: {
+        ...globals.es2022,
+        ...globals.node,
+      },
+      parserOptions: {
+        allowAutomaticSingleRunInference: true,
+        project: [`bin/tsconfig.json`],
+      },
+    },
+    rules: {
+      "no-console": `off`,
     },
   },
 
