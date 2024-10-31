@@ -14,8 +14,8 @@ export default function RadicalPage() {
       header={
         <ReferencePageHeader
           gradientColors={GradientAqua}
-          title={radical?.char ?? null}
-          subtitle={radical?.name ?? null}
+          title={radical?.hanzi[0] ?? null}
+          subtitle={radical?.name[0] ?? null}
         />
       }
       body={
@@ -28,7 +28,7 @@ export default function RadicalPage() {
 
           {radical !== undefined ? (
             <ReferencePageBodySection title="Meaning">
-              {[radical.name].concat(radical.nameAlts ?? []).join(`, `)}
+              {radical.name.join(`, `)}
             </ReferencePageBodySection>
           ) : null}
 

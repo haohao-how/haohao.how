@@ -14,7 +14,7 @@ import {
   unmarshalSkillReviewJson,
   unmarshalSkillStateJson,
 } from "./marshal";
-import { HanziSkill, SrsType } from "./model";
+import { HanziSkill, Skill, SrsType } from "./model";
 
 // Schema v2
 //
@@ -228,7 +228,7 @@ export async function addHanziSkill(r: HHReplicache, skill: HanziSkill) {
 
 export async function saveSkillRating(
   r: HHReplicache,
-  skill: HanziSkill,
+  skill: Skill,
   rating: Rating,
 ) {
   await r.mutate.reviewSkill({

@@ -17,10 +17,10 @@ export default function SideNavLayout() {
         </Link>
 
         <Link
-          href="/learn/radicals"
+          href="/learn/reviews"
           className="items-center rounded-md px-2 py-1 text-xl font-bold tracking-wide text-text hover:bg-primary-4 lg:self-stretch"
         >
-          Practice
+          Reviews
         </Link>
 
         <Link

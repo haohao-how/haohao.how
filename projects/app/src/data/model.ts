@@ -31,6 +31,8 @@ export interface SkillReview {
 }
 
 export enum SkillType {
+  RadicalToEnglish,
+  EnglishToRadical,
   HanziWordToEnglish,
   HanziWordToPinyinInitial,
   HanziWordToPinyinFinal,
@@ -52,8 +54,14 @@ export interface HanziSkill {
   hanzi: string;
 }
 
+export interface RadicalSkill {
+  type: SkillType.RadicalToEnglish | SkillType.EnglishToRadical;
+  hanzi: string;
+  name: string;
+}
+
 /** Data that forms the unique key for a skill */
-export type Skill = HanziSkill;
+export type Skill = HanziSkill | RadicalSkill;
 
 export enum QuestionFlag {
   WeakWord,
