@@ -89,6 +89,8 @@ const unmarshalSrsState = (x: MarshaledSrsState): SrsState | null => {
 // SkillType
 //
 const SkillTypeMarshal = {
+  [SkillType.RadicalToEnglish]: `re`,
+  [SkillType.EnglishToRadical]: `er`,
   [SkillType.HanziWordToEnglish]: `he`,
   [SkillType.HanziWordToPinyinInitial]: `hpi`,
   [SkillType.HanziWordToPinyinFinal]: `hpf`,
@@ -98,6 +100,8 @@ const SkillTypeMarshal = {
   [SkillType.ImageToHanzi]: `ih`,
 } as const;
 const SkillTypeUnmarshal = {
+  [`re`]: SkillType.RadicalToEnglish,
+  [`er`]: SkillType.EnglishToRadical,
   [`he`]: SkillType.HanziWordToEnglish,
   [`hpi`]: SkillType.HanziWordToPinyinInitial,
   [`hpf`]: SkillType.HanziWordToPinyinFinal,
@@ -239,10 +243,24 @@ export type MarshaledSkillId = string & z.BRAND<`SkillId`>;
 
 export const skillStatePrefix = `s/`;
 
-export const marshalSkillId = (x: Skill | MarshaledSkillId) =>
-  typeof x === `string`
-    ? x
-    : (`${SkillTypeMarshal[x.type]}:${x.hanzi}` as MarshaledSkillId);
+export const marshalSkillId = (x: Skill | MarshaledSkillId) => {
+  if (typeof x === `string`) {
+    return x;
+  }
+  switch (x.type) {
+    case SkillType.RadicalToEnglish:
+    case SkillType.EnglishToRadical:
+      return `${SkillTypeMarshal[x.type]}:${x.hanzi}:${x.name}` as MarshaledSkillId;
+    case SkillType.HanziWordToEnglish:
+    case SkillType.HanziWordToPinyinInitial:
+    case SkillType.HanziWordToPinyinFinal:
+    case SkillType.HanziWordToPinyinTone:
+    case SkillType.EnglishToHanzi:
+    case SkillType.PinyinToHanzi:
+    case SkillType.ImageToHanzi:
+      return `${SkillTypeMarshal[x.type]}:${x.hanzi}` as MarshaledSkillId;
+  }
+};
 
 export const unmarshalSkillId = (x: string): Skill => {
   const result = /^(.+?):(.+)$/.exec(x);
@@ -253,10 +271,26 @@ export const unmarshalSkillId = (x: string): Skill => {
 
   const skillType =
     SkillTypeUnmarshal[MarshaledSkillType.parse(marshaledSkillType)];
-  return {
-    type: skillType,
-    hanzi: rest,
-  };
+
+  switch (skillType) {
+    case SkillType.RadicalToEnglish:
+    case SkillType.EnglishToRadical: {
+      const result = /^(.+):(.+)$/.exec(rest);
+      invariant(result !== null);
+      const [, hanzi, name] = result;
+      invariant(hanzi !== undefined);
+      invariant(name !== undefined);
+      return { type: skillType, hanzi, name };
+    }
+    case SkillType.HanziWordToEnglish:
+    case SkillType.HanziWordToPinyinInitial:
+    case SkillType.HanziWordToPinyinFinal:
+    case SkillType.HanziWordToPinyinTone:
+    case SkillType.EnglishToHanzi:
+    case SkillType.PinyinToHanzi:
+    case SkillType.ImageToHanzi:
+      return { type: skillType, hanzi: rest };
+  }
 };
 export type MarshaledSkillReviewKey = string & z.BRAND<`SkillReviewKey`>;
 

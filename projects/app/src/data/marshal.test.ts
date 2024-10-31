@@ -6,7 +6,7 @@ import {
   unmarshalSkillStateJson,
   unmarshalSrsStateJson,
 } from "./marshal";
-import { SkillState, SkillType, SrsState, SrsType } from "./model";
+import { Skill, SkillState, SkillType, SrsState, SrsType } from "./model";
 
 // TODO: data generator fuzzy testing
 
@@ -14,7 +14,7 @@ void test(`Skill`, () => {
   const skill = {
     type: SkillType.HanziWordToEnglish,
     hanzi: `火`,
-  };
+  } satisfies Skill;
 
   const state: SkillState = {
     created: new Date(),

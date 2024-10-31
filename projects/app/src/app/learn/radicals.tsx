@@ -1,51 +1,92 @@
 import { QuizDeck } from "@/components/QuizDeck";
 import { RectButton } from "@/components/RectButton";
-import { useQueryOnce } from "@/components/ReplicacheContext";
+import { useReplicache } from "@/components/ReplicacheContext";
 import { generateQuestionForSkill } from "@/data/generator";
-import { IndexName, indexScan } from "@/data/marshal";
-import { formatDuration } from "date-fns/formatDuration";
-import { interval } from "date-fns/interval";
-import { intervalToDuration } from "date-fns/intervalToDuration";
+import { IndexName, indexScan, marshalSkillStateKey } from "@/data/marshal";
+import { RadicalSkill, Skill, SkillType } from "@/data/model";
+import { radicals } from "@/dictionary/radicals";
+import { useQuery } from "@tanstack/react-query";
 import { router } from "expo-router";
 import shuffle from "lodash/shuffle";
 import take from "lodash/take";
 import { Text, View } from "react-native";
 
 export default function RadicalsPage() {
-  const questions = useQueryOnce(async (tx) => {
-    const now = new Date();
+  const r = useReplicache();
 
-    // Look ahead at the next 50 skills, shuffle them and take 10. This way
-    // you don't end up with the same set over and over again (which happens a
-    // lot in development).
-    return take(
-      shuffle(
-        (await indexScan(tx, IndexName.SkillStateByDue, 50)).filter(
-          ([, { due }]) => due <= now,
-        ),
-      ),
-      10,
-    ).map(([skill]) => generateQuestionForSkill(skill));
+  const newQuizQuery = useQuery({
+    // TODO: avoid this being cached and reused when the button is clicked again
+    // later
+    queryKey: [RadicalsPage.name, `skills`],
+    queryFn: async () => {
+      const skills: Skill[] = [];
+
+      const radicalSkillTypes = new Set([
+        // SkillType.EnglishToRadical,
+        SkillType.RadicalToEnglish,
+      ]);
+
+      // Start with practicing skills that are due
+      skills.push(
+        ...(await r.query(async (tx) => {
+          const now = new Date();
+          return take(
+            shuffle(
+              // TODO: paginate or have a radical index
+              (await indexScan(tx, IndexName.SkillStateByDue, 50))
+                .filter(([{ type }]) => radicalSkillTypes.has(type))
+                .filter(([, { due }]) => due <= now)
+                .map(([skill]) => skill),
+            ),
+            10,
+          );
+        })),
+      );
+
+      // Fill the rest with new skills
+      // Create skills to pad out the rest of the quiz
+      {
+        const allRadicalSkills: RadicalSkill[] = [];
+        for (const radical of radicals) {
+          for (const hanzi of radical.hanzi) {
+            for (const name of radical.name) {
+              allRadicalSkills.push({
+                type: SkillType.RadicalToEnglish,
+                hanzi,
+                name,
+              });
+            }
+          }
+        }
+
+        await r.query(async (tx) => {
+          for (const skill of allRadicalSkills) {
+            if (!(await tx.has(marshalSkillStateKey(skill)))) {
+              skills.push(skill);
+              if (skills.length >= 10) {
+                return;
+              }
+            }
+          }
+        });
+      }
+
+      return skills.map((skill) => generateQuestionForSkill(skill));
+    },
+    retry: false,
   });
-
-  const nextSkillState = useQueryOnce(
-    async (tx) =>
-      (await indexScan(tx, IndexName.SkillStateByDue, 1)).map(
-        ([, skillState]) => skillState,
-      )[0],
-  );
 
   return (
     <View className="flex-1 items-center pt-safe-offset-[20px]">
-      {questions.loading ? (
+      {newQuizQuery.isLoading ? (
         <View className="my-auto">
           <Text className="text-text">Loading…</Text>
         </View>
-      ) : questions.error ? (
+      ) : newQuizQuery.error ? (
         <Text className="text-text">Oops something broken</Text>
-      ) : questions.data.length > 0 ? (
+      ) : newQuizQuery.isSuccess ? (
         <View className="w-full max-w-[600px] flex-1 items-stretch">
-          <QuizDeck questions={questions.data} />
+          <QuizDeck questions={newQuizQuery.data} />
         </View>
       ) : (
         <View
@@ -62,17 +103,6 @@ export default function RadicalsPage() {
             👏 You’re all caught up on your reviews!
           </Text>
           <GoHomeButton />
-          {nextSkillState.loading ||
-          nextSkillState.data === undefined ? null : (
-            <Text style={{ color: `#AAA`, textAlign: `center` }}>
-              Next review in{` `}
-              {formatDuration(
-                intervalToDuration(
-                  interval(new Date(), nextSkillState.data.due),
-                ),
-              )}
-            </Text>
-          )}
         </View>
       )}
     </View>

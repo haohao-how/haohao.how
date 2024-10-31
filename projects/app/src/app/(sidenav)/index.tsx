@@ -6,7 +6,7 @@ import {
 } from "@/components/SectionHeaderButton";
 import { GradientAqua, GradientPurple, GradientRed } from "@/components/styles";
 import { marshalSkillStateKey } from "@/data/marshal";
-import { Skill, SkillType } from "@/data/model";
+import { HanziSkill, Skill, SkillType } from "@/data/model";
 import { addHanziSkill } from "@/data/mutators";
 import { characterLookupByHanzi } from "@/dictionary/characters";
 import { Link } from "expo-router";
@@ -19,12 +19,12 @@ export default function IndexPage() {
   useEffect(() => {
     (async () => {
       const skillsToQueue = await r.query(async (tx) => {
-        const result: Skill[] = [];
+        const result: HanziSkill[] = [];
         for (const hanzi of characterLookupByHanzi.keys()) {
           const skill = {
             type: SkillType.HanziWordToEnglish,
             hanzi,
-          };
+          } satisfies Skill;
           if (!(await tx.has(marshalSkillStateKey(skill)))) {
             result.push(skill);
           }

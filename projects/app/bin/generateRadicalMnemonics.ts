@@ -33,8 +33,11 @@ const schema = z.object({
 
 const openai = new OpenAI();
 
-for (const { char: cc, name, charAlts } of radicals) {
-  for (const char of [cc, ...(charAlts ?? [])]) {
+for (const {
+  hanzi,
+  name: [name],
+} of radicals) {
+  for (const char of hanzi) {
     const result = queryOne.get(char) as
       | { radical: string; json: string; created_at: string }
       | undefined;
@@ -69,7 +72,7 @@ This is good because it ties together the meaning of the character, the characte
 
 ---
 
-Now you need to come up with a good mnemonic for the Chinese radical ${JSON.stringify(char)} (meaning ${JSON.stringify(name)}).
+Now you need to come up with a good mnemonic for the Chinese radical ${JSON.stringify(char)} (meaning ${JSON.stringify(name[0])}).
 
 Here's some steps you could follow:
 
