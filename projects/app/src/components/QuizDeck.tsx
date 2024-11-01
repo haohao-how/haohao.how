@@ -10,13 +10,13 @@ import {
   TransitionPresets,
   createStackNavigator,
 } from "@react-navigation/stack";
-import { useQuery } from "@tanstack/react-query";
+import { useQueries } from "@tanstack/react-query";
 import { Asset } from "expo-asset";
 import { Image } from "expo-image";
 import { router } from "expo-router";
 import sortBy from "lodash/sortBy";
 import { useMemo, useRef, useState } from "react";
-import { Animated, View } from "react-native";
+import { Animated, Platform, View } from "react-native";
 import { CloseButton } from "./CloseButton";
 import { QuizDeckMultipleChoiceQuestion } from "./QuizDeckMultipleChoiceQuestion";
 import { QuizDeckOneCorrectPairQuestion } from "./QuizDeckOneCorrectPairQuestion";
@@ -113,15 +113,11 @@ export const QuizDeck = ({ questions }: { questions: readonly Question[] }) => {
     },
   );
 
-  // Prefetch images
-  useQuery({
-    queryKey: [QuizDeck.name, `prefetch`],
-    queryFn: () =>
-      cacheImages([
-        require(`@/assets/icons/check-circled-filled.svg`),
-        require(`@/assets/icons/close-circled-filled.svg`),
-      ]),
-  });
+  // Prefetch images used in later screens.
+  usePrefetchImages(
+    require(`@/assets/icons/check-circled-filled.svg`),
+    require(`@/assets/icons/close-circled-filled.svg`),
+  );
 
   return (
     <View
@@ -233,11 +229,20 @@ function forHorizontalIOS({
   };
 }
 
-function cacheImages(images: (string | number)[]) {
-  return images.map((image) => {
-    if (typeof image === `string`) {
-      return Image.prefetch(image);
-    }
-    return Asset.fromModule(image).downloadAsync();
+function usePrefetchImages(...images: (string | number)[]) {
+  return useQueries({
+    queries: images.map((image) => ({
+      queryKey: [usePrefetchImages.name, image],
+      queryFn: () => cacheImage(image),
+    })),
   });
+}
+
+function cacheImage(image: string | number) {
+  if (Platform.OS === `web`) {
+    const uri = typeof image === `string` ? image : Asset.fromModule(image).uri;
+    return Image.prefetch(uri);
+  } else if (typeof image === `string`) {
+    return Asset.fromModule(image).downloadAsync();
+  }
 }
