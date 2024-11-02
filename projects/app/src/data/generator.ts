@@ -62,7 +62,7 @@ export function generateQuestionForSkill(skill: Skill): Question {
       const english = wordLookupByHanzi.get(skill.hanzi);
       invariant(english !== undefined, `couldn't find an english translation`);
       const rowCount = 5;
-      const wrong = getOtherHanzi(skill.hanzi, rowCount - 1);
+      const wrong = getOtherHanzi(skill.hanzi, (rowCount - 1) * 2);
 
       const answer = {
         type: `word`,
