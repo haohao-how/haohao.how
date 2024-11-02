@@ -27,10 +27,10 @@ function autoStart<K extends keyof HanziModule>(name: K) {
 
 export const preload = () => lazyHanzi();
 export const decompose = autoStart(`decompose`);
+export const definitionLookup = autoStart(`definitionLookup`);
 // TODO:
 // - decomposeMany
 // - ifComponentExists
-// - definitionLookup
 // - dictionarySearch
 // - getExamples
 // - getPinyin
