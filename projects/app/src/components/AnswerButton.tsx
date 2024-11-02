@@ -212,13 +212,8 @@ const pressable = tv({
   compoundVariants: [
     {
       disabled: false,
-      filled: true,
-      class: `hover:bg-accent-10`,
-    },
-    {
-      disabled: false,
       filled: false,
-      class: `hover:hover:border-primary-8`,
+      class: `hover:border-primary-8`,
     },
   ],
 });

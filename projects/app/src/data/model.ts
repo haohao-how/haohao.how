@@ -90,7 +90,7 @@ export interface OneCorrectPairQuestionRadicalAnswer {
 export interface OneCorrectPairQuestionWordAnswer {
   type: `word`;
   hanzi: string;
-  name: string;
+  definition: string;
 }
 
 export type OneCorrectPairQuestionAnswer =

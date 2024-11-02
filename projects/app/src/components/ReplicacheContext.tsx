@@ -115,7 +115,9 @@ export function useQueryOnce<QueryRet>(
       (data) => {
         setResult({ loading: false, data, error: false });
       },
-      () => {
+      (e: unknown) => {
+        // eslint-disable-next-line no-console
+        console.log(e);
         setResult({ loading: false, data: undefined, error: true });
       },
     );

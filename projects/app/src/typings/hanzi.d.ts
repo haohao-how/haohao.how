@@ -18,4 +18,16 @@ declare module "hanzi" {
   ): DecomposeResultSingle;
 
   export function start(): void;
+
+  interface Definition {
+    traditional: string;
+    simplified: string;
+    pinyin: string;
+    definition: string;
+  }
+
+  export function definitionLookup(
+    word: string,
+    scripttype?: `s`,
+  ): Definition[] | undefined;
 }

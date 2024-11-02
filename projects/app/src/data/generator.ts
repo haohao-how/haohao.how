@@ -1,6 +1,6 @@
-import { Character, characterLookupByHanzi } from "@/dictionary/characters";
+import { definitionLookup } from "@/dictionary/hanzi";
 import { Radical, radicalLookupByHanzi, radicals } from "@/dictionary/radicals";
-import { wordLookupByHanzi } from "@/dictionary/words";
+import { hsk1Words, hsk2Words, hsk3Words } from "@/dictionary/words";
 import { invariant } from "@haohaohow/lib/invariant";
 import shuffle from "lodash/shuffle";
 import {
@@ -59,15 +59,15 @@ export function generateQuestionForSkill(skill: Skill): Question {
       };
     }
     case SkillType.HanziWordToEnglish: {
-      const english = wordLookupByHanzi.get(skill.hanzi);
+      const english = definitionLookup(skill.hanzi)?.[0];
       invariant(english !== undefined, `couldn't find an english translation`);
       const rowCount = 5;
-      const wrong = getOtherHanzi(skill.hanzi, (rowCount - 1) * 2);
+      const wrong = getOtherWords(skill.hanzi, (rowCount - 1) * 2);
 
       const answer = {
         type: `word`,
         hanzi: skill.hanzi,
-        name: english.name,
+        definition: english.definition,
       } satisfies OneCorrectPairQuestionWordAnswer;
 
       if (wrong.length < 3) {
@@ -79,12 +79,16 @@ export function generateQuestionForSkill(skill: Skill): Question {
 
       const [wrongA, wrongB] = evenHalve(
         wrong.map((r) => {
-          const name = shuffle([r.name, ...(r.nameAlts ?? [])])[0];
-          invariant(name != null, `couldn't find name`);
+          const definition = definitionLookup(r)?.[0]?.definition;
+          if (definition == null) {
+            // eslint-disable-next-line no-console
+            console.error(`couldn't find a definition for ${r}`);
+            // invariant(english != null, `couldn't find a definition for ${r}`);
+          }
           return {
             type: `word`,
-            hanzi: r.char,
-            name,
+            hanzi: r,
+            definition: definition ?? `<no definition for ${r}>`,
           } satisfies OneCorrectPairQuestionWordAnswer;
         }),
       );
@@ -95,7 +99,6 @@ export function generateQuestionForSkill(skill: Skill): Question {
         groupA: shuffle([...wrongA, answer]),
         groupB: shuffle([...wrongB, answer]),
         answer,
-        hint: characterLookupByHanzi.get(skill.hanzi)?.mnemonic,
         skill,
       };
     }
@@ -126,11 +129,18 @@ function getOtherRadicals(hanzi: string, count: number): Radical[] {
   return [...result];
 }
 
-function getOtherHanzi(hanzi: string, count: number): Character[] {
-  const result = new Set<Character>();
+function getOtherWords(hanzi: string, count: number): string[] {
+  const result = new Set<string>();
 
-  for (const [h, char] of shuffle([...characterLookupByHanzi])) {
-    if (!result.has(char) && hanzi !== h) {
+  // Use words from the same HSK word list if possible, so that they're more
+  // likely to be familiar by being in a similar skill level. Otherwise fallback
+  // all HSK words.
+  const candidates = [hsk1Words, hsk2Words, hsk3Words].find((words) =>
+    words.includes(hanzi),
+  ) ?? [...hsk1Words, ...hsk2Words, ...hsk3Words];
+
+  for (const char of shuffle(candidates)) {
+    if (!result.has(char) && hanzi !== char) {
       result.add(char);
     }
     if (result.size === count) {

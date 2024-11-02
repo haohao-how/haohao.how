@@ -168,7 +168,7 @@ export const QuizDeckOneCorrectPairQuestion = memo(
                           </Text>
                         </View>
                         <Text className="text-xl leading-none text-accent-10">
-                          ({answer.name})
+                          ({answer.definition})
                         </Text>
                       </>
                     )}
@@ -186,7 +186,11 @@ export const QuizDeckOneCorrectPairQuestion = memo(
                         {selectedAChoice.hanzi}
                         {` `}
                         <Text className="font-normal">
-                          ({selectedAChoice.name})
+                          (
+                          {selectedAChoice.type === `radical`
+                            ? selectedAChoice.name
+                            : selectedAChoice.definition}
+                          )
                         </Text>
                       </Text>
                       {` `}+{` `}
@@ -194,7 +198,11 @@ export const QuizDeckOneCorrectPairQuestion = memo(
                         {selectedBChoice.hanzi}
                         {` `}
                         <Text className="font-normal">
-                          ({selectedBChoice.name})
+                          (
+                          {selectedBChoice.type === `radical`
+                            ? selectedBChoice.name
+                            : selectedBChoice.definition}
+                          )
                         </Text>
                       </Text>
                     </Text>
@@ -270,7 +278,7 @@ export const QuizDeckOneCorrectPairQuestion = memo(
                   }}
                 />
                 <AnswerButton2
-                  text={b.name}
+                  text={b.type === `radical` ? b.name : b.definition}
                   selected={b === selectedBChoice}
                   onPress={() => {
                     if (!showResult) {
@@ -437,7 +445,11 @@ const AnswerButton2 = ({
       onPress={handlePress}
       state={selected ? `selected` : `default`}
       className="flex-1"
-      textClassName={answerText({ isRadical })}
+      textClassName={answerText({
+        isRadical,
+        length:
+          text.length < 10 ? `short` : text.length < 20 ? `medium` : `long`,
+      })}
     >
       {text}
     </AnswerButton>
@@ -447,6 +459,11 @@ const AnswerButton2 = ({
 const answerText = tv({
   base: `text-lg lg:text-xl`,
   variants: {
+    length: {
+      short: `text-lg lg:text-xl`,
+      medium: `text-md lg:text-lg`,
+      long: `text-xs lg:text-md`,
+    },
     isRadical: {
       true: `border-[1px] border-primary-10 border-dashed px-1`,
     },

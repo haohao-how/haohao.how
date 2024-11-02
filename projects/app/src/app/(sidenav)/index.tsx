@@ -1,48 +1,13 @@
 import { CircleButton } from "@/components/CircleButton";
-import { useReplicache } from "@/components/ReplicacheContext";
 import {
   SectionHeaderButton,
   SectionHeaderButtonProps,
 } from "@/components/SectionHeaderButton";
 import { GradientAqua, GradientPurple, GradientRed } from "@/components/styles";
-import { marshalSkillStateKey } from "@/data/marshal";
-import { HanziSkill, Skill, SkillType } from "@/data/model";
-import { addHanziSkill } from "@/data/mutators";
-import { characterLookupByHanzi } from "@/dictionary/characters";
 import { Link } from "expo-router";
-import { useEffect } from "react";
 import { ColorValue, ScrollView, View } from "react-native";
 
 export default function IndexPage() {
-  const r = useReplicache();
-
-  useEffect(() => {
-    (async () => {
-      const skillsToQueue = await r.query(async (tx) => {
-        const result: HanziSkill[] = [];
-        for (const hanzi of characterLookupByHanzi.keys()) {
-          const skill = {
-            type: SkillType.HanziWordToEnglish,
-            hanzi,
-          } satisfies Skill;
-          if (!(await tx.has(marshalSkillStateKey(skill)))) {
-            result.push(skill);
-          }
-        }
-        return result;
-      });
-
-      for (const skill of skillsToQueue) {
-        // eslint-disable-next-line no-console
-        console.log(`Adding skill…`, marshalSkillStateKey(skill));
-        await addHanziSkill(r, skill);
-      }
-    })().catch((err: unknown) => {
-      // eslint-disable-next-line no-console
-      console.error(err);
-    });
-  }, [r]);
-
   return (
     <ScrollView
       className="flex-1"
