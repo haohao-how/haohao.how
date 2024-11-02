@@ -38,7 +38,6 @@ enum QuestionStateType {
 }
 
 const Stack = createStackNavigator<{
-  // init: never;
   question: {
     question: Question;
     flag?: QuestionFlag;

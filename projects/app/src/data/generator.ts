@@ -1,10 +1,16 @@
 import { Character, characterLookupByHanzi } from "@/dictionary/characters";
-import { Radical, radicalLookupByHanzi } from "@/dictionary/radicals";
+import { Radical, radicalLookupByHanzi, radicals } from "@/dictionary/radicals";
 import { wordLookupByHanzi } from "@/dictionary/words";
 import { invariant } from "@haohaohow/lib/invariant";
 import shuffle from "lodash/shuffle";
-import take from "lodash/take";
-import { Question, QuestionType, Skill, SkillType } from "./model";
+import {
+  OneCorrectPairQuestionRadicalAnswer,
+  OneCorrectPairQuestionWordAnswer,
+  Question,
+  QuestionType,
+  Skill,
+  SkillType,
+} from "./model";
 
 // generate a question to test a skill
 export function generateQuestionForSkill(skill: Skill): Question {
@@ -13,37 +19,42 @@ export function generateQuestionForSkill(skill: Skill): Question {
       const radical = radicalLookupByHanzi.get(skill.hanzi);
       invariant(radical !== undefined, `couldn't find a radical`);
       const rowCount = 5;
-      const wrongHanzi = getOtherRadicals(skill.hanzi, rowCount - 1);
-      const wrongNames = getOtherNonMatchingRadicalsByName([
-        skill.hanzi,
-        ...wrongHanzi,
-      ]).slice(0, wrongHanzi.length);
+      const wrong = getOtherRadicals(skill.hanzi, (rowCount - 1) * 2);
 
-      if (wrongHanzi.length < 3 || wrongNames.length < 3) {
+      const answer = {
+        type: `radical`,
+        hanzi: skill.hanzi,
+        name: skill.name,
+      } satisfies OneCorrectPairQuestionRadicalAnswer;
+
+      if (wrong.length < 3) {
         // eslint-disable-next-line no-console
         console.error(`couldn't generate enough options for RadicalToEnglish`);
       }
 
+      const [wrongA, wrongB] = evenHalve(
+        wrong.map((r) => {
+          const hanzi = shuffle(r.hanzi)[0];
+          const name = shuffle(r.name)[0];
+          invariant(
+            hanzi != null && name != null,
+            `couldn't find hanzi or name`,
+          );
+          return {
+            type: `radical`,
+            hanzi,
+            name,
+          } satisfies OneCorrectPairQuestionRadicalAnswer;
+        }),
+      );
+
       return {
         type: QuestionType.OneCorrectPair,
         prompt: `Match a radical with its name`,
-        groupA: shuffle([skill.hanzi, ...wrongHanzi]),
-        groupB: shuffle([
-          skill.name,
-          ...wrongNames.flatMap((x) => take(shuffle(x.name), 1)),
-        ]),
-        answer: [skill.hanzi, skill.name],
+        groupA: shuffle([answer, ...wrongA]),
+        groupB: shuffle([answer, ...wrongB]),
+        answer,
         hint: radical.mnemonic,
-        missingAnswers: [
-          // TODO this is probably wrong with how it's using hanzi array
-          ...wrongHanzi.map((h) => {
-            const r = radicalLookupByHanzi.get(h);
-            return r != null ? ([h, r.name.join(`,`)] as const) : null;
-          }),
-          ...wrongNames.flatMap((x) =>
-            x.hanzi.map((h) => [h, x.name.join(`,`)] as const),
-          ),
-        ].filter((x) => x != null),
         skill,
       };
     }
@@ -51,33 +62,40 @@ export function generateQuestionForSkill(skill: Skill): Question {
       const english = wordLookupByHanzi.get(skill.hanzi);
       invariant(english !== undefined, `couldn't find an english translation`);
       const rowCount = 5;
-      const wrongHanzi = getOtherHanzi(skill.hanzi, rowCount - 1);
-      const wrongEnglish = getOtherNonMatchingEnglishTranslations([
-        skill.hanzi,
-        ...wrongHanzi,
-      ]).slice(0, wrongHanzi.length);
+      const wrong = getOtherHanzi(skill.hanzi, rowCount - 1);
 
-      if (wrongHanzi.length < 3 || wrongEnglish.length < 3) {
+      const answer = {
+        type: `word`,
+        hanzi: skill.hanzi,
+        name: english.name,
+      } satisfies OneCorrectPairQuestionWordAnswer;
+
+      if (wrong.length < 3) {
         // eslint-disable-next-line no-console
         console.error(
           `couldn't generate enough options for HanziWordToEnglish`,
         );
       }
 
+      const [wrongA, wrongB] = evenHalve(
+        wrong.map((r) => {
+          const name = shuffle([r.name, ...(r.nameAlts ?? [])])[0];
+          invariant(name != null, `couldn't find name`);
+          return {
+            type: `word`,
+            hanzi: r.char,
+            name,
+          } satisfies OneCorrectPairQuestionWordAnswer;
+        }),
+      );
+
       return {
         type: QuestionType.OneCorrectPair,
-        prompt: `Match a radical with its name`,
-        groupA: shuffle([skill.hanzi, ...wrongHanzi]),
-        groupB: shuffle([english.name, ...wrongEnglish.map((x) => x.name)]),
-        answer: [skill.hanzi, english.name],
+        prompt: `Match a word with its name`,
+        groupA: shuffle([...wrongA, answer]),
+        groupB: shuffle([...wrongB, answer]),
+        answer,
         hint: characterLookupByHanzi.get(skill.hanzi)?.mnemonic,
-        missingAnswers: [
-          ...wrongHanzi.map((h) => {
-            const w = wordLookupByHanzi.get(h);
-            return w != null ? ([h, w.name] as const) : null;
-          }),
-          ...wrongEnglish.map((x) => [x.char, x.name] as const),
-        ].filter((x) => x != null),
         skill,
       };
     }
@@ -86,79 +104,37 @@ export function generateQuestionForSkill(skill: Skill): Question {
   }
 }
 
-function getOtherRadicals(hanzi: string, count: number): string[] {
-  const result = new Set<string>();
-
-  for (const h of shuffle([...radicalLookupByHanzi.keys()])) {
-    if (!result.has(h) && hanzi !== h) {
-      result.add(h);
-    }
-    if (result.size === count) {
-      break;
-    }
-  }
-
-  return [...result];
+function evenHalve<T>(items: T[]): [T[], T[]] {
+  const splitIndex = Math.floor(items.length / 2);
+  const a = items.slice(0, splitIndex);
+  const b = items.slice(splitIndex, splitIndex + a.length);
+  return [a, b];
 }
 
-function getOtherHanzi(hanzi: string, count: number): string[] {
-  const result = new Set<string>();
-
-  for (const h of shuffle([...characterLookupByHanzi.keys()])) {
-    if (!result.has(h) && hanzi !== h) {
-      result.add(h);
-    }
-    if (result.size === count) {
-      break;
-    }
-  }
-
-  return [...result];
-}
-
-function getOtherNonMatchingEnglishTranslations(hanzis: string[]): Character[] {
-  const result = new Set<Character>();
-  const forbidden = new Set(
-    hanzis.flatMap((h): string[] => {
-      const char = characterLookupByHanzi.get(h);
-      const word = wordLookupByHanzi.get(h);
-      return [
-        char?.name ?? ``,
-        ...(char?.nameAlts ?? []),
-        word?.name ?? ``,
-        ...(word?.nameAlts ?? []),
-      ];
-    }),
-  );
-
-  while (result.size < hanzis.length) {
-    for (const c of shuffle([...characterLookupByHanzi.values()])) {
-      if (!forbidden.has(c.name)) {
-        result.add(c);
-      }
-      if (result.size === hanzis.length) {
-        break;
-      }
-    }
-  }
-
-  return [...result];
-}
-
-function getOtherNonMatchingRadicalsByName(hanzis: string[]): Radical[] {
+function getOtherRadicals(hanzi: string, count: number): Radical[] {
   const result = new Set<Radical>();
-  const forbidden = new Set(
-    hanzis.flatMap((h): string[] => radicalLookupByHanzi.get(h)?.name ?? []),
-  );
 
-  while (result.size < hanzis.length) {
-    for (const radical of shuffle([...radicalLookupByHanzi.values()])) {
-      if (!radical.name.some((n) => forbidden.has(n))) {
-        result.add(radical);
-      }
-      if (result.size === hanzis.length) {
-        break;
-      }
+  for (const radical of shuffle(radicals)) {
+    if (!result.has(radical) && !radical.hanzi.includes(hanzi)) {
+      result.add(radical);
+    }
+    if (result.size === count) {
+      break;
+    }
+  }
+
+  return [...result];
+}
+
+function getOtherHanzi(hanzi: string, count: number): Character[] {
+  const result = new Set<Character>();
+
+  for (const [h, char] of shuffle([...characterLookupByHanzi])) {
+    if (!result.has(char) && hanzi !== h) {
+      result.add(char);
+    }
+    if (result.size === count) {
+      break;
     }
   }
 

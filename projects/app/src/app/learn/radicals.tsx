@@ -74,6 +74,9 @@ export default function RadicalsPage() {
       return skills.map((skill) => generateQuestionForSkill(skill));
     },
     retry: false,
+    // Preserves referential integrity of returned data, this is important so
+    // that `answer` objects are comparable to groups.
+    structuralSharing: false,
   });
 
   return (

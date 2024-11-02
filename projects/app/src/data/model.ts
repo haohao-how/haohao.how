@@ -81,14 +81,29 @@ export interface MultipleChoiceQuestion {
   choices: readonly string[];
 }
 
+export interface OneCorrectPairQuestionRadicalAnswer {
+  type: `radical`;
+  hanzi: string;
+  name: string;
+}
+
+export interface OneCorrectPairQuestionWordAnswer {
+  type: `word`;
+  hanzi: string;
+  name: string;
+}
+
+export type OneCorrectPairQuestionAnswer =
+  | OneCorrectPairQuestionRadicalAnswer
+  | OneCorrectPairQuestionWordAnswer;
+
 export interface OneCorrectPairQuestion {
   type: QuestionType.OneCorrectPair;
   prompt: string;
-  groupA: readonly string[];
-  groupB: readonly string[];
-  answer: readonly [groupA: string, groupB: string];
+  answer: OneCorrectPairQuestionAnswer;
+  groupA: readonly OneCorrectPairQuestionAnswer[];
+  groupB: readonly OneCorrectPairQuestionAnswer[];
   hint?: string;
-  missingAnswers?: readonly (readonly [groupA: string, groupB: string])[];
   flag?: QuestionFlag;
   skill: Skill;
 }
