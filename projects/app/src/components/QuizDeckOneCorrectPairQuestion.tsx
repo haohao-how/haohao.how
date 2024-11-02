@@ -1,8 +1,15 @@
-import { OneCorrectPairQuestion, QuestionFlag } from "@/data/model";
+import {
+  OneCorrectPairQuestion,
+  OneCorrectPairQuestionAnswer,
+  QuestionFlag,
+} from "@/data/model";
+import { radicalLookupByHanzi } from "@/dictionary/radicals";
 import { Rating } from "@/util/fsrs";
+import { invariant } from "@haohaohow/lib/invariant";
 import { Image } from "expo-image";
 import {
   ElementRef,
+  Fragment,
   ReactNode,
   forwardRef,
   memo,
@@ -42,29 +49,32 @@ export const QuizDeckOneCorrectPairQuestion = memo(
     onNext: () => void;
     onRating: (question: OneCorrectPairQuestion, rating: Rating) => void;
   }) {
-    const {
-      prompt,
-      answer: [answerA, answerB],
-      hint,
-      groupA,
-      groupB,
-      missingAnswers,
-    } = question;
-    const [selectedAChoice, setSelectedAChoice] = useState<string>();
-    const [selectedBChoice, setSelectedBChoice] = useState<string>();
+    const { prompt, answer, hint, groupA, groupB } = question;
+    const [selectedAChoice, setSelectedAChoice] =
+      useState<OneCorrectPairQuestionAnswer>();
+    const [selectedBChoice, setSelectedBChoice] =
+      useState<OneCorrectPairQuestionAnswer>();
     const [rating, setRating] = useState<Rating>();
 
     const choiceRowCount = Math.max(groupA.length, groupB.length);
-    const choiceRows: { a: string | undefined; b: string | undefined }[] = [];
+    const choiceRows: {
+      a: OneCorrectPairQuestionAnswer;
+      b: OneCorrectPairQuestionAnswer;
+    }[] = [];
 
     for (let i = 0; i < choiceRowCount; i++) {
-      choiceRows.push({ a: groupA[i], b: groupB[i] });
+      const a = groupA[i];
+      const b = groupB[i];
+      invariant(a !== undefined && b !== undefined, `missing choice`);
+      choiceRows.push({ a, b });
     }
+
+    invariant(groupA.includes(answer));
 
     const handleSubmit = () => {
       if (rating === undefined) {
         const rating =
-          selectedAChoice === answerA && selectedBChoice === answerB
+          selectedAChoice === answer && selectedBChoice === answer
             ? Rating.Good
             : Rating.Again;
         setRating(rating);
@@ -115,51 +125,80 @@ export const QuizDeckOneCorrectPairQuestion = memo(
                     Correct answer:
                   </Text>
                   <View className="flex-row items-center gap-2">
-                    <Text className="border-[1px] border-dashed border-accent-10 px-1 text-xl text-accent-10">
-                      {answerA}
-                    </Text>
-                    <Text className="text-xl leading-none text-accent-10">
-                      ({answerB})
-                    </Text>
+                    {answer.type === `radical` ? (
+                      <>
+                        <View className="flex-row items-center gap-1">
+                          {radicalLookupByHanzi
+                            .get(answer.hanzi)
+                            ?.hanzi.map((h, i) => (
+                              <Text
+                                key={i}
+                                className={`rounded-md border-[1px] border-dashed border-accent-10 px-1 text-xl text-accent-10 ${h !== answer.hanzi ? `opacity-50` : ``}`}
+                              >
+                                {h}
+                              </Text>
+                            ))}
+                        </View>
+                        <Text className="text-xl leading-none text-accent-10">
+                          (
+                          {radicalLookupByHanzi
+                            .get(answer.hanzi)
+                            ?.name.map((n, i, { length }) => (
+                              <Fragment key={i}>
+                                {i > 0 ? `, ` : null}
+                                <Text
+                                  className={
+                                    length > 1 && n === answer.name
+                                      ? `underline`
+                                      : undefined
+                                  }
+                                >
+                                  {n}
+                                </Text>
+                              </Fragment>
+                            ))}
+                          )
+                        </Text>
+                      </>
+                    ) : (
+                      <>
+                        <View className="flex-row items-center gap-1">
+                          <Text className="text-xl text-accent-10">
+                            {answer.hanzi}
+                          </Text>
+                        </View>
+                        <Text className="text-xl leading-none text-accent-10">
+                          ({answer.name})
+                        </Text>
+                      </>
+                    )}
                   </View>
                   {hint != null ? (
                     <Text className="text-md leading-snug text-accent-10">
                       <Text className="font-bold">Hint:</Text> {hint}
                     </Text>
                   ) : null}
-                  <Text className="text-md leading-snug text-accent-10">
-                    <Text className="font-bold">Your answer:</Text>
-                    {` `}
-                    <Text className="font-bold">
-                      {(() => {
-                        const a = missingAnswers?.find(
-                          (x) => x[0] === selectedAChoice,
-                        );
-                        return a ? (
-                          <>
-                            {a[0]} <Text className="font-normal">({a[1]})</Text>
-                          </>
-                        ) : (
-                          <>{selectedAChoice}</>
-                        );
-                      })()}
+                  {selectedAChoice != null && selectedBChoice != null ? (
+                    <Text className="text-md leading-snug text-accent-10">
+                      <Text className="font-bold">Your answer:</Text>
+                      {` `}
+                      <Text className="font-bold">
+                        {selectedAChoice.hanzi}
+                        {` `}
+                        <Text className="font-normal">
+                          ({selectedAChoice.name})
+                        </Text>
+                      </Text>
+                      {` `}+{` `}
+                      <Text className="font-bold">
+                        {selectedBChoice.hanzi}
+                        {` `}
+                        <Text className="font-normal">
+                          ({selectedBChoice.name})
+                        </Text>
+                      </Text>
                     </Text>
-                    {` `}+{` `}
-                    <Text className="font-bold">
-                      {(() => {
-                        const a = missingAnswers?.find(
-                          (x) => x[1] === selectedBChoice,
-                        );
-                        return a ? (
-                          <>
-                            {a[0]} <Text className="font-normal">({a[1]})</Text>
-                          </>
-                        ) : (
-                          <>{selectedBChoice}</>
-                        );
-                      })()}
-                    </Text>
-                  </Text>
+                  ) : null}
                 </>
               )}
             </View>
@@ -220,33 +259,25 @@ export const QuizDeckOneCorrectPairQuestion = memo(
           >
             {choiceRows.map(({ a, b }, i) => (
               <View className="flex-1 flex-row gap-[28px]" key={i}>
-                {a !== undefined ? (
-                  <AnswerButton2
-                    text={a}
-                    isRadical
-                    selected={a === selectedAChoice}
-                    onPress={(text) => {
-                      if (!showResult) {
-                        setSelectedAChoice(text);
-                      }
-                    }}
-                  />
-                ) : (
-                  <View />
-                )}
-                {b !== undefined ? (
-                  <AnswerButton2
-                    text={b}
-                    selected={b === selectedBChoice}
-                    onPress={(text) => {
-                      if (!showResult) {
-                        setSelectedBChoice(text);
-                      }
-                    }}
-                  />
-                ) : (
-                  <View />
-                )}
+                <AnswerButton2
+                  text={a.hanzi}
+                  isRadical={a.type === `radical`}
+                  selected={a === selectedAChoice}
+                  onPress={() => {
+                    if (!showResult) {
+                      setSelectedAChoice(a);
+                    }
+                  }}
+                />
+                <AnswerButton2
+                  text={b.name}
+                  selected={b === selectedBChoice}
+                  onPress={() => {
+                    if (!showResult) {
+                      setSelectedBChoice(b);
+                    }
+                  }}
+                />
               </View>
             ))}
           </View>
