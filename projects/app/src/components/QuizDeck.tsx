@@ -241,7 +241,6 @@ function cacheImage(image: string | number) {
   if (Platform.OS === `web`) {
     const uri = typeof image === `string` ? image : Asset.fromModule(image).uri;
     return Image.prefetch(uri);
-  } else if (typeof image === `string`) {
-    return Asset.fromModule(image).downloadAsync();
   }
+  return Asset.fromModule(image).downloadAsync();
 }

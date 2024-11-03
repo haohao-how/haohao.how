@@ -65,10 +65,10 @@ export const RectButton2 = forwardRef<
 });
 
 const pressable = tv({
-  base: `rounded-lg px-3 py-1 items-center justify-center`,
+  base: `rounded-lg px-3 py-[4px] items-center justify-center`,
   variants: {
     variant: {
-      filled: ``,
+      filled: `py-[5px]`,
       outline: `border-[2px]`,
       bare: ``,
     },
