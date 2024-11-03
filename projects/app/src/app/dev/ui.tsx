@@ -445,6 +445,17 @@ const AnswerButtonExamples = (props: Partial<PropsOf<typeof AnswerButton>>) => (
       <ExampleStack title="synced">
         <SyncedAnswerButtonExample />
       </ExampleStack>
+
+      <ExampleStack title="text overflow">
+        <View className="h-[120px] w-[120px] gap-2 border-2 border-dashed border-primary-8">
+          <AnswerButton className="flex-1" {...props}>
+            one two three four five six seven eight nine ten
+          </AnswerButton>
+          <AnswerButton className="flex-1" disabled {...props}>
+            one two three four five six seven eight nine ten
+          </AnswerButton>
+        </View>
+      </ExampleStack>
     </View>
 
     <LittlePrimaryHeader title="flex-col" />

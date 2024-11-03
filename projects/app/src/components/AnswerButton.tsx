@@ -168,6 +168,8 @@ export const AnswerButton = forwardRef<
             state,
             className: textClassName,
           })}
+          numberOfLines={2}
+          ellipsizeMode="tail"
         >
           {children}
         </Text>
