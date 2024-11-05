@@ -5,6 +5,7 @@ import { IndexName, indexScan, marshalSkillStateKey } from "@/data/marshal";
 import { HanziSkill, Skill, SkillType } from "@/data/model";
 import { hsk1Words } from "@/dictionary/words";
 import { useQuery } from "@tanstack/react-query";
+import isEqual from "lodash/isEqual";
 import shuffle from "lodash/shuffle";
 import take from "lodash/take";
 import { Text, View } from "react-native";
@@ -17,6 +18,7 @@ export default function LearnHsk1Page() {
     // later
     queryKey: [LearnHsk1Page.name, `skills`],
     queryFn: async () => {
+      const quizSize = 10;
       const skills: Skill[] = [];
 
       const radicalSkillTypes = new Set([
@@ -39,27 +41,32 @@ export default function LearnHsk1Page() {
                 .filter(([, { due }]) => due <= now)
                 .map(([skill]) => skill),
             ),
-            10,
+            quizSize,
           );
         })),
       );
 
       // Fill the rest with new skills
       // Create skills to pad out the rest of the quiz
-      {
-        const candidateSkills: HanziSkill[] = [];
+      if (skills.length < quizSize) {
+        const hsk1Skills: HanziSkill[] = [];
         for (const hanzi of hsk1Words) {
-          candidateSkills.push({
+          hsk1Skills.push({
             type: SkillType.HanziWordToEnglish,
             hanzi,
           });
         }
 
         await r.query(async (tx) => {
-          for (const skill of candidateSkills) {
-            if (!(await tx.has(marshalSkillStateKey(skill)))) {
+          for (const skill of hsk1Skills) {
+            if (
+              // Don't add skills that are already in the quiz
+              !skills.some((s) => isEqual(s.hanzi, skill.hanzi)) &&
+              // Don't include skills that are already practiced
+              !(await tx.has(marshalSkillStateKey(skill)))
+            ) {
               skills.push(skill);
-              if (skills.length >= 10) {
+              if (skills.length === quizSize) {
                 return;
               }
             }
