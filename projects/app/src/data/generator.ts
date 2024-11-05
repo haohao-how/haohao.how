@@ -59,8 +59,19 @@ export function generateQuestionForSkill(skill: Skill): Question {
       };
     }
     case SkillType.HanziWordToEnglish: {
-      const english = definitionLookup(skill.hanzi)?.[0];
-      invariant(english !== undefined, `couldn't find an english translation`);
+      const english =
+        definitionLookup(skill.hanzi)?.[0] ??
+        // HACK: missing definitions from hanzijs
+        {
+          车上: {
+            definition: `on the bus`,
+            pinyin: `chē shàng`,
+          },
+        }[skill.hanzi];
+      invariant(
+        english !== undefined,
+        `couldn't find an english translation for ${skill.hanzi}`,
+      );
       const rowCount = 5;
       const wrong = getOtherWords(skill.hanzi, (rowCount - 1) * 2);
 

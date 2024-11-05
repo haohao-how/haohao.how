@@ -3,6 +3,7 @@ import { saveSkillRating } from "@/data/mutators";
 import { readonlyMapSet } from "@/util/collections";
 import { Rating } from "@/util/fsrs";
 import { StackNavigationFor } from "@/util/types";
+import { invariant } from "@haohaohow/lib/invariant";
 import { NavigationContainer, useTheme } from "@react-navigation/native";
 import {
   StackCardInterpolatedStyle,
@@ -39,7 +40,7 @@ enum QuestionStateType {
 
 const Stack = createStackNavigator<{
   question: {
-    question: Question;
+    question: Question | null;
     flag?: QuestionFlag;
   };
 }>();
@@ -91,6 +92,10 @@ export const QuizDeck = ({ questions }: { questions: readonly Question[] }) => {
 
   const handleRating = useEventCallback(
     (question: Question, rating: Rating) => {
+      invariant(
+        questions.includes(question),
+        `handleRating called with wrong question`,
+      );
       const success = rating !== Rating.Again;
 
       if (question.type === QuestionType.OneCorrectPair) {
@@ -155,12 +160,22 @@ export const QuizDeck = ({ questions }: { questions: readonly Question[] }) => {
         >
           <Stack.Screen
             name="question"
-            initialParams={{ question: questions[0] }}
+            initialParams={{
+              // initial params is cached across multiple mounts, it seems like
+              // the screen names are global? and initialParams can only be set
+              // once?
+              question: null,
+            }}
             children={({
               route: {
-                params: { question, flag },
+                params: { question: q, flag },
               },
             }) => {
+              const question = q ?? questions[0];
+              invariant(
+                question != null && questions.includes(question),
+                `Stack.Screen called with wrong question`,
+              );
               switch (question.type) {
                 case QuestionType.MultipleChoice:
                   return (
