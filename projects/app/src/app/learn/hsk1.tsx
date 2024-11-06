@@ -8,15 +8,14 @@ import { useQuery } from "@tanstack/react-query";
 import isEqual from "lodash/isEqual";
 import shuffle from "lodash/shuffle";
 import take from "lodash/take";
+import { useId } from "react";
 import { Text, View } from "react-native";
 
 export default function LearnHsk1Page() {
   const r = useReplicache();
 
   const newQuizQuery = useQuery({
-    // TODO: avoid this being cached and reused when the button is clicked again
-    // later
-    queryKey: [LearnHsk1Page.name, `skills`],
+    queryKey: [LearnHsk1Page.name, `quiz`, useId()],
     queryFn: async () => {
       const quizSize = 10;
       const skills: Skill[] = [];
@@ -80,6 +79,7 @@ export default function LearnHsk1Page() {
     // Preserves referential integrity of returned data, this is important so
     // that `answer` objects are comparable to groups.
     structuralSharing: false,
+    staleTime: Infinity,
     throwOnError: true,
   });
 
@@ -90,7 +90,7 @@ export default function LearnHsk1Page() {
           <Text className="text-text">Loading…</Text>
         </View>
       ) : newQuizQuery.error ? (
-        <Text className="text-text">Oops something broken</Text>
+        <Text className="text-text">Oops something went wrong</Text>
       ) : newQuizQuery.isSuccess ? (
         <View className="w-full max-w-[600px] flex-1 items-stretch">
           <QuizDeck questions={newQuizQuery.data} />
