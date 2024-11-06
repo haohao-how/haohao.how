@@ -12,7 +12,7 @@ import { useFonts } from "expo-font";
 import { Image } from "expo-image";
 import { Slot, SplashScreen, useNavigationContainerRef } from "expo-router";
 import * as Updates from "expo-updates";
-import { remapProps } from "nativewind";
+import { cssInterop } from "nativewind";
 import { useEffect, useState } from "react";
 import { Platform, useColorScheme, View } from "react-native";
 import "../global.css";
@@ -66,7 +66,11 @@ Sentry.configureScope((scope) => {
 });
 
 // NativeWind adapters for third party components
-remapProps(Image, { className: `style` });
+
+// https://discord.com/channels/968718419904057416/1302346762899427390/1302486905656705045
+cssInterop(Image, {
+  className: { target: `style`, nativeStyleToProp: { color: `tintColor` } },
+});
 
 function RootLayout() {
   // Capture the NavigationContainer ref and register it with the instrumentation.
