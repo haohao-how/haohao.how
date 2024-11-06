@@ -1,4 +1,5 @@
 import { invariant } from "@haohaohow/lib/invariant";
+// eslint-disable-next-line no-restricted-imports
 import type { Definition } from "hanzi";
 
 type HanziModule = typeof import("hanzi");

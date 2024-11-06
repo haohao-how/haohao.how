@@ -14,7 +14,7 @@ import {
 import { useQueries } from "@tanstack/react-query";
 import { Asset } from "expo-asset";
 import { Image } from "expo-image";
-import { router } from "expo-router";
+import { Href, Link, usePathname } from "expo-router";
 import sortBy from "lodash/sortBy";
 import { useMemo, useRef, useState } from "react";
 import { Animated, Platform, View } from "react-native";
@@ -22,6 +22,7 @@ import { CloseButton } from "./CloseButton";
 import { QuizDeckMultipleChoiceQuestion } from "./QuizDeckMultipleChoiceQuestion";
 import { QuizDeckOneCorrectPairQuestion } from "./QuizDeckOneCorrectPairQuestion";
 import { QuizProgressBar } from "./QuizProgressBar";
+import { RectButton2 } from "./RectButton2";
 import { useReplicache } from "./ReplicacheContext";
 import { useEventCallback } from "./util";
 
@@ -39,6 +40,7 @@ enum QuestionStateType {
 }
 
 const Stack = createStackNavigator<{
+  results: undefined;
   question: {
     question: Question | null;
     flag?: QuestionFlag;
@@ -83,10 +85,7 @@ export const QuizDeck = ({ questions }: { questions: readonly Question[] }) => {
       const flag = attempts > 0 ? QuestionFlag.PreviousMistake : question.flag;
       navigationRef.current?.replace(`question`, { question, flag });
     } else {
-      // There's no next deck item, bail.
-      setTimeout(() => {
-        router.push(`/`);
-      }, 500);
+      navigationRef.current?.replace(`results`);
     }
   });
 
@@ -122,6 +121,8 @@ export const QuizDeck = ({ questions }: { questions: readonly Question[] }) => {
     require(`@/assets/icons/check-circled-filled.svg`),
     require(`@/assets/icons/close-circled-filled.svg`),
   );
+
+  const pathname = usePathname();
 
   return (
     <View
@@ -195,6 +196,25 @@ export const QuizDeck = ({ questions }: { questions: readonly Question[] }) => {
                     />
                   );
               }
+            }}
+          />
+          <Stack.Screen
+            name="results"
+            children={() => {
+              return (
+                <View className="gap-2">
+                  <Link href={pathname as Href} asChild replace>
+                    <RectButton2 variant="filled" accent>
+                      Keep learning
+                    </RectButton2>
+                  </Link>
+                  <Link href="/" asChild>
+                    <RectButton2 variant="bare">
+                      That’s enough for now
+                    </RectButton2>
+                  </Link>
+                </View>
+              );
             }}
           />
         </Stack.Navigator>
