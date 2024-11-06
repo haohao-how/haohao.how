@@ -1,4 +1,4 @@
-import { definitionLookup } from "@/dictionary/hanzi";
+import { simpleDefinitionLookup } from "@/dictionary/hanzi";
 import { Radical, radicalLookupByHanzi, radicals } from "@/dictionary/radicals";
 import { hsk1Words, hsk2Words, hsk3Words } from "@/dictionary/words";
 import { invariant } from "@haohaohow/lib/invariant";
@@ -59,57 +59,7 @@ export function generateQuestionForSkill(skill: Skill): Question {
       };
     }
     case SkillType.HanziWordToEnglish: {
-      const english =
-        definitionLookup(skill.hanzi)?.[0] ??
-        // HACK: missing definitions from hanzijs
-        {
-          // hsk1
-          车上: {
-            definition: `on the bus`,
-            pinyin: `chē shàng`,
-          },
-          看到: {
-            definition: `to see`,
-            pinyin: `kàn dào`,
-          },
-          请坐: {
-            definition: `please sit`,
-            pinyin: `qǐng zuò`,
-          },
-          真的: {
-            definition: `really`,
-            pinyin: `zhēn de`,
-          },
-          // hsk2
-          不太: {
-            definition: `not very`,
-            pinyin: `bù tài`,
-          },
-          好人: {
-            definition: `good person`,
-            pinyin: `hǎo rén`,
-          },
-          见过: {
-            definition: `have seen`,
-            pinyin: `jiàn guò`,
-          },
-          拿到: {
-            definition: `to get`,
-            pinyin: `ná dào`,
-          },
-          全国: {
-            definition: `whole country`,
-            pinyin: `quán guó`,
-          },
-          送到: {
-            definition: `to deliver`,
-            pinyin: `sòng dào`,
-          },
-        }[skill.hanzi];
-      invariant(
-        english !== undefined,
-        `couldn't find an english translation for ${skill.hanzi}`,
-      );
+      const english = simpleDefinitionLookup(skill.hanzi);
       const rowCount = 5;
       const wrong = getOtherWords(skill.hanzi, (rowCount - 1) * 2);
 
@@ -128,16 +78,10 @@ export function generateQuestionForSkill(skill: Skill): Question {
 
       const [wrongA, wrongB] = evenHalve(
         wrong.map((r) => {
-          const definition = definitionLookup(r)?.[0]?.definition;
-          if (definition == null) {
-            // eslint-disable-next-line no-console
-            console.error(`couldn't find a definition for ${r}`);
-            // invariant(english != null, `couldn't find a definition for ${r}`);
-          }
           return {
             type: `word`,
             hanzi: r,
-            definition: definition ?? `<no definition for ${r}>`,
+            definition: simpleDefinitionLookup(r).definition,
           } satisfies OneCorrectPairQuestionWordAnswer;
         }),
       );
