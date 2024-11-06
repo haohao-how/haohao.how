@@ -97,10 +97,9 @@ export const QuizDeckOneCorrectPairQuestion = memo(
               {isCorrect ? (
                 <View className="flex-row items-center gap-[8px]">
                   <Image
+                    className="h-[32px] w-[32px] flex-shrink text-accent-10"
                     source={require(`@/assets/icons/check-circled-filled.svg`)}
-                    style={{ height: 32, width: 32, flexShrink: 1 }}
-                    // Blocked on https://discord.com/channels/968718419904057416/1298775941652414545
-                    tintColor="#ABD063"
+                    tintColor="currentColor"
                   />
                   <Text className="text-2xl font-bold text-accent-10">
                     Nice!
@@ -110,12 +109,11 @@ export const QuizDeckOneCorrectPairQuestion = memo(
                 <>
                   <View className="flex-row items-center gap-[8px]">
                     <Image
+                      className="h-[32px] w-[32px] flex-shrink text-accent-10"
                       source={require(
                         `@/assets/icons/close-circled-filled.svg`,
                       )}
-                      style={{ height: 32, width: 32, flexShrink: 1 }}
-                      // Blocked on https://discord.com/channels/968718419904057416/1298775941652414545
-                      tintColor="#CE675F"
+                      tintColor="currentColor"
                     />
                     <Text className="text-2xl font-bold text-accent-10">
                       Incorrect
