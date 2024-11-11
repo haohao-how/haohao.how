@@ -20,9 +20,9 @@ export default function RadicalPage() {
       }
       body={
         <>
-          {radical?.mnemonic !== undefined ? (
+          {radical?.nameMnemonic !== undefined ? (
             <ReferencePageBodySection title="Mnemonic">
-              {radical.mnemonic}
+              {radical.nameMnemonic}
             </ReferencePageBodySection>
           ) : null}
 
@@ -32,9 +32,9 @@ export default function RadicalPage() {
             </ReferencePageBodySection>
           ) : null}
 
-          {radical?.pronunciations !== undefined ? (
-            <ReferencePageBodySection title="Pronunciation">
-              {radical.pronunciations.join(`, `)}
+          {radical?.pinyin !== undefined ? (
+            <ReferencePageBodySection title="Pinyin">
+              {radical.pinyin.join(`, `)}
             </ReferencePageBodySection>
           ) : null}
         </>

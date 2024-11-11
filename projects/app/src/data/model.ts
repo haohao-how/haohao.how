@@ -33,6 +33,8 @@ export interface SkillReview {
 export enum SkillType {
   RadicalToEnglish,
   EnglishToRadical,
+  RadicalToPinyin,
+  PinyinToRadical,
   HanziWordToEnglish,
   HanziWordToPinyinInitial,
   HanziWordToPinyinFinal,
@@ -54,11 +56,19 @@ export interface HanziSkill {
   hanzi: string;
 }
 
-export interface RadicalSkill {
+export interface RadicalNameSkill {
   type: SkillType.RadicalToEnglish | SkillType.EnglishToRadical;
   hanzi: string;
   name: string;
 }
+
+export interface RadicalPinyinSkill {
+  type: SkillType.RadicalToPinyin | SkillType.PinyinToRadical;
+  hanzi: string;
+  pinyin: string;
+}
+
+export type RadicalSkill = RadicalNameSkill | RadicalPinyinSkill;
 
 /** Data that forms the unique key for a skill */
 export type Skill = HanziSkill | RadicalSkill;
@@ -81,21 +91,44 @@ export interface MultipleChoiceQuestion {
   choices: readonly string[];
 }
 
-export interface OneCorrectPairQuestionRadicalAnswer {
-  type: `radical`;
-  hanzi: string;
-  name: string;
-}
+// export interface OneCorrectPairQuestionRadicalAnswer {
+//   type: `radical`;
+//   hanzi: string;
+//   nameOrPinyin: string;
+// }
 
-export interface OneCorrectPairQuestionWordAnswer {
-  type: `word`;
-  hanzi: string;
-  definition: string;
-}
+// export interface OneCorrectPairQuestionWordAnswer {
+//   type: `word`;
+//   hanzi: string;
+//   definition: string;
+// }
 
-export type OneCorrectPairQuestionAnswer =
-  | OneCorrectPairQuestionRadicalAnswer
-  | OneCorrectPairQuestionWordAnswer;
+export type OneCorrectPairQuestionChoice =
+  | {
+      type: `radical`;
+      hanzi: string;
+    }
+  | {
+      type: `hanzi`;
+      hanzi: string;
+    }
+  | {
+      type: `name`;
+      english: string;
+    }
+  | {
+      type: `pinyin`;
+      pinyin: string;
+    }
+  | {
+      type: `definition`;
+      english: string;
+    };
+
+export interface OneCorrectPairQuestionAnswer {
+  a: OneCorrectPairQuestionChoice;
+  b: OneCorrectPairQuestionChoice;
+}
 
 export interface OneCorrectPairQuestion {
   type: QuestionType.OneCorrectPair;

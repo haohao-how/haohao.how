@@ -1,14 +1,14 @@
 import { QuizDeck } from "@/components/QuizDeck";
 import { RectButton } from "@/components/RectButton";
 import { useReplicache } from "@/components/ReplicacheContext";
-import { generateQuestionForSkill } from "@/data/generator";
-import { IndexName, indexScan, marshalSkillStateKey } from "@/data/marshal";
-import { RadicalSkill, Skill, SkillType } from "@/data/model";
+import { sentryCaptureException } from "@/components/util";
+import { generateQuestionForSkillOrThrow } from "@/data/generator";
+import { marshalSkillStateKey } from "@/data/marshal";
+import { Question, RadicalSkill, SkillType } from "@/data/model";
+import { questionsForReview } from "@/data/query";
 import { radicals } from "@/dictionary/radicals";
 import { useQuery } from "@tanstack/react-query";
 import { router } from "expo-router";
-import shuffle from "lodash/shuffle";
-import take from "lodash/take";
 import { Text, View } from "react-native";
 
 export default function RadicalsPage() {
@@ -19,33 +19,23 @@ export default function RadicalsPage() {
     // later
     queryKey: [RadicalsPage.name, `skills`],
     queryFn: async () => {
-      const skills: Skill[] = [];
-
-      const radicalSkillTypes = new Set([
-        // SkillType.EnglishToRadical,
-        SkillType.RadicalToEnglish,
-      ]);
-
-      // Start with practicing skills that are due
-      skills.push(
-        ...(await r.query(async (tx) => {
-          const now = new Date();
-          return take(
-            shuffle(
-              // TODO: paginate or have a radical index
-              (await indexScan(tx, IndexName.SkillStateByDue, 50))
-                .filter(([{ type }]) => radicalSkillTypes.has(type))
-                .filter(([, { due }]) => due <= now)
-                .map(([skill]) => skill),
-            ),
-            10,
-          );
-        })),
+      const limit = 10;
+      const questions: Question[] = await r.query((tx) =>
+        questionsForReview(tx, {
+          limit,
+          sampleSize: 50,
+          skillTypes: [
+            // SkillType.EnglishToRadical,
+            SkillType.RadicalToEnglish,
+            SkillType.RadicalToPinyin,
+          ],
+        }),
       );
 
       // Fill the rest with new skills
       // Create skills to pad out the rest of the quiz
-      {
+      if (questions.length < limit) {
+        // TODO: could be generated once and cached somewhere.
         const allRadicalSkills: RadicalSkill[] = [];
         for (const radical of radicals) {
           for (const hanzi of radical.hanzi) {
@@ -56,14 +46,27 @@ export default function RadicalsPage() {
                 name,
               });
             }
+            for (const pinyin of radical.pinyin) {
+              allRadicalSkills.push({
+                type: SkillType.RadicalToPinyin,
+                hanzi,
+                pinyin,
+              });
+            }
           }
         }
 
         await r.query(async (tx) => {
           for (const skill of allRadicalSkills) {
             if (!(await tx.has(marshalSkillStateKey(skill)))) {
-              skills.push(skill);
-              if (skills.length >= 10) {
+              try {
+                questions.push(generateQuestionForSkillOrThrow(skill));
+              } catch (e) {
+                sentryCaptureException(e);
+                continue;
+              }
+
+              if (questions.length === limit) {
                 return;
               }
             }
@@ -71,9 +74,10 @@ export default function RadicalsPage() {
         });
       }
 
-      return skills.map((skill) => generateQuestionForSkill(skill));
+      return questions;
     },
     retry: false,
+    throwOnError: true,
     // Preserves referential integrity of returned data, this is important so
     // that `answer` objects are comparable to groups.
     structuralSharing: false,

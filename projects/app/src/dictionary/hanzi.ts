@@ -1,4 +1,3 @@
-import { invariant } from "@haohaohow/lib/invariant";
 // eslint-disable-next-line no-restricted-imports
 import type { Definition } from "hanzi";
 
@@ -36,9 +35,15 @@ export const definitionLookup = autoStart(`definitionLookup`);
 
 export type SimpleDefinition = Pick<Definition, `pinyin` | `definition`>;
 
-export const simpleDefinitionLookup = (hanzi: string): SimpleDefinition => {
-  const result = definitionLookup(hanzi, `s`)?.[0] ?? missingDefinitions[hanzi];
-  invariant(result !== undefined, `couldn't find a definition for ${hanzi}`);
+export const simpleDefinitionLookup = (
+  hanzi: string,
+): SimpleDefinition | null => {
+  const result =
+    definitionLookup(hanzi, `s`)?.[0] ?? missingDefinitions[hanzi] ?? null;
+  if (result == null) {
+    // eslint-disable-next-line no-console
+    console.warn(`Missing definition for ${hanzi}`);
+  }
   return result;
 };
 
@@ -85,6 +90,10 @@ const missingDefinitions: Record<string, SimpleDefinition> = {
   送到: {
     definition: `to deliver`,
     pinyin: `sòng dào`,
+  },
+  在家: {
+    definition: `at home`,
+    pinyin: `zài jiā`,
   },
 };
 

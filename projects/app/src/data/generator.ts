@@ -1,51 +1,70 @@
 import { simpleDefinitionLookup } from "@/dictionary/hanzi";
-import { Radical, radicalLookupByHanzi, radicals } from "@/dictionary/radicals";
+import { radicalLookupByHanzi, radicals } from "@/dictionary/radicals";
 import { hsk1Words, hsk2Words, hsk3Words } from "@/dictionary/words";
 import { invariant } from "@haohaohow/lib/invariant";
 import shuffle from "lodash/shuffle";
 import {
-  OneCorrectPairQuestionRadicalAnswer,
-  OneCorrectPairQuestionWordAnswer,
+  OneCorrectPairQuestionAnswer,
+  OneCorrectPairQuestionChoice,
   Question,
   QuestionType,
   Skill,
   SkillType,
 } from "./model";
 
+type BuilderChoice =
+  | { radical: string }
+  | { hanzi: string }
+  | { pinyin: string }
+  | { definition: string }
+  | { name: string };
+
+const choice = (a: BuilderChoice): OneCorrectPairQuestionChoice =>
+  `radical` in a
+    ? { type: `radical`, hanzi: a.radical }
+    : `hanzi` in a
+      ? { type: `hanzi`, hanzi: a.hanzi }
+      : `pinyin` in a
+        ? { type: `pinyin`, pinyin: a.pinyin }
+        : `definition` in a
+          ? { type: `definition`, english: a.definition }
+          : { type: `name`, english: a.name };
+
+const choicePair = (
+  a: BuilderChoice,
+  b: BuilderChoice,
+): OneCorrectPairQuestionAnswer => ({
+  a: choice(a),
+  b: choice(b),
+});
+
 // generate a question to test a skill
-export function generateQuestionForSkill(skill: Skill): Question {
+export function generateQuestionForSkillOrThrow(skill: Skill): Question {
   switch (skill.type) {
     case SkillType.RadicalToEnglish: {
       const radical = radicalLookupByHanzi.get(skill.hanzi);
       invariant(radical !== undefined, `couldn't find a radical`);
       const rowCount = 5;
-      const wrong = getOtherRadicals(skill.hanzi, (rowCount - 1) * 2);
-
-      const answer = {
-        type: `radical`,
-        hanzi: skill.hanzi,
-        name: skill.name,
-      } satisfies OneCorrectPairQuestionRadicalAnswer;
-
-      if (wrong.length < 3) {
-        // eslint-disable-next-line no-console
-        console.error(`couldn't generate enough options for RadicalToEnglish`);
-      }
-
+      const answer = choicePair({ radical: skill.hanzi }, { name: skill.name });
       const [wrongA, wrongB] = evenHalve(
-        wrong.map((r) => {
-          const hanzi = shuffle(r.hanzi)[0];
-          const name = shuffle(r.name)[0];
-          invariant(
-            hanzi != null && name != null,
-            `couldn't find hanzi or name`,
-          );
-          return {
-            type: `radical`,
-            hanzi,
-            name,
-          } satisfies OneCorrectPairQuestionRadicalAnswer;
-        }),
+        getOtherChoices(
+          shuffle(
+            radicals.flatMap((r) => {
+              const result = [];
+              for (const radical of r.hanzi) {
+                for (const name of r.name) {
+                  result.push(choicePair({ radical }, { name }));
+                }
+              }
+              return result;
+            }),
+          ),
+          {
+            initial: [JSON.stringify(answer.a), JSON.stringify(answer.b)],
+            fn: (r) => [JSON.stringify(r.a), JSON.stringify(r.b)],
+          },
+          (rowCount - 1) * 2,
+        ),
       );
 
       return {
@@ -54,37 +73,69 @@ export function generateQuestionForSkill(skill: Skill): Question {
         groupA: shuffle([answer, ...wrongA]),
         groupB: shuffle([answer, ...wrongB]),
         answer,
-        hint: radical.mnemonic,
+        hint: radical.nameMnemonic,
+        skill,
+      };
+    }
+    case SkillType.RadicalToPinyin: {
+      const radical = radicalLookupByHanzi.get(skill.hanzi);
+      invariant(radical !== undefined, `couldn't find a radical`);
+      const rowCount = 5;
+      const answer = choicePair(
+        { radical: skill.hanzi },
+        { pinyin: skill.pinyin },
+      );
+      const [wrongA, wrongB] = evenHalve(
+        getOtherChoices(
+          shuffle(
+            radicals.flatMap((r) => {
+              const result = [];
+              for (const radical of r.hanzi) {
+                for (const pinyin of r.pinyin) {
+                  result.push(choicePair({ radical }, { pinyin }));
+                }
+              }
+              return result;
+            }),
+          ),
+          {
+            initial: [JSON.stringify(answer.a), JSON.stringify(answer.b)],
+            fn: (r) => [JSON.stringify(r.a), JSON.stringify(r.b)],
+          },
+          (rowCount - 1) * 2,
+        ),
+      );
+
+      return {
+        type: QuestionType.OneCorrectPair,
+        prompt: `Match a radical with its pinyin`,
+        groupA: shuffle([answer, ...wrongA]),
+        groupB: shuffle([answer, ...wrongB]),
+        answer,
         skill,
       };
     }
     case SkillType.HanziWordToEnglish: {
       const english = simpleDefinitionLookup(skill.hanzi);
-      const rowCount = 5;
-      const wrong = getOtherWords(skill.hanzi, (rowCount - 1) * 2);
-
-      const answer = {
-        type: `word`,
-        hanzi: skill.hanzi,
-        definition: english.definition,
-      } satisfies OneCorrectPairQuestionWordAnswer;
-
-      if (wrong.length < 3) {
-        // eslint-disable-next-line no-console
-        console.error(
-          `couldn't generate enough options for HanziWordToEnglish`,
-        );
-      }
-
-      const [wrongA, wrongB] = evenHalve(
-        wrong.map((r) => {
-          return {
-            type: `word`,
-            hanzi: r,
-            definition: simpleDefinitionLookup(r).definition,
-          } satisfies OneCorrectPairQuestionWordAnswer;
-        }),
+      invariant(
+        english != null,
+        `missing definition for hanzi word ${skill.hanzi}`,
       );
+      const rowCount = 5;
+      const answer = choicePair(
+        { hanzi: skill.hanzi },
+        { definition: english.definition },
+      );
+      const otherAnswers: OneCorrectPairQuestionAnswer[] = [];
+      for (const hanzi of getOtherWords(skill.hanzi, (rowCount - 1) * 2)) {
+        const definition = simpleDefinitionLookup(hanzi)?.definition;
+        invariant(
+          definition != null,
+          `missing definition for other word ${hanzi}`,
+        );
+        otherAnswers.push(choicePair({ hanzi }, { definition }));
+      }
+      const [wrongA, wrongB] = evenHalve(otherAnswers);
 
       return {
         type: QuestionType.OneCorrectPair,
@@ -107,17 +158,30 @@ function evenHalve<T>(items: T[]): [T[], T[]] {
   return [a, b];
 }
 
-function getOtherRadicals(hanzi: string, count: number): Radical[] {
-  const result = new Set<Radical>();
+function getOtherChoices<
+  T,
+  U extends [string] | [string, string] | [string, string, string],
+>(choices: T[], uniqueBy: { initial: U; fn: (r: T) => U }, count: number): T[] {
+  const result = new Set<T>();
+  const seenKeys = uniqueBy.initial.map((x) => new Set([x]));
 
-  for (const radical of shuffle(radicals)) {
-    if (!result.has(radical) && !radical.hanzi.includes(hanzi)) {
-      result.add(radical);
+  for (const radical of shuffle(choices)) {
+    if (!result.has(radical)) {
+      const newKeys = uniqueBy.fn(radical);
+      if (!newKeys.some((k, i) => seenKeys[i]?.has(k))) {
+        newKeys.forEach((k, i) => seenKeys[i]?.add(k));
+        result.add(radical);
+      }
     }
     if (result.size === count) {
       break;
     }
   }
+
+  invariant(
+    result.size == count,
+    `couldn't get enough other choices ${result.size} != ${count}`,
+  );
 
   return [...result];
 }
@@ -140,6 +204,11 @@ function getOtherWords(hanzi: string, count: number): string[] {
       break;
     }
   }
+
+  invariant(
+    result.size == count,
+    `couldn't get enough other choices ${result.size} != ${count}`,
+  );
 
   return [...result];
 }

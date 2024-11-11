@@ -1,31 +1,24 @@
 import { QuizDeck } from "@/components/QuizDeck";
 import { RectButton } from "@/components/RectButton";
 import { useQueryOnce } from "@/components/ReplicacheContext";
-import { generateQuestionForSkill } from "@/data/generator";
 import { IndexName, indexScan } from "@/data/marshal";
+import { questionsForReview } from "@/data/query";
 import { formatDuration } from "date-fns/formatDuration";
 import { interval } from "date-fns/interval";
 import { intervalToDuration } from "date-fns/intervalToDuration";
 import { router } from "expo-router";
-import shuffle from "lodash/shuffle";
-import take from "lodash/take";
 import { Text, View } from "react-native";
 
 export default function ReviewsPage() {
   const questions = useQueryOnce(async (tx) => {
-    const now = new Date();
-
-    // Look ahead at the next 50 skills, shuffle them and take 10. This way
-    // you don't end up with the same set over and over again (which happens a
-    // lot in development).
-    return take(
-      shuffle(
-        (await indexScan(tx, IndexName.SkillStateByDue, 50)).filter(
-          ([, { due }]) => due <= now,
-        ),
-      ),
-      10,
-    ).map(([skill]) => generateQuestionForSkill(skill));
+    return await questionsForReview(tx, {
+      limit: 10,
+      dueBeforeNow: true,
+      // Look ahead at the next 50 skills, shuffle them and take 10. This way
+      // you don't end up with the same set over and over again (which happens a
+      // lot in development).
+      sampleSize: 50,
+    });
   });
 
   const nextSkillState = useQueryOnce(
