@@ -150,7 +150,7 @@ export const mnemonics = new Map<string, { mnemonic: string; rationale: string }
 
   // Write ts to disk using async node fs APIs
   await writeFile(
-    join(import.meta.dirname, `../src/dictionary/radicalMnemonics.gen.ts`),
+    join(import.meta.dirname, `../src/dictionary/radicalNameMnemonics.gen.ts`),
     ts,
     `utf8`,
   );

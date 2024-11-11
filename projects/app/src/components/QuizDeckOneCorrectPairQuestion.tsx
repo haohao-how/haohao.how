@@ -1,6 +1,7 @@
 import {
   OneCorrectPairQuestion,
   OneCorrectPairQuestionAnswer,
+  OneCorrectPairQuestionChoice,
   QuestionFlag,
 } from "@/data/model";
 import { radicalLookupByHanzi } from "@/dictionary/radicals";
@@ -50,9 +51,9 @@ export const QuizDeckOneCorrectPairQuestion = memo(
     onRating: (question: OneCorrectPairQuestion, rating: Rating) => void;
   }) {
     const { prompt, answer, hint, groupA, groupB } = question;
-    const [selectedAChoice, setSelectedAChoice] =
+    const [selectedAAnswer, setSelectedAAnswer] =
       useState<OneCorrectPairQuestionAnswer>();
-    const [selectedBChoice, setSelectedBChoice] =
+    const [selectedBAnswer, setSelectedBAnswer] =
       useState<OneCorrectPairQuestionAnswer>();
     const [rating, setRating] = useState<Rating>();
 
@@ -74,7 +75,7 @@ export const QuizDeckOneCorrectPairQuestion = memo(
     const handleSubmit = () => {
       if (rating === undefined) {
         const rating =
-          selectedAChoice === answer && selectedBChoice === answer
+          selectedAAnswer === answer && selectedBAnswer === answer
             ? Rating.Good
             : Rating.Again;
         setRating(rating);
@@ -122,87 +123,21 @@ export const QuizDeckOneCorrectPairQuestion = memo(
                   <Text className="text-xl font-bold leading-none text-accent-10">
                     Correct answer:
                   </Text>
-                  <View className="flex-row items-center gap-2">
-                    {answer.type === `radical` ? (
-                      <>
-                        <View className="flex-row items-center gap-1">
-                          {radicalLookupByHanzi
-                            .get(answer.hanzi)
-                            ?.hanzi.map((h, i) => (
-                              <Text
-                                key={i}
-                                className={`rounded-md border-[1px] border-dashed border-accent-10 px-1 text-xl text-accent-10 ${h !== answer.hanzi ? `opacity-50` : ``}`}
-                              >
-                                {h}
-                              </Text>
-                            ))}
-                        </View>
-                        <Text className="text-xl leading-none text-accent-10">
-                          (
-                          {radicalLookupByHanzi
-                            .get(answer.hanzi)
-                            ?.name.map((n, i, { length }) => (
-                              <Fragment key={i}>
-                                {i > 0 ? `, ` : null}
-                                <Text
-                                  className={
-                                    length > 1 && n === answer.name
-                                      ? `underline`
-                                      : undefined
-                                  }
-                                >
-                                  {n}
-                                </Text>
-                              </Fragment>
-                            ))}
-                          )
-                        </Text>
-                      </>
-                    ) : (
-                      <>
-                        <View className="flex-row items-center gap-1">
-                          <Text className="text-xl text-accent-10">
-                            {answer.hanzi}
-                          </Text>
-                        </View>
-                        <Text className="text-xl leading-none text-accent-10">
-                          ({answer.definition})
-                        </Text>
-                      </>
-                    )}
-                  </View>
+
+                  <ShowAnswer answer={answer} />
+
                   {hint != null ? (
                     <Text className="text-md leading-snug text-accent-10">
                       <Text className="font-bold">Hint:</Text> {hint}
                     </Text>
                   ) : null}
-                  {selectedAChoice != null && selectedBChoice != null ? (
+                  {selectedAAnswer != null && selectedBAnswer != null ? (
                     <Text className="text-md leading-snug text-accent-10">
                       <Text className="font-bold">Your answer:</Text>
                       {` `}
-                      <Text className="font-bold">
-                        {selectedAChoice.hanzi}
-                        {` `}
-                        <Text className="font-normal">
-                          (
-                          {selectedAChoice.type === `radical`
-                            ? selectedAChoice.name
-                            : selectedAChoice.definition}
-                          )
-                        </Text>
-                      </Text>
+                      <ShowAnswer answer={selectedAAnswer} small />
                       {` `}+{` `}
-                      <Text className="font-bold">
-                        {selectedBChoice.hanzi}
-                        {` `}
-                        <Text className="font-normal">
-                          (
-                          {selectedBChoice.type === `radical`
-                            ? selectedBChoice.name
-                            : selectedBChoice.definition}
-                          )
-                        </Text>
-                      </Text>
+                      <ShowAnswer answer={selectedBAnswer} small />
                     </Text>
                   ) : null}
                 </>
@@ -213,7 +148,7 @@ export const QuizDeckOneCorrectPairQuestion = memo(
         submitButton={
           <SubmitButton
             state={
-              selectedAChoice === undefined || selectedBChoice === undefined
+              selectedAAnswer === undefined || selectedBAnswer === undefined
                 ? SubmitButtonState.Disabled
                 : !showResult
                   ? SubmitButtonState.Check
@@ -265,22 +200,21 @@ export const QuizDeckOneCorrectPairQuestion = memo(
           >
             {choiceRows.map(({ a, b }, i) => (
               <View className="flex-1 flex-row gap-[28px]" key={i}>
-                <AnswerButton2
-                  text={a.hanzi}
-                  isRadical={a.type === `radical`}
-                  selected={a === selectedAChoice}
+                <ChoiceButton
+                  choice={a.a}
+                  selected={a === selectedAAnswer}
                   onPress={() => {
                     if (!showResult) {
-                      setSelectedAChoice(a);
+                      setSelectedAAnswer(a);
                     }
                   }}
                 />
-                <AnswerButton2
-                  text={b.type === `radical` ? b.name : b.definition}
-                  selected={b === selectedBChoice}
+                <ChoiceButton
+                  choice={b.b}
+                  selected={b === selectedBAnswer}
                   onPress={() => {
                     if (!showResult) {
-                      setSelectedBChoice(b);
+                      setSelectedBAnswer(b);
                     }
                   }}
                 />
@@ -292,6 +226,114 @@ export const QuizDeckOneCorrectPairQuestion = memo(
     );
   },
 );
+
+const ShowChoice = ({
+  choice,
+  includeAlternatives = false,
+  small = false,
+}: {
+  choice: OneCorrectPairQuestionChoice;
+  includeAlternatives?: boolean;
+  small?: boolean;
+}) => {
+  switch (choice.type) {
+    case `radical`: {
+      const hanzis = (includeAlternatives
+        ? radicalLookupByHanzi.get(choice.hanzi)?.hanzi
+        : null) ?? [choice.hanzi];
+      return (
+        <View className="flex-row items-center gap-1">
+          {hanzis.map((hanzi, i) => (
+            <Text
+              key={i}
+              className={choiceRadicalText({
+                alternative: hanzi !== choice.hanzi,
+                small,
+              })}
+            >
+              {hanzi}
+            </Text>
+          ))}
+        </View>
+      );
+    }
+    case `name`: {
+      const names = (includeAlternatives
+        ? radicalLookupByHanzi.get(choice.english)?.name
+        : null) ?? [choice.english];
+      return (
+        <Text className={choiceEnglishText({ small })}>
+          (
+          {names.map((n, i, { length }) => (
+            <Fragment key={i}>
+              {i > 0 ? `, ` : null}
+              <Text
+                className={
+                  length > 1 && n === choice.english ? `underline` : undefined
+                }
+              >
+                {n}
+              </Text>
+            </Fragment>
+          ))}
+          )
+        </Text>
+      );
+    }
+    default:
+      return (
+        <Text className={choiceEnglishText({ small })}>
+          {choiceText(choice)}
+        </Text>
+      );
+  }
+};
+
+const choiceRadicalText = tv({
+  base: `rounded-md border-[1px] border-dashed border-accent-10 px-1 text-xl text-accent-10`,
+  variants: {
+    alternative: {
+      true: `opacity-50`,
+    },
+    small: {
+      true: `text-md`,
+    },
+  },
+});
+
+const choiceEnglishText = tv({
+  base: `text-xl leading-none text-accent-10`,
+  variants: {
+    small: {
+      true: `text-md`,
+    },
+  },
+});
+
+const ShowAnswer = ({
+  answer: { a, b },
+  includeAlternatives = false,
+  small = false,
+}: {
+  answer: OneCorrectPairQuestionAnswer;
+  includeAlternatives?: boolean;
+  small?: boolean;
+}) => {
+  return (
+    <View className={`flex-row items-center ${small ? `gap-1` : `gap-2`}`}>
+      <ShowChoice
+        choice={a}
+        includeAlternatives={includeAlternatives}
+        small={small}
+      />
+      <ShowChoice
+        choice={b}
+        includeAlternatives={includeAlternatives}
+        small={small}
+      />
+    </View>
+  );
+};
 
 const Skeleton = ({
   children,
@@ -423,28 +465,43 @@ const SubmitButton = forwardRef<
   );
 });
 
-const AnswerButton2 = ({
+function choiceText(choice: OneCorrectPairQuestionChoice): string {
+  switch (choice.type) {
+    case `radical`:
+      return choice.hanzi;
+    case `hanzi`:
+      return choice.hanzi;
+    case `pinyin`:
+      return choice.pinyin;
+    case `definition`:
+      return choice.english;
+    case `name`:
+      return choice.english;
+  }
+}
+
+const ChoiceButton = ({
   selected,
-  text,
-  isRadical = false,
+  choice,
   onPress,
 }: {
   selected: boolean;
-  text: string;
-  isRadical?: boolean;
-  onPress: (text: string) => void;
+  choice: OneCorrectPairQuestionChoice;
+  onPress: (choice: OneCorrectPairQuestionChoice) => void;
 }) => {
   const handlePress = useCallback(() => {
-    onPress(text);
-  }, [onPress, text]);
+    onPress(choice);
+  }, [onPress, choice]);
+
+  const text = choiceText(choice);
 
   return (
     <AnswerButton
       onPress={handlePress}
       state={selected ? `selected` : `default`}
       className="flex-1"
-      textClassName={answerText({
-        isRadical,
+      textClassName={choiceButtonText({
+        isRadical: choice.type === `radical`,
         length:
           text.length < 10 ? `short` : text.length < 20 ? `medium` : `long`,
       })}
@@ -454,8 +511,11 @@ const AnswerButton2 = ({
   );
 };
 
-const answerText = tv({
-  base: `text-lg lg:text-xl`,
+const choiceButtonText = tv({
+  // px-1: Horizontal padding is necessary to give first and last letters on a
+  // line with accents enough space to not be clipped. Without this words like
+  // "lǐ" will have half the accent clipped.
+  base: `text-lg lg:text-xl px-1`,
   variants: {
     length: {
       short: `text-lg lg:text-xl`,

@@ -1,3 +1,5 @@
+import { invariant } from "@haohaohow/lib/invariant";
+
 export async function iterTake<T>(
   iter: AsyncIterableIterator<T>,
   limit: number,
@@ -20,4 +22,12 @@ export function readonlyMapSet<K, V>(
   const copy = new Map(map);
   copy.set(key, value);
   return copy;
+}
+
+export function randomOne<T>(items: readonly T[]): T {
+  invariant(
+    items.length > 0,
+    `cannot pick one random item from an empty array`,
+  );
+  return items[Math.floor(Math.random() * items.length)] as T;
 }

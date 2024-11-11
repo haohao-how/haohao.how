@@ -91,6 +91,8 @@ const unmarshalSrsState = (x: MarshaledSrsState): SrsState | null => {
 const SkillTypeMarshal = {
   [SkillType.RadicalToEnglish]: `re`,
   [SkillType.EnglishToRadical]: `er`,
+  [SkillType.RadicalToPinyin]: `rp`,
+  [SkillType.PinyinToRadical]: `pr`,
   [SkillType.HanziWordToEnglish]: `he`,
   [SkillType.HanziWordToPinyinInitial]: `hpi`,
   [SkillType.HanziWordToPinyinFinal]: `hpf`,
@@ -100,15 +102,21 @@ const SkillTypeMarshal = {
   [SkillType.ImageToHanzi]: `ih`,
 } as const;
 const SkillTypeUnmarshal = {
-  [`re`]: SkillType.RadicalToEnglish,
-  [`er`]: SkillType.EnglishToRadical,
-  [`he`]: SkillType.HanziWordToEnglish,
-  [`hpi`]: SkillType.HanziWordToPinyinInitial,
-  [`hpf`]: SkillType.HanziWordToPinyinFinal,
-  [`hpt`]: SkillType.HanziWordToPinyinTone,
-  [`eh`]: SkillType.EnglishToHanzi,
-  [`ph`]: SkillType.PinyinToHanzi,
-  [`ih`]: SkillType.ImageToHanzi,
+  [SkillTypeMarshal[SkillType.RadicalToEnglish]]: SkillType.RadicalToEnglish,
+  [SkillTypeMarshal[SkillType.EnglishToRadical]]: SkillType.EnglishToRadical,
+  [SkillTypeMarshal[SkillType.RadicalToPinyin]]: SkillType.RadicalToPinyin,
+  [SkillTypeMarshal[SkillType.PinyinToRadical]]: SkillType.PinyinToRadical,
+  [SkillTypeMarshal[SkillType.HanziWordToEnglish]]:
+    SkillType.HanziWordToEnglish,
+  [SkillTypeMarshal[SkillType.HanziWordToPinyinInitial]]:
+    SkillType.HanziWordToPinyinInitial,
+  [SkillTypeMarshal[SkillType.HanziWordToPinyinFinal]]:
+    SkillType.HanziWordToPinyinFinal,
+  [SkillTypeMarshal[SkillType.HanziWordToPinyinTone]]:
+    SkillType.HanziWordToPinyinTone,
+  [SkillTypeMarshal[SkillType.EnglishToHanzi]]: SkillType.EnglishToHanzi,
+  [SkillTypeMarshal[SkillType.PinyinToHanzi]]: SkillType.PinyinToHanzi,
+  [SkillTypeMarshal[SkillType.ImageToHanzi]]: SkillType.ImageToHanzi,
 } as const;
 
 const MarshaledSkillType = z.enum(
@@ -248,9 +256,14 @@ export const marshalSkillId = (x: Skill | MarshaledSkillId) => {
     return x;
   }
   switch (x.type) {
+    // Radical skills
     case SkillType.RadicalToEnglish:
     case SkillType.EnglishToRadical:
       return `${SkillTypeMarshal[x.type]}:${x.hanzi}:${x.name}` as MarshaledSkillId;
+    case SkillType.RadicalToPinyin:
+    case SkillType.PinyinToRadical:
+      return `${SkillTypeMarshal[x.type]}:${x.hanzi}:${x.pinyin}` as MarshaledSkillId;
+    // Hanzi skills
     case SkillType.HanziWordToEnglish:
     case SkillType.HanziWordToPinyinInitial:
     case SkillType.HanziWordToPinyinFinal:
@@ -281,6 +294,15 @@ export const unmarshalSkillId = (x: string): Skill => {
       invariant(hanzi !== undefined);
       invariant(name !== undefined);
       return { type: skillType, hanzi, name };
+    }
+    case SkillType.RadicalToPinyin:
+    case SkillType.PinyinToRadical: {
+      const result = /^(.+):(.+)$/.exec(rest);
+      invariant(result !== null);
+      const [, hanzi, pinyin] = result;
+      invariant(hanzi !== undefined);
+      invariant(pinyin !== undefined);
+      return { type: skillType, hanzi, pinyin };
     }
     case SkillType.HanziWordToEnglish:
     case SkillType.HanziWordToPinyinInitial:
@@ -350,4 +372,17 @@ export async function indexScan<
       // of [key, value].
       .map(([[, key], value]) => unmarshal([key, value]) as Unmarshaled)
   );
+}
+
+export async function* indexScanIter<
+  I extends IndexName,
+  Unmarshaled = ReturnType<(typeof indexUnmarshalers)[I]>,
+>(tx: ReadTransaction, indexName: I): AsyncGenerator<Unmarshaled> {
+  // Work around https://github.com/rocicorp/replicache/issues/1039
+  const iter = tx.scan({ indexName }).entries();
+  const unmarshal = indexUnmarshalers[indexName];
+
+  for await (const [[, key], value] of iter) {
+    yield unmarshal([key, value]) as Unmarshaled;
+  }
 }

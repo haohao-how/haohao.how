@@ -3,13 +3,20 @@ import * as Haptics from "expo-haptics";
 import { useCallback, useInsertionEffect, useRef } from "react";
 import { Platform } from "react-native";
 
+/**
+ * Alias for {@link Sentry.captureException}.
+ */
+export function sentryCaptureException(e: unknown) {
+  Sentry.captureException(e);
+}
+
 export function hapticImpactIfMobile() {
   if (Platform.OS === `ios` || Platform.OS === `android`) {
     // Calling impactAsync on an unsupported platform (e.g. web) throws an
     // exception and will crash the app.
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium).catch(
       (e: unknown) => {
-        Sentry.captureException(e);
+        sentryCaptureException(e);
       },
     );
   }

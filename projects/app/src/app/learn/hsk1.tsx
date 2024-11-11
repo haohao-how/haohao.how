@@ -1,13 +1,13 @@
 import { QuizDeck } from "@/components/QuizDeck";
 import { useReplicache } from "@/components/ReplicacheContext";
-import { generateQuestionForSkill } from "@/data/generator";
-import { IndexName, indexScan, marshalSkillStateKey } from "@/data/marshal";
-import { HanziSkill, Skill, SkillType } from "@/data/model";
+import { sentryCaptureException } from "@/components/util";
+import { generateQuestionForSkillOrThrow } from "@/data/generator";
+import { marshalSkillStateKey } from "@/data/marshal";
+import { HanziSkill, Question, QuestionType, SkillType } from "@/data/model";
+import { questionsForReview } from "@/data/query";
 import { hsk1Words } from "@/dictionary/words";
 import { useQuery } from "@tanstack/react-query";
 import isEqual from "lodash/isEqual";
-import shuffle from "lodash/shuffle";
-import take from "lodash/take";
 import { useId } from "react";
 import { Text, View } from "react-native";
 
@@ -18,36 +18,20 @@ export default function LearnHsk1Page() {
     queryKey: [LearnHsk1Page.name, `quiz`, useId()],
     queryFn: async () => {
       const quizSize = 10;
-      const skills: Skill[] = [];
-
-      const radicalSkillTypes = new Set([
-        // SkillType.EnglishToRadical,
-        SkillType.HanziWordToEnglish,
-      ]);
 
       // Start with practicing skills that are due
-      skills.push(
-        ...(await r.query(async (tx) => {
-          const now = new Date();
-          return take(
-            shuffle(
-              // TODO: paginate or have a radical index
-              (await indexScan(tx, IndexName.SkillStateByDue, 50))
-                .filter(
-                  ([{ type, hanzi }]) =>
-                    radicalSkillTypes.has(type) && hsk1Words.includes(hanzi),
-                )
-                .filter(([, { due }]) => due <= now)
-                .map(([skill]) => skill),
-            ),
-            quizSize,
-          );
-        })),
+      const questions: Question[] = await r.query((tx) =>
+        questionsForReview(tx, {
+          limit: quizSize,
+          sampleSize: 50,
+          filter: (skill) => hsk1Words.includes(skill.hanzi),
+          skillTypes: [SkillType.HanziWordToEnglish],
+        }),
       );
 
       // Fill the rest with new skills
       // Create skills to pad out the rest of the quiz
-      if (skills.length < quizSize) {
+      if (questions.length < quizSize) {
         const hsk1Skills: HanziSkill[] = [];
         for (const hanzi of hsk1Words) {
           hsk1Skills.push({
@@ -60,12 +44,22 @@ export default function LearnHsk1Page() {
           for (const skill of hsk1Skills) {
             if (
               // Don't add skills that are already in the quiz
-              !skills.some((s) => isEqual(s.hanzi, skill.hanzi)) &&
+              !questions.some(
+                (q) =>
+                  q.type === QuestionType.OneCorrectPair &&
+                  isEqual(q.skill.hanzi, skill.hanzi),
+              ) &&
               // Don't include skills that are already practiced
               !(await tx.has(marshalSkillStateKey(skill)))
             ) {
-              skills.push(skill);
-              if (skills.length === quizSize) {
+              try {
+                questions.push(generateQuestionForSkillOrThrow(skill));
+              } catch (e) {
+                sentryCaptureException(e);
+                continue;
+              }
+
+              if (questions.length === quizSize) {
                 return;
               }
             }
@@ -73,7 +67,7 @@ export default function LearnHsk1Page() {
         });
       }
 
-      return skills.map((skill) => generateQuestionForSkill(skill));
+      return questions;
     },
     retry: false,
     // Preserves referential integrity of returned data, this is important so
