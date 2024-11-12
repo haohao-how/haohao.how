@@ -40,7 +40,7 @@ export async function questionsForReview(
     }
 
     try {
-      result.push(generateQuestionForSkillOrThrow(skill));
+      result.push(await generateQuestionForSkillOrThrow(skill));
     } catch (e) {
       sentryCaptureException(e);
       continue;

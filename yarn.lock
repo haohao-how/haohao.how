@@ -2699,6 +2699,7 @@ __metadata:
     expo-av: "npm:~14.0.7"
     expo-constants: "npm:~16.0.2"
     expo-crypto: "npm:^13.0.2"
+    expo-file-system: "npm:^17.0.1"
     expo-font: "npm:~12.0.10"
     expo-haptics: "npm:~13.0.1"
     expo-image: "npm:~1.13.0"
@@ -10494,7 +10495,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"expo-file-system@npm:~17.0.1":
+"expo-file-system@npm:^17.0.1, expo-file-system@npm:~17.0.1":
   version: 17.0.1
   resolution: "expo-file-system@npm:17.0.1"
   peerDependencies:

@@ -8,6 +8,8 @@ let config = getDefaultConfig(__dirname);
 // Fixes "Metro has encountered an error: While trying to resolve module `replicache-react`"
 config.resolver.unstable_enablePackageExports = true;
 
+config.resolver.assetExts = [...config.resolver.assetExts, `jsonasset`];
+
 config = withSentryConfig(config);
 
 config = withNativeWind(config, { input: `./src/global.css`, inlineRem: 16 });

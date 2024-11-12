@@ -1,5 +1,4 @@
 import { invariant } from "@haohaohow/lib/invariant";
-import { mnemonics } from "./radicalNameMnemonics.gen";
 
 interface RadicalDatum {
   hanzi: string[];
@@ -9,7 +8,6 @@ interface RadicalDatum {
 
 export interface Radical {
   hanzi: string[];
-  nameMnemonic?: string;
   name: string[];
   pinyin: string[];
 }
@@ -245,13 +243,6 @@ export const radicals = radicalData.map(({ hanzi: hanzi, name, pinyin }) => {
     name,
     pinyin,
   };
-
-  if (hanzi[0] != undefined) {
-    const lookup = mnemonics.get(hanzi[0]);
-    if (lookup !== undefined) {
-      radical.nameMnemonic = lookup[0]?.mnemonic;
-    }
-  }
 
   return radical;
 });

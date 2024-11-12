@@ -3,11 +3,21 @@ import { ReferencePageBodySection } from "@/components/ReferencePageBodySection"
 import { ReferencePageHeader } from "@/components/ReferencePageHeader";
 import { GradientAqua } from "@/components/styles";
 import { radicalLookupByHanzi } from "@/dictionary/radicals";
+import { asyncJson } from "@/dictionary/radicalsAsync";
+import { useQuery } from "@tanstack/react-query";
 import { useLocalSearchParams } from "expo-router";
 
 export default function RadicalPage() {
   const { id } = useLocalSearchParams<`/character/[id]`>();
   const radical = radicalLookupByHanzi.get(id);
+
+  const nameMnemonic = useQuery({
+    queryKey: [`character.radical`, id],
+    queryFn: async () => {
+      return asyncJson.lookupNameMnemonic(id);
+    },
+    throwOnError: true,
+  });
 
   return (
     <ReferencePage
@@ -20,9 +30,9 @@ export default function RadicalPage() {
       }
       body={
         <>
-          {radical?.nameMnemonic !== undefined ? (
+          {nameMnemonic.data !== undefined ? (
             <ReferencePageBodySection title="Mnemonic">
-              {radical.nameMnemonic}
+              {nameMnemonic.data.mnemonic}
             </ReferencePageBodySection>
           ) : null}
 
