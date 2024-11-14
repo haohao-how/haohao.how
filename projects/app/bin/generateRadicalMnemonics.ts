@@ -1,9 +1,15 @@
-import { writeFile } from "node:fs/promises";
+import { readFile, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import { DatabaseSync } from "node:sqlite";
 import OpenAI from "openai";
 import { z } from "zod";
-import { radicals } from "../src/dictionary/radicals.js";
+
+const radicals = JSON.parse(
+  await readFile(
+    join(import.meta.dirname, `../src/dictionary/radicals.jsonasset`),
+    `utf8`,
+  ),
+) as { hanzi: string[]; name: string[] }[];
 
 const db = new DatabaseSync(import.meta.filename.replace(/\..+$/, `.db`));
 
@@ -72,7 +78,7 @@ This is good because it ties together the meaning of the character, the characte
 
 ---
 
-Now you need to come up with a good mnemonic for the Chinese radical ${JSON.stringify(char)} (meaning ${JSON.stringify(name[0])}).
+Now you need to come up with a good mnemonic for the Chinese radical ${JSON.stringify(char)} (meaning ${JSON.stringify(name?.[0])}).
 
 Here's some steps you could follow:
 
@@ -96,7 +102,7 @@ Output in the format:
       ],
     });
 
-    let rawJson = completion.choices[0].message.content;
+    let rawJson = completion.choices[0]?.message.content;
 
     if (rawJson == null) {
       console.error(`Failed to get response for ${char} (${name})`);

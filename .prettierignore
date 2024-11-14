@@ -1,0 +1,6 @@
+# This file must be in the root to be used by VS Code auto save.
+/projects/app/drizzle/meta
+/projects/app/api/*.json
+/projects/app/api/*.yaml
+/projects/app/.vercel
+*.jsonasset

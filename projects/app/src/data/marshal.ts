@@ -378,11 +378,40 @@ export async function* indexScanIter<
   I extends IndexName,
   Unmarshaled = ReturnType<(typeof indexUnmarshalers)[I]>,
 >(tx: ReadTransaction, indexName: I): AsyncGenerator<Unmarshaled> {
-  // Work around https://github.com/rocicorp/replicache/issues/1039
-  const iter = tx.scan({ indexName }).entries();
-  const unmarshal = indexUnmarshalers[indexName];
+  // HACK: convoluted workaround to fix a bug in Safari where the transaction
+  // would be prematurely closed with:
+  //
+  // > InvalidStateError: Failed to execute 'objectStore' on 'IDBTransaction':
+  // > The transaction finished.
+  //
+  // See also https://github.com/rocicorp/replicache/issues/486
+  //
+  // This approach synchronously loads a page of results at a time and then
+  // releases the transaction. This is not ideal, but seems better than using
+  // `.toArray()` which doesn't honor `limit` when using an index, so it would
+  // load the entire index at a time (see
+  // https://github.com/rocicorp/replicache/issues/1039).
 
-  for await (const [[, key], value] of iter) {
-    yield unmarshal([key, value]) as Unmarshaled;
-  }
+  const unmarshal = indexUnmarshalers[indexName];
+  const pageSize = 50;
+  let page: [string, ReadonlyJSONValue][];
+  let start: { key: string; exclusive: true } | undefined;
+
+  do {
+    page = [];
+
+    for await (const [[, key], value] of tx
+      .scan({ indexName, start })
+      .entries()) {
+      page.push([key, value]);
+      if (page.length === pageSize) {
+        start = { key, exclusive: true };
+        break;
+      }
+    }
+
+    for (const kv of page) {
+      yield unmarshal(kv) as Unmarshaled;
+    }
+  } while (page.length > 0);
 }

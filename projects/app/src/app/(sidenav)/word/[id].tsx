@@ -2,48 +2,56 @@ import { ReferencePage } from "@/components/ReferencePage";
 import { ReferencePageBodySection } from "@/components/ReferencePageBodySection";
 import { ReferencePageHeader } from "@/components/ReferencePageHeader";
 import { GradientPurple } from "@/components/styles";
-import { wordLookupByHanzi } from "@/dictionary/words";
+import { lookupWord } from "@/dictionary/dictionary";
+import { useQuery } from "@tanstack/react-query";
 import { useLocalSearchParams } from "expo-router";
 
 export default function WordPage() {
   const { id } = useLocalSearchParams<`/word/[id]`>();
-  const word = wordLookupByHanzi.get(id);
+
+  const query = useQuery({
+    queryKey: [`word`, id],
+    queryFn: async () => {
+      return await lookupWord(id);
+    },
+    throwOnError: true,
+  });
 
   return (
     <ReferencePage
       header={
         <ReferencePageHeader
           gradientColors={GradientPurple}
-          title={word?.text ?? null}
-          subtitle={word?.name ?? null}
+          title={id}
+          subtitle={query.data?.definition ?? null}
         />
       }
       body={
-        <>
-          {word?.mnemonic !== undefined ? (
+        query.isLoading ? (
+          <>Loading</>
+        ) : query.isError ? (
+          <>Error</>
+        ) : (
+          <>
             <ReferencePageBodySection title="Mnemonic">
-              {word.mnemonic}
+              {`todo`}
             </ReferencePageBodySection>
-          ) : null}
 
-          {word !== undefined ? (
             <ReferencePageBodySection title="Meaning">
-              {[word.name].concat(word.nameAlts ?? []).join(`, `)}
+              {query.data?.definition ?? ``}
             </ReferencePageBodySection>
-          ) : null}
 
-          {word?.pronunciations !== undefined ? (
-            <ReferencePageBodySection title="Pronunciation">
-              {word.pronunciations.join(`, `)}
-            </ReferencePageBodySection>
-          ) : null}
+            {query.data?.pinyin !== undefined ? (
+              <ReferencePageBodySection title="Pronunciation">
+                {query.data.pinyin}
+              </ReferencePageBodySection>
+            ) : null}
 
-          {word?.characters !== undefined ? (
             <ReferencePageBodySection title="Characters">
-              {word.characters.join(`, `)}
+              {[].join(`, `)}
             </ReferencePageBodySection>
-          ) : null}
-        </>
+          </>
+        )
       }
     />
   );

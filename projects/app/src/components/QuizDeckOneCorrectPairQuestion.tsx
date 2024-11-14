@@ -4,9 +4,10 @@ import {
   OneCorrectPairQuestionChoice,
   QuestionFlag,
 } from "@/data/model";
-import { radicalLookupByHanzi } from "@/dictionary/radicals";
+import { lookupRadicalByHanzi } from "@/dictionary/dictionary";
 import { Rating } from "@/util/fsrs";
 import { invariant } from "@haohaohow/lib/invariant";
+import { useQuery } from "@tanstack/react-query";
 import { Image } from "expo-image";
 import {
   ElementRef,
@@ -236,11 +237,27 @@ const ShowChoice = ({
   includeAlternatives?: boolean;
   small?: boolean;
 }) => {
+  const radical = choice.type === `radical` ? choice.hanzi : null;
+
+  const query = useQuery({
+    queryKey: [`radical`, radical],
+    queryFn: async () => {
+      if (radical != null) {
+        return await lookupRadicalByHanzi(radical);
+      }
+    },
+    enabled: includeAlternatives && radical != null,
+  });
+
+  if (query.isLoading) {
+    return <Text className={choiceRadicalText({ small })}>Loading…</Text>;
+  }
+
   switch (choice.type) {
     case `radical`: {
-      const hanzis = (includeAlternatives
-        ? radicalLookupByHanzi.get(choice.hanzi)?.hanzi
-        : null) ?? [choice.hanzi];
+      const hanzis = (includeAlternatives ? query.data?.hanzi : null) ?? [
+        choice.hanzi,
+      ];
       return (
         <View className="flex-row items-center gap-1">
           {hanzis.map((hanzi, i) => (
@@ -258,9 +275,9 @@ const ShowChoice = ({
       );
     }
     case `name`: {
-      const names = (includeAlternatives
-        ? radicalLookupByHanzi.get(choice.english)?.name
-        : null) ?? [choice.english];
+      const names = (includeAlternatives ? query.data?.name : null) ?? [
+        choice.english,
+      ];
       return (
         <Text className={choiceEnglishText({ small })}>
           (
@@ -280,7 +297,9 @@ const ShowChoice = ({
         </Text>
       );
     }
-    default:
+    case `hanzi`:
+    case `pinyin`:
+    case `definition`:
       return (
         <Text className={choiceEnglishText({ small })}>
           {choiceText(choice)}

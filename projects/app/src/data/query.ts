@@ -20,7 +20,6 @@ export async function questionsForReview(
   const now = new Date();
   const skillTypesFilter =
     options?.skillTypes != null ? new Set(options.skillTypes) : null;
-
   for await (const [skill, skillState] of indexScanIter(
     tx,
     IndexName.SkillStateByDue,

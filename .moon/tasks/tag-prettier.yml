@@ -1,7 +1,7 @@
 tasks:
   prettier:
-    command: yarn prettier --write --check .
+    command: yarn prettier --write --check --ignore-path .gitignore --ignore-path ../../.gitignore --ignore-path ../../.prettierignore .
     options:
       runInCI: false
   prettierCheck:
-    command: yarn prettier --check .
+    command: yarn prettier --check --ignore-path .gitignore --ignore-path ../../.gitignore --ignore-path ../../.prettierignore .

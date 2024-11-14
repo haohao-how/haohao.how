@@ -7,6 +7,8 @@ import { Platform } from "react-native";
  * Alias for {@link Sentry.captureException}.
  */
 export function sentryCaptureException(e: unknown) {
+  // eslint-disable-next-line no-console
+  console.error(e);
   Sentry.captureException(e);
 }
 

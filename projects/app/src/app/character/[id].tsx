@@ -2,48 +2,54 @@ import { ReferencePage } from "@/components/ReferencePage";
 import { ReferencePageBodySection } from "@/components/ReferencePageBodySection";
 import { ReferencePageHeader } from "@/components/ReferencePageHeader";
 import { GradientRed } from "@/components/styles";
-import { characterLookupByHanzi } from "@/dictionary/characters";
+import { lookupWord } from "@/dictionary/dictionary";
+import { useQuery } from "@tanstack/react-query";
 import { useLocalSearchParams } from "expo-router";
 
 export default function CharacterPage() {
   const { id } = useLocalSearchParams<`/character/[id]`>();
-  const character = characterLookupByHanzi.get(id);
+
+  const query = useQuery({
+    queryKey: [`character`, id],
+    queryFn: async () => {
+      return await lookupWord(id);
+    },
+    throwOnError: true,
+  });
 
   return (
     <ReferencePage
       header={
         <ReferencePageHeader
           gradientColors={GradientRed}
-          title={character?.char ?? null}
-          subtitle={character?.name ?? null}
+          title={id}
+          subtitle={`todo`}
         />
       }
       body={
-        <>
-          {character?.mnemonic !== undefined ? (
+        query.isLoading ? (
+          <>Loading</>
+        ) : query.isError ? (
+          <>Error</>
+        ) : (
+          <>
             <ReferencePageBodySection title="Mnemonic">
-              {character.mnemonic}
+              {`todo`}
             </ReferencePageBodySection>
-          ) : null}
 
-          {character !== undefined ? (
             <ReferencePageBodySection title="Meaning">
-              {[character.name].concat(character.nameAlts ?? []).join(`, `)}
+              {`todo`}
             </ReferencePageBodySection>
-          ) : null}
 
-          {character?.pronunciations !== undefined ? (
             <ReferencePageBodySection title="Pronunciation">
-              {character.pronunciations.join(`, `)}
+              {`todo`}
             </ReferencePageBodySection>
-          ) : null}
 
-          {character?.radicals !== undefined ? (
             <ReferencePageBodySection title="Radicals">
-              {character.radicals.join(`, `)}
+              {`todo`}
             </ReferencePageBodySection>
-          ) : null}
-        </>
+          </>
+        )
       }
     />
   );

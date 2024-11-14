@@ -52,7 +52,8 @@ export const useClientStorageQuery = (key: string) => {
         case `ios`:
         case `android`:
           return SecureStore.getItemAsync(storageKey);
-        default:
+        case `macos`:
+        case `windows`:
           throw new Error(`unsupported platform ${Platform.OS}`);
       }
     },
@@ -85,7 +86,8 @@ export const useClientStorageMutation = (key: string) => {
             await SecureStore.setItemAsync(storageKey, value);
           }
           break;
-        default:
+        case `macos`:
+        case `windows`:
           throw new Error(`unsupported platform ${Platform.OS}`);
       }
 

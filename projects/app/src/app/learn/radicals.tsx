@@ -6,7 +6,7 @@ import { generateQuestionForSkillOrThrow } from "@/data/generator";
 import { marshalSkillStateKey } from "@/data/marshal";
 import { Question, RadicalSkill, SkillType } from "@/data/model";
 import { questionsForReview } from "@/data/query";
-import { radicals } from "@/dictionary/radicals";
+import { allRadicals } from "@/dictionary/dictionary";
 import { useQuery } from "@tanstack/react-query";
 import { router } from "expo-router";
 import { Text, View } from "react-native";
@@ -37,7 +37,7 @@ export default function RadicalsPage() {
       if (questions.length < limit) {
         // TODO: could be generated once and cached somewhere.
         const allRadicalSkills: RadicalSkill[] = [];
-        for (const radical of radicals) {
+        for (const radical of await allRadicals()) {
           for (const hanzi of radical.hanzi) {
             for (const name of radical.name) {
               allRadicalSkills.push({
