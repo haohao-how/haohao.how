@@ -60,7 +60,7 @@ export default function RadicalsPage() {
           for (const skill of allRadicalSkills) {
             if (!(await tx.has(marshalSkillStateKey(skill)))) {
               try {
-                questions.push(generateQuestionForSkillOrThrow(skill));
+                questions.push(await generateQuestionForSkillOrThrow(skill));
               } catch (e) {
                 sentryCaptureException(e);
                 continue;

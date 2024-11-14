@@ -53,7 +53,7 @@ export default function LearnHsk1Page() {
               !(await tx.has(marshalSkillStateKey(skill)))
             ) {
               try {
-                questions.push(generateQuestionForSkillOrThrow(skill));
+                questions.push(await generateQuestionForSkillOrThrow(skill));
               } catch (e) {
                 sentryCaptureException(e);
                 continue;

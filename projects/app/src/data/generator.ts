@@ -1,5 +1,6 @@
 import { simpleDefinitionLookup } from "@/dictionary/hanzi";
 import { radicalLookupByHanzi, radicals } from "@/dictionary/radicals";
+import { asyncJson } from "@/dictionary/radicalsAsync";
 import { hsk1Words, hsk2Words, hsk3Words } from "@/dictionary/words";
 import { invariant } from "@haohaohow/lib/invariant";
 import shuffle from "lodash/shuffle";
@@ -39,7 +40,9 @@ const choicePair = (
 });
 
 // generate a question to test a skill
-export function generateQuestionForSkillOrThrow(skill: Skill): Question {
+export async function generateQuestionForSkillOrThrow(
+  skill: Skill,
+): Promise<Question> {
   switch (skill.type) {
     case SkillType.RadicalToEnglish: {
       const radical = radicalLookupByHanzi.get(skill.hanzi);
@@ -67,13 +70,15 @@ export function generateQuestionForSkillOrThrow(skill: Skill): Question {
         ),
       );
 
+      const hint = await asyncJson.lookupNameMnemonic(skill.hanzi);
+
       return {
         type: QuestionType.OneCorrectPair,
         prompt: `Match a radical with its name`,
         groupA: shuffle([answer, ...wrongA]),
         groupB: shuffle([answer, ...wrongB]),
         answer,
-        hint: radical.nameMnemonic,
+        hint: hint?.mnemonic,
         skill,
       };
     }
