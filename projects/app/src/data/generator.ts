@@ -1,6 +1,9 @@
-import { simpleDefinitionLookup } from "@/dictionary/hanzi";
-import { radicalLookupByHanzi, radicals } from "@/dictionary/radicals";
-import { asyncJson } from "@/dictionary/radicalsAsync";
+import {
+  allRadicals,
+  lookupRadicalByHanzi,
+  lookupRadicalNameMnemonic,
+  lookupWord,
+} from "@/dictionary/dictionary";
 import { hsk1Words, hsk2Words, hsk3Words } from "@/dictionary/words";
 import { invariant } from "@haohaohow/lib/invariant";
 import shuffle from "lodash/shuffle";
@@ -45,14 +48,14 @@ export async function generateQuestionForSkillOrThrow(
 ): Promise<Question> {
   switch (skill.type) {
     case SkillType.RadicalToEnglish: {
-      const radical = radicalLookupByHanzi.get(skill.hanzi);
-      invariant(radical !== undefined, `couldn't find a radical`);
+      const radical = await lookupRadicalByHanzi(skill.hanzi);
+      invariant(radical != null, `couldn't find a radical`);
       const rowCount = 5;
       const answer = choicePair({ radical: skill.hanzi }, { name: skill.name });
       const [wrongA, wrongB] = evenHalve(
         getOtherChoices(
           shuffle(
-            radicals.flatMap((r) => {
+            (await allRadicals()).flatMap((r) => {
               const result = [];
               for (const radical of r.hanzi) {
                 for (const name of r.name) {
@@ -70,7 +73,7 @@ export async function generateQuestionForSkillOrThrow(
         ),
       );
 
-      const hint = await asyncJson.lookupNameMnemonic(skill.hanzi);
+      const hint = await lookupRadicalNameMnemonic(skill.hanzi);
 
       return {
         type: QuestionType.OneCorrectPair,
@@ -83,8 +86,8 @@ export async function generateQuestionForSkillOrThrow(
       };
     }
     case SkillType.RadicalToPinyin: {
-      const radical = radicalLookupByHanzi.get(skill.hanzi);
-      invariant(radical !== undefined, `couldn't find a radical`);
+      const radical = await lookupRadicalByHanzi(skill.hanzi);
+      invariant(radical !== null, `couldn't find a radical`);
       const rowCount = 5;
       const answer = choicePair(
         { radical: skill.hanzi },
@@ -93,7 +96,7 @@ export async function generateQuestionForSkillOrThrow(
       const [wrongA, wrongB] = evenHalve(
         getOtherChoices(
           shuffle(
-            radicals.flatMap((r) => {
+            (await allRadicals()).flatMap((r) => {
               const result = [];
               for (const radical of r.hanzi) {
                 for (const pinyin of r.pinyin) {
@@ -121,7 +124,7 @@ export async function generateQuestionForSkillOrThrow(
       };
     }
     case SkillType.HanziWordToEnglish: {
-      const english = simpleDefinitionLookup(skill.hanzi);
+      const english = await lookupWord(skill.hanzi);
       invariant(
         english != null,
         `missing definition for hanzi word ${skill.hanzi}`,
@@ -133,7 +136,7 @@ export async function generateQuestionForSkillOrThrow(
       );
       const otherAnswers: OneCorrectPairQuestionAnswer[] = [];
       for (const hanzi of getOtherWords(skill.hanzi, (rowCount - 1) * 2)) {
-        const definition = simpleDefinitionLookup(hanzi)?.definition;
+        const definition = (await lookupWord(hanzi))?.definition;
         invariant(
           definition != null,
           `missing definition for other word ${hanzi}`,
@@ -141,7 +144,6 @@ export async function generateQuestionForSkillOrThrow(
         otherAnswers.push(choicePair({ hanzi }, { definition }));
       }
       const [wrongA, wrongB] = evenHalve(otherAnswers);
-
       return {
         type: QuestionType.OneCorrectPair,
         prompt: `Match a word with its name`,
@@ -151,7 +153,14 @@ export async function generateQuestionForSkillOrThrow(
         skill,
       };
     }
-    default:
+    case SkillType.EnglishToRadical:
+    case SkillType.PinyinToRadical:
+    case SkillType.HanziWordToPinyinInitial:
+    case SkillType.HanziWordToPinyinFinal:
+    case SkillType.HanziWordToPinyinTone:
+    case SkillType.EnglishToHanzi:
+    case SkillType.PinyinToHanzi:
+    case SkillType.ImageToHanzi:
       throw new Error(`todo: not implemented`);
   }
 }

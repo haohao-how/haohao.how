@@ -6,6 +6,7 @@
     "moduleResolution": "NodeNext",
     "noEmit": true,
     "emitDeclarationOnly": false,
+    "noUncheckedIndexedAccess": true,
     "strict": true
     // "rootDir": ".."
   },

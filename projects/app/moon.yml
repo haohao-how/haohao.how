@@ -146,6 +146,13 @@ tasks:
     env:
       NODE_OPTIONS: --experimental-sqlite $NODE_OPTIONS
 
+  generateWordDictionary:
+    command: yarn tsx ./bin/generateWordDictionary.ts
+    options:
+      runInCI: false
+      envFile: .env.local
+      cache: false
+
   expoDoctor:
     command: npx -y expo-doctor@1.12.3
     env:

@@ -2,19 +2,25 @@ import { ReferencePage } from "@/components/ReferencePage";
 import { ReferencePageBodySection } from "@/components/ReferencePageBodySection";
 import { ReferencePageHeader } from "@/components/ReferencePageHeader";
 import { GradientAqua } from "@/components/styles";
-import { radicalLookupByHanzi } from "@/dictionary/radicals";
-import { asyncJson } from "@/dictionary/radicalsAsync";
+import {
+  lookupRadicalByHanzi,
+  lookupRadicalNameMnemonic,
+} from "@/dictionary/dictionary";
 import { useQuery } from "@tanstack/react-query";
 import { useLocalSearchParams } from "expo-router";
+import { Text } from "react-native";
 
 export default function RadicalPage() {
-  const { id } = useLocalSearchParams<`/character/[id]`>();
-  const radical = radicalLookupByHanzi.get(id);
+  const { id } = useLocalSearchParams<`/radical/[id]`>();
 
-  const nameMnemonic = useQuery({
+  const query = useQuery({
     queryKey: [`character.radical`, id],
     queryFn: async () => {
-      return asyncJson.lookupNameMnemonic(id);
+      const [radical, nameMnemonic] = await Promise.all([
+        lookupRadicalByHanzi(id),
+        lookupRadicalNameMnemonic(id),
+      ]);
+      return { radical, nameMnemonic: nameMnemonic?.mnemonic ?? null };
     },
     throwOnError: true,
   });
@@ -24,30 +30,36 @@ export default function RadicalPage() {
       header={
         <ReferencePageHeader
           gradientColors={GradientAqua}
-          title={radical?.hanzi[0] ?? null}
-          subtitle={radical?.name[0] ?? null}
+          title={id}
+          subtitle={query.data?.radical?.name[0] ?? null}
         />
       }
       body={
-        <>
-          {nameMnemonic.data !== undefined ? (
-            <ReferencePageBodySection title="Mnemonic">
-              {nameMnemonic.data.mnemonic}
-            </ReferencePageBodySection>
-          ) : null}
+        query.isLoading ? (
+          <Text className="text-text">Loading</Text>
+        ) : query.isError ? (
+          <Text className="text-text">Error</Text>
+        ) : (
+          <>
+            {query.data?.nameMnemonic != null ? (
+              <ReferencePageBodySection title="Mnemonic">
+                {query.data.nameMnemonic}
+              </ReferencePageBodySection>
+            ) : null}
 
-          {radical !== undefined ? (
-            <ReferencePageBodySection title="Meaning">
-              {radical.name.join(`, `)}
-            </ReferencePageBodySection>
-          ) : null}
+            {query.data?.radical != null ? (
+              <ReferencePageBodySection title="Meaning">
+                {query.data.radical.name.join(`, `)}
+              </ReferencePageBodySection>
+            ) : null}
 
-          {radical?.pinyin !== undefined ? (
-            <ReferencePageBodySection title="Pinyin">
-              {radical.pinyin.join(`, `)}
-            </ReferencePageBodySection>
-          ) : null}
-        </>
+            {query.data?.radical?.pinyin != null ? (
+              <ReferencePageBodySection title="Pinyin">
+                {query.data.radical.pinyin.join(`, `)}
+              </ReferencePageBodySection>
+            ) : null}
+          </>
+        )
       }
     />
   );
