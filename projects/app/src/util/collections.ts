@@ -14,6 +14,20 @@ export async function iterTake<T>(
   return results;
 }
 
+export function arrayFilterUniqueWithKey<T>(
+  keyFn: (x: T) => unknown = (x) => x,
+): (item: T) => boolean {
+  const seen = new Set();
+  return (x): boolean => {
+    const key = keyFn(x);
+    const unseen = !seen.has(key);
+    if (unseen) {
+      seen.add(key);
+    }
+    return unseen;
+  };
+}
+
 export function readonlyMapSet<K, V>(
   map: ReadonlyMap<K, V>,
   key: K,

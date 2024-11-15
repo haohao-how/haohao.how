@@ -1,5 +1,4 @@
-import { MultipleChoiceQuestion } from "@/data/model";
-import { Rating } from "@/util/fsrs";
+import { MultipleChoiceQuestion, SkillRating } from "@/data/model";
 import { Asset } from "expo-asset";
 import { Audio } from "expo-av";
 import chunk from "lodash/chunk";
@@ -22,13 +21,15 @@ export const QuizDeckMultipleChoiceQuestion = memo(
   function QuizDeckMultipleChoiceQuestion({
     question,
     onNext,
-    onRating,
   }: {
     question: MultipleChoiceQuestion;
     onNext: () => void;
-    onRating: (question: MultipleChoiceQuestion, rating: Rating) => void;
+    onRating: (
+      question: MultipleChoiceQuestion,
+      ratings: SkillRating[],
+    ) => void;
   }) {
-    const { prompt, answer, choices } = question;
+    const { prompt, choices } = question;
     const [selectedChoice, setSelectedChoice] = useState<string>();
     const [sound, setSound] = useState<Audio.Sound>();
 
@@ -113,11 +114,12 @@ export const QuizDeckMultipleChoiceQuestion = memo(
 
     const choicesRows = chunk(choices, 2);
     const handleSubmit = () => {
+      throw new Error(`not implemented`);
       // TODO: show error or success modal
-      onRating(
-        question,
-        selectedChoice === answer ? Rating.Good : Rating.Again,
-      );
+      // onRating(
+      //   question,
+      //   selectedChoice === answer ? Rating.Good : Rating.Again,
+      // );
       onNext();
     };
     return (

@@ -31,7 +31,6 @@ export default function RadicalsPage() {
           ],
         }),
       );
-
       // Fill the rest with new skills
       // Create skills to pad out the rest of the quiz
       if (questions.length < limit) {

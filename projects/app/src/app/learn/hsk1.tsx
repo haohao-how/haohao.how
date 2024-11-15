@@ -43,11 +43,12 @@ export default function LearnHsk1Page() {
         await r.query(async (tx) => {
           for (const skill of hsk1Skills) {
             if (
-              // Don't add skills that are already in the quiz
+              // Don't add skills that are already used as answers in the quiz.
               !questions.some(
                 (q) =>
                   q.type === QuestionType.OneCorrectPair &&
-                  isEqual(q.skill.hanzi, skill.hanzi),
+                  (isEqual(q.answer.a.skill, skill.hanzi) ||
+                    isEqual(q.answer.b.skill, skill.hanzi)),
               ) &&
               // Don't include skills that are already practiced
               !(await tx.has(marshalSkillStateKey(skill)))

@@ -18,22 +18,22 @@ import {
 } from "./model";
 
 type BuilderChoice =
-  | { radical: string }
-  | { hanzi: string }
-  | { pinyin: string }
-  | { definition: string }
-  | { name: string };
+  | { radical: string; skill: Skill }
+  | { hanzi: string; skill: Skill }
+  | { pinyin: string; skill: Skill }
+  | { definition: string; skill: Skill }
+  | { name: string; skill: Skill };
 
-const choice = (a: BuilderChoice): OneCorrectPairQuestionChoice =>
-  `radical` in a
-    ? { type: `radical`, hanzi: a.radical }
-    : `hanzi` in a
-      ? { type: `hanzi`, hanzi: a.hanzi }
-      : `pinyin` in a
-        ? { type: `pinyin`, pinyin: a.pinyin }
-        : `definition` in a
-          ? { type: `definition`, english: a.definition }
-          : { type: `name`, english: a.name };
+const choice = (x: BuilderChoice): OneCorrectPairQuestionChoice =>
+  `radical` in x
+    ? { type: `radical`, hanzi: x.radical, skill: x.skill }
+    : `hanzi` in x
+      ? { type: `hanzi`, hanzi: x.hanzi, skill: x.skill }
+      : `pinyin` in x
+        ? { type: `pinyin`, pinyin: x.pinyin, skill: x.skill }
+        : `definition` in x
+          ? { type: `definition`, english: x.definition, skill: x.skill }
+          : { type: `name`, english: x.name, skill: x.skill };
 
 const choicePair = (
   a: BuilderChoice,
@@ -52,7 +52,10 @@ export async function generateQuestionForSkillOrThrow(
       const radical = await lookupRadicalByHanzi(skill.hanzi);
       invariant(radical != null, `couldn't find a radical`);
       const rowCount = 5;
-      const answer = choicePair({ radical: skill.hanzi }, { name: skill.name });
+      const answer = choicePair(
+        { radical: skill.hanzi, skill },
+        { name: skill.name, skill },
+      );
       const [wrongA, wrongB] = evenHalve(
         getOtherChoices(
           shuffle(
@@ -60,7 +63,12 @@ export async function generateQuestionForSkillOrThrow(
               const result = [];
               for (const radical of r.hanzi) {
                 for (const name of r.name) {
-                  result.push(choicePair({ radical }, { name }));
+                  const skill = {
+                    type: SkillType.EnglishToRadical,
+                    hanzi: radical,
+                    name,
+                  } as const;
+                  result.push(choicePair({ radical, skill }, { name, skill }));
                 }
               }
               return result;
@@ -83,7 +91,6 @@ export async function generateQuestionForSkillOrThrow(
         groupB: shuffle([answer, ...wrongB]),
         answer,
         hint: hint?.mnemonic,
-        skill,
       };
     }
     case SkillType.RadicalToPinyin: {
@@ -91,8 +98,8 @@ export async function generateQuestionForSkillOrThrow(
       invariant(radical !== null, `couldn't find a radical`);
       const rowCount = 5;
       const answer = choicePair(
-        { radical: skill.hanzi },
-        { pinyin: skill.pinyin },
+        { radical: skill.hanzi, skill },
+        { pinyin: skill.pinyin, skill },
       );
       const [wrongA, wrongB] = evenHalve(
         getOtherChoices(
@@ -101,7 +108,14 @@ export async function generateQuestionForSkillOrThrow(
               const result = [];
               for (const radical of r.hanzi) {
                 for (const pinyin of r.pinyin) {
-                  result.push(choicePair({ radical }, { pinyin }));
+                  const skill = {
+                    type: SkillType.RadicalToPinyin,
+                    hanzi: radical,
+                    pinyin,
+                  } as const;
+                  result.push(
+                    choicePair({ radical, skill }, { pinyin, skill }),
+                  );
                 }
               }
               return result;
@@ -121,7 +135,6 @@ export async function generateQuestionForSkillOrThrow(
         groupA: shuffle([answer, ...wrongA]),
         groupB: shuffle([answer, ...wrongB]),
         answer,
-        skill,
       };
     }
     case SkillType.HanziWordToEnglish: {
@@ -132,15 +145,25 @@ export async function generateQuestionForSkillOrThrow(
       );
       const rowCount = 5;
       const answer = choicePair(
-        { hanzi: skill.hanzi },
-        { definition: randomOne(english.definitions) },
+        { hanzi: skill.hanzi, skill },
+        { definition: randomOne(english.definitions), skill },
       );
       const otherAnswers: OneCorrectPairQuestionAnswer[] = [];
       for (const hanzi of getOtherWords(skill.hanzi, (rowCount - 1) * 2)) {
         const lookup = await lookupWord(hanzi);
         invariant(lookup != null, `missing definition for other word ${hanzi}`);
+        const skill = {
+          type: SkillType.HanziWordToEnglish,
+          hanzi,
+        } as const;
         otherAnswers.push(
-          choicePair({ hanzi }, { definition: randomOne(lookup.definitions) }),
+          choicePair(
+            { hanzi, skill },
+            {
+              definition: randomOne(lookup.definitions),
+              skill,
+            },
+          ),
         );
       }
       const [wrongA, wrongB] = evenHalve(otherAnswers);
@@ -150,7 +173,6 @@ export async function generateQuestionForSkillOrThrow(
         groupA: shuffle([...wrongA, answer]),
         groupB: shuffle([...wrongB, answer]),
         answer,
-        skill,
       };
     }
     case SkillType.EnglishToRadical:
