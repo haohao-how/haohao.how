@@ -5,6 +5,7 @@ import {
   lookupWord,
 } from "@/dictionary/dictionary";
 import { hsk1Words, hsk2Words, hsk3Words } from "@/dictionary/words";
+import { randomOne } from "@/util/collections";
 import { invariant } from "@haohaohow/lib/invariant";
 import shuffle from "lodash/shuffle";
 import {
@@ -132,16 +133,15 @@ export async function generateQuestionForSkillOrThrow(
       const rowCount = 5;
       const answer = choicePair(
         { hanzi: skill.hanzi },
-        { definition: english.definition },
+        { definition: randomOne(english.definitions) },
       );
       const otherAnswers: OneCorrectPairQuestionAnswer[] = [];
       for (const hanzi of getOtherWords(skill.hanzi, (rowCount - 1) * 2)) {
-        const definition = (await lookupWord(hanzi))?.definition;
-        invariant(
-          definition != null,
-          `missing definition for other word ${hanzi}`,
+        const lookup = await lookupWord(hanzi);
+        invariant(lookup != null, `missing definition for other word ${hanzi}`);
+        otherAnswers.push(
+          choicePair({ hanzi }, { definition: randomOne(lookup.definitions) }),
         );
-        otherAnswers.push(choicePair({ hanzi }, { definition }));
       }
       const [wrongA, wrongB] = evenHalve(otherAnswers);
       return {

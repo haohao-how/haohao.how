@@ -23,7 +23,7 @@ export default function WordPage() {
         <ReferencePageHeader
           gradientColors={GradientPurple}
           title={id}
-          subtitle={query.data?.definition ?? null}
+          subtitle={query.data?.definitions.join(`; `) ?? null}
         />
       }
       body={
@@ -38,7 +38,7 @@ export default function WordPage() {
             </ReferencePageBodySection>
 
             <ReferencePageBodySection title="Meaning">
-              {query.data?.definition ?? ``}
+              {query.data?.definitions.join(`; `) ?? ``}
             </ReferencePageBodySection>
 
             {query.data?.pinyin !== undefined ? (

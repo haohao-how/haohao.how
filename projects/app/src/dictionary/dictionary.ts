@@ -45,7 +45,7 @@ const loadWords = memoize(
             z.string(),
             z.object({
               pinyin: z.string(),
-              definition: z.string(),
+              definitions: z.array(z.string()),
             }),
           ]),
         ),
