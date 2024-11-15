@@ -6,7 +6,7 @@ export const expo = {
   expo: {
     name: `Hao`,
     slug: `hao`,
-    version: `1.8.0`,
+    version: `1.9.0`,
     scheme: `hao`,
     runtimeVersion: {
       policy: `fingerprint`,
