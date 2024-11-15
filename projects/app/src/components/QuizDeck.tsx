@@ -1,4 +1,9 @@
-import { Question, QuestionFlag, QuestionType } from "@/data/model";
+import {
+  Question,
+  QuestionFlag,
+  QuestionType,
+  SkillRating,
+} from "@/data/model";
 import { saveSkillRating } from "@/data/mutators";
 import { readonlyMapSet } from "@/util/collections";
 import { Rating } from "@/util/fsrs";
@@ -24,7 +29,7 @@ import { QuizDeckOneCorrectPairQuestion } from "./QuizDeckOneCorrectPairQuestion
 import { QuizProgressBar } from "./QuizProgressBar";
 import { RectButton2 } from "./RectButton2";
 import { useReplicache } from "./ReplicacheContext";
-import { useEventCallback } from "./util";
+import { sentryCaptureException, useEventCallback } from "./util";
 
 const buttonThickness = 4;
 const gap = 16;
@@ -90,18 +95,17 @@ export const QuizDeck = ({ questions }: { questions: readonly Question[] }) => {
   });
 
   const handleRating = useEventCallback(
-    (question: Question, rating: Rating) => {
+    (question: Question, ratings: SkillRating[]) => {
       invariant(
         questions.includes(question),
         `handleRating called with wrong question`,
       );
-      const success = rating !== Rating.Again;
+      invariant(ratings.length > 0, `ratings must not be empty`);
 
-      if (question.type === QuestionType.OneCorrectPair) {
-        saveSkillRating(r, question.skill, rating).catch((e: unknown) => {
-          // eslint-disable-next-line no-console
-          console.error(`failed to update skill`, e);
-        });
+      const success = ratings.every(({ rating }) => rating !== Rating.Again);
+
+      for (const { skill, rating } of ratings) {
+        saveSkillRating(r, skill, rating).catch(sentryCaptureException);
       }
 
       setStreakCount((prev) => (success ? prev + 1 : 0));

@@ -91,6 +91,11 @@ export interface MultipleChoiceQuestion {
   choices: readonly string[];
 }
 
+export interface SkillRating {
+  skill: Skill;
+  rating: Rating;
+}
+
 // export interface OneCorrectPairQuestionRadicalAnswer {
 //   type: `radical`;
 //   hanzi: string;
@@ -107,22 +112,27 @@ export type OneCorrectPairQuestionChoice =
   | {
       type: `radical`;
       hanzi: string;
+      skill?: Skill;
     }
   | {
       type: `hanzi`;
       hanzi: string;
+      skill?: Skill;
     }
   | {
       type: `name`;
       english: string;
+      skill?: Skill;
     }
   | {
       type: `pinyin`;
       pinyin: string;
+      skill?: Skill;
     }
   | {
       type: `definition`;
       english: string;
+      skill?: Skill;
     };
 
 export interface OneCorrectPairQuestionAnswer {
@@ -138,7 +148,6 @@ export interface OneCorrectPairQuestion {
   groupB: readonly OneCorrectPairQuestionAnswer[];
   hint?: string;
   flag?: QuestionFlag;
-  skill: Skill;
 }
 
 export type Question = MultipleChoiceQuestion | OneCorrectPairQuestion;

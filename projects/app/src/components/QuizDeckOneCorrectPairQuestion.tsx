@@ -3,8 +3,10 @@ import {
   OneCorrectPairQuestionAnswer,
   OneCorrectPairQuestionChoice,
   QuestionFlag,
+  SkillRating,
 } from "@/data/model";
 import { lookupRadicalByHanzi } from "@/dictionary/dictionary";
+import { arrayFilterUniqueWithKey } from "@/util/collections";
 import { Rating } from "@/util/fsrs";
 import { invariant } from "@haohaohow/lib/invariant";
 import { useQuery } from "@tanstack/react-query";
@@ -49,7 +51,10 @@ export const QuizDeckOneCorrectPairQuestion = memo(
     question: OneCorrectPairQuestion;
     flag?: QuestionFlag;
     onNext: () => void;
-    onRating: (question: OneCorrectPairQuestion, rating: Rating) => void;
+    onRating: (
+      question: OneCorrectPairQuestion,
+      ratings: SkillRating[],
+    ) => void;
   }) {
     const { prompt, answer, hint, groupA, groupB } = question;
     const [selectedAAnswer, setSelectedAAnswer] =
@@ -79,8 +84,19 @@ export const QuizDeckOneCorrectPairQuestion = memo(
           selectedAAnswer === answer && selectedBAnswer === answer
             ? Rating.Good
             : Rating.Again;
+
+        const skillRatings: SkillRating[] = [
+          selectedAAnswer?.a.skill,
+          selectedAAnswer?.b.skill,
+          selectedBAnswer?.a.skill,
+          selectedBAnswer?.b.skill,
+        ]
+          .filter((x) => x != null)
+          .map((skill) => ({ skill, rating }))
+          .filter(arrayFilterUniqueWithKey((x) => JSON.stringify(x.skill)));
+
         setRating(rating);
-        onRating(question, rating);
+        onRating(question, skillRatings);
       } else {
         onNext();
       }
