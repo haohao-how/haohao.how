@@ -11,7 +11,9 @@ const radicals = JSON.parse(
   ),
 ) as { hanzi: string[]; name: string[] }[];
 
-const db = new DatabaseSync(import.meta.filename.replace(/\..+$/, `.db`));
+const dbLocation = import.meta.filename.replace(/\.[^.]+$/, `.db`);
+console.log(`Using db: ${dbLocation}`);
+const db = new DatabaseSync(dbLocation);
 
 db.exec(`
   CREATE TABLE IF NOT EXISTS data2(
