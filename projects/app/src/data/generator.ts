@@ -129,12 +129,15 @@ export async function generateQuestionForSkillOrThrow(
         ),
       );
 
+      const hint = await lookupRadicalNameMnemonic(skill.hanzi);
+
       return {
         type: QuestionType.OneCorrectPair,
         prompt: `Match a radical with its pinyin`,
         groupA: shuffle([answer, ...wrongA]),
         groupB: shuffle([answer, ...wrongB]),
         answer,
+        hint: hint?.mnemonic,
       };
     }
     case SkillType.HanziWordToEnglish: {

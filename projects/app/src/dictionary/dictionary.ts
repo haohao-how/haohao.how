@@ -88,12 +88,37 @@ const loadRadicalStrokes = memoize(() =>
   ).then((data) => new Map(data.map((r) => [r.strokes, r.characters]))),
 );
 
+const loadRadicalPinyinMnemonics = memoize(() =>
+  readJsonAssetOrThrow(
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+    Asset.fromModule(require(`./radicalPinyinMnemonics.jsonasset`)),
+    z.record(
+      z.string(),
+      z.object({
+        initial: z.string(),
+        final: z.string(),
+        tone: z.string(),
+        meaning: z.string(),
+        mnemonics: z.array(
+          z.object({
+            mnemonic: z.string(),
+            strategy: z.string(),
+          }),
+        ),
+      }),
+    ),
+  ).then((data) => new Map(Object.entries(data))),
+);
+
 export const allRadicals = async () => await loadRadicals();
 
 export const allRadicalsByStrokes = async () => await loadRadicalStrokes();
 
 export const lookupRadicalNameMnemonic = async (hanzi: string) =>
   (await loadRadicalNameMnemonics()).get(hanzi)?.[0] ?? null;
+
+export const lookupRadicalPinyinMnemonic = async (hanzi: string) =>
+  (await loadRadicalPinyinMnemonics()).get(hanzi)?.mnemonics[0] ?? null;
 
 export const lookupWord = async (hanzi: string) =>
   (await loadWords()).get(hanzi) ?? null;
