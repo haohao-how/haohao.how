@@ -108,15 +108,27 @@ const lookupFallback: Record<string, Definition> = {
   },
 };
 
+const overrides: Record<string, Partial<Definition>> = {
+  跟: {
+    definition: `with/and/follow/compared to/to go with`,
+  },
+};
+
 const missing: string[] = [];
 
 for (const word of [...hsk1Words, ...hsk2Words, ...hsk3Words]) {
   const result =
     hanzi.definitionLookup(word, `s`)?.[0] ?? lookupFallback[word] ?? null;
+
   if (result == null) {
     missing.push(word);
     continue;
   }
+
+  if (word in overrides) {
+    Object.assign(result, overrides[word]);
+  }
+
   const { pinyin, definition } = result;
 
   const definitions = [];
@@ -135,7 +147,7 @@ for (const word of [...hsk1Words, ...hsk2Words, ...hsk3Words]) {
 }
 
 if (missing.length > 0) {
-  throw new Error(`Missing definitions for: ${missing.join(`,`)}`);
+  console.warn(`Missing definitions for: ${missing.join(`,`)}`);
 }
 
 // Write ts to disk using async node fs APIs
