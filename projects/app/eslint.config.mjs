@@ -43,17 +43,16 @@ export default tseslint.config(
   ...tseslint.configs.strictTypeChecked,
   ...tseslint.configs.stylisticTypeChecked,
 
-  // base config
+  // expo/metro files config
   {
-    files: [`{api,src}/**/*.{cjs,js,ts,tsx}`, `*.{cjs,mjs,js,ts}`],
+    files: [`{api,src}/**/*.{cjs,js,mjs,ts,tsx}`, `*.{cjs,js,mjs,ts,tsx}`],
     languageOptions: {
       globals: {
         ...globals.es2020,
         ...globals.node,
       },
       parserOptions: {
-        allowAutomaticSingleRunInference: true,
-        project: [`tsconfig.json`],
+        projectService: true,
       },
     },
   },
@@ -188,8 +187,7 @@ export default tseslint.config(
         ...globals.node,
       },
       parserOptions: {
-        allowAutomaticSingleRunInference: true,
-        project: [`bin/tsconfig.json`],
+        projectService: true,
       },
     },
     rules: {

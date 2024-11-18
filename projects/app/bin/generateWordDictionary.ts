@@ -2,10 +2,20 @@
 import hanzi, { Definition } from "hanzi";
 import { writeFile } from "node:fs/promises";
 import { join } from "node:path";
-import { hsk1Words, hsk2Words, hsk3Words } from "../src/dictionary/words.js";
+import {
+  allHsk1Words,
+  allHsk2Words,
+  allHsk3Words,
+} from "../src/dictionary/dictionary.js";
 import "../src/typings/hanzi.d.ts";
 
 hanzi.start();
+
+const [hsk1Words, hsk2Words, hsk3Words] = await Promise.all([
+  allHsk1Words(),
+  allHsk2Words(),
+  allHsk3Words(),
+]);
 
 const dictionary = new Map<string, { pinyin: string; definitions: string[] }>();
 
@@ -130,7 +140,7 @@ if (missing.length > 0) {
 
 // Write ts to disk using async node fs APIs
 await writeFile(
-  join(import.meta.dirname, `../src/dictionary/words.jsonasset`),
+  join(import.meta.dirname, `../src/dictionary/words.asset.json`),
   JSON.stringify([...dictionary.entries()]),
   `utf8`,
 );

@@ -1,16 +1,10 @@
 import chunk from "lodash/chunk.js";
-import { readFile, writeFile } from "node:fs/promises";
+import { writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import { DatabaseSync } from "node:sqlite";
 import OpenAI from "openai";
 import { z } from "zod";
-
-const radicals = JSON.parse(
-  await readFile(
-    join(import.meta.dirname, `../src/dictionary/radicals.jsonasset`),
-    `utf8`,
-  ),
-) as { hanzi: string[]; name: string[] }[];
+import { allRadicals } from "../src/dictionary/dictionary.js";
 
 const dbLocation = import.meta.filename.replace(/\.[^.]+$/, `.db`);
 console.log(`Using db: ${dbLocation}`);
@@ -54,7 +48,7 @@ const radicalsToQuery = [];
 for (const {
   hanzi,
   name: [name],
-} of radicals) {
+} of await allRadicals()) {
   for (const char of hanzi) {
     const result = queryOne.get(char) as
       | { radical: string; json: string; created_at: string }

@@ -1,5 +1,4 @@
 {
-  // "extends": "../tsconfig",
   "compilerOptions": {
     "module": "NodeNext",
     "target": "ESNext",
@@ -8,15 +7,11 @@
     "emitDeclarationOnly": false,
     "noUncheckedIndexedAccess": true,
     "strict": true
-    // "rootDir": ".."
   },
-  "include": [
-    "**/*"
-    // , "../src/**/*"
-  ],
+  "include": ["**/*"],
   "references": [
     {
-      "path": ".."
+      "path": "../"
     }
   ]
 }
