@@ -77,6 +77,7 @@ export default function RadicalsPage() {
     },
     retry: false,
     throwOnError: true,
+    staleTime: Infinity,
     // Preserves referential integrity of returned data, this is important so
     // that `answer` objects are comparable to groups.
     structuralSharing: false,
