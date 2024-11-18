@@ -5,7 +5,7 @@ import { generateQuestionForSkillOrThrow } from "@/data/generator";
 import { marshalSkillStateKey } from "@/data/marshal";
 import { HanziSkill, Question, QuestionType, SkillType } from "@/data/model";
 import { questionsForReview } from "@/data/query";
-import { hsk1Words } from "@/dictionary/words";
+import { allHsk1Words } from "@/dictionary/dictionary";
 import { useQuery } from "@tanstack/react-query";
 import isEqual from "lodash/isEqual";
 import { useId } from "react";
@@ -18,6 +18,8 @@ export default function LearnHsk1Page() {
     queryKey: [LearnHsk1Page.name, `quiz`, useId()],
     queryFn: async () => {
       const quizSize = 10;
+
+      const hsk1Words = await allHsk1Words();
 
       // Start with practicing skills that are due
       const questions: Question[] = await r.query((tx) =>

@@ -18,14 +18,14 @@
     "target": "ESNext"
   },
   "include": [
-    "*",
-    "src/**/*",
-    "api/**/*",
     ".expo/types/**/*.ts",
+    "*",
+    "api/**/*",
     "expo-env.d.ts",
-    "nativewind-env.d.ts"
+    "nativewind-env.d.ts",
+    "src/**/*.json",
+    "src/**/*"
   ],
-  "exclude": ["dist", "node_modules", "bin"],
   "references": [
     {
       "path": "../lib"

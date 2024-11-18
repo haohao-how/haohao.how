@@ -1,10 +1,12 @@
 import {
+  allHsk1Words,
+  allHsk2Words,
+  allHsk3Words,
   allRadicals,
   lookupRadicalByHanzi,
   lookupRadicalNameMnemonic,
   lookupWord,
 } from "@/dictionary/dictionary";
-import { hsk1Words, hsk2Words, hsk3Words } from "@/dictionary/words";
 import { randomOne } from "@/util/collections";
 import { invariant } from "@haohaohow/lib/invariant";
 import shuffle from "lodash/shuffle";
@@ -152,7 +154,10 @@ export async function generateQuestionForSkillOrThrow(
         { definition: randomOne(english.definitions), skill },
       );
       const otherAnswers: OneCorrectPairQuestionAnswer[] = [];
-      for (const hanzi of getOtherWords(skill.hanzi, (rowCount - 1) * 2)) {
+      for (const hanzi of await getOtherWords(
+        skill.hanzi,
+        (rowCount - 1) * 2,
+      )) {
         const lookup = await lookupWord(hanzi);
         invariant(lookup != null, `missing definition for other word ${hanzi}`);
         const skill = {
@@ -225,8 +230,14 @@ function getOtherChoices<
   return [...result];
 }
 
-function getOtherWords(hanzi: string, count: number): string[] {
+async function getOtherWords(hanzi: string, count: number): Promise<string[]> {
   const result = new Set<string>();
+
+  const [hsk1Words, hsk2Words, hsk3Words] = await Promise.all([
+    allHsk1Words(),
+    allHsk2Words(),
+    allHsk3Words(),
+  ]);
 
   // Use words from the same HSK word list if possible, so that they're more
   // likely to be familiar by being in a similar skill level. Otherwise fallback

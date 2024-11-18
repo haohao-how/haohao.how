@@ -1,9 +1,27 @@
 import { RectButton2 } from "@/components/RectButton2";
-import { hsk1Words, hsk2Words } from "@/dictionary/words";
+import {
+  allHsk1Words,
+  allHsk2Words,
+  allHsk3Words,
+} from "@/dictionary/dictionary";
+import { useQuery } from "@tanstack/react-query";
 import { Link } from "expo-router";
 import { ScrollView, Text, View } from "react-native";
 
 export default function WordsPage() {
+  const query = useQuery({
+    queryKey: [WordsPage.name, `words`],
+    queryFn: async () => {
+      const [hsk1Words, hsk2Words, hsk3Words] = await Promise.all([
+        allHsk1Words(),
+        allHsk2Words(),
+        allHsk3Words(),
+      ]);
+      return { hsk1Words, hsk2Words, hsk3Words };
+    },
+    throwOnError: true,
+  });
+
   return (
     <ScrollView
       className="flex-1"
@@ -21,38 +39,51 @@ export default function WordsPage() {
             and daily language use.
           </Text>
         </View>
-        <WordList words={hsk1Words} />
-        <Link href="/learn/hsk1" asChild>
-          <RectButton2 variant="filled" accent>
-            Practice
-          </RectButton2>
-        </Link>
+        {query.data == null ? (
+          query.isLoading ? (
+            <Text className="text-text">Loading</Text>
+          ) : query.isError ? (
+            <Text className="text-text">Error</Text>
+          ) : (
+            <Text className="text-text">unexpected state</Text>
+          )
+        ) : (
+          <>
+            <WordList words={query.data.hsk1Words} />
+            <Link href="/learn/hsk1" asChild>
+              <RectButton2 variant="filled" accent>
+                Practice
+              </RectButton2>
+            </Link>
 
-        <View className="gap-2 px-safe-or-4 lg:px-0">
-          <Text className="text-center text-2xl font-bold text-text">
-            HSK 2
-          </Text>
-          <Text className="text-md text-center leading-relaxed text-text">
-            HSK 2 vocabulary expands on foundational words, adding more verbs,
-            adjectives, and expressions to help you engage in simple
-            conversations and express a wider range of everyday ideas in
-            Chinese.
-          </Text>
-        </View>
-        <WordList words={hsk2Words} />
+            <View className="gap-2 px-safe-or-4 lg:px-0">
+              <Text className="text-center text-2xl font-bold text-text">
+                HSK 2
+              </Text>
+              <Text className="text-md text-center leading-relaxed text-text">
+                HSK 2 vocabulary expands on foundational words, adding more
+                verbs, adjectives, and expressions to help you engage in simple
+                conversations and express a wider range of everyday ideas in
+                Chinese.
+              </Text>
+            </View>
+            <WordList words={query.data.hsk2Words} />
 
-        <View className="gap-2 px-safe-or-4 lg:px-0">
-          <Text className="text-center text-2xl font-bold text-text">
-            HSK 3
-          </Text>
-          <Text className="text-md text-center leading-relaxed text-text">
-            HSK 3 vocabulary expands your ability to engage in everyday topics
-            and express yourself in more detail. Learning these words will
-            enhance your fluency, enabling you to discuss a wider range of
-            subjects and handle daily interactions with greater confidence.
-          </Text>
-        </View>
-        <WordList words={hsk2Words} />
+            <View className="gap-2 px-safe-or-4 lg:px-0">
+              <Text className="text-center text-2xl font-bold text-text">
+                HSK 3
+              </Text>
+              <Text className="text-md text-center leading-relaxed text-text">
+                HSK 3 vocabulary expands your ability to engage in everyday
+                topics and express yourself in more detail. Learning these words
+                will enhance your fluency, enabling you to discuss a wider range
+                of subjects and handle daily interactions with greater
+                confidence.
+              </Text>
+            </View>
+            <WordList words={query.data.hsk3Words} />
+          </>
+        )}
       </View>
     </ScrollView>
   );

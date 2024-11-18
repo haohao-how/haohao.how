@@ -10,6 +10,7 @@ export default function RadicalsPage() {
     queryFn: async () => {
       return await allRadicalsByStrokes();
     },
+    throwOnError: true,
   });
 
   return (
@@ -53,7 +54,7 @@ export default function RadicalsPage() {
                 Radicals with {strokes} strokes
               </Text>
               <View className="flex-row flex-wrap gap-2">
-                {query.data.get(strokes)?.map((char, i) => (
+                {query.data.get(strokes)?.characters.map((char, i) => (
                   <Link href={`/radical/${char}`} asChild key={i}>
                     <RectButton2 textClassName="text-xl font-normal">
                       {char}

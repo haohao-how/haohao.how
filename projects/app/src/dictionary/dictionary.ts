@@ -1,46 +1,37 @@
-import { Asset } from "expo-asset";
-import * as FileSystem from "expo-file-system";
 import memoize from "lodash/memoize";
 import { z } from "zod";
 
-const readJsonAssetOrThrow = async <T extends z.ZodTypeAny>(
-  asset: Asset,
-  schema: T,
-): Promise<z.infer<T>> => {
-  const json =
-    asset.localUri !== null
-      ? FileSystem.readAsStringAsync(asset.localUri).then(
-          (x) => JSON.parse(x) as unknown,
-        )
-      : fetch(asset.uri).then((response) => response.json());
-
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-  return schema.parse(await json) as z.infer<T>;
-};
-
-const loadRadicalNameMnemonics = memoize(
+export const loadRadicalNameMnemonics = memoize(
   async () =>
     new Map(
-      await readJsonAssetOrThrow(
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-        Asset.fromModule(require(`./radicalNameMnemonics.jsonasset`)),
-        z.array(
+      z
+        .array(
           z.tuple([
             z.string(),
             z.array(z.object({ mnemonic: z.string(), rationale: z.string() })),
           ]),
-        ),
-      ),
+        )
+        .parse((await import(`./radicalNameMnemonics.asset.json`)).default),
     ),
 );
 
-const loadWords = memoize(
+export const allHsk1Words = memoize(async () =>
+  z.array(z.string()).parse((await import(`./hsk1Words.asset.json`)).default),
+);
+
+export const allHsk2Words = memoize(async () =>
+  z.array(z.string()).parse((await import(`./hsk2Words.asset.json`)).default),
+);
+
+export const allHsk3Words = memoize(async () =>
+  z.array(z.string()).parse((await import(`./hsk3Words.asset.json`)).default),
+);
+
+export const loadWords = memoize(
   async () =>
     new Map(
-      await readJsonAssetOrThrow(
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-        Asset.fromModule(require(`./words.jsonasset`)),
-        z.array(
+      z
+        .array(
           z.tuple([
             z.string(),
             z.object({
@@ -48,24 +39,21 @@ const loadWords = memoize(
               definitions: z.array(z.string()),
             }),
           ]),
-        ),
-      ),
+        )
+        .parse((await import(`./words.asset.json`)).default),
     ),
 );
 
-const newLocal = `./radicals` + `.jsonasset`;
-export const loadRadicals = memoize(() =>
-  readJsonAssetOrThrow(
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-    Asset.fromModule(require(newLocal)),
-    z.array(
+export const loadRadicals = memoize(async () =>
+  z
+    .array(
       z.object({
         hanzi: z.array(z.string()),
         name: z.array(z.string()),
         pinyin: z.array(z.string()),
       }),
-    ),
-  ),
+    )
+    .parse((await import(`./radicals.asset.json`)).default),
 );
 
 export const loadRadicalsByHanzi = memoize(async () => {
@@ -74,40 +62,41 @@ export const loadRadicalsByHanzi = memoize(async () => {
   );
 });
 
-const loadRadicalStrokes = memoize(() =>
-  readJsonAssetOrThrow(
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-    Asset.fromModule(require(`./radicalStrokes.jsonasset`)),
-    z.array(
-      z.object({
-        strokes: z.number(),
-        range: z.tuple([z.number(), z.number()]),
-        characters: z.array(z.string()),
-      }),
+const loadRadicalStrokes = memoize(
+  async () =>
+    new Map(
+      z
+        .array(
+          z.object({
+            strokes: z.number(),
+            range: z.tuple([z.number(), z.number()]),
+            characters: z.array(z.string()),
+          }),
+        )
+        .parse((await import(`./radicalStrokes.asset.json`)).default)
+        .map((r) => [r.strokes, r]),
     ),
-  ).then((data) => new Map(data.map((r) => [r.strokes, r.characters]))),
 );
 
-const loadRadicalPinyinMnemonics = memoize(() =>
-  readJsonAssetOrThrow(
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-    Asset.fromModule(require(`./radicalPinyinMnemonics.jsonasset`)),
-    z.record(
-      z.string(),
-      z.object({
-        initial: z.string(),
-        final: z.string(),
-        tone: z.string(),
-        meaning: z.string(),
-        mnemonics: z.array(
-          z.object({
-            mnemonic: z.string(),
-            strategy: z.string(),
-          }),
-        ),
-      }),
+const loadRadicalPinyinMnemonics = memoize(
+  async () =>
+    new Map(
+      Object.entries(
+        z
+          .array(
+            z.tuple([
+              z.string(),
+              z.array(
+                z.object({
+                  mnemonic: z.string(),
+                  strategy: z.string(),
+                }),
+              ),
+            ]),
+          )
+          .parse((await import(`./radicalPinyinMnemonics.asset.json`)).default),
+      ),
     ),
-  ).then((data) => new Map(Object.entries(data))),
 );
 
 export const allRadicals = async () => await loadRadicals();
@@ -118,7 +107,7 @@ export const lookupRadicalNameMnemonic = async (hanzi: string) =>
   (await loadRadicalNameMnemonics()).get(hanzi)?.[0] ?? null;
 
 export const lookupRadicalPinyinMnemonic = async (hanzi: string) =>
-  (await loadRadicalPinyinMnemonics()).get(hanzi)?.mnemonics[0] ?? null;
+  (await loadRadicalPinyinMnemonics()).get(hanzi)?.[0] ?? null;
 
 export const lookupWord = async (hanzi: string) =>
   (await loadWords()).get(hanzi) ?? null;

@@ -5,10 +5,11 @@ const { withNativeWind } = require(`nativewind/metro`);
 
 let config = getDefaultConfig(__dirname);
 
+// Force invalid require(…) calls to error on build rather than runtime.
+config.transformer.dynamicDepsInPackages = `reject`;
+
 // Fixes "Metro has encountered an error: While trying to resolve module `replicache-react`"
 config.resolver.unstable_enablePackageExports = true;
-
-config.resolver.assetExts = [...config.resolver.assetExts, `jsonasset`];
 
 config = withSentryConfig(config);
 
