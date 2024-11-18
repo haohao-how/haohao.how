@@ -5,7 +5,7 @@ export const ReferencePageBodySection = ({
   children,
 }: {
   title: string;
-  children: string;
+  children: React.ReactNode;
 }) => {
   return (
     <View className="gap-[4px]">
@@ -13,7 +13,11 @@ export const ReferencePageBodySection = ({
         <Text className="text-lg text-primary-10">{title}</Text>
       </View>
       <View>
-        <Text className="text-xl text-primary-12">{children}</Text>
+        {typeof children === `string` ? (
+          <Text className="text-xl text-primary-12">{children}</Text>
+        ) : (
+          children
+        )}
       </View>
     </View>
   );

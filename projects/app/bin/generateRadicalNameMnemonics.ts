@@ -1,9 +1,14 @@
+import { invariant } from "@haohaohow/lib/invariant";
 import { writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import { DatabaseSync } from "node:sqlite";
 import OpenAI from "openai";
 import { z } from "zod";
-import { allRadicals } from "../src/dictionary/dictionary.js";
+import {
+  allRadicalPrimaryForms,
+  allRadicals,
+} from "../src/dictionary/dictionary.js";
+import { jsonStringifyIndentOneLevel } from "../src/util/json.js";
 
 const dbLocation = import.meta.filename.replace(/\.[^.]+$/, `.db`);
 console.log(`Using db: ${dbLocation}`);
@@ -36,28 +41,28 @@ const schema = z.object({
 const openai = new OpenAI();
 
 for (const {
-  hanzi,
+  hanzi: [char],
   name: [name],
 } of await allRadicals()) {
-  for (const char of hanzi) {
-    const result = queryOne.get(char) as
-      | { radical: string; json: string; created_at: string }
-      | undefined;
-    if (result) {
-      console.log(`Skipping ${char} (cached)`);
-      continue;
-    }
+  invariant(char != null);
+  const result = queryOne.get(char) as
+    | { radical: string; json: string; created_at: string }
+    | undefined;
+  if (result) {
+    console.log(`Skipping ${char} (cached)`);
+    continue;
+  }
 
-    const completion = await openai.chat.completions.create({
-      model: `gpt-4o-mini`,
-      messages: [
-        {
-          role: `system`,
-          content: `You are a Chinese tutor helping English students learn Chinese.`,
-        },
-        {
-          role: `user`,
-          content: `
+  const completion = await openai.chat.completions.create({
+    model: `gpt-4o-mini`,
+    messages: [
+      {
+        role: `system`,
+        content: `You are a Chinese tutor helping English students learn Chinese.`,
+      },
+      {
+        role: `user`,
+        content: `
 The task is to create some high quality mnemonics for Chinese characters. Characteristics of high quality mnemonics are:
 
 - It includes the character's name and creates a strong association to the character.
@@ -94,40 +99,39 @@ Output in the format:
   }[]
 }
 `,
-        },
-      ],
-    });
+      },
+    ],
+  });
 
-    let rawJson = completion.choices[0]?.message.content;
+  let rawJson = completion.choices[0]?.message.content;
 
-    if (rawJson == null) {
-      console.error(`Failed to get response for ${char} (${name})`);
-      console.log(`Skipping…`);
-      continue;
-    }
-
-    rawJson = rawJson
-      // fix strings ending in smart quote
-      .replace(/”\n/g, `"\n`)
-      // fix lines ending in double quote that are missing a trailing comma
-      .replace(/"(\n\s+")/g, `",$1`);
-
-    let json;
-    try {
-      json = schema.parse(JSON.parse(rawJson));
-    } catch (e) {
-      console.error(e);
-      console.error(`Failed to parse JSON:`, rawJson);
-      console.log(`Skipping…`);
-      continue;
-    }
-
-    console.log(
-      `Success for ${char} (${name}), mnemonics:\n${json.mnemonics.map((m) => `  - ${m.mnemonic}\n    (${m.rationale})`).join(`\n`)}`,
-    );
-
-    insert.run(char, JSON.stringify(json));
+  if (rawJson == null) {
+    console.error(`Failed to get response for ${char} (${name})`);
+    console.log(`Skipping…`);
+    continue;
   }
+
+  rawJson = rawJson
+    // fix strings ending in smart quote
+    .replace(/”\n/g, `"\n`)
+    // fix lines ending in double quote that are missing a trailing comma
+    .replace(/"(\n\s+")/g, `",$1`);
+
+  let json;
+  try {
+    json = schema.parse(JSON.parse(rawJson));
+  } catch (e) {
+    console.error(e);
+    console.error(`Failed to parse JSON:`, rawJson);
+    console.log(`Skipping…`);
+    continue;
+  }
+
+  console.log(
+    `Success for ${char} (${name}), mnemonics:\n${json.mnemonics.map((m) => `  - ${m.mnemonic}\n    (${m.rationale})`).join(`\n`)}`,
+  );
+
+  insert.run(char, JSON.stringify(json));
 }
 
 {
@@ -137,22 +141,23 @@ Output in the format:
     created_at: string;
   }[];
 
+  const primaryRadicalSet = new Set(await allRadicalPrimaryForms());
+
   // generate a typescript file with the mnemonics
-  const ts = `[
-  ${rows
-    .map((row) => {
-      const mns = (JSON.parse(row.json) as z.TypeOf<typeof schema>).mnemonics;
-      return JSON.stringify([row.radical, mns]);
-    })
-    .join(`,\n`)}
-]
-`;
+  const ts = jsonStringifyIndentOneLevel(
+    rows
+      .filter((row) => primaryRadicalSet.has(row.radical))
+      .map((row) => {
+        const mns = (JSON.parse(row.json) as z.TypeOf<typeof schema>).mnemonics;
+        return [row.radical, mns];
+      }),
+  );
 
   // Write ts to disk using async node fs APIs
   await writeFile(
     join(
       import.meta.dirname,
-      `../src/dictionary/radicalNameMnemonics.jsonasset`,
+      `../src/dictionary/radicalNameMnemonics.asset.json`,
     ),
     ts,
     `utf8`,

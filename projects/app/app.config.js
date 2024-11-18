@@ -69,7 +69,7 @@ export const expo = {
     owner: `haohaohow`,
     updates: {
       url: `https://u.expo.dev/67cd571e-6234-4837-8e61-d9b4d19f0acf`,
-      assetPatternsToBeBundled: [`./src/**/*.jsonasset`],
+      assetPatternsToBeBundled: [`./src/**/*.asset.json`],
     },
     plugins: [
       [

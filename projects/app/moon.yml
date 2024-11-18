@@ -137,8 +137,8 @@ tasks:
       # Pass $NODE_OPTIONS to support VS Code "JavaScript Debug Terminal".
       NODE_OPTIONS: --import tsx $NODE_OPTIONS
 
-  generateRadicalMnemonics:
-    command: yarn tsx ./bin/generateRadicalMnemonics.ts
+  generateRadicalNameMnemonics:
+    command: yarn tsx ./bin/generateRadicalNameMnemonics.ts
     options:
       runInCI: false
       envFile: .env.local

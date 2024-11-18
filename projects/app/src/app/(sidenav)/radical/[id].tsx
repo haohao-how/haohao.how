@@ -4,11 +4,11 @@ import { ReferencePageHeader } from "@/components/ReferencePageHeader";
 import { GradientAqua } from "@/components/styles";
 import {
   lookupRadicalByHanzi,
-  lookupRadicalNameMnemonic,
+  lookupRadicalNameMnemonics,
 } from "@/dictionary/dictionary";
 import { useQuery } from "@tanstack/react-query";
 import { useLocalSearchParams } from "expo-router";
-import { Text } from "react-native";
+import { Text, View } from "react-native";
 
 export default function RadicalPage() {
   const { id } = useLocalSearchParams<`/radical/[id]`>();
@@ -16,11 +16,11 @@ export default function RadicalPage() {
   const query = useQuery({
     queryKey: [`character.radical`, id],
     queryFn: async () => {
-      const [radical, nameMnemonic] = await Promise.all([
+      const [radical, nameMnemonics] = await Promise.all([
         lookupRadicalByHanzi(id),
-        lookupRadicalNameMnemonic(id),
+        lookupRadicalNameMnemonics(id),
       ]);
-      return { radical, nameMnemonic: nameMnemonic?.mnemonic ?? null };
+      return { radical, nameMnemonics };
     },
     throwOnError: true,
   });
@@ -41,18 +41,27 @@ export default function RadicalPage() {
           <Text className="text-text">Error</Text>
         ) : (
           <>
-            {query.data?.nameMnemonic != null ? (
-              <ReferencePageBodySection title="Mnemonic">
-                {query.data.nameMnemonic}
+            {query.data?.nameMnemonics != null ? (
+              <ReferencePageBodySection title="Mnemonics">
+                <View className="flex-col gap-2">
+                  {query.data.nameMnemonics.map(
+                    ({ mnemonic, rationale }, i) => (
+                      <View key={i} className="gap-1">
+                        <Text className="text-md text-text">{mnemonic}</Text>
+                        <Text className="text-xs italic text-primary-10">
+                          {rationale}
+                        </Text>
+                      </View>
+                    ),
+                  )}
+                </View>
               </ReferencePageBodySection>
             ) : null}
-
             {query.data?.radical != null ? (
               <ReferencePageBodySection title="Meaning">
                 {query.data.radical.name.join(`, `)}
               </ReferencePageBodySection>
             ) : null}
-
             {query.data?.radical?.pinyin != null ? (
               <ReferencePageBodySection title="Pinyin">
                 {query.data.radical.pinyin.join(`, `)}
