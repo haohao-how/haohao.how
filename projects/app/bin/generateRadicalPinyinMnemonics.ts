@@ -1,10 +1,15 @@
+import { invariant } from "@haohaohow/lib/invariant";
 import chunk from "lodash/chunk.js";
 import { writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import { DatabaseSync } from "node:sqlite";
 import OpenAI from "openai";
 import { z } from "zod";
-import { allRadicals } from "../src/dictionary/dictionary.js";
+import {
+  allRadicalPrimaryForms,
+  allRadicals,
+} from "../src/dictionary/dictionary.js";
+import { jsonStringifyIndentOneLevel } from "../src/util/json.js";
 
 const dbLocation = import.meta.filename.replace(/\.[^.]+$/, `.db`);
 console.log(`Using db: ${dbLocation}`);
@@ -46,19 +51,19 @@ let maxRequests = 100;
 // Make a list of all the radicals that aren't cached.
 const radicalsToQuery = [];
 for (const {
-  hanzi,
+  hanzi: [char],
   name: [name],
 } of await allRadicals()) {
-  for (const char of hanzi) {
-    const result = queryOne.get(char) as
-      | { radical: string; json: string; created_at: string }
-      | undefined;
-    if (result) {
-      console.log(`Skipping ${char} (cached)`);
-      continue;
-    } else {
-      radicalsToQuery.push({ char, name });
-    }
+  invariant(char != null);
+
+  const result = queryOne.get(char) as
+    | { radical: string; json: string; created_at: string }
+    | undefined;
+  if (result) {
+    console.log(`Skipping ${char} (cached)`);
+    continue;
+  } else {
+    radicalsToQuery.push({ char, name });
   }
 }
 
@@ -236,22 +241,23 @@ Output in only JSON (no markdown wrapper) using the shape:
     created_at: string;
   }[];
 
+  const primaryRadicalSet = new Set(await allRadicalPrimaryForms());
+
   // generate a typescript file with the mnemonics
-  const ts = `[
-  ${rows
-    .map((row) => {
-      const mns = characterSchema.parse(JSON.parse(row.json)).mnemonics;
-      return JSON.stringify([row.radical, mns]);
-    })
-    .join(`,\n`)}
-]
-`;
+  const ts = jsonStringifyIndentOneLevel(
+    rows
+      .filter((row) => primaryRadicalSet.has(row.radical))
+      .map((row) => {
+        const mns = characterSchema.parse(JSON.parse(row.json)).mnemonics;
+        return [row.radical, mns];
+      }),
+  );
 
   // Write ts to disk using async node fs APIs
   await writeFile(
     join(
       import.meta.dirname,
-      `../src/dictionary/radicalPinyinMnemonics.jsonasset`,
+      `../src/dictionary/radicalPinyinMnemonics.asset.json`,
     ),
     ts,
     `utf8`,

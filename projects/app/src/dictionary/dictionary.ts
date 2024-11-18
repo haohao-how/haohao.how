@@ -1,3 +1,4 @@
+import { invariant } from "@haohaohow/lib/invariant";
 import memoize from "lodash/memoize";
 import { z } from "zod";
 
@@ -56,6 +57,14 @@ export const loadRadicals = memoize(async () =>
     .parse((await import(`./radicals.asset.json`)).default),
 );
 
+export const allRadicalPrimaryForms = memoize(async () =>
+  (await allRadicals()).map((r) => {
+    const first = r.hanzi[0];
+    invariant(first != null);
+    return first;
+  }),
+);
+
 export const loadRadicalsByHanzi = memoize(async () => {
   return new Map(
     (await loadRadicals()).flatMap((r) => r.hanzi.map((h) => [h, r])),
@@ -78,7 +87,7 @@ const loadRadicalStrokes = memoize(
     ),
 );
 
-const loadRadicalPinyinMnemonics = memoize(
+export const loadRadicalPinyinMnemonics = memoize(
   async () =>
     new Map(
       z
@@ -97,15 +106,41 @@ const loadRadicalPinyinMnemonics = memoize(
     ),
 );
 
+export const allRadicalNormalizations = memoize(
+  async () =>
+    new Map(
+      (await loadRadicals()).flatMap(({ hanzi }) =>
+        hanzi.map((h) => [h, hanzi[0]]),
+      ),
+    ),
+);
+
+export const normalizeRadicalOrThrow = async (
+  radical: string,
+): Promise<string> => {
+  const result = (await allRadicalNormalizations()).get(radical);
+  invariant(result != null, `couldn't find a normalization for ${radical}`);
+  return result;
+};
+
 export const allRadicals = async () => await loadRadicals();
 
 export const allRadicalsByStrokes = async () => await loadRadicalStrokes();
 
 export const lookupRadicalNameMnemonic = async (hanzi: string) =>
-  (await loadRadicalNameMnemonics()).get(hanzi)?.[0] ?? null;
+  (await loadRadicalNameMnemonics()).get(
+    await normalizeRadicalOrThrow(hanzi),
+  )?.[0] ?? null;
+
+export const lookupRadicalNameMnemonics = async (hanzi: string) =>
+  (await loadRadicalNameMnemonics()).get(
+    await normalizeRadicalOrThrow(hanzi),
+  ) ?? null;
 
 export const lookupRadicalPinyinMnemonic = async (hanzi: string) =>
-  (await loadRadicalPinyinMnemonics()).get(hanzi)?.[0] ?? null;
+  (await loadRadicalPinyinMnemonics()).get(
+    await normalizeRadicalOrThrow(hanzi),
+  )?.[0] ?? null;
 
 export const lookupWord = async (hanzi: string) =>
   (await loadWords()).get(hanzi) ?? null;
