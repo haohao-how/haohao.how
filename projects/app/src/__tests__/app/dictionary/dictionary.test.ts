@@ -33,6 +33,11 @@ void test(`json data can be loaded and passes the schema validation`, async () =
   await allRadicalPrimaryForms();
 });
 
+void test(`there are 214 radicals to match official kangxi radicals`, async () => {
+  const radicals = await loadRadicals();
+  assert.equal(radicals.length, 214);
+});
+
 void test(`radical name mnemonics don't include radical alternatives`, async () => {
   const radicalNameMnemonics = await loadRadicalNameMnemonics();
   const primarySet = new Set(await allRadicalPrimaryForms());
