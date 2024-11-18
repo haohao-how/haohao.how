@@ -81,21 +81,19 @@ const loadRadicalStrokes = memoize(
 const loadRadicalPinyinMnemonics = memoize(
   async () =>
     new Map(
-      Object.entries(
-        z
-          .array(
-            z.tuple([
-              z.string(),
-              z.array(
-                z.object({
-                  mnemonic: z.string(),
-                  strategy: z.string(),
-                }),
-              ),
-            ]),
-          )
-          .parse((await import(`./radicalPinyinMnemonics.asset.json`)).default),
-      ),
+      z
+        .array(
+          z.tuple([
+            z.string(),
+            z.array(
+              z.object({
+                mnemonic: z.string(),
+                strategy: z.string(),
+              }),
+            ),
+          ]),
+        )
+        .parse((await import(`./radicalPinyinMnemonics.asset.json`)).default),
     ),
 );
 

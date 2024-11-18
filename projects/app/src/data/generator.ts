@@ -5,6 +5,7 @@ import {
   allRadicals,
   lookupRadicalByHanzi,
   lookupRadicalNameMnemonic,
+  lookupRadicalPinyinMnemonic,
   lookupWord,
 } from "@/dictionary/dictionary";
 import { randomOne } from "@/util/collections";
@@ -131,7 +132,7 @@ export async function generateQuestionForSkillOrThrow(
         ),
       );
 
-      const hint = await lookupRadicalNameMnemonic(skill.hanzi);
+      const hint = await lookupRadicalPinyinMnemonic(skill.hanzi);
 
       return {
         type: QuestionType.OneCorrectPair,
