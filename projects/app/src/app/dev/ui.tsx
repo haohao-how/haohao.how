@@ -1,4 +1,6 @@
 import { AnswerButton, AnswerButtonState } from "@/components/AnswerButton";
+import { HanziText } from "@/components/HanziText";
+import { RadicalText } from "@/components/RadicalText";
 import { RectButton2 } from "@/components/RectButton2";
 import { PropsOf } from "@/components/types";
 import { Link } from "expo-router";
@@ -19,6 +21,14 @@ export default function DesignSystemPage() {
         </Link>
       </View>
       <ScrollView style={{ flex: 1 }}>
+        <Section title="HanziText">
+          <HanziTextExamples />
+        </Section>
+
+        <Section title="RadicalText">
+          <RadicalTextExamples />
+        </Section>
+
         <Section title="AnswerButton">
           <AnswerButtonExamples />
         </Section>
@@ -162,6 +172,54 @@ const typography = tv({
   },
 });
 
+const HanziTextExamples = () => (
+  <>
+    <ExampleStack title="normal">
+      <View className="items-start border-2 border-dashed border-primary-8">
+        <HanziText pinyin="nǐhǎo" hanzi="你好" />
+      </View>
+    </ExampleStack>
+
+    <ExampleStack title="no pinyin">
+      <View className="items-start border-2 border-dashed border-primary-8">
+        <HanziText hanzi="你好" />
+      </View>
+    </ExampleStack>
+
+    <ExampleStack title="danger (accent)">
+      <View className="danger-theme">
+        <View className="items-start border-2 border-dashed border-primary-8">
+          <HanziText pinyin="nǐhǎo" hanzi="你好" accented />
+        </View>
+      </View>
+    </ExampleStack>
+  </>
+);
+
+const RadicalTextExamples = () => (
+  <>
+    <ExampleStack title="normal">
+      <View className="items-start border-2 border-dashed border-primary-8">
+        <RadicalText pinyin="yǐ" radical="乚" />
+      </View>
+    </ExampleStack>
+
+    <ExampleStack title="no pinyin">
+      <View className="items-start border-2 border-dashed border-primary-8">
+        <RadicalText radical="乚" />
+      </View>
+    </ExampleStack>
+
+    <ExampleStack title="danger (accent)">
+      <View className="danger-theme">
+        <View className="items-start border-2 border-dashed border-primary-8">
+          <RadicalText pinyin="yǐ" radical="乚" accented />
+        </View>
+      </View>
+    </ExampleStack>
+  </>
+);
+
 const TypographyExample = ({
   size,
   family,
@@ -172,7 +230,7 @@ const TypographyExample = ({
   return (
     <View>
       <Text className="font-xs text-primary-9">
-        <Text className="text-xs font-bold text-primary-11">{size}</Text>
+        <Text className="text-xs text-primary-11">{size}</Text>
       </Text>
 
       <Text className={typography({ size, family })} numberOfLines={1}>
