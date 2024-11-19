@@ -400,12 +400,12 @@ export async function* indexScanIter<
   do {
     page = [];
 
-    for await (const [[, key], value] of tx
+    for await (const [[indexKey, key], value] of tx
       .scan({ indexName, start })
       .entries()) {
       page.push([key, value]);
       if (page.length === pageSize) {
-        start = { key, exclusive: true };
+        start = { key: indexKey, exclusive: true };
         break;
       }
     }

@@ -22,14 +22,16 @@ export default function LearnHsk1Page() {
       const hsk1Words = await allHsk1Words();
 
       // Start with practicing skills that are due
-      const questions: Question[] = await r.query((tx) =>
-        questionsForReview(tx, {
-          limit: quizSize,
-          sampleSize: 50,
-          filter: (skill) => hsk1Words.includes(skill.hanzi),
-          skillTypes: [SkillType.HanziWordToEnglish],
-        }),
-      );
+      const questions: Question[] = (
+        await r.query((tx) =>
+          questionsForReview(tx, {
+            limit: quizSize,
+            sampleSize: 50,
+            filter: (skill) => hsk1Words.includes(skill.hanzi),
+            skillTypes: [SkillType.HanziWordToEnglish],
+          }),
+        )
+      ).map(([, , question]) => question);
 
       // Fill the rest with new skills
       // Create skills to pad out the rest of the quiz

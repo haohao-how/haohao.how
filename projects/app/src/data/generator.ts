@@ -181,18 +181,23 @@ export async function generateQuestionForSkillOrThrow(
         english != null,
         `missing definition for hanzi word ${skill.hanzi}`,
       );
+      function randomCommonDefinition(definitions: string[]) {
+        // Only use the first two definitions, the rest can become too obscure.
+        return randomOne(definitions.slice(0, 2));
+      }
       const rowCount = 5;
       const answer = choicePair(
         { hanzi: skill.hanzi, skill },
-        { definition: randomOne(english.definitions), skill },
+        {
+          definition: randomCommonDefinition(english.definitions),
+          skill,
+        },
       );
       const otherAnswers: OneCorrectPairQuestionAnswer[] = [];
-      for (const hanzi of await getOtherWords(
+      for (const [hanzi, lookup] of await getOtherWords(
         skill.hanzi,
         (rowCount - 1) * 2,
       )) {
-        const lookup = await lookupWord(hanzi);
-        invariant(lookup != null, `missing definition for other word ${hanzi}`);
         const skill = {
           type: SkillType.HanziWordToEnglish,
           hanzi,
@@ -201,7 +206,7 @@ export async function generateQuestionForSkillOrThrow(
           choicePair(
             { hanzi, skill },
             {
-              definition: randomOne(lookup.definitions),
+              definition: randomCommonDefinition(lookup.definitions),
               skill,
             },
           ),
@@ -263,8 +268,12 @@ function getOtherChoices<
   return [...result];
 }
 
-async function getOtherWords(hanzi: string, count: number): Promise<string[]> {
-  const result = new Set<string>();
+async function getOtherWords(hanzi: string, count: number) {
+  const seenChars = new Set<string>();
+  const result: [
+    string,
+    NonNullable<Awaited<ReturnType<typeof lookupWord>>>,
+  ][] = [];
 
   const [hsk1Words, hsk2Words, hsk3Words] = await Promise.all([
     allHsk1Words(),
@@ -280,18 +289,27 @@ async function getOtherWords(hanzi: string, count: number): Promise<string[]> {
   ) ?? [...hsk1Words, ...hsk2Words, ...hsk3Words];
 
   for (const char of shuffle(candidates)) {
-    if (!result.has(char) && hanzi !== char) {
-      result.add(char);
+    if (seenChars.has(char) || hanzi === char) {
+      continue;
     }
-    if (result.size === count) {
+
+    const lookup = await lookupWord(char);
+    if (lookup == null) {
+      continue;
+    }
+
+    seenChars.add(char);
+    result.push([char, lookup]);
+
+    if (result.length === count) {
       break;
     }
   }
 
   invariant(
-    result.size == count,
-    `couldn't get enough other choices ${result.size} != ${count}`,
+    result.length == count,
+    `couldn't get enough other choices ${result.length} != ${count}`,
   );
 
-  return [...result];
+  return result;
 }

@@ -1,7 +1,8 @@
 import { QuizDeck } from "@/components/QuizDeck";
 import { RectButton } from "@/components/RectButton";
 import { useQueryOnce } from "@/components/ReplicacheContext";
-import { IndexName, indexScan } from "@/data/marshal";
+import { generateQuestionForSkillOrThrow } from "@/data/generator";
+import { IndexName, indexScanIter } from "@/data/marshal";
 import { questionsForReview } from "@/data/query";
 import { formatDuration } from "date-fns/formatDuration";
 import { interval } from "date-fns/interval";
@@ -11,7 +12,7 @@ import { Text, View } from "react-native";
 
 export default function ReviewsPage() {
   const questions = useQueryOnce(async (tx) => {
-    return await questionsForReview(tx, {
+    const result = await questionsForReview(tx, {
       limit: 10,
       dueBeforeNow: true,
       // Look ahead at the next 50 skills, shuffle them and take 10. This way
@@ -19,14 +20,29 @@ export default function ReviewsPage() {
       // lot in development).
       sampleSize: 50,
     });
+
+    return result.map(([, , question]) => question);
   });
 
-  const nextSkillState = useQueryOnce(
-    async (tx) =>
-      (await indexScan(tx, IndexName.SkillStateByDue, 1)).map(
-        ([, skillState]) => skillState,
-      )[0],
-  );
+  const nextNotYetDueSkillState = useQueryOnce(async (tx) => {
+    const now = new Date();
+    for await (const [skill, skillState] of indexScanIter(
+      tx,
+      IndexName.SkillStateByDue,
+    )) {
+      if (skillState.due <= now) {
+        continue;
+      }
+
+      try {
+        await generateQuestionForSkillOrThrow(skill);
+      } catch {
+        continue;
+      }
+
+      return skillState;
+    }
+  });
 
   return (
     <View className="flex-1 items-center pt-safe-offset-[20px]">
@@ -55,13 +71,13 @@ export default function ReviewsPage() {
             👏 You’re all caught up on your reviews!
           </Text>
           <GoHomeButton />
-          {nextSkillState.loading ||
-          nextSkillState.data === undefined ? null : (
+          {nextNotYetDueSkillState.loading ||
+          nextNotYetDueSkillState.data === undefined ? null : (
             <Text style={{ color: `#AAA`, textAlign: `center` }}>
               Next review in{` `}
               {formatDuration(
                 intervalToDuration(
-                  interval(new Date(), nextSkillState.data.due),
+                  interval(new Date(), nextNotYetDueSkillState.data.due),
                 ),
               )}
             </Text>

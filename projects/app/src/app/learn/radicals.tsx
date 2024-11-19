@@ -20,17 +20,19 @@ export default function RadicalsPage() {
     queryKey: [RadicalsPage.name, `skills`],
     queryFn: async () => {
       const limit = 10;
-      const questions: Question[] = await r.query((tx) =>
-        questionsForReview(tx, {
-          limit,
-          sampleSize: 50,
-          skillTypes: [
-            // SkillType.EnglishToRadical,
-            SkillType.RadicalToEnglish,
-            SkillType.RadicalToPinyin,
-          ],
-        }),
-      );
+      const questions: Question[] = (
+        await r.query((tx) =>
+          questionsForReview(tx, {
+            limit,
+            sampleSize: 50,
+            skillTypes: [
+              // SkillType.EnglishToRadical,
+              SkillType.RadicalToEnglish,
+              SkillType.RadicalToPinyin,
+            ],
+          }),
+        )
+      ).map(([, , question]) => question);
       // Fill the rest with new skills
       // Create skills to pad out the rest of the quiz
       if (questions.length < limit) {

@@ -15,8 +15,8 @@ export async function questionsForReview(
     filter?: (skill: Skill, skillState: SkillState) => boolean;
     limit?: number;
   },
-) {
-  const result: Question[] = [];
+): Promise<[Skill, SkillState, Question][]> {
+  const result: [Skill, SkillState, Question][] = [];
   const now = new Date();
   const skillTypesFilter =
     options?.skillTypes != null ? new Set(options.skillTypes) : null;
@@ -25,7 +25,7 @@ export async function questionsForReview(
     IndexName.SkillStateByDue,
   )) {
     // Only consider skills that are due for review.
-    if (options?.dueBeforeNow != null && skillState.due > now) {
+    if (options?.dueBeforeNow === true && skillState.due > now) {
       continue;
     }
 
@@ -39,13 +39,21 @@ export async function questionsForReview(
     }
 
     try {
-      result.push(await generateQuestionForSkillOrThrow(skill));
+      result.push([
+        skill,
+        skillState,
+        await generateQuestionForSkillOrThrow(skill),
+      ]);
     } catch (e) {
       sentryCaptureException(e);
       continue;
     }
 
-    if (options?.sampleSize != null && result.length === options.sampleSize) {
+    if (options?.sampleSize != null) {
+      if (result.length === options.sampleSize) {
+        break;
+      }
+    } else if (options?.limit != null && result.length === options.limit) {
       break;
     }
   }
