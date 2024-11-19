@@ -5,7 +5,7 @@ import {
   QuestionFlag,
   SkillRating,
 } from "@/data/model";
-import { lookupRadicalByHanzi } from "@/dictionary/dictionary";
+import { lookupRadicalByHanzi, lookupWord } from "@/dictionary/dictionary";
 import { arrayFilterUniqueWithKey } from "@/util/collections";
 import { Rating } from "@/util/fsrs";
 import { invariant } from "@haohaohow/lib/invariant";
@@ -34,6 +34,7 @@ import {
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { tv } from "tailwind-variants";
 import { AnswerButton } from "./AnswerButton";
+import { HanziText } from "./HanziText";
 import { RadicalText } from "./RadicalText";
 import { RectButton2 } from "./RectButton2";
 import { PropsOf } from "./types";
@@ -258,8 +259,9 @@ const ShowChoice = ({
   small?: boolean;
 }) => {
   const radical = choice.type === `radical` ? choice.hanzi : null;
+  const hanzi = choice.type === `hanzi` ? choice.hanzi : null;
 
-  const query = useQuery({
+  const radicalQuery = useQuery({
     queryKey: [`radical`, radical],
     queryFn: async () => {
       if (radical != null) {
@@ -269,16 +271,26 @@ const ShowChoice = ({
     enabled: radical != null,
   });
 
-  if (query.isLoading) {
+  const hanziQuery = useQuery({
+    queryKey: [`hanzi`, hanzi],
+    queryFn: async () => {
+      if (hanzi != null) {
+        return await lookupWord(hanzi);
+      }
+    },
+    enabled: hanzi != null,
+  });
+
+  if (radicalQuery.isLoading || hanziQuery.isLoading) {
     return null;
   }
 
   switch (choice.type) {
     case `radical`: {
-      const hanzis = (includeAlternatives ? query.data?.hanzi : null) ?? [
-        choice.hanzi,
-      ];
-      const pinyin = query.data?.pinyin[0];
+      const hanzis = (includeAlternatives
+        ? radicalQuery.data?.hanzi
+        : null) ?? [choice.hanzi];
+      const pinyin = radicalQuery.data?.pinyin[0];
       return (
         <View className="flex-row items-end gap-1">
           {hanzis.map((hanzi, i) => (
@@ -297,7 +309,7 @@ const ShowChoice = ({
       );
     }
     case `name`: {
-      const names = (includeAlternatives ? query.data?.name : null) ?? [
+      const names = (includeAlternatives ? radicalQuery.data?.name : null) ?? [
         choice.english,
       ];
       return (
@@ -319,7 +331,10 @@ const ShowChoice = ({
         </Text>
       );
     }
-    case `hanzi`:
+    case `hanzi`: {
+      const pinyin = hanziQuery.data?.pinyin;
+      return <HanziText pinyin={pinyin} hanzi={choice.hanzi} accented />;
+    }
     case `pinyin`:
     case `definition`:
       return (
