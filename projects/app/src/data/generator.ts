@@ -46,6 +46,39 @@ const choicePair = (
   b: choice(b),
 });
 
+function keyForChoice(choice: OneCorrectPairQuestionChoice) {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { skill, type, ...rest } = choice;
+  return JSON.stringify(rest);
+}
+
+function uniqueChoicesInvariant(choices: OneCorrectPairQuestionChoice[]) {
+  const seen = new Set<string>();
+
+  for (const choice of choices) {
+    const key = keyForChoice(choice);
+    invariant(!seen.has(key), `duplicate choice ${key}`);
+    seen.add(key);
+  }
+}
+
+function validQuestionInvariant(question: Question) {
+  switch (question.type) {
+    case QuestionType.OneCorrectPair: {
+      // Ensure there aren't two identical choices in the same group.
+      uniqueChoicesInvariant(question.groupA.map((x) => x.a));
+      uniqueChoicesInvariant(question.groupB.map((x) => x.b));
+      invariant(question.groupA.includes(question.answer));
+      invariant(question.groupB.includes(question.answer));
+      break;
+    }
+    case QuestionType.MultipleChoice:
+      break;
+  }
+
+  return question;
+}
+
 // generate a question to test a skill
 export async function generateQuestionForSkillOrThrow(
   skill: Skill,
@@ -78,23 +111,22 @@ export async function generateQuestionForSkillOrThrow(
             }),
           ),
           {
-            initial: [JSON.stringify(answer.a), JSON.stringify(answer.b)],
-            fn: (r) => [JSON.stringify(r.a), JSON.stringify(r.b)],
+            initial: [keyForChoice(answer.a), keyForChoice(answer.b)],
+            fn: (r) => [keyForChoice(r.a), keyForChoice(r.b)],
           },
           (rowCount - 1) * 2,
         ),
       );
 
       const hint = await lookupRadicalNameMnemonic(skill.hanzi);
-
-      return {
+      return validQuestionInvariant({
         type: QuestionType.OneCorrectPair,
         prompt: `Match a radical with its name`,
         groupA: shuffle([answer, ...wrongA]),
         groupB: shuffle([answer, ...wrongB]),
         answer,
         hint: hint?.mnemonic,
-      };
+      });
     }
     case SkillType.RadicalToPinyin: {
       const radical = await lookupRadicalByHanzi(skill.hanzi);
@@ -125,8 +157,8 @@ export async function generateQuestionForSkillOrThrow(
             }),
           ),
           {
-            initial: [JSON.stringify(answer.a), JSON.stringify(answer.b)],
-            fn: (r) => [JSON.stringify(r.a), JSON.stringify(r.b)],
+            initial: [keyForChoice(answer.a), keyForChoice(answer.b)],
+            fn: (r) => [keyForChoice(r.a), keyForChoice(r.b)],
           },
           (rowCount - 1) * 2,
         ),
@@ -134,14 +166,14 @@ export async function generateQuestionForSkillOrThrow(
 
       const hint = await lookupRadicalPinyinMnemonic(skill.hanzi);
 
-      return {
+      return validQuestionInvariant({
         type: QuestionType.OneCorrectPair,
         prompt: `Match a radical with its pinyin`,
         groupA: shuffle([answer, ...wrongA]),
         groupB: shuffle([answer, ...wrongB]),
         answer,
         hint: hint?.mnemonic,
-      };
+      });
     }
     case SkillType.HanziWordToEnglish: {
       const english = await lookupWord(skill.hanzi);
@@ -176,13 +208,13 @@ export async function generateQuestionForSkillOrThrow(
         );
       }
       const [wrongA, wrongB] = evenHalve(otherAnswers);
-      return {
+      return validQuestionInvariant({
         type: QuestionType.OneCorrectPair,
         prompt: `Match a word with its name`,
         groupA: shuffle([...wrongA, answer]),
         groupB: shuffle([...wrongB, answer]),
         answer,
-      };
+      });
     }
     case SkillType.EnglishToRadical:
     case SkillType.PinyinToRadical:
