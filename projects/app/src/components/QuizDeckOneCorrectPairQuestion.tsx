@@ -34,7 +34,7 @@ import {
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { tv } from "tailwind-variants";
 import { AnswerButton } from "./AnswerButton";
-import { RectButton } from "./RectButton";
+import { RadicalText } from "./RadicalText";
 import { RectButton2 } from "./RectButton2";
 import { PropsOf } from "./types";
 
@@ -141,7 +141,7 @@ export const QuizDeckOneCorrectPairQuestion = memo(
                     Correct answer:
                   </Text>
 
-                  <ShowAnswer answer={answer} />
+                  <ShowAnswer answer={answer} includeAlternatives />
 
                   {hint != null ? (
                     <Text className="text-md leading-snug text-accent-10">
@@ -149,13 +149,17 @@ export const QuizDeckOneCorrectPairQuestion = memo(
                     </Text>
                   ) : null}
                   {selectedAAnswer != null && selectedBAnswer != null ? (
-                    <Text className="text-md leading-snug text-accent-10">
-                      <Text className="font-bold">Your answer:</Text>
+                    <View className="flex-row items-center gap-2">
+                      <Text className="text-md font-bold leading-snug text-accent-10">
+                        Your answer:
+                      </Text>
                       {` `}
                       <ShowAnswer answer={selectedAAnswer} small />
-                      {` `}+{` `}
+                      <Text className="text-md font-bold leading-snug text-accent-10">
+                        {` `}+{` `}
+                      </Text>
                       <ShowAnswer answer={selectedBAnswer} small />
-                    </Text>
+                    </View>
                   ) : null}
                 </>
               )}
@@ -262,11 +266,11 @@ const ShowChoice = ({
         return await lookupRadicalByHanzi(radical);
       }
     },
-    enabled: includeAlternatives && radical != null,
+    enabled: radical != null,
   });
 
   if (query.isLoading) {
-    return <Text className={choiceRadicalText({ small })}>Loading…</Text>;
+    return null;
   }
 
   switch (choice.type) {
@@ -274,18 +278,20 @@ const ShowChoice = ({
       const hanzis = (includeAlternatives ? query.data?.hanzi : null) ?? [
         choice.hanzi,
       ];
+      const pinyin = query.data?.pinyin[0];
       return (
-        <View className="flex-row items-center gap-1">
+        <View className="flex-row items-end gap-1">
           {hanzis.map((hanzi, i) => (
-            <Text
+            <View
               key={i}
-              className={choiceRadicalText({
-                alternative: hanzi !== choice.hanzi,
-                small,
-              })}
+              className={hanzi !== choice.hanzi ? `opacity-50` : undefined}
             >
-              {hanzi}
-            </Text>
+              <RadicalText
+                pinyin={hanzi === choice.hanzi ? pinyin : undefined}
+                radical={hanzi}
+                accented
+              />
+            </View>
           ))}
         </View>
       );
@@ -323,18 +329,6 @@ const ShowChoice = ({
       );
   }
 };
-
-const choiceRadicalText = tv({
-  base: `rounded-md border-[1px] border-dashed border-accent-10 px-1 text-xl text-accent-10`,
-  variants: {
-    alternative: {
-      true: `opacity-50`,
-    },
-    small: {
-      true: `text-md`,
-    },
-  },
-});
 
 const choiceEnglishText = tv({
   base: `text-xl leading-none text-accent-10`,
@@ -466,7 +460,7 @@ enum SubmitButtonState {
 
 const SubmitButton = forwardRef<
   ElementRef<typeof RectButton2>,
-  { state: SubmitButtonState } & Pick<PropsOf<typeof RectButton>, `onPress`>
+  { state: SubmitButtonState } & Pick<PropsOf<typeof RectButton2>, `onPress`>
 >(function SubmitButton({ state, onPress }, ref) {
   let text;
 
