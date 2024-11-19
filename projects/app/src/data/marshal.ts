@@ -395,17 +395,21 @@ export async function* indexScanIter<
   const unmarshal = indexUnmarshalers[indexName];
   const pageSize = 50;
   let page: [string, ReadonlyJSONValue][];
-  let start: { key: string; exclusive: true } | undefined;
+  let startKey: string | undefined;
 
   do {
     page = [];
 
     for await (const [[indexKey, key], value] of tx
-      .scan({ indexName, start })
+      .scan({
+        indexName,
+        start:
+          startKey != null ? { key: startKey, exclusive: true } : undefined,
+      })
       .entries()) {
+      startKey = indexKey;
       page.push([key, value]);
       if (page.length === pageSize) {
-        start = { key: indexKey, exclusive: true };
         break;
       }
     }
