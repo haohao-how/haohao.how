@@ -314,7 +314,6 @@ const ShowChoice = ({
       ];
       return (
         <Text className={choiceEnglishText({ small })}>
-          (
           {names.map((n, i, { length }) => (
             <Fragment key={i}>
               {i > 0 ? `, ` : null}
@@ -327,7 +326,6 @@ const ShowChoice = ({
               </Text>
             </Fragment>
           ))}
-          )
         </Text>
       );
     }
