@@ -5,14 +5,18 @@ export const HanziText = ({
   pinyin,
   hanzi,
   accented,
+  hanziClassName,
 }: {
   pinyin?: string;
   hanzi: string;
   accented?: boolean;
+  hanziClassName?: string;
 }) => {
   return (
     <View className="flex-0 items-center">
-      <Text className={hanziText({ accented })}>{hanzi}</Text>
+      <Text className={hanziText({ accented, className: hanziClassName })}>
+        {hanzi}
+      </Text>
       {pinyin != null ? (
         <>
           <Text
