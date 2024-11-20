@@ -2675,6 +2675,7 @@ __metadata:
     "@types/apple-signin-api": "npm:^1.5.3"
     "@types/babel__core": "npm:7.20.x"
     "@types/color": "npm:^3"
+    "@types/debug": "npm:^4 <=4.3.x"
     "@types/eslint": "npm:^9 <=9.13.x"
     "@types/eslint__js": "npm:^8.42.3"
     "@types/lodash": "npm:4.17.x"
@@ -2685,6 +2686,7 @@ __metadata:
     "@typescript-eslint/utils": "npm:^8.12.1"
     color: "npm:^4.2.3"
     date-fns: "npm:^3.6.0"
+    debug: "npm:^4.3.7"
     drizzle-kit: "npm:^0.28.0"
     drizzle-orm: "npm:^0.33.0"
     eslint: "npm:^9.13.0"
@@ -2738,11 +2740,13 @@ __metadata:
     replicache-react: "npm:^5.0.1"
     tailwind-variants: "npm:^0.2.1"
     tailwindcss: "npm:^3.4.14"
+    ts-essentials: "npm:^10.0.3"
     tsx: "npm:^4.15.7"
     typescript: "npm:^5.5.2"
     typescript-eslint: "npm:^8.14.0"
     ucd-full: "npm:^16.0.0"
     ws: "npm:^8.17.1"
+    yargs: "npm:^17.7.2"
     zod: "npm:^3.23.8"
   languageName: unknown
   linkType: soft
@@ -5994,6 +5998,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/debug@npm:^4 <=4.3.x":
+  version: 4.1.12
+  resolution: "@types/debug@npm:4.1.12"
+  dependencies:
+    "@types/ms": "npm:*"
+  checksum: 10c0/5dcd465edbb5a7f226e9a5efd1f399c6172407ef5840686b73e3608ce135eeca54ae8037dcd9f16bdb2768ac74925b820a8b9ecc588a58ca09eca6acabe33e2f
+  languageName: node
+  linkType: hard
+
 "@types/emscripten@npm:^1.39.6":
   version: 1.39.10
   resolution: "@types/emscripten@npm:1.39.10"
@@ -6103,6 +6116,13 @@ __metadata:
   version: 4.17.13
   resolution: "@types/lodash@npm:4.17.13"
   checksum: 10c0/c3d0b7efe7933ac0369b99f2f7bff9240d960680fdb74b41ed4bd1b3ca60cca1e31fe4046d9abbde778f941a41bc2a75eb629abf8659fa6c27b66efbbb0802a9
+  languageName: node
+  linkType: hard
+
+"@types/ms@npm:*":
+  version: 0.7.34
+  resolution: "@types/ms@npm:0.7.34"
+  checksum: 10c0/ac80bd90012116ceb2d188fde62d96830ca847823e8ca71255616bc73991aa7d9f057b8bfab79e8ee44ffefb031ddd1bcce63ea82f9e66f7c31ec02d2d823ccc
   languageName: node
   linkType: hard
 
@@ -17851,6 +17871,18 @@ __metadata:
   peerDependencies:
     typescript: ">=4.2.0"
   checksum: 10c0/f54a0ba9ed56ce66baea90a3fa087a484002e807f28a8ccb2d070c75e76bde64bd0f6dce98b3802834156306050871b67eec325cb4e918015a360a3f0868c77c
+  languageName: node
+  linkType: hard
+
+"ts-essentials@npm:^10.0.3":
+  version: 10.0.3
+  resolution: "ts-essentials@npm:10.0.3"
+  peerDependencies:
+    typescript: ">=4.5.0"
+  peerDependenciesMeta:
+    typescript:
+      optional: true
+  checksum: 10c0/1bbad8241d8db1ebe4b2eb8f3c984b879de24b14ea42010fcbbc71d9a61a4e3ccd95f7a22c8c0709e2cad578fe1722012e9fbf74420a2ca3fc840565d0b8eb9d
   languageName: node
   linkType: hard
 

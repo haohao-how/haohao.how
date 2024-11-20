@@ -181,7 +181,7 @@ export async function generateQuestionForSkillOrThrow(
         english != null,
         `missing definition for hanzi word ${skill.hanzi}`,
       );
-      function randomCommonDefinition(definitions: string[]) {
+      function randomCommonDefinition(definitions: readonly string[]) {
         // Only use the first two definitions, the rest can become too obscure.
         return randomOne(definitions.slice(0, 2));
       }

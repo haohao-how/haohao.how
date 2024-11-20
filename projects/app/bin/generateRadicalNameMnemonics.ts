@@ -1,60 +1,108 @@
 import { invariant } from "@haohaohow/lib/invariant";
+import makeDebug from "debug";
 import { writeFile } from "node:fs/promises";
 import { join } from "node:path";
-import { DatabaseSync } from "node:sqlite";
 import OpenAI from "openai";
+import { ChatCompletionCreateParamsNonStreaming } from "openai/resources/index.mjs";
+import yargs from "yargs";
 import { z } from "zod";
 import {
   allRadicalPrimaryForms,
-  allRadicals,
+  loadRadicalNameMnemonics,
+  lookupRadicalByHanzi,
 } from "../src/dictionary/dictionary.js";
+import { mergeMaps, sortComparatorString } from "../src/util/collections.js";
 import { jsonStringifyIndentOneLevel } from "../src/util/json.js";
+import { makeDbCache } from "./util/cache.js";
 
-const dbLocation = import.meta.filename.replace(/\.[^.]+$/, `.db`);
-console.log(`Using db: ${dbLocation}`);
-const db = new DatabaseSync(dbLocation);
+const debug = makeDebug(`hhh`);
 
-db.exec(`
-  CREATE TABLE IF NOT EXISTS data2(
-    radical TEXT PRIMARY KEY,
-    json TEXT,
-    created_at TEXT DEFAULT CURRENT_TIMESTAMP
-  ) STRICT
-`);
+const argv = await yargs(process.argv.slice(2))
+  .usage(`$0 [args]`)
+  .option(`update`, {
+    type: `string`,
+    describe: `characters to explicitly update`,
+    coerce: (x: string) => x.split(`,`),
+  })
+  .option(`debug`, {
+    type: `boolean`,
+    default: false,
+  })
+  .option(`force-write`, {
+    type: `boolean`,
+    default: false,
+  })
+  .strict()
+  .parseAsync();
 
-// Create a prepared statement to insert data into the database.
-const insert = db.prepare(`INSERT INTO data2 (radical, json) VALUES (?, ?)`);
-const queryOne = db.prepare(`SELECT * FROM data2 WHERE radical = ?`);
-const queryAll = db.prepare(`SELECT * FROM data2`);
+if (argv.debug) {
+  makeDebug.enable(`${debug.namespace},${debug.namespace}:*`);
+}
 
-const schema = z.object({
+const dbCache = makeDbCache(import.meta.filename, `openai_chat_cache`, debug);
+
+const openAiSchema = z.object({
   name: z.string(),
-  meaning: z.string(),
+  radical: z.string(),
   mnemonics: z.array(
     z.object({
       mnemonic: z.string(),
-      rationale: z.string(),
+      reasoning_steps: z.array(z.string()),
     }),
   ),
 });
 
 const openai = new OpenAI();
 
-for (const {
-  hanzi: [char],
-  name: [name],
-} of await allRadicals()) {
-  invariant(char != null);
-  const result = queryOne.get(char) as
-    | { radical: string; json: string; created_at: string }
-    | undefined;
-  if (result) {
-    console.log(`Skipping ${char} (cached)`);
+const radicalsToCheck = argv.update ?? [
+  ...new Set((await loadRadicalNameMnemonics()).keys()).difference(
+    new Set(await allRadicalPrimaryForms()),
+  ),
+];
+
+console.log(`Radicals to check: ${[...radicalsToCheck].join(`,`)}`);
+
+const decompositions: Record<string, string> = {
+  无: `⿱一尢`,
+};
+
+const openAiWithCache = async (
+  body: ChatCompletionCreateParamsNonStreaming,
+) => {
+  const cached = dbCache.get(body);
+  if (cached == null) {
+    debug(`Making OpenAI chat request: %O`, body);
+    const completion = await openai.chat.completions.create(body);
+    const result = completion.choices[0]?.message.content;
+    debug(`OpenAI chat response: %O`, result);
+    invariant(
+      result != null,
+      `No result for OpenAI request:\n${JSON.stringify(body, null, 2)}`,
+    );
+    dbCache.set(body, result);
+    return result;
+  }
+  invariant(typeof cached === `string`);
+  return cached;
+};
+
+const updates = new Map<string, { mnemonic: string; rationale: string }[]>();
+
+for (const hanzi of radicalsToCheck) {
+  const name = (await lookupRadicalByHanzi(hanzi))?.name[0];
+  if (name == null) {
+    console.warn(`No name lookup data for ${hanzi}, skipping…`);
     continue;
   }
 
-  const completion = await openai.chat.completions.create({
-    model: `gpt-4o-mini`,
+  const decomposition = decompositions[hanzi];
+  if (decomposition == null) {
+    console.warn(`No decomposition for ${hanzi}, skipping…`);
+    continue;
+  }
+
+  const rawJson = await openAiWithCache({
+    model: `gpt-4o`,
     messages: [
       {
         role: `system`,
@@ -63,103 +111,98 @@ for (const {
       {
         role: `user`,
         content: `
-The task is to create some high quality mnemonics for Chinese characters. Characteristics of high quality mnemonics are:
+Create a mnemonic to help remember that the name of the Chinese radical ${hanzi} is "${name}".
 
-- It includes the character's name and creates a strong association to the character.
-- It considers aspects that make it uniquely to avoid confusion with other similar characters.
-- It includes similar-looking characters if their meaning is relevant and helpful for remembering.
-- It is short and concise, ideally just one sentence.
-- It doesn't include the character ${JSON.stringify(char)} itself.
+Use the following strategy:
 
-For example if the character is "玉" a good mnemonic would be:
+**1. Analyze the radical components**
 
-  > Imagine a beautiful jade jewel attached to the base of a king's crown".
+- The radical is composed as ${decomposition}. 
+- Write a description of the layout of the sub-radicals.
+- For each component, list out separately:
+  - **Name:** <insert>
+  - **Meaning:** <insert>
+  - **Position:** <insert>
+  - **Visual depictions:** (if this component was a sketch what might it be of (take into account its position relative to other components, for example 八 at the top could be a chimney, but at the bottom might be a rocket nozzle))
+    - <insert description 1>
+    - ...
+    - <insert description 5>
 
-This is good because it ties together the meaning of the character, the character's visual appearance, and the related character 王.
+**2. Best practices for mnemonics**
+
+- Link together one of the visual depictions of each component.
+- The story should be something that someone could picture in their head.
+- Make it clear why (given its components) the radical's name makes sense.
+- Don't make the mnemonics too long, shorter can be easier to remember.
+- Be sure to include the exact name of the radical (i.e. "${name}")
+- Explain the logical steps in creating the mnemonic.
 
 ---
 
-Now you need to come up with a good mnemonic for the Chinese radical ${JSON.stringify(char)} (meaning ${JSON.stringify(name?.[0])}).
-
-Here's some steps you could follow:
-
-1. Give the English name of the Chinese radical ${JSON.stringify(char)} and explain its meaning.
-2. What characters look similar that beginners might confuse it with?
-3. Describe the visual appearance of ${JSON.stringify(char)}, emphasise distinctive elements.
-4. Then brainstorm 10 mnemonics that combine everything together and adhere to the high quality characteristics.
-
-Output in the format:
-
-{
-  "name": string,
-  "meaning": string,
-  "mnemonics": {
-    "mnemonic": string,
-    "rationale": string
-  }[]
-}
+Write 10 mnemonic variations for ${hanzi} (${name}).
 `,
       },
     ],
+    response_format: {
+      type: `json_schema`,
+      json_schema: {
+        name: `radical_mnemonics`,
+        schema: {
+          type: `object`,
+          properties: {
+            radical: { type: `string` },
+            name: { type: `string` },
+            mnemonics: {
+              type: `array`,
+              items: {
+                type: `object`,
+                properties: {
+                  mnemonic: { type: `string` },
+                  reasoning_steps: {
+                    type: `array`,
+                    items: { type: `string` },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
   });
 
-  let rawJson = completion.choices[0]?.message.content;
-
-  if (rawJson == null) {
-    console.error(`Failed to get response for ${char} (${name})`);
-    console.log(`Skipping…`);
-    continue;
-  }
-
-  rawJson = rawJson
-    // fix strings ending in smart quote
-    .replace(/”\n/g, `"\n`)
-    // fix lines ending in double quote that are missing a trailing comma
-    .replace(/"(\n\s+")/g, `",$1`);
-
-  let json;
   try {
-    json = schema.parse(JSON.parse(rawJson));
+    const json = openAiSchema.parse(JSON.parse(rawJson));
+
+    updates.set(
+      hanzi,
+      json.mnemonics.map((m) => ({
+        mnemonic: m.mnemonic,
+        rationale: m.reasoning_steps.join(`\n`),
+      })),
+    );
+    console.log(
+      `Success for ${hanzi} (${name}), mnemonics:\n${json.mnemonics.map((m) => `  - ${m.mnemonic}\n    Rationale:\n${m.reasoning_steps.map((x, i) => `    ${i + 1}. ${x}`).join(`\n`)}`).join(`\n`)}`,
+    );
   } catch (e) {
-    console.error(e);
-    console.error(`Failed to parse JSON:`, rawJson);
-    console.log(`Skipping…`);
+    console.error(`Failed to parse response, skipping…`, e);
     continue;
   }
-
-  console.log(
-    `Success for ${char} (${name}), mnemonics:\n${json.mnemonics.map((m) => `  - ${m.mnemonic}\n    (${m.rationale})`).join(`\n`)}`,
-  );
-
-  insert.run(char, JSON.stringify(json));
 }
 
-{
-  const rows = queryAll.all() as {
-    radical: string;
-    json: string;
-    created_at: string;
-  }[];
+if (argv[`force-write`] || updates.size > 0) {
+  const existingData = await loadRadicalNameMnemonics();
 
-  const primaryRadicalSet = new Set(await allRadicalPrimaryForms());
+  const updatedData = [...mergeMaps(existingData, updates).entries()]
+    // Sort the map for minimal diffs in PR
+    .sort(sortComparatorString(([key]) => key));
 
-  // generate a typescript file with the mnemonics
-  const ts = jsonStringifyIndentOneLevel(
-    rows
-      .filter((row) => primaryRadicalSet.has(row.radical))
-      .map((row) => {
-        const mns = (JSON.parse(row.json) as z.TypeOf<typeof schema>).mnemonics;
-        return [row.radical, mns];
-      }),
-  );
-
-  // Write ts to disk using async node fs APIs
   await writeFile(
     join(
       import.meta.dirname,
       `../src/dictionary/radicalNameMnemonics.asset.json`,
     ),
-    ts,
+    jsonStringifyIndentOneLevel(updatedData),
     `utf8`,
   );
 }
