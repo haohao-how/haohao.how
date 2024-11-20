@@ -294,18 +294,20 @@ const ShowChoice = ({
       const pinyin = radicalQuery.data?.pinyin[0];
       return (
         <View className="flex-row items-end gap-1">
-          {hanzis.map((hanzi, i) => (
-            <View
-              key={i}
-              className={hanzi !== choice.hanzi ? `opacity-50` : undefined}
-            >
-              <RadicalText
-                pinyin={!small && hanzi === choice.hanzi ? pinyin : undefined}
-                radical={hanzi}
-                accented
-              />
-            </View>
-          ))}
+          {hanzis.map((hanzi, i) => {
+            return (
+              <View
+                key={i}
+                className={hanzi !== choice.hanzi ? `opacity-50` : undefined}
+              >
+                <RadicalText
+                  pinyin={!small && hanzi === choice.hanzi ? pinyin : undefined}
+                  radical={hanzi}
+                  accented
+                />
+              </View>
+            );
+          })}
         </View>
       );
     }
@@ -353,6 +355,8 @@ const choiceEnglishText = tv({
   },
 });
 
+const choicesWithPinyinRendering = new Set([`radical`, `hanzi`]);
+
 const ShowAnswer = ({
   answer: { a, b },
   includeAlternatives = false,
@@ -362,8 +366,14 @@ const ShowAnswer = ({
   includeAlternatives?: boolean;
   small?: boolean;
 }) => {
+  const needPaddingForFloatingPinyin =
+    !small &&
+    (choicesWithPinyinRendering.has(a.type) ||
+      choicesWithPinyinRendering.has(b.type));
   return (
-    <View className={`flex-row items-center ${small ? `gap-1` : `gap-2`}`}>
+    <View
+      className={`flex-row items-center ${small ? `gap-1` : `gap-2`} ${needPaddingForFloatingPinyin ? `pt-4` : ``}`}
+    >
       <ShowChoice
         choice={a}
         includeAlternatives={includeAlternatives}

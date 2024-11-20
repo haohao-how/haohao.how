@@ -48,16 +48,18 @@ export const QuizDeckMultipleChoiceQuestion = memo(
       setLogMsg(
         `downloaded=${soundAsset.downloaded} downloading=${
           // @ts-expect-error it's private but only temporary
+          // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
           soundAsset.downloading
-        } localUri=${soundAsset.localUri}`,
+        } localUri=${soundAsset.localUri ?? `nullish`}`,
       );
       setLogMsgTimer(
         setInterval(() => {
           setLogMsg(
             `downloaded=${soundAsset.downloaded} downloading=${
               // @ts-expect-error it's private but only temporary
+              // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
               soundAsset.downloading
-            } localUri=${soundAsset.localUri}`,
+            } localUri=${soundAsset.localUri ?? `nullish`}`,
           );
         }, 100),
       );
