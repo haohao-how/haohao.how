@@ -150,16 +150,17 @@ export const QuizDeckOneCorrectPairQuestion = memo(
                     </Text>
                   ) : null}
                   {selectedAAnswer != null && selectedBAnswer != null ? (
-                    <View className="flex-row items-center gap-2">
-                      <Text className="text-md font-bold leading-snug text-accent-10">
+                    <View className="flex-row flex-wrap items-center gap-2">
+                      <Text className="text-md flex-shrink-0 font-bold leading-snug text-accent-10">
                         Your answer:
                       </Text>
-                      {` `}
-                      <ShowAnswer answer={selectedAAnswer} small />
-                      <Text className="text-md font-bold leading-snug text-accent-10">
-                        {` `}+{` `}
-                      </Text>
-                      <ShowAnswer answer={selectedBAnswer} small />
+                      <View className="flex-1 flex-row flex-wrap items-center">
+                        <ShowAnswer answer={selectedAAnswer} small />
+                        <Text className="text-md flex-shrink-0 flex-grow-0 px-1 leading-snug text-accent-10 opacity-50">
+                          +
+                        </Text>
+                        <ShowAnswer answer={selectedBAnswer} small />
+                      </View>
                     </View>
                   ) : null}
                 </>
@@ -299,7 +300,7 @@ const ShowChoice = ({
               className={hanzi !== choice.hanzi ? `opacity-50` : undefined}
             >
               <RadicalText
-                pinyin={hanzi === choice.hanzi ? pinyin : undefined}
+                pinyin={!small && hanzi === choice.hanzi ? pinyin : undefined}
                 radical={hanzi}
                 accented
               />
@@ -330,7 +331,7 @@ const ShowChoice = ({
       );
     }
     case `hanzi`: {
-      const pinyin = hanziQuery.data?.pinyin;
+      const pinyin = small ? undefined : hanziQuery.data?.pinyin;
       return <HanziText pinyin={pinyin} hanzi={choice.hanzi} accented />;
     }
     case `pinyin`:
