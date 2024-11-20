@@ -89,7 +89,7 @@ export default function WordsPage() {
   );
 }
 
-const WordList = ({ words }: { words: string[] }) => {
+const WordList = ({ words }: { words: readonly string[] }) => {
   return (
     <View className="flex-row flex-wrap gap-2">
       {words.map((word, i) => (

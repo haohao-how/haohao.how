@@ -72,6 +72,7 @@
     "@stylistic/eslint-plugin": "^2.9.0",
     "@types/babel__core": "7.20.x",
     "@types/color": "^3",
+    "@types/debug": "^4 <=4.3.x",
     "@types/eslint": "^9 <=9.13.x",
     "@types/eslint__js": "^8.42.3",
     "@types/lodash": "4.17.x",
@@ -80,6 +81,7 @@
     "@types/react-dom": "18.2.x",
     "@types/ws": "^8 <=8.17.x",
     "@typescript-eslint/utils": "^8.12.1",
+    "debug": "^4.3.7",
     "drizzle-kit": "^0.28.0",
     "eslint": "^9.13.0",
     "eslint-plugin-import": "^2.31.0",
@@ -90,10 +92,12 @@
     "openai": "^4.68.4",
     "prettier": "^3.3.2",
     "prettier-plugin-tailwindcss": "^0.6.8",
+    "ts-essentials": "^10.0.3",
     "tsx": "^4.15.7",
     "typescript": "^5.5.2",
     "typescript-eslint": "^8.14.0",
-    "ucd-full": "^16.0.0"
+    "ucd-full": "^16.0.0",
+    "yargs": "^17.7.2"
   },
   "private": true,
   "expo": {

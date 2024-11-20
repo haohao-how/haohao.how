@@ -1,48 +1,56 @@
+import { deepReadonly } from "@/util/collections";
 import { invariant } from "@haohaohow/lib/invariant";
 import memoize from "lodash/memoize";
 import { z } from "zod";
 
-export const loadRadicalNameMnemonics = memoize(
-  async () =>
-    new Map(
-      z
-        .array(
-          z.tuple([
-            z.string(),
-            z.array(z.object({ mnemonic: z.string(), rationale: z.string() })),
-          ]),
-        )
-        .parse((await import(`./radicalNameMnemonics.asset.json`)).default),
-    ),
+export const loadRadicalNameMnemonics = memoize(async () =>
+  z
+    .array(
+      z.tuple([
+        z.string(),
+        z.array(z.object({ mnemonic: z.string(), rationale: z.string() })),
+      ]),
+    )
+    .transform((x) => new Map(x))
+    .transform(deepReadonly)
+    .parse((await import(`./radicalNameMnemonics.asset.json`)).default),
 );
 
 export const allHsk1Words = memoize(async () =>
-  z.array(z.string()).parse((await import(`./hsk1Words.asset.json`)).default),
+  z
+    .array(z.string())
+    .transform(deepReadonly)
+    .parse((await import(`./hsk1Words.asset.json`)).default),
 );
 
 export const allHsk2Words = memoize(async () =>
-  z.array(z.string()).parse((await import(`./hsk2Words.asset.json`)).default),
+  z
+    .array(z.string())
+    .transform(deepReadonly)
+    .parse((await import(`./hsk2Words.asset.json`)).default),
 );
 
 export const allHsk3Words = memoize(async () =>
-  z.array(z.string()).parse((await import(`./hsk3Words.asset.json`)).default),
+  z
+    .array(z.string())
+    .transform(deepReadonly)
+    .parse((await import(`./hsk3Words.asset.json`)).default),
 );
 
-export const loadWords = memoize(
-  async () =>
-    new Map(
-      z
-        .array(
-          z.tuple([
-            z.string(),
-            z.object({
-              pinyin: z.string(),
-              definitions: z.array(z.string()),
-            }),
-          ]),
-        )
-        .parse((await import(`./words.asset.json`)).default),
-    ),
+export const loadWords = memoize(async () =>
+  z
+    .array(
+      z.tuple([
+        z.string(),
+        z.object({
+          pinyin: z.string(),
+          definitions: z.array(z.string()),
+        }),
+      ]),
+    )
+    .transform((x) => new Map(x))
+    .transform(deepReadonly)
+    .parse((await import(`./words.asset.json`)).default),
 );
 
 export const loadRadicals = memoize(async () =>
@@ -54,65 +62,66 @@ export const loadRadicals = memoize(async () =>
         pinyin: z.array(z.string()),
       }),
     )
+    .transform(deepReadonly)
     .parse((await import(`./radicals.asset.json`)).default),
 );
 
 export const allRadicalPrimaryForms = memoize(async () =>
-  (await allRadicals()).map((r) => {
-    const first = r.hanzi[0];
-    invariant(first != null);
-    return first;
-  }),
+  deepReadonly(
+    (await allRadicals()).map((r) => {
+      const first = r.hanzi[0];
+      invariant(first != null);
+      return first;
+    }),
+  ),
 );
 
-export const loadRadicalsByHanzi = memoize(async () => {
-  return new Map(
-    (await loadRadicals()).flatMap((r) => r.hanzi.map((h) => [h, r])),
-  );
-});
+export const loadRadicalsByHanzi = memoize(async () =>
+  deepReadonly(
+    new Map((await loadRadicals()).flatMap((r) => r.hanzi.map((h) => [h, r]))),
+  ),
+);
 
-const loadRadicalStrokes = memoize(
-  async () =>
-    new Map(
-      z
-        .array(
+const loadRadicalStrokes = memoize(async () =>
+  z
+    .array(
+      z.object({
+        strokes: z.number(),
+        range: z.tuple([z.number(), z.number()]),
+        characters: z.array(z.string()),
+      }),
+    )
+    .transform((x) => new Map(x.map((r) => [r.strokes, r])))
+    .transform(deepReadonly)
+    .parse((await import(`./radicalStrokes.asset.json`)).default),
+);
+
+export const loadRadicalPinyinMnemonics = memoize(async () =>
+  z
+    .array(
+      z.tuple([
+        z.string(),
+        z.array(
           z.object({
-            strokes: z.number(),
-            range: z.tuple([z.number(), z.number()]),
-            characters: z.array(z.string()),
+            mnemonic: z.string(),
+            strategy: z.string(),
           }),
-        )
-        .parse((await import(`./radicalStrokes.asset.json`)).default)
-        .map((r) => [r.strokes, r]),
-    ),
+        ),
+      ]),
+    )
+    .transform((x) => new Map(x))
+    .transform(deepReadonly)
+    .parse((await import(`./radicalPinyinMnemonics.asset.json`)).default),
 );
 
-export const loadRadicalPinyinMnemonics = memoize(
-  async () =>
-    new Map(
-      z
-        .array(
-          z.tuple([
-            z.string(),
-            z.array(
-              z.object({
-                mnemonic: z.string(),
-                strategy: z.string(),
-              }),
-            ),
-          ]),
-        )
-        .parse((await import(`./radicalPinyinMnemonics.asset.json`)).default),
-    ),
-);
-
-export const allRadicalNormalizations = memoize(
-  async () =>
+export const allRadicalNormalizations = memoize(async () =>
+  deepReadonly(
     new Map(
       (await loadRadicals()).flatMap(({ hanzi }) =>
         hanzi.map((h) => [h, hanzi[0]]),
       ),
     ),
+  ),
 );
 
 export const normalizeRadicalOrThrow = async (
