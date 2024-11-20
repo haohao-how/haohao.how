@@ -334,7 +334,14 @@ const ShowChoice = ({
     }
     case `hanzi`: {
       const pinyin = small ? undefined : hanziQuery.data?.pinyin;
-      return <HanziText pinyin={pinyin} hanzi={choice.hanzi} accented />;
+      return (
+        <HanziText
+          pinyin={pinyin}
+          hanzi={choice.hanzi}
+          accented
+          hanziClassName={small ? `text-md` : undefined}
+        />
+      );
     }
     case `pinyin`:
     case `definition`:
