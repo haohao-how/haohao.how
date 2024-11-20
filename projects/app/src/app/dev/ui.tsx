@@ -178,6 +178,10 @@ const HanziTextExamples = () => (
       <View className="items-start border-2 border-dashed border-primary-8">
         <HanziText pinyin="nǐhǎo" hanzi="你好" />
       </View>
+
+      <View className="items-start border-2 border-dashed border-primary-8">
+        <HanziText pinyin="bie2 de5" hanzi="别的" />
+      </View>
     </ExampleStack>
 
     <ExampleStack title="no pinyin">
