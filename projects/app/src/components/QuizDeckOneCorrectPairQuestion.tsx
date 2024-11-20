@@ -150,16 +150,17 @@ export const QuizDeckOneCorrectPairQuestion = memo(
                     </Text>
                   ) : null}
                   {selectedAAnswer != null && selectedBAnswer != null ? (
-                    <View className="flex-row items-center gap-2">
-                      <Text className="text-md font-bold leading-snug text-accent-10">
+                    <View className="flex-row flex-wrap items-center gap-2">
+                      <Text className="text-md flex-shrink-0 font-bold leading-snug text-accent-10">
                         Your answer:
                       </Text>
-                      {` `}
-                      <ShowAnswer answer={selectedAAnswer} small />
-                      <Text className="text-md font-bold leading-snug text-accent-10">
-                        {` `}+{` `}
-                      </Text>
-                      <ShowAnswer answer={selectedBAnswer} small />
+                      <View className="flex-1 flex-row flex-wrap items-center">
+                        <ShowAnswer answer={selectedAAnswer} small />
+                        <Text className="text-md flex-shrink-0 flex-grow-0 px-1 leading-snug text-accent-10 opacity-50">
+                          +
+                        </Text>
+                        <ShowAnswer answer={selectedBAnswer} small />
+                      </View>
                     </View>
                   ) : null}
                 </>
@@ -293,18 +294,20 @@ const ShowChoice = ({
       const pinyin = radicalQuery.data?.pinyin[0];
       return (
         <View className="flex-row items-end gap-1">
-          {hanzis.map((hanzi, i) => (
-            <View
-              key={i}
-              className={hanzi !== choice.hanzi ? `opacity-50` : undefined}
-            >
-              <RadicalText
-                pinyin={hanzi === choice.hanzi ? pinyin : undefined}
-                radical={hanzi}
-                accented
-              />
-            </View>
-          ))}
+          {hanzis.map((hanzi, i) => {
+            return (
+              <View
+                key={i}
+                className={hanzi !== choice.hanzi ? `opacity-50` : undefined}
+              >
+                <RadicalText
+                  pinyin={!small && hanzi === choice.hanzi ? pinyin : undefined}
+                  radical={hanzi}
+                  accented
+                />
+              </View>
+            );
+          })}
         </View>
       );
     }
@@ -330,7 +333,7 @@ const ShowChoice = ({
       );
     }
     case `hanzi`: {
-      const pinyin = hanziQuery.data?.pinyin;
+      const pinyin = small ? undefined : hanziQuery.data?.pinyin;
       return <HanziText pinyin={pinyin} hanzi={choice.hanzi} accented />;
     }
     case `pinyin`:
@@ -352,6 +355,8 @@ const choiceEnglishText = tv({
   },
 });
 
+const choicesWithPinyinRendering = new Set([`radical`, `hanzi`]);
+
 const ShowAnswer = ({
   answer: { a, b },
   includeAlternatives = false,
@@ -361,8 +366,14 @@ const ShowAnswer = ({
   includeAlternatives?: boolean;
   small?: boolean;
 }) => {
+  const needPaddingForFloatingPinyin =
+    !small &&
+    (choicesWithPinyinRendering.has(a.type) ||
+      choicesWithPinyinRendering.has(b.type));
   return (
-    <View className={`flex-row items-center ${small ? `gap-1` : `gap-2`}`}>
+    <View
+      className={`flex-row items-center ${small ? `gap-1` : `gap-2`} ${needPaddingForFloatingPinyin ? `pt-4` : ``}`}
+    >
       <ShowChoice
         choice={a}
         includeAlternatives={includeAlternatives}

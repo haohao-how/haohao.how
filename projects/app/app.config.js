@@ -1,5 +1,9 @@
 const prodDomain = `haohao.how`;
-const ngrokDomain = `${process.env.EXPO_TUNNEL_SUBDOMAIN}.ngrok.io`;
+const devDomain =
+  process.env.EXPO_TUNNEL_SUBDOMAIN != null &&
+  process.env.NODE_ENV === `development`
+    ? `${process.env.EXPO_TUNNEL_SUBDOMAIN}.ngrok.io`
+    : null;
 
 /** @type {import('expo/config').ExpoConfig} */
 export const expo = {
@@ -29,9 +33,13 @@ export const expo = {
       associatedDomains: [
         `applinks:${prodDomain}`,
         // Development
-        `applinks:${ngrokDomain}`,
-        `activitycontinuation:${ngrokDomain}`,
-        `webcredentials:${ngrokDomain}`,
+        ...(devDomain != null
+          ? [
+              `applinks:${devDomain}`,
+              `activitycontinuation:${devDomain}`,
+              `webcredentials:${devDomain}`,
+            ]
+          : []),
       ],
       usesAppleSignIn: true,
     },
@@ -75,7 +83,7 @@ export const expo = {
       [
         `expo-router`,
         {
-          origin: `https://${process.env.NODE_ENV === `development` ? ngrokDomain : prodDomain}`,
+          origin: `https://${devDomain ?? prodDomain}`,
         },
       ],
       [

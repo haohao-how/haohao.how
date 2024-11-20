@@ -159,7 +159,15 @@ export default tseslint.config(
       "@typescript-eslint/no-var-requires": `off`,
       "@typescript-eslint/restrict-template-expressions": [
         `error`,
-        { allowBoolean: true, allowNumber: true },
+        {
+          allowAny: false,
+          allowArray: false,
+          allowBoolean: true,
+          allowNever: false,
+          allowNullish: false,
+          allowNumber: true,
+          allowRegExp: false,
+        },
       ],
       "@typescript-eslint/switch-exhaustiveness-check": [
         `error`,
@@ -192,6 +200,14 @@ export default tseslint.config(
     },
     rules: {
       "no-console": `off`,
+    },
+  },
+
+  // test files
+  {
+    files: [`**/*.test.*`],
+    rules: {
+      "@typescript-eslint/restrict-template-expressions": `off`,
     },
   },
 
