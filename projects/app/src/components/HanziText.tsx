@@ -1,4 +1,4 @@
-import { Platform, Text, View } from "react-native";
+import { Text, View } from "react-native";
 import { tv } from "tailwind-variants";
 
 export const HanziText = ({
@@ -14,28 +14,33 @@ export const HanziText = ({
     <View className="flex-0 items-center">
       <Text className={hanziText({ accented })}>{hanzi}</Text>
       {pinyin != null ? (
-        <Text
-          className={pinyinText({ accented })}
-          numberOfLines={
-            Platform.OS != `web`
-              ? // Don't allow wrapping
-                1
-              : // On web this causes it to be ellipsized instead of shrinking
-                undefined
-          }
-          adjustsFontSizeToFit
-        >
-          {pinyin
-            // Remove spaces to reduce overflows
-            .replace(/\s/g, ``)}
-        </Text>
+        <>
+          <Text
+            className={pinyinText({
+              accented,
+              className: `absolute bottom-[100%] left-0 right-0 text-center`,
+            })}
+          >
+            {pinyin}
+          </Text>
+          <Text
+            className={pinyinText({
+              accented,
+              // Hide the pinyin text, but keep it in the layout to give enough
+              // space for absolute positioned floating one.
+              className: `h-[0] opacity-0`,
+            })}
+          >
+            {pinyin}
+          </Text>
+        </>
       ) : null}
     </View>
   );
 };
 
 const pinyinText = tv({
-  base: `text-xs text-primary-9 absolute bottom-[100%] right-0 left-0 text-center pb-1 text-nowrap`,
+  base: `text-xs text-primary-9 text-nowrap`,
   variants: {
     accented: {
       true: `text-accent-10 opacity-80`,

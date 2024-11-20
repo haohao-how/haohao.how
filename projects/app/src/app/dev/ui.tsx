@@ -174,7 +174,13 @@ const typography = tv({
 
 const HanziTextExamples = () => (
   <>
-    <ExampleStack title="normal">
+    <ExampleStack title="bare" className="gap-5">
+      <View className="items-start border-2 border-dashed border-primary-8">
+        <HanziText hanzi="你好" />
+      </View>
+    </ExampleStack>
+
+    <ExampleStack title="pinyin" className="gap-5">
       <View className="items-start border-2 border-dashed border-primary-8">
         <HanziText pinyin="nǐhǎo" hanzi="你好" />
       </View>
@@ -184,17 +190,9 @@ const HanziTextExamples = () => (
       </View>
     </ExampleStack>
 
-    <ExampleStack title="no pinyin">
+    <ExampleStack title="accented" className="gap-5">
       <View className="items-start border-2 border-dashed border-primary-8">
-        <HanziText hanzi="你好" />
-      </View>
-    </ExampleStack>
-
-    <ExampleStack title="danger (accent)">
-      <View className="danger-theme">
-        <View className="items-start border-2 border-dashed border-primary-8">
-          <HanziText pinyin="nǐhǎo" hanzi="你好" accented />
-        </View>
+        <HanziText pinyin="nǐhǎo" hanzi="你好" accented />
       </View>
     </ExampleStack>
   </>
@@ -202,23 +200,21 @@ const HanziTextExamples = () => (
 
 const RadicalTextExamples = () => (
   <>
-    <ExampleStack title="normal">
-      <View className="items-start border-2 border-dashed border-primary-8">
-        <RadicalText pinyin="yǐ" radical="乚" />
-      </View>
-    </ExampleStack>
-
-    <ExampleStack title="no pinyin">
+    <ExampleStack title="bare" className="gap-5">
       <View className="items-start border-2 border-dashed border-primary-8">
         <RadicalText radical="乚" />
       </View>
     </ExampleStack>
 
-    <ExampleStack title="danger (accent)">
-      <View className="danger-theme">
-        <View className="items-start border-2 border-dashed border-primary-8">
-          <RadicalText pinyin="yǐ" radical="乚" accented />
-        </View>
+    <ExampleStack title="pinyin" className="gap-5">
+      <View className="items-start border-2 border-dashed border-primary-8">
+        <RadicalText pinyin="yǐ" radical="乚" />
+      </View>
+    </ExampleStack>
+
+    <ExampleStack title="accented" className="gap-5">
+      <View className="items-start border-2 border-dashed border-primary-8">
+        <RadicalText pinyin="yǐ" radical="乚" accented />
       </View>
     </ExampleStack>
   </>
@@ -306,11 +302,13 @@ const examplesStackClassName = `bg-background flex-1 shrink basis-1 flex-row fle
 const ExampleStack = ({
   children,
   title,
+  className,
 }: {
   children: ReactNode;
   title: string;
+  className?: string;
 }) => (
-  <View className="items-center gap-2 p-2">
+  <View className={`items-center gap-2 p-2 ${className ?? ``}`}>
     <Text className="text-center text-xs text-primary-10">{title}</Text>
     {children}
   </View>
