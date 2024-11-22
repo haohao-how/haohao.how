@@ -4,7 +4,7 @@
   "devCommand": "",
   "functions": {
     "api/index.cjs": {
-      "runtime": "@vercel/node@3.2.24",
+      "runtime": "@vercel/node@3.2.25",
       "includeFiles": "dist/vercel/server/**"
     }
   },
