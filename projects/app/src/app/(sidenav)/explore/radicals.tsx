@@ -55,7 +55,13 @@ export default function RadicalsPage() {
               </Text>
               <View className="flex-row flex-wrap gap-2">
                 {query.data.get(strokes)?.characters.map((char, i) => (
-                  <Link href={`/radical/${char}`} asChild key={i}>
+                  <Link
+                    href={
+                      strokes > 1 ? `/radical/new/${char}` : `/radical/${char}`
+                    }
+                    asChild
+                    key={i}
+                  >
                     <RectButton2 textClassName="text-xl font-normal">
                       {char}
                     </RectButton2>
