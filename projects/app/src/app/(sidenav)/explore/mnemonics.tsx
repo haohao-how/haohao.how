@@ -209,6 +209,23 @@ const associations = {
   ],
 };
 
+const widths = [
+  `w-[25%]`,
+  `w-[0%]`,
+  `w-[0%]`,
+  `w-[10%]`,
+  `w-[0%]`,
+  `w-[0%]`,
+  `w-[0%]`,
+  `w-[75%]`,
+  `w-[84%]`,
+  `w-[0%]`,
+  `w-[0%]`,
+  `w-[5%]`,
+  `w-[100%]`,
+  `w-[43%]`,
+];
+
 export default function MnemonicsPage() {
   const query = useQuery({
     queryKey: [MnemonicsPage.name, `initials`],
@@ -246,7 +263,7 @@ export default function MnemonicsPage() {
               <Text className="text-lg font-bold text-text">Tones</Text>
             </View>
             <View className="flex-row flex-wrap gap-3.5 lg:gap-4">
-              {query.data.tones.map(({ tone, desc }) => (
+              {query.data.tones.map(({ tone, desc }, i) => (
                 <View
                   key={tone}
                   className="size-24 justify-center gap-2 rounded-xl bg-primary-3 px-2 hover:bg-primary-5 lg:size-24"
@@ -261,7 +278,9 @@ export default function MnemonicsPage() {
                     {desc}
                   </Text>
                   <View className="h-2 rounded bg-primary-5">
-                    <View className="h-2 w-5 rounded bg-[yellow]"></View>
+                    <View
+                      className={`h-2 ${widths[3 + (i % widths.length)] ?? ``} rounded bg-[yellow]`}
+                    ></View>
                   </View>
                 </View>
               ))}
@@ -273,7 +292,7 @@ export default function MnemonicsPage() {
               <Text className="text-lg font-bold text-text">Initials</Text>
             </View>
             <View className="flex-row flex-wrap gap-3.5 lg:gap-4">
-              {query.data.initials.map(({ prefix, n }) => (
+              {query.data.initials.map(({ prefix, n }, i) => (
                 <View
                   key={prefix}
                   className="size-24 justify-center gap-2 rounded-xl bg-primary-3 px-2 hover:bg-primary-5 lg:size-24"
@@ -288,7 +307,9 @@ export default function MnemonicsPage() {
                     {n}
                   </Text>
                   <View className="h-2 rounded bg-primary-5">
-                    <View className="h-2 w-5 rounded bg-[yellow]"></View>
+                    <View
+                      className={`h-2 ${widths[1 + (i % widths.length)] ?? ``} rounded bg-[yellow]`}
+                    ></View>
                   </View>
                 </View>
               ))}
@@ -300,7 +321,7 @@ export default function MnemonicsPage() {
               <Text className="text-lg font-bold text-text">Finals</Text>
             </View>
             <View className="flex-row flex-wrap gap-3.5 lg:gap-4">
-              {query.data.finals.map(({ suffix, location }) => (
+              {query.data.finals.map(({ suffix, location }, i) => (
                 <View
                   key={suffix}
                   className="size-24 justify-center gap-2 rounded-xl bg-primary-3 px-2 hover:bg-primary-5 lg:size-24"
@@ -315,7 +336,9 @@ export default function MnemonicsPage() {
                     {location}
                   </Text>
                   <View className="h-2 rounded bg-primary-5">
-                    <View className="h-2 w-5 rounded bg-[yellow]"></View>
+                    <View
+                      className={`h-2 ${widths[5 + (i % widths.length)] ?? ``} rounded bg-[yellow]`}
+                    ></View>
                   </View>
                 </View>
               ))}
