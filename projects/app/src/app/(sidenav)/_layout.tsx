@@ -40,6 +40,12 @@ export default function SideNavLayout() {
         >
           Words
         </Link>
+        <Link
+          href="/explore/mnemonics"
+          className="items-center rounded-md px-2 py-1 text-xl font-bold tracking-wide text-text hover:bg-primary-4 lg:self-stretch"
+        >
+          Mnemonics
+        </Link>
 
         <Link
           href="/history"
