@@ -1,4 +1,4 @@
-import { LinearGradient } from "expo-linear-gradient";
+import { LinearGradient, LinearGradientProps } from "expo-linear-gradient";
 import { Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { CloseButton } from "./CloseButton";
@@ -10,7 +10,7 @@ export const ReferencePageHeader = ({
 }: {
   title: string | null;
   subtitle: string | null;
-  gradientColors: readonly string[];
+  gradientColors: LinearGradientProps[`colors`];
 }) => {
   const insets = useSafeAreaInsets();
 

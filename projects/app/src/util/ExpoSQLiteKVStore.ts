@@ -109,7 +109,7 @@ export class ExpoSQLiteKVStoreReadImpl implements ExperimentalKVRead {
     db: SQLite.SQLiteDatabase,
     public readonly onRelease: () => void,
   ) {
-    this._txId = txIds[db.databaseName] = (txIds[db.databaseName] ?? 0) + 1;
+    this._txId = txIds[db.databasePath] = (txIds[db.databasePath] ?? 0) + 1;
     log?.(`KV[${this._txId.toString()}]#constructor()`);
     this._db = db;
   }

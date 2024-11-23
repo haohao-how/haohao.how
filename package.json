@@ -7,6 +7,7 @@
   "devDependencies": {
     "@types/semver": "7.5.x",
     "@yarnpkg/doctor": "^4.0.2",
+    "@yarnpkg/parsers": "^3.0.2",
     "@yarnpkg/types": "^4.0.0",
     "prettier": "^3.3.2",
     "semver": "^7.5.0",
@@ -36,6 +37,7 @@
     "metro-runtime@npm:0.80.12": "patch:metro-runtime@npm%3A0.80.12#~/.yarn/patches/metro-runtime-npm-0.80.9-3f02d2003d.patch",
     "react-native-css-interop@npm:~0.0.21": "0.1.15",
     "metro-runtime@npm:^0.80.3": "patch:metro-runtime@npm%3A0.80.12#~/.yarn/patches/metro-runtime-npm-0.80.12-8e7410ce37.patch",
-    "metro-runtime@npm:0.80.9": "patch:metro-runtime@npm%3A0.80.12#~/.yarn/patches/metro-runtime-npm-0.80.12-8e7410ce37.patch"
+    "metro-runtime@npm:0.80.9": "patch:metro-runtime@npm%3A0.80.12#~/.yarn/patches/metro-runtime-npm-0.80.12-8e7410ce37.patch",
+    "@expo/cli@npm:0.21.8": "patch:@expo/cli@npm%3A0.21.8#~/.yarn/patches/@expo-cli-npm-0.21.8-5950619da9.patch"
   }
 }
