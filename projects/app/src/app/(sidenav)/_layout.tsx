@@ -1,6 +1,6 @@
 import { Link, Slot } from "expo-router";
 import { StatusBar } from "expo-status-bar";
-import { View } from "react-native";
+import { ScrollView, View } from "react-native";
 import { useMediaQuery } from "react-responsive";
 
 export default function SideNavLayout() {
@@ -8,7 +8,12 @@ export default function SideNavLayout() {
 
   return (
     <View className="flex-1 flex-col-reverse items-stretch self-stretch lg:flex-row">
-      <View className="min-w-[200px] flex-row items-center justify-center gap-4 border-t-2 border-primary-4 pt-2 pb-safe-or-2 px-safe-or-4 lg:max-h-full lg:max-w-[200px] lg:flex-col lg:items-start lg:justify-start lg:border-r-2 lg:border-t-0 lg:px-4 lg:pt-4">
+      <ScrollView
+        horizontal={!isLg}
+        centerContent={!isLg}
+        className="flex-grow-0 border-t-2 border-primary-4 pt-2 pb-safe-or-2 lg:max-h-full lg:border-t-0"
+        contentContainerClassName="items-center gap-4 px-safe-or-4 lg:px-4 lg:pt-4"
+      >
         <Link
           href="/"
           className="px-2 py-1 text-2xl font-bold tracking-wide text-primary-10"
@@ -49,7 +54,7 @@ export default function SideNavLayout() {
         >
           UI
         </Link>
-      </View>
+      </ScrollView>
       <Slot />
       <StatusBar style="auto" />
     </View>
