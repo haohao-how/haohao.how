@@ -157,6 +157,7 @@ export const QuizDeck = ({ questions }: { questions: readonly Question[] }) => {
             screenOptions={{
               gestureEnabled: false,
               headerShown: false,
+              animation: `slide_from_right`,
               ...TransitionPresets.SlideFromRightIOS,
               cardStyleInterpolator: forHorizontalIOS,
             }}
