@@ -12,7 +12,10 @@ export type RectButton2Props = {
   children?: ViewProps[`children`];
   className?: string;
   textClassName?: string;
-} & Omit<PropsOf<typeof Pressable>, `children`>;
+} & Pick<
+  PropsOf<typeof Pressable>,
+  keyof PropsOf<typeof Pressable> & (`on${string}` | `disabled`)
+>;
 
 export const RectButton2 = forwardRef<
   ElementRef<typeof Pressable>,

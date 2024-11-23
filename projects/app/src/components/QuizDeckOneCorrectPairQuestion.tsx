@@ -510,13 +510,10 @@ const SubmitButton = forwardRef<
 
   return (
     <RectButton2
-      style={{ flex: 1 }}
       variant="filled"
       ref={ref}
       disabled={state === SubmitButtonState.Disabled}
-      className={
-        state === SubmitButtonState.Incorrect ? `danger-theme` : `success-theme`
-      }
+      className={`flex-1 ${state === SubmitButtonState.Incorrect ? `danger-theme` : `success-theme`}`}
       accent
       onPress={state === SubmitButtonState.Disabled ? undefined : onPress}
     >
