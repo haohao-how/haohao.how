@@ -1,5 +1,6 @@
-import type { TypedNavigator } from "@react-navigation/native";
-import type { NativeStackNavigationProp } from "react-native-screens/lib/typescript/native-stack/types";
+import { PropsOf } from "@/components/types";
+import { TypedNavigator } from "@react-navigation/native";
+import { AnyFunction } from "ts-essentials";
 
 type MaximumAllowedBoundary = 50;
 
@@ -18,8 +19,12 @@ export type RepeatedSequence2<
 
 export type ValuesOf<X> = X[keyof X];
 
-export type StackNavigationFor<Stack> =
+export type StackNavigationFor<
+  Stack,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  Stack extends TypedNavigator<infer T, any, any, any, any>
-    ? NativeStackNavigationProp<T>
-    : never;
+  ScreenListenersFn = Stack extends TypedNavigator<any, any>
+    ? PropsOf<Stack[`Navigator`]>[`screenListeners`]
+    : never,
+> = ScreenListenersFn extends AnyFunction
+  ? Parameters<ScreenListenersFn>[0][`navigation`]
+  : never;

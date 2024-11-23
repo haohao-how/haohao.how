@@ -9,7 +9,11 @@ import { readonlyMapSet } from "@/util/collections";
 import { Rating } from "@/util/fsrs";
 import { StackNavigationFor } from "@/util/types";
 import { invariant } from "@haohaohow/lib/invariant";
-import { NavigationContainer, useTheme } from "@react-navigation/native";
+import {
+  NavigationContainer,
+  NavigationIndependentTree,
+  useTheme,
+} from "@react-navigation/native";
 import {
   StackCardInterpolatedStyle,
   StackCardInterpolationProps,
@@ -147,82 +151,84 @@ export const QuizDeck = ({ questions }: { questions: readonly Question[] }) => {
         />
       </View>
 
-      <NavigationContainer independent={true} theme={theme}>
-        <Stack.Navigator
-          screenOptions={{
-            gestureEnabled: false,
-            headerShown: false,
-            animationEnabled: true,
-            ...TransitionPresets.SlideFromRightIOS,
-            cardStyleInterpolator: forHorizontalIOS,
-          }}
-          screenListeners={({ navigation }) => ({
-            // Hack to get the navigation object.
-            state: () => {
-              navigationRef.current = navigation as Navigation;
-            },
-          })}
-        >
-          <Stack.Screen
-            name="question"
-            initialParams={{
-              // initial params is cached across multiple mounts, it seems like
-              // the screen names are global? and initialParams can only be set
-              // once?
-              question: null,
+      <NavigationIndependentTree>
+        <NavigationContainer theme={theme}>
+          <Stack.Navigator
+            screenOptions={{
+              gestureEnabled: false,
+              headerShown: false,
+              ...TransitionPresets.SlideFromRightIOS,
+              cardStyleInterpolator: forHorizontalIOS,
             }}
-            children={({
-              route: {
-                params: { question: q, flag },
+            screenListeners={({ navigation }) => ({
+              // Hack to get the navigation object.
+              state: () => {
+                navigationRef.current = navigation;
+                // as Navigation;
               },
-            }) => {
-              const question = q ?? questions[0];
-              invariant(
-                question != null && questions.includes(question),
-                `Stack.Screen called with wrong question`,
-              );
-              switch (question.type) {
-                case QuestionType.MultipleChoice:
-                  return (
-                    <QuizDeckMultipleChoiceQuestion
-                      question={question}
-                      onNext={handleNext}
-                      onRating={handleRating}
-                    />
-                  );
-                case QuestionType.OneCorrectPair:
-                  return (
-                    <QuizDeckOneCorrectPairQuestion
-                      question={question}
-                      flag={flag}
-                      onNext={handleNext}
-                      onRating={handleRating}
-                    />
-                  );
-              }
-            }}
-          />
-          <Stack.Screen
-            name="results"
-            children={() => {
-              return (
-                <View className="gap-2">
-                  <Link href={pathname as Href} asChild replace>
-                    <RectButton2 variant="filled" accent>
-                      Keep learning
-                    </RectButton2>
-                  </Link>
-                  <Link href="/" asChild>
-                    <RectButton2 variant="bare">
-                      That’s enough for now
-                    </RectButton2>
-                  </Link>
-                </View>
-              );
-            }}
-          />
-        </Stack.Navigator>
-      </NavigationContainer>
+            })}
+          >
+            <Stack.Screen
+              name="question"
+              initialParams={{
+                // initial params is cached across multiple mounts, it seems like
+                // the screen names are global? and initialParams can only be set
+                // once?
+                question: null,
+              }}
+              children={({
+                route: {
+                  params: { question: q, flag },
+                },
+              }) => {
+                const question = q ?? questions[0];
+                invariant(
+                  question != null && questions.includes(question),
+                  `Stack.Screen called with wrong question`,
+                );
+                switch (question.type) {
+                  case QuestionType.MultipleChoice:
+                    return (
+                      <QuizDeckMultipleChoiceQuestion
+                        question={question}
+                        onNext={handleNext}
+                        onRating={handleRating}
+                      />
+                    );
+                  case QuestionType.OneCorrectPair:
+                    return (
+                      <QuizDeckOneCorrectPairQuestion
+                        question={question}
+                        flag={flag}
+                        onNext={handleNext}
+                        onRating={handleRating}
+                      />
+                    );
+                }
+              }}
+            />
+            <Stack.Screen
+              name="results"
+              children={() => {
+                return (
+                  <View className="gap-2">
+                    <Link href={pathname as Href} asChild replace>
+                      <RectButton2 variant="filled" accent>
+                        Keep learning
+                      </RectButton2>
+                    </Link>
+                    <Link href="/" asChild>
+                      <RectButton2 variant="bare">
+                        That’s enough for now
+                      </RectButton2>
+                    </Link>
+                  </View>
+                );
+              }}
+            />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </NavigationIndependentTree>
     </View>
   );
 };

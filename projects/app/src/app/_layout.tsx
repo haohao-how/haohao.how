@@ -1,7 +1,7 @@
 import { ReplicacheProvider } from "@/components/ReplicacheContext";
 import { trpc } from "@/util/trpc";
-import "@expo/match-media";
 import {
+  DefaultTheme,
   Theme as ReactNavigationTheme,
   ThemeProvider,
 } from "@react-navigation/native";
@@ -15,6 +15,7 @@ import * as Updates from "expo-updates";
 import { cssInterop } from "nativewind";
 import { useEffect, useState } from "react";
 import { Platform, useColorScheme, View } from "react-native";
+import Animated from "react-native-reanimated";
 import "../global.css";
 
 // Via the guide: https://docs.expo.dev/guides/using-sentry/
@@ -25,7 +26,7 @@ const updateGroup =
   metadata && `updateGroup` in metadata ? metadata.updateGroup : undefined;
 
 // Construct a new instrumentation instance. This is needed to communicate between the integration and React
-const routingInstrumentation = new Sentry.ReactNavigationInstrumentation();
+const routingIntegration = Sentry.reactNavigationIntegration();
 
 Sentry.init({
   enabled: !__DEV__,
@@ -34,14 +35,11 @@ Sentry.init({
   // something goes wrong with sending the event. Set it to `false` in
   // production
   debug: __DEV__,
-  integrations: [
-    new Sentry.ReactNativeTracing({
-      routingInstrumentation,
-    }),
-  ],
+  integrations: [routingIntegration],
 });
 
-Sentry.configureScope((scope) => {
+{
+  const scope = Sentry.getCurrentScope();
   scope.setTag(`expo-update-id`, Updates.updateId);
   scope.setTag(`expo-is-embedded-update`, Updates.isEmbeddedLaunch);
   scope.setTag(`platform-os`, Platform.OS);
@@ -63,7 +61,7 @@ Sentry.configureScope((scope) => {
       `not applicable for embedded updates`,
     );
   }
-});
+}
 
 // NativeWind adapters for third party components
 
@@ -71,6 +69,7 @@ Sentry.configureScope((scope) => {
 cssInterop(Image, {
   className: { target: `style`, nativeStyleToProp: { color: `tintColor` } },
 });
+cssInterop(Animated.View, { className: `style` });
 
 function RootLayout() {
   // Capture the NavigationContainer ref and register it with the instrumentation.
@@ -78,7 +77,7 @@ function RootLayout() {
   const dark = useColorScheme() === `dark`;
 
   useEffect(() => {
-    routingInstrumentation.registerNavigationContainer(ref);
+    routingIntegration.registerNavigationContainer(ref);
   }, [ref]);
 
   const [queryClient] = useState(() => new QueryClient());
@@ -138,6 +137,7 @@ function RootLayout() {
                   primary: BUG_DETECTOR_COLOR,
                   text: BUG_DETECTOR_COLOR,
                 },
+                fonts: DefaultTheme.fonts,
               } satisfies ReactNavigationTheme
             }
           >

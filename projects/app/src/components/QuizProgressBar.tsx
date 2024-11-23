@@ -1,4 +1,4 @@
-import { LinearGradient } from "expo-linear-gradient";
+import { LinearGradient, LinearGradientProps } from "expo-linear-gradient";
 import { useEffect, useState } from "react";
 import {
   Animated,
@@ -13,7 +13,7 @@ export const QuizProgressBar = ({
   colors,
 }: {
   progress: number;
-  colors: string[];
+  colors: LinearGradientProps[`colors`];
 }) => {
   const [layout, setLayout] = useState<LayoutRectangle>();
   const [widthAnim] = useState(() => new Animated.Value(0));

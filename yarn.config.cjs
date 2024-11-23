@@ -1,7 +1,11 @@
 // @ts-check
 
-/** @type {import('@yarnpkg/types')} */
+/// <reference types="node" />
+
 const { defineConfig } = require("@yarnpkg/types");
+const { parseSyml } = require("@yarnpkg/parsers");
+const fs = require("node:fs/promises");
+
 const semver = require("semver");
 
 /**
@@ -117,6 +121,36 @@ function enforceStrictTypesCompatibility(ctx, resolutions = {}) {
 }
 
 /**
+ * This rule will enforce that there are no unused Yarn patches in
+ * .yarn/patches/. It works by checking the yarn.lock file and seeing which
+ * patches are used, and then comparing that to the filesystem.
+ *
+ * @param {Context} ctx
+ */
+async function enforceAllPatchesAreUsed(ctx) {
+  const lockFileParsed = parseSyml(
+    await fs.readFile(__dirname + "/yarn.lock", { encoding: "utf-8" }),
+  );
+
+  const usedPatchPaths = new Set();
+
+  for (const [, { resolution }] of Object.entries(lockFileParsed)) {
+    const x = /#~\/(\.yarn\/patches\/@?[a-z0-9-\.]+\.patch)/g.exec(resolution);
+    if (x != null) {
+      for (const patchPath of x.slice(1)) {
+        usedPatchPaths.add(patchPath);
+      }
+    }
+  }
+
+  for await (const path of fs.glob(`.yarn/patches/*.patch`)) {
+    if (!usedPatchPaths.has(path)) {
+      reportRootError(ctx, `Unused patch: ${path}`);
+    }
+  }
+}
+
+/**
  * Return the corresponding `@types/` package for a given package.
  *
  * @param {string} packageIdent
@@ -154,6 +188,7 @@ function reportRootError({ Yarn }, message) {
 
 module.exports = defineConfig({
   async constraints(ctx) {
+    await enforceAllPatchesAreUsed(ctx);
     await enforceConsistentDependenciesAcrossTheProject(ctx);
     await enforceScopedDependencyVersions(ctx, `@trpc/`);
     await enforceStrictTypesCompatibility(ctx, {
