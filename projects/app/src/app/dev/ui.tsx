@@ -5,13 +5,18 @@ import { RectButton2 } from "@/components/RectButton2";
 import { PropsOf } from "@/components/types";
 import { Link } from "expo-router";
 import shuffle from "lodash/shuffle";
-import { ReactNode, useState } from "react";
-import { ScrollView, Text, View } from "react-native";
+import { ReactNode, useRef, useState } from "react";
+import { Pressable, ScrollView, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { tv } from "tailwind-variants";
 
 export default function DesignSystemPage() {
   const insets = useSafeAreaInsets();
+  const scrollViewRef = useRef<ScrollView>(null);
+
+  const scrollTo = (y: number) => {
+    scrollViewRef.current?.scrollTo({ y, animated: true });
+  };
 
   return (
     <View style={{ flex: 1, paddingTop: insets.top }}>
@@ -20,24 +25,24 @@ export default function DesignSystemPage() {
           <Text className="text-text hover:underline">Home</Text>
         </Link>
       </View>
-      <ScrollView style={{ flex: 1 }}>
-        <Section title="HanziText">
+      <ScrollView style={{ flex: 1 }} ref={scrollViewRef}>
+        <Section title="HanziText" scrollTo={scrollTo}>
           <HanziTextExamples />
         </Section>
 
-        <Section title="RadicalText">
+        <Section title="RadicalText" scrollTo={scrollTo}>
           <RadicalTextExamples />
         </Section>
 
-        <Section title="AnswerButton">
+        <Section title="AnswerButton" scrollTo={scrollTo}>
           <AnswerButtonExamples />
         </Section>
 
-        <Section title="RectButton2">
+        <Section title="RectButton2" scrollTo={scrollTo}>
           <RectButton2Examples />
         </Section>
 
-        <Section title="Typography">
+        <Section title="Typography" scrollTo={scrollTo}>
           <View className="flex-1 gap-2">
             {([`body`, `title`, `chinese`] as const).map((family) => (
               <View key={family}>
@@ -53,7 +58,7 @@ export default function DesignSystemPage() {
           </View>
         </Section>
 
-        <Section title="Colors">
+        <Section title="Colors" scrollTo={scrollTo}>
           <View>
             <LittlePrimaryHeader title="slate" />
             <View className="flex-row flex-wrap gap-1">
@@ -277,25 +282,45 @@ const ColorSwatch = ({
 const Section = ({
   title,
   children,
+  scrollTo,
 }: {
   title: string;
   children: ReactNode;
-}) => (
-  <>
-    <View className="flex-row">
-      <View className="light-theme flex-1 bg-primary-4 p-2">
-        <Text className="text-2xl">{title}</Text>
+  /**
+   * For manual regression testing it's help to pixel-align the same position on
+   * the new and old page and quickly swap between them to see the differences.
+   * Being able to click the section title makes this easier.
+   */
+  scrollTo: (y: number) => void;
+}) => {
+  const ref = useRef<View>(null);
+  return (
+    <>
+      <View className="flex-row" ref={ref}>
+        <View className="light-theme flex-1 bg-primary-4 p-2 hover:bg-primary-5">
+          <Pressable
+            onPress={() => {
+              ref.current?.measure((x, y) => {
+                scrollTo(y);
+              });
+            }}
+          >
+            <Text className="text-2xl">{title}</Text>
+          </Pressable>
+        </View>
+        <View className="dark-theme flex-1 bg-primary-4 p-2" />
       </View>
-      <View className="dark-theme flex-1 bg-primary-4 p-2" />
-    </View>
-    <View className="flex-row">
-      <View className={`light-theme ${examplesStackClassName}`}>
-        {children}
+      <View className="flex-row">
+        <View className={`light-theme ${examplesStackClassName}`}>
+          {children}
+        </View>
+        <View className={`dark-theme ${examplesStackClassName}`}>
+          {children}
+        </View>
       </View>
-      <View className={`dark-theme ${examplesStackClassName}`}>{children}</View>
-    </View>
-  </>
-);
+    </>
+  );
+};
 
 const examplesStackClassName = `bg-background flex-1 shrink basis-1 flex-row flex-wrap justify-center gap-2 p-2 sm:justify-start`;
 
