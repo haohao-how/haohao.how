@@ -153,17 +153,16 @@ export default function RadicalPage() {
         <View className="h-1 w-2 flex-1"></View>
         <View className="h-1 w-2 flex-1"></View>
 
-        <View className="w-[100%] max-w-[600px] flex-col items-center gap-3 mb-safe-offset-2">
+        <View className="w-[100%] max-w-[600px] flex-col items-stretch gap-3 mb-safe-offset-2">
           <RectButton2
             variant="outline"
-            className="w-[100%]"
             onPress={() => {
               setShowExplanation((x) => !x);
             }}
           >
             I Don&apos;t Get It
           </RectButton2>
-          <RectButton2 variant="filled" className="w-[100%]" accent>
+          <RectButton2 variant="filled" accent>
             Next
           </RectButton2>
         </View>
@@ -281,17 +280,16 @@ export default function RadicalPage() {
 
             <View className="min-h-8 flex-1"></View>
 
-            <View className="mx-4 gap-3 mb-safe-offset-4">
+            <View className="mx-4 items-stretch gap-3 mb-safe-offset-4">
               <RectButton2
                 variant="outline"
-                className="w-[100%]"
                 onPress={() => {
                   setShowExplanation((x) => !x);
                 }}
               >
                 I Don&apos;t Get It
               </RectButton2>
-              <RectButton2 variant="filled" className="w-[100%]" accent>
+              <RectButton2 variant="filled" accent>
                 Next
               </RectButton2>
             </View>

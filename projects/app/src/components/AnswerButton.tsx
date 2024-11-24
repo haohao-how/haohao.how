@@ -1,3 +1,4 @@
+import { cssInterop } from "nativewind";
 import { ElementRef, forwardRef, useEffect, useState } from "react";
 import { Pressable, Text, View, ViewProps } from "react-native";
 import Animated, {
@@ -19,9 +20,13 @@ export type AnswerButtonProps = {
   children?: ViewProps[`children`];
   state?: AnswerButtonState;
   className?: string;
+  inFlexRowParent?: boolean;
   textClassName?: string;
   disabled?: boolean;
 } & Omit<PropsOf<typeof Pressable>, `children` | `disabled`>;
+
+const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
+cssInterop(AnimatedPressable, { className: `style` });
 
 export const AnswerButton = forwardRef<
   ElementRef<typeof Pressable>,
@@ -31,6 +36,7 @@ export const AnswerButton = forwardRef<
     disabled = false,
     children,
     state = `default`,
+    inFlexRowParent = false,
     className,
     textClassName,
     ...pressableProps
@@ -38,6 +44,9 @@ export const AnswerButton = forwardRef<
   ref,
 ) {
   const [prevState, setPrevState] = useState(state);
+  const [bgFilled, setBgFilled] = useState(false);
+  const [pressed, setPressed] = useState(false);
+  const [hovered, setHovered] = useState(false);
 
   const scale = useSharedValue(1);
   const bgScale = useSharedValue(0.5);
@@ -54,7 +63,7 @@ export const AnswerButton = forwardRef<
   const withScaleAnimation = () =>
     withSequence(
       withTiming(0.5, { duration: 0 }),
-      withTiming(1.07, {
+      withTiming(1.03, {
         duration: 200 * animationFactor,
         easing: Easing.inOut(Easing.quad),
       }),
@@ -100,8 +109,6 @@ export const AnswerButton = forwardRef<
     }
   }, [bgOpacity, bgScale, scale, stateChanged, state]);
 
-  const [bgFilled, setBgFilled] = useState(false);
-
   // When the background scale reaches 100% update `bgFilled` to make the border
   // bright.
   useAnimatedReaction(
@@ -119,31 +126,44 @@ export const AnswerButton = forwardRef<
     [bgScale.value],
   );
 
-  const [pressed, setPressed] = useState(false);
+  const flat = pressed || disabled;
 
   return (
-    <Animated.View style={{ transform: [{ scale }] }} className={className}>
-      <Pressable
-        {...pressableProps}
-        disabled={disabled}
-        onPressIn={(e) => {
-          setPressed(true);
-          hapticImpactIfMobile();
-          pressableProps.onPressIn?.(e);
-        }}
-        onPressOut={(e) => {
-          setPressed(false);
-          pressableProps.onPressOut?.(e);
-        }}
-        onPress={(e) => {
-          pressableProps.onPress?.(e);
-        }}
-        ref={ref}
-        className={pressable({
-          flat: pressed || disabled,
+    <AnimatedPressable
+      {...pressableProps}
+      disabled={disabled}
+      onHoverIn={(e) => {
+        setHovered(true);
+        pressableProps.onHoverIn?.(e);
+      }}
+      onHoverOut={(e) => {
+        setHovered(false);
+        pressableProps.onHoverOut?.(e);
+      }}
+      onPressIn={(e) => {
+        setPressed(true);
+        hapticImpactIfMobile();
+        pressableProps.onPressIn?.(e);
+      }}
+      onPressOut={(e) => {
+        setPressed(false);
+        pressableProps.onPressOut?.(e);
+      }}
+      onPress={(e) => {
+        pressableProps.onPress?.(e);
+      }}
+      ref={ref}
+      style={{ transform: [{ scale }] }}
+      className={pressable({ flat, inFlexRowParent, className })}
+    >
+      <View
+        className={roundedRect({
+          flat,
+          pressed,
           disabled,
           state,
           filled: state !== `default` && bgFilled,
+          hovered,
           className,
         })}
       >
@@ -161,7 +181,7 @@ export const AnswerButton = forwardRef<
             pointerEvents: `none`,
           }}
         >
-          <View className="pointer-events-none absolute bottom-0 left-0 right-0 top-0 rounded-lg bg-accent-4" />
+          <View className="pointer-events-none absolute bottom-0 left-0 right-0 top-0 bg-accent-4" />
         </Animated.View>
         <Text
           className={text({
@@ -173,9 +193,31 @@ export const AnswerButton = forwardRef<
         >
           {children}
         </Text>
-      </Pressable>
-    </Animated.View>
+      </View>
+    </AnimatedPressable>
   );
+});
+
+const pressable = tv({
+  base: ``,
+  variants: {
+    flat: {
+      true: ``,
+    },
+    inFlexRowParent: {
+      true: `flex-row`,
+    },
+  },
+  compoundVariants: [
+    {
+      flat: true,
+      class: `pt-[4px]`,
+    },
+    {
+      flat: true,
+      class: `pt-[2px]`,
+    },
+  ],
 });
 
 const text = tv({
@@ -190,7 +232,7 @@ const text = tv({
   },
 });
 
-const pressable = tv({
+const roundedRect = tv({
   base: `items-center select-none justify-center border-2 px-3 py-1 rounded-lg`,
   variants: {
     state: {
@@ -203,19 +245,30 @@ const pressable = tv({
       true: `opacity-50 select-none cursor-default`,
     },
     flat: {
-      true: `mt-[2px]`,
       false: `border-b-4`,
     },
     filled: {
       true: `border-accent-9`,
       false: `border-primary-7`,
     },
+    pressed: {
+      true: ``,
+    },
+    hovered: {
+      true: ``,
+    },
   },
   compoundVariants: [
     {
       disabled: false,
       filled: false,
-      class: `hover:border-primary-8`,
+      hovered: true,
+      class: `border-primary-8`,
+    },
+    {
+      filled: false,
+      pressed: true,
+      class: `border-primary-8`,
     },
   ],
 });

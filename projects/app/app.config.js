@@ -15,6 +15,7 @@ export const expo = {
     runtimeVersion: {
       policy: `fingerprint`,
     },
+    newArchEnabled: true,
     orientation: `portrait`,
     icon: `./src/assets/icon.png`,
     userInterfaceStyle: `automatic`,
