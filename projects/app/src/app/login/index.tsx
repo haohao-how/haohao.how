@@ -37,7 +37,6 @@ export default function LoginPage() {
         onPressIn={() => {
           sessionIdMutation.mutate(null);
         }}
-        style={{ height: 50 }}
       >
         Logout
       </RectButton2>

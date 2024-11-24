@@ -1,5 +1,5 @@
 import { ElementRef, forwardRef, useState } from "react";
-import { Pressable, Text, ViewProps } from "react-native";
+import { Pressable, Text, View, ViewProps } from "react-native";
 import { tv } from "tailwind-variants";
 import { PropsOf } from "./types";
 import { hapticImpactIfMobile } from "./util";
@@ -11,6 +11,7 @@ export type RectButton2Props = {
   accent?: boolean;
   children?: ViewProps[`children`];
   className?: string;
+  inFlexRowParent?: boolean;
   textClassName?: string;
 } & Pick<
   PropsOf<typeof Pressable>,
@@ -26,6 +27,7 @@ export const RectButton2 = forwardRef<
     variant = `outline`,
     accent = false,
     className,
+    inFlexRowParent = false,
     textClassName,
     ...pressableProps
   },
@@ -38,10 +40,21 @@ export const RectButton2 = forwardRef<
   }
 
   const [pressed, setPressed] = useState(false);
+  const [hovered, setHovered] = useState(false);
+
+  const flat = pressed || disabled;
 
   return (
     <Pressable
       {...pressableProps}
+      onHoverIn={(e) => {
+        setHovered(true);
+        pressableProps.onHoverIn?.(e);
+      }}
+      onHoverOut={(e) => {
+        setHovered(false);
+        pressableProps.onHoverOut?.(e);
+      }}
       onPressIn={(e) => {
         setPressed(true);
         hapticImpactIfMobile();
@@ -51,23 +64,59 @@ export const RectButton2 = forwardRef<
         setPressed(false);
         pressableProps.onPressOut?.(e);
       }}
+      data-my-attr="foofoo"
       ref={ref}
-      className={pressable({
-        flat: pressed || disabled,
-        className,
-        accent,
-        variant,
-        disabled,
-      })}
+      className={pressable({ flat, variant, inFlexRowParent, className })}
     >
-      <Text className={text({ variant, accent, class: textClassName })}>
-        {children}
-      </Text>
+      <View
+        className={roundedRect({
+          flat,
+          accent,
+          variant,
+          disabled,
+          pressed,
+          hovered,
+          className,
+        })}
+      >
+        <Text className={text({ variant, accent, class: textClassName })}>
+          {children}
+        </Text>
+      </View>
     </Pressable>
   );
 });
 
 const pressable = tv({
+  base: ``,
+  variants: {
+    flat: {
+      true: ``,
+    },
+    variant: {
+      filled: ``,
+      outline: ``,
+      bare: ``,
+    },
+    inFlexRowParent: {
+      true: `flex-row`,
+    },
+  },
+  compoundVariants: [
+    {
+      flat: true,
+      variant: `filled`,
+      class: `pt-[4px]`,
+    },
+    {
+      flat: true,
+      variant: `outline`,
+      class: `pt-[2px]`,
+    },
+  ],
+});
+
+const roundedRect = tv({
   base: `rounded-lg px-3 py-[4px] items-center justify-center`,
   variants: {
     variant: {
@@ -75,10 +124,16 @@ const pressable = tv({
       outline: `border-[2px]`,
       bare: ``,
     },
+    hovered: {
+      true: ``,
+    },
     flat: {
       true: ``,
     },
     accent: {
+      true: ``,
+    },
+    pressed: {
       true: ``,
     },
     disabled: {
@@ -89,7 +144,13 @@ const pressable = tv({
     {
       variant: `filled`,
       accent: true,
-      class: `bg-accent-10 hover:bg-accent-11 border-accent-9`,
+      class: `bg-accent-10 border-accent-9`,
+    },
+    {
+      variant: `filled`,
+      hovered: true,
+      accent: true,
+      class: `bg-accent-11`,
     },
     {
       variant: `filled`,
@@ -100,12 +161,8 @@ const pressable = tv({
       variant: `filled`,
       accent: false,
       disabled: false,
-      class: `hover:bg-primary-11 hover:border-primary-10`,
-    },
-    {
-      variant: `filled`,
-      flat: true,
-      class: `mt-[4px]`,
+      hovered: true,
+      class: `bg-primary-11 border-primary-10`,
     },
     {
       variant: `filled`,
@@ -126,15 +183,23 @@ const pressable = tv({
       variant: `outline`,
       accent: false,
       disabled: false,
-      class: `hover:border-primary-8`,
+      hovered: true,
+      class: `border-primary-8`,
+    },
+    {
+      variant: `outline`,
+      accent: false,
+      disabled: false,
+      pressed: true,
+      class: `border-primary-8`,
     },
     {
       variant: `outline`,
       flat: true,
-      class: `mt-[2px] border-b-[2px]`,
+      class: `border-b-[2px]`,
     },
     {
-      variant: [`outline`],
+      variant: `outline`,
       flat: false,
       class: `border-b-[4px]`,
     },

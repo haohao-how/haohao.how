@@ -406,7 +406,7 @@ const RectButton2Examples = (props: Partial<PropsOf<typeof RectButton2>>) => (
 
       <ExampleStack title="items-stretch">
         <View className="w-[120px] flex-col items-stretch gap-2 border-2 border-dashed border-primary-8">
-          <RectButton2Variants {...props} />
+          <RectButton2Variants className="flex-col" {...props} />
         </View>
       </ExampleStack>
 
@@ -450,25 +450,25 @@ const RectButton2Examples = (props: Partial<PropsOf<typeof RectButton2>>) => (
     <View className="flex-row flex-wrap">
       <ExampleStack title="items-start">
         <View className="h-[100px] flex-row items-start gap-2 border-2 border-dashed border-primary-8">
-          <RectButton2Variants {...props} />
+          <RectButton2Variants inFlexRowParent {...props} />
         </View>
       </ExampleStack>
 
       <ExampleStack title="items-center">
         <View className="h-[100px] flex-row items-center gap-2 border-2 border-dashed border-primary-8">
-          <RectButton2Variants {...props} />
+          <RectButton2Variants inFlexRowParent {...props} />
         </View>
       </ExampleStack>
 
-      <ExampleStack title="items-stretch">
+      <ExampleStack title="items-stretch**">
         <View className="h-[100px] flex-row items-stretch gap-2 border-2 border-dashed border-primary-8">
-          <RectButton2Variants {...props} />
+          <RectButton2Variants inFlexRowParent {...props} />
         </View>
       </ExampleStack>
 
       <ExampleStack title="items-end">
         <View className="h-[100px] flex-row items-end gap-2 border-2 border-dashed border-primary-8">
-          <RectButton2Variants {...props} />
+          <RectButton2Variants inFlexRowParent {...props} />
         </View>
       </ExampleStack>
     </View>
@@ -478,25 +478,25 @@ const RectButton2Examples = (props: Partial<PropsOf<typeof RectButton2>>) => (
     <View className="flex-row flex-wrap">
       <ExampleStack title="items-start">
         <View className="h-[100px] flex-row items-start gap-2 border-2 border-dashed border-primary-8">
-          <RectButton2Variants className="flex-1" {...props} />
+          <RectButton2Variants inFlexRowParent className="flex-1" {...props} />
         </View>
       </ExampleStack>
 
       <ExampleStack title="items-center">
         <View className="h-[100px] flex-row items-center gap-2 border-2 border-dashed border-primary-8">
-          <RectButton2Variants className="flex-1" {...props} />
+          <RectButton2Variants inFlexRowParent className="flex-1" {...props} />
         </View>
       </ExampleStack>
 
-      <ExampleStack title="items-stretch">
+      <ExampleStack title="items-stretch**">
         <View className="h-[100px] flex-row items-stretch gap-2 border-2 border-dashed border-primary-8">
-          <RectButton2Variants className="flex-1" {...props} />
+          <RectButton2Variants inFlexRowParent className="flex-1" {...props} />
         </View>
       </ExampleStack>
 
       <ExampleStack title="items-end">
         <View className="h-[100px] flex-row items-end gap-2 border-2 border-dashed border-primary-8">
-          <RectButton2Variants className="flex-1" {...props} />
+          <RectButton2Variants inFlexRowParent className="flex-1" {...props} />
         </View>
       </ExampleStack>
     </View>
@@ -547,25 +547,25 @@ const AnswerButtonExamples = (props: Partial<PropsOf<typeof AnswerButton>>) => (
 
     <View className="flex-row flex-wrap">
       <ExampleStack title="items-start">
-        <View className="h-[120px] w-[120px] items-start gap-2 border-2 border-dashed border-primary-8">
+        <View className="h-[120px] w-[120px] flex-col items-start gap-2 border-2 border-dashed border-primary-8">
           <SyncedAnswerButtonExample />
         </View>
       </ExampleStack>
 
       <ExampleStack title="items-center">
-        <View className="h-[120px] w-[120px] items-center gap-2 border-2 border-dashed border-primary-8">
+        <View className="h-[120px] w-[120px] flex-col items-center gap-2 border-2 border-dashed border-primary-8">
           <SyncedAnswerButtonExample />
         </View>
       </ExampleStack>
 
       <ExampleStack title="items-stretch">
-        <View className="h-[120px] w-[120px] gap-2 border-2 border-dashed border-primary-8">
+        <View className="h-[120px] w-[120px] flex-col gap-2 border-2 border-dashed border-primary-8">
           <SyncedAnswerButtonExample />
         </View>
       </ExampleStack>
 
       <ExampleStack title="items-end">
-        <View className="h-[120px] w-[120px] items-end gap-2 border-2 border-dashed border-primary-8">
+        <View className="h-[120px] w-[120px] flex-col items-end gap-2 border-2 border-dashed border-primary-8">
           <SyncedAnswerButtonExample />
         </View>
       </ExampleStack>
@@ -575,25 +575,25 @@ const AnswerButtonExamples = (props: Partial<PropsOf<typeof AnswerButton>>) => (
 
     <View className="flex-row flex-wrap">
       <ExampleStack title="items-start">
-        <View className="h-[120px] w-[120px] items-start gap-2 border-2 border-dashed border-primary-8">
+        <View className="h-[120px] w-[120px] flex-col items-start gap-2 border-2 border-dashed border-primary-8">
           <SyncedAnswerButtonExample className="flex-1" />
         </View>
       </ExampleStack>
 
       <ExampleStack title="items-center">
-        <View className="h-[120px] w-[120px] items-center gap-2 border-2 border-dashed border-primary-8">
+        <View className="h-[120px] w-[120px] flex-col items-center gap-2 border-2 border-dashed border-primary-8">
           <SyncedAnswerButtonExample className="flex-1" />
         </View>
       </ExampleStack>
 
       <ExampleStack title="items-stretch">
-        <View className="h-[120px] w-[120px] gap-2 border-2 border-dashed border-primary-8">
+        <View className="h-[120px] w-[120px] flex-col gap-2 border-2 border-dashed border-primary-8">
           <SyncedAnswerButtonExample className="flex-1" />
         </View>
       </ExampleStack>
 
       <ExampleStack title="items-end">
-        <View className="h-[120px] w-[120px] items-end gap-2 border-2 border-dashed border-primary-8">
+        <View className="h-[120px] w-[120px] flex-col items-end gap-2 border-2 border-dashed border-primary-8">
           <SyncedAnswerButtonExample className="flex-1" />
         </View>
       </ExampleStack>
@@ -604,25 +604,25 @@ const AnswerButtonExamples = (props: Partial<PropsOf<typeof AnswerButton>>) => (
     <View className="flex-row flex-wrap">
       <ExampleStack title="items-start">
         <View className="h-[100px] w-[200px] flex-row items-start gap-2 border-2 border-dashed border-primary-8">
-          <SyncedAnswerButtonExample />
+          <SyncedAnswerButtonExample inFlexRowParent />
         </View>
       </ExampleStack>
 
       <ExampleStack title="items-center">
         <View className="h-[100px] w-[200px] flex-row items-center gap-2 border-2 border-dashed border-primary-8">
-          <SyncedAnswerButtonExample />
+          <SyncedAnswerButtonExample inFlexRowParent />
         </View>
       </ExampleStack>
 
       <ExampleStack title="items-stretch">
         <View className="h-[100px] w-[200px] flex-row gap-2 border-2 border-dashed border-primary-8">
-          <SyncedAnswerButtonExample />
+          <SyncedAnswerButtonExample inFlexRowParent />
         </View>
       </ExampleStack>
 
       <ExampleStack title="items-end">
         <View className="h-[100px] w-[200px] flex-row items-end gap-2 border-2 border-dashed border-primary-8">
-          <SyncedAnswerButtonExample />
+          <SyncedAnswerButtonExample inFlexRowParent />
         </View>
       </ExampleStack>
     </View>
@@ -632,25 +632,25 @@ const AnswerButtonExamples = (props: Partial<PropsOf<typeof AnswerButton>>) => (
     <View className="flex-row flex-wrap">
       <ExampleStack title="items-start">
         <View className="h-[100px] w-[200px] flex-row items-start gap-2 border-2 border-dashed border-primary-8">
-          <SyncedAnswerButtonExample className="flex-1" />
+          <SyncedAnswerButtonExample inFlexRowParent className="flex-1" />
         </View>
       </ExampleStack>
 
       <ExampleStack title="items-center">
         <View className="h-[100px] w-[200px] flex-row items-center gap-2 border-2 border-dashed border-primary-8">
-          <SyncedAnswerButtonExample className="flex-1" />
+          <SyncedAnswerButtonExample inFlexRowParent className="flex-1" />
         </View>
       </ExampleStack>
 
       <ExampleStack title="items-stretch">
         <View className="h-[100px] w-[200px] flex-row gap-2 border-2 border-dashed border-primary-8">
-          <SyncedAnswerButtonExample className="flex-1" />
+          <SyncedAnswerButtonExample inFlexRowParent className="flex-1" />
         </View>
       </ExampleStack>
 
       <ExampleStack title="items-end">
         <View className="h-[100px] w-[200px] flex-row items-end gap-2 border-2 border-dashed border-primary-8">
-          <SyncedAnswerButtonExample className="flex-1" />
+          <SyncedAnswerButtonExample inFlexRowParent className="flex-1" />
         </View>
       </ExampleStack>
     </View>

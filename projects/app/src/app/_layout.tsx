@@ -31,10 +31,6 @@ const routingIntegration = Sentry.reactNavigationIntegration();
 Sentry.init({
   enabled: !__DEV__,
   dsn: `https://88e3787d84756d748f01113cc6a01fde@o4506645802909696.ingest.us.sentry.io/4506645804679168`,
-  // If `true`, Sentry will try to print out useful debugging information if
-  // something goes wrong with sending the event. Set it to `false` in
-  // production
-  debug: __DEV__,
   integrations: [routingIntegration],
 });
 
