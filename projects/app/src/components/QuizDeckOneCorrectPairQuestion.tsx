@@ -208,7 +208,7 @@ export const QuizDeckOneCorrectPairQuestion = memo(
           </View>
         ) : null}
         <View>
-          <Text className="text-lg font-bold text-text">{prompt}</Text>
+          <Text className="text-xl font-bold text-text">{prompt}</Text>
         </View>
         <View className="flex-1 justify-center py-quiz-px">
           <View
