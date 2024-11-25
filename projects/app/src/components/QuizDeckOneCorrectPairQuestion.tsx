@@ -560,7 +560,7 @@ const ChoiceButton = ({
       textClassName={choiceButtonText({
         isRadical: choice.type === `radical`,
         length:
-          text.length < 10 ? `short` : text.length < 20 ? `medium` : `long`,
+          text.length <= 20 ? `short` : text.length <= 40 ? `medium` : `long`,
       })}
     >
       {text}
