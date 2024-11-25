@@ -336,7 +336,7 @@ const ShowChoice = ({
       const pinyin = small ? undefined : hanziQuery.data?.pinyin;
       return (
         <HanziText
-          pinyin={pinyin}
+          pinyin={pinyin?.join(` `)}
           hanzi={choice.hanzi}
           accented
           hanziClassName={small ? `text-md` : undefined}

@@ -6,8 +6,10 @@ import {
   allHsk1Words,
   allHsk2Words,
   allHsk3Words,
+  convertPinyinWithToneNumberToToneMark,
 } from "../src/dictionary/dictionary.js";
 import "../src/typings/hanzi.d.ts";
+import { jsonStringifyIndentOneLevel } from "../src/util/json.js";
 
 hanzi.start();
 
@@ -17,7 +19,10 @@ const [hsk1Words, hsk2Words, hsk3Words] = await Promise.all([
   allHsk3Words(),
 ]);
 
-const dictionary = new Map<string, { pinyin: string; definitions: string[] }>();
+const dictionary = new Map<
+  string,
+  { pinyin: string[]; definitions: string[] }
+>();
 
 const lookupFallback: Record<string, Definition> = {
   // hsk1
@@ -143,7 +148,12 @@ for (const word of [...hsk1Words, ...hsk2Words, ...hsk3Words]) {
     }
   }
 
-  dictionary.set(word, { pinyin, definitions });
+  dictionary.set(word, {
+    pinyin: pinyin
+      .split(` `)
+      .map((x) => convertPinyinWithToneNumberToToneMark(x)),
+    definitions,
+  });
 }
 
 if (missing.length > 0) {
@@ -153,6 +163,6 @@ if (missing.length > 0) {
 // Write ts to disk using async node fs APIs
 await writeFile(
   join(import.meta.dirname, `../src/dictionary/words.asset.json`),
-  JSON.stringify([...dictionary.entries()]),
+  jsonStringifyIndentOneLevel([...dictionary.entries()]),
   `utf8`,
 );
