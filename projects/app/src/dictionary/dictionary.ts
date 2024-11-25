@@ -43,7 +43,7 @@ export const loadWords = memoize(async () =>
       z.tuple([
         z.string(),
         z.object({
-          pinyin: z.string(),
+          pinyin: z.array(z.string()),
           definitions: z.array(z.string()),
         }),
       ]),
@@ -163,3 +163,74 @@ export const lookupRadicalsByStrokes = async (strokes: number) =>
 export const radicalStrokes = [
   1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17,
 ];
+
+/**
+ * Converts a single pinyin word written with a tone number suffix to use a tone
+ * mark instead (also converts v to ü).
+ */
+export function convertPinyinWithToneNumberToToneMark(pinyin: string): string {
+  if (pinyin.length === 0) {
+    return pinyin;
+  }
+
+  // An algorithm to find the correct vowel letter (when there is more than one) is as follows:
+  //
+  // 1. If there is an a or an e, it will take the tone mark
+  // 2. If there is an ou, then the o takes the tone mark
+  // 3. Otherwise, the second vowel takes the tone mark
+
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  let tone = `012345`.indexOf(pinyin[pinyin.length - 1]!);
+
+  const pinyinLengthWithoutTone = tone > 0 ? pinyin.length - 1 : pinyin.length;
+
+  let result = ``;
+  for (let i = 0; i < pinyinLengthWithoutTone; i++) {
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const char = pinyin[i]!;
+
+    if (tone > 0) {
+      const nextChar = pinyin[i + 1];
+
+      if (char === `a` || char === `e`) {
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        result += toneMap[char][tone]!;
+        tone = -1;
+        continue;
+      } else if (char === `o` && nextChar === `u`) {
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        result += toneMap[char][tone]!;
+        tone = -1;
+        continue;
+      } else if (isPinyinVowel(char)) {
+        if (isPinyinVowel(nextChar)) {
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          result += toneMap[char][5]! + toneMap[nextChar][tone]!;
+          i++;
+        } else {
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          result += toneMap[char][tone]!;
+        }
+        tone = -1;
+        continue;
+      }
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    result += isPinyinVowel(char) ? toneMap[char][5]! : char;
+  }
+  return result;
+}
+
+const toneMap = {
+  a: `_āáǎàa`,
+  e: `_ēéěèe`,
+  i: `_īíǐìi`,
+  o: `_ōóǒòo`,
+  u: `_ūúǔùu`,
+  v: `_ǖǘǚǜü`,
+} as const;
+
+const isPinyinVowel = (
+  char: string | null | undefined,
+): char is `a` | `e` | `i` | `o` | `u` | `v` => char != null && char in toneMap;
