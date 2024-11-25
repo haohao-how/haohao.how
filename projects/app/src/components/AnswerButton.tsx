@@ -156,6 +156,10 @@ export const AnswerButton = forwardRef<
       style={{ transform: [{ scale }] }}
       className={pressable({ flat, inFlexRowParent, className })}
     >
+      <Animated.View
+        style={{ opacity: bgOpacity, transform: [{ scale: bgScale }] }}
+        className="pointer-events-none absolute bottom-[2px] left-[1px] right-[1px] top-[2px] rounded-lg bg-accent-4"
+      />
       <View
         className={roundedRect({
           flat,
@@ -167,27 +171,8 @@ export const AnswerButton = forwardRef<
           className,
         })}
       >
-        <Animated.View
-          style={{
-            position: `absolute`,
-            // HACK: fixes border radius on the parent from looking wonky
-            top: 0.5,
-            left: 0.5,
-            right: 0.5,
-            bottom: 0.5,
-            zIndex: -1,
-            opacity: bgOpacity,
-            transform: [{ scale: bgScale }],
-            pointerEvents: `none`,
-          }}
-        >
-          <View className="pointer-events-none absolute bottom-0 left-0 right-0 top-0 bg-accent-4" />
-        </Animated.View>
         <Text
-          className={text({
-            state,
-            className: textClassName,
-          })}
+          className={text({ state, className: textClassName })}
           numberOfLines={2}
           ellipsizeMode="tail"
         >
