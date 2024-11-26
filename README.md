@@ -6,4 +6,4 @@ Read the contribution and developer documentation [here](./CONTRIBUTING.md).
 
 # haohaohow — teach yourself Chinese
 
-Start today https://haohao.how
+Start learning https://haohao.how
