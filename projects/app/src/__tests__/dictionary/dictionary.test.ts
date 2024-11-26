@@ -152,7 +152,10 @@ void test(`convertPinyinWithToneNumberToToneMark`, () => {
     [`dou4`, `dòu`],
     [`dou5`, `dou`],
 
+    // A few examples
     [`hao3`, `hǎo`],
+    [`zhu5`, `zhu`],
+    [`zi5`, `zi`],
   ] as const) {
     assert.equal(convertPinyinWithToneNumberToToneMark(input), expected);
   }
