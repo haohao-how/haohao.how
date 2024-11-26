@@ -5,6 +5,7 @@ import { GradientPurple } from "@/components/styles";
 import { lookupWord } from "@/dictionary/dictionary";
 import { useQuery } from "@tanstack/react-query";
 import { useLocalSearchParams } from "expo-router";
+import { ScrollView } from "react-native";
 
 export default function WordPage() {
   const { id } = useLocalSearchParams<`/word/[id]`>();
@@ -18,41 +19,43 @@ export default function WordPage() {
   });
 
   return (
-    <ReferencePage
-      header={
-        <ReferencePageHeader
-          gradientColors={GradientPurple}
-          title={id}
-          subtitle={query.data?.definitions.join(`; `) ?? null}
-        />
-      }
-      body={
-        query.isLoading ? (
-          <>Loading</>
-        ) : query.isError ? (
-          <>Error</>
-        ) : (
-          <>
-            <ReferencePageBodySection title="Mnemonic">
-              {`todo`}
-            </ReferencePageBodySection>
-
-            <ReferencePageBodySection title="Meaning">
-              {query.data?.definitions.join(`; `) ?? ``}
-            </ReferencePageBodySection>
-
-            {query.data?.pinyin !== undefined ? (
-              <ReferencePageBodySection title="Pronunciation">
-                {query.data.pinyin}
+    <ScrollView>
+      <ReferencePage
+        header={
+          <ReferencePageHeader
+            gradientColors={GradientPurple}
+            title={id}
+            subtitle={query.data?.definitions.join(`; `) ?? null}
+          />
+        }
+        body={
+          query.isLoading ? (
+            <>Loading</>
+          ) : query.isError ? (
+            <>Error</>
+          ) : (
+            <>
+              <ReferencePageBodySection title="Mnemonic">
+                {`todo`}
               </ReferencePageBodySection>
-            ) : null}
 
-            <ReferencePageBodySection title="Characters">
-              {[].join(`, `)}
-            </ReferencePageBodySection>
-          </>
-        )
-      }
-    />
+              <ReferencePageBodySection title="Meaning">
+                {query.data?.definitions.join(`; `) ?? ``}
+              </ReferencePageBodySection>
+
+              {query.data?.pinyin !== undefined ? (
+                <ReferencePageBodySection title="Pronunciation">
+                  {query.data.pinyin}
+                </ReferencePageBodySection>
+              ) : null}
+
+              <ReferencePageBodySection title="Characters">
+                {[].join(`, `)}
+              </ReferencePageBodySection>
+            </>
+          )
+        }
+      />
+    </ScrollView>
   );
 }
