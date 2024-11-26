@@ -60,7 +60,7 @@ export function randomOne<T>(items: readonly T[]): T {
   return items[Math.floor(Math.random() * items.length)] as T;
 }
 
-export type SortComparator<T> = (a: T, b: T) => number;
+export type SortComparator<T> = NonNullable<Parameters<T[][`sort`]>[0]>;
 
 export function sortComparatorNumber(): (a: number, b: number) => number;
 export function sortComparatorNumber(): (fn: (x: unknown) => number) => number;
