@@ -3,6 +3,22 @@ import { invariant } from "@haohaohow/lib/invariant";
 import memoize from "lodash/memoize";
 import { z } from "zod";
 
+export const loadHanziHeroPinyin = memoize(async () =>
+  z
+    .object({
+      initials: z.array(z.union([z.string(), z.array(z.string())])),
+      finals: z.array(z.union([z.string(), z.array(z.string())])),
+      combined: z.array(z.string()),
+    })
+    .transform(({ initials, finals, combined }) => ({
+      initials: initials.map((x) => (typeof x === `string` ? [x, x] : x)),
+      finals: finals.map((x) => (typeof x === `string` ? [x, x] : x)),
+      combined,
+    }))
+    .transform(deepReadonly)
+    .parse((await import(`./hanziHeroPinyin.asset.json`)).default),
+);
+
 export const loadMnemonicTheme = memoize(async () =>
   z
     .object({
@@ -161,9 +177,7 @@ export const allRadicals = async () => await loadRadicals();
 export const allRadicalsByStrokes = async () => await loadRadicalStrokes();
 
 export const lookupRadicalNameMnemonic = async (hanzi: string) =>
-  (await loadRadicalNameMnemonics()).get(
-    await normalizeRadicalOrThrow(hanzi),
-  )?.[0] ?? null;
+  (await lookupRadicalNameMnemonics(hanzi))?.[0] ?? null;
 
 export const lookupRadicalNameMnemonics = async (hanzi: string) =>
   (await loadRadicalNameMnemonics()).get(
@@ -171,9 +185,12 @@ export const lookupRadicalNameMnemonics = async (hanzi: string) =>
   ) ?? null;
 
 export const lookupRadicalPinyinMnemonic = async (hanzi: string) =>
+  (await lookupRadicalPinyinMnemonics(hanzi))?.[0] ?? null;
+
+export const lookupRadicalPinyinMnemonics = async (hanzi: string) =>
   (await loadRadicalPinyinMnemonics()).get(
     await normalizeRadicalOrThrow(hanzi),
-  )?.[0] ?? null;
+  ) ?? null;
 
 export const lookupWord = async (hanzi: string) =>
   (await loadWords()).get(hanzi) ?? null;
