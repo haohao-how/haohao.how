@@ -15,7 +15,7 @@
       "source.fixAll.eslint": "explicit",
       "source.organizeImports": "always",
     },
-    "eslint.experimental.useFlatConfig": true,
+    "eslint.useFlatConfig": true,
     "eslint.workingDirectories": [
       { "directory": "./" },
       { "pattern": "./projects/*" },
