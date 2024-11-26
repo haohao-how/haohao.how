@@ -3,6 +3,30 @@ import { invariant } from "@haohaohow/lib/invariant";
 import memoize from "lodash/memoize";
 import { z } from "zod";
 
+export const loadMnemonicTheme = memoize(async () =>
+  z
+    .object({
+      tones: z.array(z.object({ tone: z.number(), desc: z.string() })),
+      initials: z.array(
+        z.object({ prefix: z.string(), n: z.string(), desc: z.string() }),
+      ),
+      finals: z.array(
+        z.object({
+          suffix: z.string(),
+          location: z.string(),
+          rationale: z.string(),
+        }),
+      ),
+    })
+    .transform((x) => ({
+      tones: new Map(x.tones.map((t) => [t.tone, t.desc])),
+      initials: new Map(x.initials.map((i) => [i.prefix, i])),
+      finals: new Map(x.finals.map((f) => [f.suffix, f])),
+    }))
+    .transform(deepReadonly)
+    .parse((await import(`./mnemonicTheme.asset.json`)).default),
+);
+
 export const loadRadicalNameMnemonics = memoize(async () =>
   z
     .array(

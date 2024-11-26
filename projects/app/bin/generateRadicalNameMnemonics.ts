@@ -1,9 +1,8 @@
-import { invariant } from "@haohaohow/lib/invariant";
 import makeDebug from "debug";
 import { writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import OpenAI from "openai";
-import { ChatCompletionCreateParamsNonStreaming } from "openai/resources/index.mjs";
+import { zodResponseFormat } from "openai/helpers/zod";
 import yargs from "yargs";
 import { z } from "zod";
 import {
@@ -14,6 +13,7 @@ import {
 import { mergeMaps, sortComparatorString } from "../src/util/collections.js";
 import { jsonStringifyIndentOneLevel } from "../src/util/json.js";
 import { makeDbCache } from "./util/cache.js";
+import { openAiWithCache } from "./util/openai.js";
 
 const debug = makeDebug(`hhh`);
 
@@ -22,7 +22,7 @@ const argv = await yargs(process.argv.slice(2))
   .option(`update`, {
     type: `string`,
     describe: `characters to explicitly update`,
-    coerce: (x: string) => x.split(`,`),
+    coerce: (x: string) => x.split(`,`).filter((x) => x !== ``),
   })
   .option(`debug`, {
     type: `boolean`,
@@ -66,26 +66,6 @@ const decompositions: Record<string, string> = {
   无: `⿱一尢`,
 };
 
-const openAiWithCache = async (
-  body: ChatCompletionCreateParamsNonStreaming,
-) => {
-  const cached = dbCache.get(body);
-  if (cached == null) {
-    debug(`Making OpenAI chat request: %O`, body);
-    const completion = await openai.chat.completions.create(body);
-    const result = completion.choices[0]?.message.content;
-    debug(`OpenAI chat response: %O`, result);
-    invariant(
-      result != null,
-      `No result for OpenAI request:\n${JSON.stringify(body, null, 2)}`,
-    );
-    dbCache.set(body, result);
-    return result;
-  }
-  invariant(typeof cached === `string`);
-  return cached;
-};
-
 const updates = new Map<string, { mnemonic: string; rationale: string }[]>();
 
 for (const hanzi of radicalsToCheck) {
@@ -101,16 +81,17 @@ for (const hanzi of radicalsToCheck) {
     continue;
   }
 
-  const rawJson = await openAiWithCache({
-    model: `gpt-4o`,
-    messages: [
-      {
-        role: `system`,
-        content: `You are a Chinese tutor helping English students learn Chinese.`,
-      },
-      {
-        role: `user`,
-        content: `
+  const rawJson = await openAiWithCache(
+    {
+      model: `gpt-4o`,
+      messages: [
+        {
+          role: `system`,
+          content: `You are a Chinese tutor helping English students learn Chinese.`,
+        },
+        {
+          role: `user`,
+          content: `
 Create a mnemonic to help remember that the name of the Chinese radical ${hanzi} is "${name}".
 
 Use the following strategy:
@@ -141,35 +122,12 @@ Use the following strategy:
 
 Write 10 mnemonic variations for ${hanzi} (${name}).
 `,
-      },
-    ],
-    response_format: {
-      type: `json_schema`,
-      json_schema: {
-        name: `radical_mnemonics`,
-        schema: {
-          type: `object`,
-          properties: {
-            radical: { type: `string` },
-            name: { type: `string` },
-            mnemonics: {
-              type: `array`,
-              items: {
-                type: `object`,
-                properties: {
-                  mnemonic: { type: `string` },
-                  reasoning_steps: {
-                    type: `array`,
-                    items: { type: `string` },
-                  },
-                },
-              },
-            },
-          },
         },
-      },
+      ],
+      response_format: zodResponseFormat(openAiSchema, `radical_mnemonics`),
     },
-  });
+    { dbCache, openai },
+  );
 
   try {
     const json = openAiSchema.parse(JSON.parse(rawJson));

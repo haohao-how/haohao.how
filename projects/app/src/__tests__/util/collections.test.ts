@@ -1,5 +1,4 @@
 import { sortComparatorNumber, sortComparatorString } from "@/util/collections";
-import { invariant } from "@haohaohow/lib/invariant";
 import assert from "node:assert";
 import test from "node:test";
 
@@ -20,12 +19,21 @@ void test(`sortComparatorString`, () => {
 
   {
     const arr = [[`c`], [`a`], [`b`]];
-    arr.sort(sortComparatorString(([x]) => notNull(x)));
+    arr.sort(sortComparatorString(([x]) => x!));
     assert.deepEqual(arr, [[`a`], [`b`], [`c`]]);
   }
 });
 
-const notNull = <T>(x: T): NonNullable<T> => {
-  invariant(x != null, `expected not null`);
-  return x;
-};
+void test(`sortComparatorNumber`, () => {
+  {
+    const arr = [3, 1, 2];
+    arr.sort(sortComparatorNumber());
+    assert.deepEqual(arr, [1, 2, 3]);
+  }
+
+  {
+    const arr = [[3], [1], [2]];
+    arr.sort(sortComparatorNumber(([x]) => x!));
+    assert.deepEqual(arr, [[1], [2], [3]]);
+  }
+});

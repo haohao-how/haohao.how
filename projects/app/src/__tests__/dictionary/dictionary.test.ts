@@ -5,12 +5,12 @@ import {
   allRadicalPrimaryForms,
   allRadicalsByStrokes,
   convertPinyinWithToneNumberToToneMark,
+  loadMnemonicTheme,
   loadRadicalNameMnemonics,
   loadRadicalPinyinMnemonics,
   loadRadicals,
   loadWords,
 } from "@/dictionary/dictionary";
-import { invariant } from "@haohaohow/lib/invariant";
 import assert from "node:assert";
 import test from "node:test";
 
@@ -24,6 +24,7 @@ void test(`radical groups have the right number of elements`, async () => {
 });
 
 void test(`json data can be loaded and passes the schema validation`, async () => {
+  await loadMnemonicTheme();
   await allHsk1Words();
   await allHsk2Words();
   await allHsk3Words();
@@ -183,18 +184,15 @@ function isNotCjkUnifiedIdeograph(char: string): boolean {
 async function kangxiRadicalToCjkRadical(
   kangxi: string,
 ): Promise<string | undefined> {
-  const xCodePoint = kangxi.codePointAt(0);
-  assert(xCodePoint != null);
+  const xCodePoint = kangxi.codePointAt(0)!;
 
   const { EquivalentUnifiedIdeograph } = await import(
     `ucd-full/EquivalentUnifiedIdeograph.json`
   );
 
   const newCodePoint = EquivalentUnifiedIdeograph.find((rule) => {
-    const minHex = rule.range[0];
-    const maxHex = rule.range[1] ?? rule.range[0];
-    invariant(minHex != null);
-    invariant(maxHex != null);
+    const minHex = rule.range[0]!;
+    const maxHex = rule.range[1] ?? rule.range[0]!;
 
     const min = parseInt(minHex, 16);
     const max = parseInt(maxHex, 16);

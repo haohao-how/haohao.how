@@ -43,3 +43,5 @@ export function makeDbCache<K, V>(
     },
   };
 }
+
+export type DbCache = ReturnType<typeof makeDbCache>;
