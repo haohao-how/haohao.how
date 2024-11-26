@@ -2,6 +2,7 @@ import makeDebug from "debug";
 import { writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import OpenAI from "openai";
+import { zodResponseFormat } from "openai/helpers/zod";
 import yargs from "yargs";
 import { z } from "zod";
 import {
@@ -123,32 +124,7 @@ Write 10 mnemonic variations for ${hanzi} (${name}).
 `,
         },
       ],
-      response_format: {
-        type: `json_schema`,
-        json_schema: {
-          name: `radical_mnemonics`,
-          schema: {
-            type: `object`,
-            properties: {
-              radical: { type: `string` },
-              name: { type: `string` },
-              mnemonics: {
-                type: `array`,
-                items: {
-                  type: `object`,
-                  properties: {
-                    mnemonic: { type: `string` },
-                    reasoning_steps: {
-                      type: `array`,
-                      items: { type: `string` },
-                    },
-                  },
-                },
-              },
-            },
-          },
-        },
-      },
+      response_format: zodResponseFormat(openAiSchema, `radical_mnemonics`),
     },
     { dbCache, openai },
   );

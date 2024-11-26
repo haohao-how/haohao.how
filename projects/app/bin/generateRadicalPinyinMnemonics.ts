@@ -3,6 +3,7 @@ import makeDebug from "debug";
 import { writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import OpenAI from "openai";
+import { zodResponseFormat } from "openai/helpers/zod";
 import yargs from "yargs";
 import { z } from "zod";
 import {
@@ -179,49 +180,7 @@ Write 5 mnemonic variations for ${char} (${pinyin}).
 `,
         },
       ],
-      response_format: {
-        type: `json_schema`,
-        json_schema: {
-          name: `radical_mnemonics`,
-          schema: {
-            $defs: {
-              mnemonic: {
-                type: `object`,
-                properties: {
-                  mnemonic: { type: `string` },
-                  reasoning_steps: {
-                    type: `array`,
-                    items: { type: `string` },
-                  },
-                },
-                required: [`mnemonic`, `reasoning_steps`],
-              },
-            },
-            type: `object`,
-            properties: {
-              character: { type: `string` },
-              initial: { type: `string` },
-              final: { type: `string` },
-              tone: { type: `string` },
-              meaning: { type: `string` },
-              mnemonics: {
-                type: `array`,
-                items: {
-                  $ref: `#/$defs/mnemonic`,
-                },
-              },
-            },
-            required: [
-              `character`,
-              `initial`,
-              `final`,
-              `tone`,
-              `meaning`,
-              `mnemonics`,
-            ],
-          },
-        },
-      },
+      response_format: zodResponseFormat(openAiSchema, `radical_mnemonics`),
     },
     { dbCache, openai },
   );
