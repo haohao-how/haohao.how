@@ -60,11 +60,16 @@ export function randomOne<T>(items: readonly T[]): T {
   return items[Math.floor(Math.random() * items.length)] as T;
 }
 
+export type SortComparator<T> = (a: T, b: T) => number;
+
 export function sortComparatorNumber(): (a: number, b: number) => number;
 export function sortComparatorNumber(): (fn: (x: unknown) => number) => number;
 export function sortComparatorNumber<T>(
+  fn: (x: T) => number,
+): SortComparator<T>;
+export function sortComparatorNumber<T>(
   fn?: (x: T) => number,
-): (a: T, b: T) => number {
+): SortComparator<T> {
   fn ??= (x) => x as unknown as number;
   return (a, b) => fn(a) - fn(b);
 }
@@ -72,10 +77,10 @@ export function sortComparatorNumber<T>(
 export function sortComparatorString(): (a: string, b: string) => number;
 export function sortComparatorString<T>(
   fn: (x: T) => string,
-): (a: T, b: T) => number;
+): SortComparator<T>;
 export function sortComparatorString<T>(
   fn?: (x: T) => string,
-): (a: T, b: T) => number {
+): SortComparator<T> {
   fn ??= (x) => x as unknown as string;
   return (a, b) => fn(a).localeCompare(fn(b));
 }

@@ -25,6 +25,20 @@ void test(`sortComparatorString`, () => {
   }
 });
 
+void test(`sortComparatorNumber`, () => {
+  {
+    const arr = [3, 1, 2];
+    arr.sort(sortComparatorNumber());
+    assert.deepEqual(arr, [1, 2, 3]);
+  }
+
+  {
+    const arr = [[3], [1], [2]];
+    arr.sort(sortComparatorNumber(([x]) => x));
+    assert.deepEqual(arr, [[1], [2], [3]]);
+  }
+});
+
 const notNull = <T>(x: T): NonNullable<T> => {
   invariant(x != null, `expected not null`);
   return x;

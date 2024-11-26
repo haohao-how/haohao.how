@@ -1,34 +1,54 @@
 import { invariant } from "@haohaohow/lib/invariant";
-import chunk from "lodash/chunk.js";
+import makeDebug from "debug";
 import { writeFile } from "node:fs/promises";
 import { join } from "node:path";
-import { DatabaseSync } from "node:sqlite";
 import OpenAI from "openai";
+import yargs from "yargs";
 import { z } from "zod";
 import {
   allRadicalPrimaryForms,
-  allRadicals,
+  loadMnemonicTheme,
+  loadRadicalPinyinMnemonics,
+  loadRadicalsByHanzi,
 } from "../src/dictionary/dictionary.js";
+import {
+  mergeMaps,
+  sortComparatorNumber,
+  sortComparatorString,
+} from "../src/util/collections.js";
 import { jsonStringifyIndentOneLevel } from "../src/util/json.js";
+import { makeDbCache } from "./util/cache.js";
+import { openAiWithCache } from "./util/openai.js";
 
-const dbLocation = import.meta.filename.replace(/\.[^.]+$/, `.db`);
-console.log(`Using db: ${dbLocation}`);
-const db = new DatabaseSync(dbLocation);
+const debug = makeDebug(`hhh`);
 
-db.exec(`
-  CREATE TABLE IF NOT EXISTS data(
-    radical TEXT PRIMARY KEY,
-    json TEXT,
-    created_at TEXT DEFAULT CURRENT_TIMESTAMP
-  ) STRICT
-`);
+const argv = await yargs(process.argv.slice(2))
+  .usage(`$0 [args]`)
+  .option(`update`, {
+    type: `string`,
+    describe: `characters to explicitly update`,
+    coerce: (x: string) => x.split(`,`).filter((x) => x !== ``),
+  })
+  .option(`debug`, {
+    type: `boolean`,
+    default: false,
+  })
+  .option(`force-write`, {
+    type: `boolean`,
+    default: false,
+  })
+  .strict()
+  .parseAsync();
 
-// Create a prepared statement to insert data into the database.
-const insert = db.prepare(`INSERT INTO data (radical, json) VALUES (?, ?)`);
-const queryOne = db.prepare(`SELECT * FROM data WHERE radical = ?`);
-const queryAll = db.prepare(`SELECT * FROM data`);
+if (argv.debug) {
+  makeDebug.enable(`${debug.namespace},${debug.namespace}:*`);
+}
 
-const characterSchema = z.object({
+const theme = await loadMnemonicTheme();
+
+const dbCache = makeDbCache(import.meta.filename, `openai_chat_cache`, debug);
+
+const openAiSchema = z.object({
   character: z.string(),
   initial: z.string(),
   final: z.string(),
@@ -37,131 +57,105 @@ const characterSchema = z.object({
   mnemonics: z.array(
     z.object({
       mnemonic: z.string(),
-      strategy: z.string(),
+      reasoning_steps: z.array(z.string()),
     }),
   ),
 });
 
-const batchResponse = z.array(characterSchema);
-
 const openai = new OpenAI();
 
-let maxRequests = 100;
+const radicalsToCheck = argv.update ?? [
+  ...new Set((await loadRadicalPinyinMnemonics()).keys()).difference(
+    new Set(await allRadicalPrimaryForms()),
+  ),
+];
 
-// Make a list of all the radicals that aren't cached.
-const radicalsToQuery = [];
-for (const {
-  hanzi: [char],
-  name: [name],
-} of await allRadicals()) {
-  invariant(char != null);
+const updates = new Map<string, { mnemonic: string; strategy: string }[]>();
 
-  const result = queryOne.get(char) as
-    | { radical: string; json: string; created_at: string }
-    | undefined;
-  if (result) {
-    console.log(`Skipping ${char} (cached)`);
-    continue;
-  } else {
-    radicalsToQuery.push({ char, name });
-  }
-}
+const decompositions: Record<string, string> = {
+  无: `⿱一尢`,
+  一: `？`,
+};
 
-for (const batch of chunk(radicalsToQuery, 5)) {
-  if (--maxRequests == 0) {
-    break;
-  }
+for (const char of radicalsToCheck) {
+  const lookup = (await loadRadicalsByHanzi()).get(char);
+  const name = lookup?.name[0];
+  const pinyin = lookup?.pinyin[0];
+  const decomposition = decompositions[char];
+  invariant(name != null, `Missing name data for ${char}`);
+  invariant(pinyin != null, `Missing pinyin data for ${char}`);
+  invariant(decomposition != null, `Missing decomposition data for ${char}`);
 
-  const chars = batch.map((b) => b.char);
+  const rawJson = await openAiWithCache(
+    {
+      model: `gpt-4o`,
+      messages: [
+        {
+          role: `system`,
+          content: `You are a Chinese tutor helping English students learn Chinese.`,
+        },
+        {
+          role: `user`,
+          content: `
+Create a mnemonic to help remember that the pinyin of the Chinese radical ${char} (${name}) is "${pinyin}".
 
-  const completion = await openai.chat.completions.create({
-    model: `gpt-4o-mini`,
-    messages: [
-      {
-        role: `system`,
-        content: `You are a Chinese tutor helping English students learn Chinese. Only respond in valid parsable JSON format.`,
-      },
-      {
-        role: `user`,
-        content: `
-Create high-quality mnemonics for a Chinese character using the following detailed strategy. The mnemonics must encode the character's **pinyin initial**, **final**, **tone**, and **meaning**, while incorporating its **visual appearance**. Use the provided associations for initials and finals to ensure consistency. Follow these steps:
+Use the following strategy:
+
+**1. Analyze the radical components**
+
+- The radical's composition is IDS: ${decomposition}
+  - "？" symbolises unknown, likely the character is in its most simple form.
+- Write a description of the layout of the sub-radicals.
+- For each component, list out separately:
+  - **Name:** <insert>
+  - **Meaning:** <insert>
+  - **Position:** <insert>
+  - **Visual depictions:** (if this component was a sketch what might it be of (take into account its position relative to other components, for example 八 at the top could be a chimney, but at the bottom might be a rocket nozzle))
+    - <insert description 1>
+    - ...
+    - <insert description 5>
 
 ---
 
-### **1. Theme and Associations**
-Use a **Nature theme**:
+**2. Incorporate critical information**
+
+The mnemonic must encode the character's **pinyin initial**, **final**, **tone**, and **meaning**, while incorporating its **visual appearance**. Use the following associations for initials and finals to ensure consistency with other mnemonics.
+
+---
+
+**3. Use a distinct themes**
+ 
+For each piece of critical information, encode it using a distinct theme. This ensures that when someone reads the mnemonic they're able to know which part of the mnemonic is referring to which piece of information, avoiding ambiguity and overlaps in references.
+
 - **Initials**: Represented by a person or pop-culture character based on the initial.
 - **Finals**: Represented by a location, place, or environment based on the final.
 - **Tone**: Encoded using an action, emotion, or motion:
-  - **Tone 1 (flat)**: Calm, steady, or horizontal actions.
-  - **Tone 2 (rising)**: Ascending, uplifting, or climbing actions.
-  - **Tone 3 (fall-rise)**: Dipping and rising, bouncing, or scooping actions.
-  - **Tone 4 (falling)**: Sharp, sudden, or downward actions.
-  - **Tone 5 (neutral)**: Light, fleeting, or resting actions (e.g., "skipping lightly," "hovering gently," or "a quick pause").
+${[...theme.tones.entries()]
+  .sort(sortComparatorNumber(([num]) => num))
+  .map(([num, desc]) => `  - **Tone ${num}**: ${desc}`)
+  .join(`\n`)}
 
----
 
-### **2. Associations for Initials**
+**3.1. Associations for Initials**
 | Initial | Person/Pop-Culture Character |
 |---------|-------------------------------|
-| **b**   | Bilbo Baggins                |
-| **p**   | Pocahontas                   |
-| **m**   | Moana                        |
-| **f**   | Frodo                        |
-| **d**   | David Attenborough           |
-| **t**   | Tarzan                       |
-| **n**   | Nemo                         |
-| **l**   | Legolas                      |
-| **g**   | Gandalf                      |
-| **k**   | King Kong                    |
-| **h**   | Hagrid                       |
-| **j**   | Jane Goodall                 |
-| **q**   | Quasimodo                    |
-| **x**   | Xena                         |
-| **zh**  | Zeus                         |
-| **ch**  | Chun-Li                      |
-| **sh**  | Shrek                        |
-| **r**   | Robin Hood                   |
-| **z**   | Zorro                        |
-| **c**   | Captain Planet               |
-| **s**   | Simba                        |
-| **y**   | Yoda                         |
-| **w**   | Wonder Woman                 |
+${[...theme.initials.entries()]
+  .sort(sortComparatorString(([initial]) => initial))
+  .map(([, { n, prefix, desc }]) => `| **${prefix}** | ${n} (${desc}) |`)
+  .join(`\n`)}
 
----
 
-### **3. Associations for Finals**
+**3.2 Associations for Finals**
 | Final   | Location/Environment         |
 |---------|-------------------------------|
-| **-a**  | Savanna                      |
-| **-o**  | Volcano                      |
-| **-e**  | Glacier                      |
-| **-ai** | Island                       |
-| **-ei** | Cliffside                    |
-| **-ao** | Waterfall                    |
-| **-ou** | Canyon                       |
-| **-an** | Wetlands                     |
-| **-en** | Forest                       |
-| **-ang**| Jungle                       |
-| **-eng**| Mountain                     |
-| **-ong**| Lagoon                       |
-| **-i**  | Valley                       |
-| **-u**  | Desert                       |
-| **-ü**  | Rainforest                   |
-| **-ian**| Meadow                       |
-| **-uan**| Sand Dune                    |
-| **-üan**| Bay                          |
-| **-in** | Tundra                       |
-| **-un** | Ocean                        |
-| **-ün** | Misty Hills                  |
-| **-ang**| Volcano Crater               |
-| **-eng**| Steppe                       |
-| **-ong**| Oasis                        |
-| **-er** | Riverbend                    |
+${[...theme.finals.entries()]
+  .sort(sortComparatorString(([initial]) => initial))
+  .map(([, { suffix, location }]) => `| **${suffix}** | ${location}) |`)
+  .join(`\n`)}
 
 ---
 
-### **4. Structure of the Mnemonic**
+**4. Structure of the Mnemonic**
 Each mnemonic must:
 1. Include a **vivid person or character** for the pinyin initial.
 2. Reference a **location or environment** for the pinyin final.
@@ -170,96 +164,101 @@ Each mnemonic must:
 5. Reference the **visual appearance** of the character to aid recognition.
 6. Be concise, memorable, and easy to visualize.
 
+**5. Final tips**
+
+- Link together one of the visual depictions of each component.
+- The story should be something that someone could picture in their head.
+- Make it clear why (given its components) the radical's pinyin makes sense.
+- Don't make the mnemonics too long, shorter can be easier to remember.
+- Be sure to include the exact pinyin of the radical (i.e. "${pinyin}")
+- Explain the logical steps in creating the mnemonic.
+
 ---
 
-Generate mnemonics for the characters ${JSON.stringify(chars)}
-
----
-
-Output in only JSON (no markdown wrapper) using the shape:
-
-[
-  {
-    "character": "<insert character or radical>"
-    "initial": "<insert initial and its association>",
-    "final": "<insert final and its association>",
-    "tone": "<insert tone and its description>",
-    "meaning": "<insert meaning>",
-    "mnemonics": [
-      {
-        "mnemonic": "<insert mnemonic>",
-        "strategy": "<insert explanation of strategy>"
-      }
-      <insert 4 more variations>
-    ]
-  },
-  ...
-]
+Write 5 mnemonic variations for ${char} (${pinyin}).
 `,
+        },
+      ],
+      response_format: {
+        type: `json_schema`,
+        json_schema: {
+          name: `radical_mnemonics`,
+          schema: {
+            $defs: {
+              mnemonic: {
+                type: `object`,
+                properties: {
+                  mnemonic: { type: `string` },
+                  reasoning_steps: {
+                    type: `array`,
+                    items: { type: `string` },
+                  },
+                },
+                required: [`mnemonic`, `reasoning_steps`],
+              },
+            },
+            type: `object`,
+            properties: {
+              character: { type: `string` },
+              initial: { type: `string` },
+              final: { type: `string` },
+              tone: { type: `string` },
+              meaning: { type: `string` },
+              mnemonics: {
+                type: `array`,
+                items: {
+                  $ref: `#/$defs/mnemonic`,
+                },
+              },
+            },
+            required: [
+              `character`,
+              `initial`,
+              `final`,
+              `tone`,
+              `meaning`,
+              `mnemonics`,
+            ],
+          },
+        },
       },
-    ],
-  });
+    },
+    { dbCache, openai },
+  );
 
-  const batchDescription = chars.join(`,`);
-  let rawJson = completion.choices[0]?.message.content;
-
-  if (rawJson == null) {
-    console.error(`Failed to get response for ${batchDescription}`);
-    console.log(`Skipping…`);
-    continue;
-  }
-
-  rawJson = rawJson
-    // fix strings ending in smart quote
-    .replace(/”\n/g, `"\n`)
-    // fix lines ending in double quote that are missing a trailing comma
-    .replace(/"(\n\s+")/g, `",$1`);
-
-  let json;
   try {
-    json = batchResponse.parse(JSON.parse(rawJson));
-  } catch (e) {
-    console.error(e);
-    console.error(`Failed to parse JSON:`, rawJson);
-    console.log(`Skipping…`);
-    continue;
-  }
+    const r = openAiSchema.parse(JSON.parse(rawJson));
 
-  for (const result of json) {
-    console.log(
-      `Success for ${result.character}, mnemonics:\n${result.mnemonics.map((m) => `  - ${m.mnemonic}\n    (${m.strategy})`).join(`\n`)}`,
+    updates.set(
+      r.character,
+      r.mnemonics.map((m) => ({
+        mnemonic: m.mnemonic,
+        strategy: m.reasoning_steps.join(`\n`),
+      })),
     );
-
-    insert.run(result.character, JSON.stringify(result));
+    console.log(
+      `Radical ${r.character} [${r.initial === `` ? `_` : r.initial}- + -${r.final} + ${r.tone}] "${r.meaning}"
+Mnemonics:\n${r.mnemonics.map((m, i) => `  ${i + 1}. ${m.mnemonic}\n    Rationale:\n${m.reasoning_steps.map((x, i) => `    ${i + 1}. ${x}`).join(`\n`)}`).join(`\n`)}`,
+    );
+  } catch (e) {
+    console.error(`Failed to parse response for ${char}, skipping…`, e);
+    continue;
   }
 }
 
-{
-  const rows = queryAll.all() as {
-    radical: string;
-    json: string;
-    created_at: string;
-  }[];
+if (argv[`force-write`] || updates.size > 0) {
+  const existingData = await loadRadicalPinyinMnemonics();
 
-  const primaryRadicalSet = new Set(await allRadicalPrimaryForms());
+  const updatedData = [...mergeMaps(existingData, updates).entries()]
+    // Sort the map for minimal diffs in PR
+    .sort(sortComparatorString(([key]) => key));
 
-  // generate a typescript file with the mnemonics
-  const ts = jsonStringifyIndentOneLevel(
-    rows
-      .filter((row) => primaryRadicalSet.has(row.radical))
-      .map((row) => {
-        const mns = characterSchema.parse(JSON.parse(row.json)).mnemonics;
-        return [row.radical, mns];
-      }),
-  );
-
-  // Write ts to disk using async node fs APIs
   await writeFile(
     join(
       import.meta.dirname,
       `../src/dictionary/radicalPinyinMnemonics.asset.json`,
     ),
-    ts,
+    jsonStringifyIndentOneLevel(updatedData),
     `utf8`,
   );
 }

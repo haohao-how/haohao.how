@@ -5,6 +5,7 @@ import {
   allRadicalPrimaryForms,
   allRadicalsByStrokes,
   convertPinyinWithToneNumberToToneMark,
+  loadMnemonicTheme,
   loadRadicalNameMnemonics,
   loadRadicalPinyinMnemonics,
   loadRadicals,
@@ -24,6 +25,7 @@ void test(`radical groups have the right number of elements`, async () => {
 });
 
 void test(`json data can be loaded and passes the schema validation`, async () => {
+  await loadMnemonicTheme();
   await allHsk1Words();
   await allHsk2Words();
   await allHsk3Words();
