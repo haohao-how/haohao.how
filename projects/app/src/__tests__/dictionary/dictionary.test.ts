@@ -5,12 +5,14 @@ import {
   allRadicalPrimaryForms,
   allRadicalsByStrokes,
   convertPinyinWithToneNumberToToneMark,
+  loadHanziHeroPinyin,
   loadMnemonicTheme,
   loadRadicalNameMnemonics,
   loadRadicalPinyinMnemonics,
   loadRadicals,
   loadWords,
 } from "@/dictionary/dictionary";
+import { sortComparatorNumber } from "@/util/collections";
 import assert from "node:assert";
 import test from "node:test";
 
@@ -24,6 +26,7 @@ void test(`radical groups have the right number of elements`, async () => {
 });
 
 void test(`json data can be loaded and passes the schema validation`, async () => {
+  await loadHanziHeroPinyin();
   await loadMnemonicTheme();
   await allHsk1Words();
   await allHsk2Words();
@@ -158,6 +161,55 @@ void test(`convertPinyinWithToneNumberToToneMark`, () => {
     [`zi5`, `zi`],
   ] as const) {
     assert.equal(convertPinyinWithToneNumberToToneMark(input), expected);
+  }
+});
+
+async function hanziHeroSplitPinyin(
+  pinyin: string,
+): Promise<[initial: string, final: string] | null> {
+  const { initials, finals } = await loadHanziHeroPinyin();
+
+  for (const [, ...is] of initials
+    // There's some overlap with initials and finals, the algorithm should use
+    // the longest possible initial.
+    .toSorted(sortComparatorNumber((x) => x.length))
+    .reverse()) {
+    for (const initial of is) {
+      if (pinyin.startsWith(initial)) {
+        const final = pinyin.slice(initial.length);
+        for (const [, ...fs] of finals) {
+          if (fs.includes(final)) {
+            return [initial, final];
+          }
+        }
+      }
+    }
+  }
+
+  return null;
+}
+
+void test(`hanzi hero pinyin covers kangxi pinyin`, async () => {
+  const { combined } = await loadHanziHeroPinyin();
+
+  assert.equal(combined.length, new Set(combined).size);
+
+  for (const x of combined) {
+    assert.notEqual(await hanziHeroSplitPinyin(x), null, `couldn't split ${x}`);
+  }
+
+  for (const [input, expected] of [
+    [`a`, [``, `a`]],
+    [`bi`, [`bi`, ``]],
+    [`tie`, [`ti`, `e`]],
+    [`zhou`, [`zh`, `ou`]],
+    [`zhuo`, [`zhu`, `o`]],
+  ] as const) {
+    assert.deepEqual(
+      await hanziHeroSplitPinyin(input),
+      expected,
+      `${input} didn't split as expected`,
+    );
   }
 });
 
