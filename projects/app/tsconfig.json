@@ -4,7 +4,7 @@
     "allowJs": true,
     "baseUrl": ".",
     "esModuleInterop": true,
-    "jsx": "react-native",
+    "jsx": "preserve",
     "lib": ["DOM", "ESNext"],
     "module": "ES2020",
     "moduleResolution": "Bundler",
