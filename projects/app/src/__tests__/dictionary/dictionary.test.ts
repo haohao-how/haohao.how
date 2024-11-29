@@ -46,6 +46,18 @@ void test(`json data can be loaded and passes the schema validation`, async () =
   await allRadicalPrimaryForms();
 });
 
+void test(`there are no pronunciations mixed into word definitions`, async () => {
+  const words = await loadWords();
+
+  for (const [, { definitions }] of words) {
+    for (const definition of definitions) {
+      assert.doesNotMatch(definition, /also pr[a-z]*\.? \[/);
+      assert.doesNotMatch(definition, /pronunciation /);
+      // assert.doesNotMatch(definition, /\[/); // TODO
+    }
+  }
+});
+
 void test(`there are 214 radicals to match official kangxi radicals`, async () => {
   const radicals = await loadRadicals();
   assert.equal(radicals.length, 214);
