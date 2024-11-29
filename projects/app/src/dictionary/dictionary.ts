@@ -3,20 +3,69 @@ import { invariant } from "@haohaohow/lib/invariant";
 import memoize from "lodash/memoize";
 import { z } from "zod";
 
-export const loadHanziHeroPinyin = memoize(async () =>
+export const loadPinyinWords = memoize(async () =>
+  z
+    .array(z.string())
+    .transform(deepReadonly)
+    .parse((await import(`./pinyinWords.asset.json`)).default),
+);
+
+export const loadStandardPinyinChart = memoize(async () =>
   z
     .object({
       initials: z.array(z.union([z.string(), z.array(z.string())])),
       finals: z.array(z.union([z.string(), z.array(z.string())])),
-      combined: z.array(z.string()),
+      overrides: z.record(z.tuple([z.string(), z.string()])),
     })
-    .transform(({ initials, finals, combined }) => ({
+    .transform(({ initials, finals, overrides }) => ({
       initials: initials.map((x) => (typeof x === `string` ? [x, x] : x)),
       finals: finals.map((x) => (typeof x === `string` ? [x, x] : x)),
-      combined,
+      overrides,
     }))
     .transform(deepReadonly)
-    .parse((await import(`./hanziHeroPinyin.asset.json`)).default),
+    .parse((await import(`./standardPinyinChart.asset.json`)).default),
+);
+
+export const loadMmPinyinChart = memoize(async () =>
+  z
+    .object({
+      initials: z.array(z.union([z.string(), z.array(z.string())])),
+      finals: z.array(z.union([z.string(), z.array(z.string())])),
+    })
+    .transform(({ initials, finals }) => ({
+      initials: initials.map((x) => (typeof x === `string` ? [x, x] : x)),
+      finals: finals.map((x) => (typeof x === `string` ? [x, x] : x)),
+    }))
+    .transform(deepReadonly)
+    .parse((await import(`./mmPinyinChart.asset.json`)).default),
+);
+
+export const loadHhPinyinChart = memoize(async () =>
+  z
+    .object({
+      initials: z.array(z.union([z.string(), z.array(z.string())])),
+      finals: z.array(z.union([z.string(), z.array(z.string())])),
+    })
+    .transform(({ initials, finals }) => ({
+      initials: initials.map((x) => (typeof x === `string` ? [x, x] : x)),
+      finals: finals.map((x) => (typeof x === `string` ? [x, x] : x)),
+    }))
+    .transform(deepReadonly)
+    .parse((await import(`./hhPinyinChart.asset.json`)).default),
+);
+
+export const loadHmmPinyinChart = memoize(async () =>
+  z
+    .object({
+      initials: z.array(z.union([z.string(), z.array(z.string())])),
+      finals: z.array(z.union([z.string(), z.array(z.string())])),
+    })
+    .transform(({ initials, finals }) => ({
+      initials: initials.map((x) => (typeof x === `string` ? [x, x] : x)),
+      finals: finals.map((x) => (typeof x === `string` ? [x, x] : x)),
+    }))
+    .transform(deepReadonly)
+    .parse((await import(`./hmmPinyinChart.asset.json`)).default),
 );
 
 export const loadMnemonicTheme = memoize(async () =>

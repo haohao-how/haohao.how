@@ -137,6 +137,15 @@ tasks:
       # Pass $NODE_OPTIONS to support VS Code "JavaScript Debug Terminal".
       NODE_OPTIONS: --import tsx $NODE_OPTIONS
 
+  formatAssetJson:
+    command: yarn tsx ./bin/formatAssetJson.ts
+    options:
+      runInCI: false
+      envFile: .env.local
+      cache: false
+    env:
+      NODE_OPTIONS: --experimental-sqlite $NODE_OPTIONS
+
   generateRadicalNameMnemonics:
     command: yarn tsx ./bin/generateRadicalNameMnemonics.ts
     options:
