@@ -1,4 +1,4 @@
-[![Release](https://github.com/haohao-how/haohaohow/actions/workflows/release.yml/badge.svg)](https://github.com/haohao-how/haohaohow/actions/workflows/release.yml) 
+[![Release](https://github.com/haohao-how/haohaohow/actions/workflows/release.yml/badge.svg)](https://github.com/haohao-how/haohaohow/actions/workflows/release.yml)
 [![CI daily](https://github.com/haohao-how/haohaohow/actions/workflows/ci-daily.yml/badge.svg)](https://github.com/haohao-how/haohaohow/actions/workflows/ci-daily.yml)
 ![](https://img.shields.io/badge/ios-✅-teal)
 ![](https://img.shields.io/badge/android-✅-teal)

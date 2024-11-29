@@ -7,6 +7,7 @@ import {
   convertPinyinWithToneNumberToToneMark,
   loadHhPinyinChart,
   loadHmmPinyinChart,
+  loadMmPinyinChart,
   loadMnemonicTheme,
   loadPinyinWords,
   loadRadicalNameMnemonics,
@@ -18,6 +19,7 @@ import {
 import { sortComparatorNumber } from "@/util/collections";
 import assert from "node:assert";
 import test from "node:test";
+import { DeepReadonly } from "ts-essentials";
 
 void test(`radical groups have the right number of elements`, async () => {
   // Data integrity test to ensure that the number of characters in each group
@@ -185,19 +187,23 @@ function expandCombinations(
 
 function splitPinyin(
   pinyin: string,
-  initials: readonly PinyinProduction[],
-  finals: readonly PinyinProduction[],
-): [initial: string, final: string] | null {
-  const initialsList = expandCombinations(initials)
+  chart: PinyinChart,
+): readonly [initial: string, final: string] | null {
+  const initialsList = expandCombinations(chart.initials)
     // There's some overlap with initials and finals, the algorithm should use
     // the longest possible initial.
     .toSorted(sortComparatorNumber(([, x]) => x.length))
     .reverse();
-  const finalsList = expandCombinations(finals)
+  const finalsList = expandCombinations(chart.finals)
     // There's some overlap with initials and finals, the algorithm should use
     // the longest possible initial.
     .toSorted(sortComparatorNumber((x) => x.length))
     .reverse();
+
+  const override = chart.overrides?.[pinyin];
+  if (override) {
+    return override;
+  }
 
   for (const [initialLabel, initial] of initialsList) {
     if (pinyin.startsWith(initial)) {
@@ -213,14 +219,70 @@ function splitPinyin(
   return null;
 }
 
-void test(`standard pinyin covers kangxi pinyin`, async () => {
-  const { initials, finals } = await loadStandardPinyinChart();
-  const combined = await loadPinyinWords();
+interface PinyinChart {
+  initials: readonly PinyinProduction[];
+  finals: readonly PinyinProduction[];
+  overrides?: DeepReadonly<Record<string, [initial: string, final: string]>>;
+}
 
-  for (const [input, initial, final] of [
+async function testPinyinChart(
+  chart: PinyinChart,
+  testCases: readonly [string, string, string][] = [],
+): Promise<void> {
+  const pinyinWords = await loadPinyinWords();
+
+  // Start with test cases first as these are easier to debug.
+  for (const [input, initial, final] of testCases) {
+    assert.deepEqual(
+      splitPinyin(input, chart),
+      [initial, final],
+      `${input} didn't split as expected`,
+    );
+  }
+
+  for (const x of pinyinWords) {
+    assert.notEqual(splitPinyin(x, chart), null, `couldn't split ${x}`);
+  }
+
+  // Ensure that there are no duplicates initials or finals.
+  assertUniqueArray(chart.initials.flatMap(([, ...x]) => x));
+  assertUniqueArray(chart.finals.flatMap(([, ...x]) => x));
+}
+
+function assertUniqueArray<T>(items: readonly T[]): void {
+  const seen = new Set();
+  const duplicates = [];
+  for (const x of items) {
+    if (!seen.has(x)) {
+      seen.add(x);
+    } else {
+      duplicates.push(x);
+    }
+  }
+  assert.deepEqual(duplicates, [], `expected no duplicates`);
+}
+
+void test(`standard pinyin covers kangxi pinyin`, async () => {
+  const chart = await loadStandardPinyinChart();
+
+  await testPinyinChart(chart, [
     [`a`, `∅`, `a`],
     [`an`, `∅`, `an`],
-    [`jue`, `j`, `üe`],
+    [`ê`, `∅`, `ê`],
+    [`ju`, `j`, `ü`],
+    [`qu`, `q`, `ü`],
+    [`xu`, `x`, `ü`],
+    [`bu`, `b`, `u`],
+    [`pu`, `p`, `u`],
+    [`mu`, `m`, `u`],
+    [`fu`, `f`, `u`],
+    [`du`, `d`, `u`],
+    [`tu`, `t`, `u`],
+    [`nu`, `n`, `u`],
+    [`lu`, `l`, `u`],
+    [`gu`, `g`, `u`],
+    [`ku`, `k`, `u`],
+    [`hu`, `h`, `u`],
     [`wu`, `∅`, `u`],
     [`wa`, `∅`, `ua`],
     [`er`, `∅`, `er`],
@@ -250,68 +312,74 @@ void test(`standard pinyin covers kangxi pinyin`, async () => {
     [`yuan`, `∅`, `üan`],
     [`yun`, `∅`, `ün`],
     [`yong`, `∅`, `iong`],
-  ] as const) {
-    // todo: assert no duplicate splits
-    assert.deepEqual(
-      splitPinyin(input, initials, finals),
-      [initial, final],
-      `${input} didn't split as expected`,
-    );
-  }
+    [`ju`, `j`, `ü`],
+    [`jue`, `j`, `üe`],
+    [`juan`, `j`, `üan`],
+    [`jun`, `j`, `ün`],
+    [`jiong`, `j`, `iong`],
+    [`qu`, `q`, `ü`],
+    [`que`, `q`, `üe`],
+    [`quan`, `q`, `üan`],
+    [`qun`, `q`, `ün`],
+    [`qiong`, `q`, `iong`],
+    [`xu`, `x`, `ü`],
+    [`xue`, `x`, `üe`],
+    [`xuan`, `x`, `üan`],
+    [`xun`, `x`, `ün`],
+    [`xiong`, `x`, `iong`],
+  ]);
+});
 
-  for (const x of combined) {
-    assert.notEqual(
-      splitPinyin(x, initials, finals),
-      null,
-      `couldn't split ${x}`,
-    );
-  }
+void test(`mm pinyin covers kangxi pinyin`, async () => {
+  const chart = await loadMmPinyinChart();
+
+  await testPinyinChart(chart, [
+    [`zhang`, `zh`, `ang`],
+    [`bao`, `b`, `ao`],
+    [`ao`, `∅`, `ao`],
+    [`ba`, `b`, `a`],
+    [`ci`, `c`, `∅`],
+    [`chi`, `ch`, `∅`],
+    [`cong`, `cu`, `(e)ng`],
+    [`chong`, `chu`, `(e)ng`],
+    [`chui`, `chu`, `ei`],
+    [`diu`, `di`, `ou`],
+    [`miu`, `mi`, `ou`],
+    [`niu`, `ni`, `ou`],
+    [`you`, `y`, `ou`],
+    [`yin`, `y`, `(e)n`],
+    [`ê`, `∅`, `e`],
+    [`er`, `∅`, `∅`],
+    // [`zh(i)`, `zh`, `∅`], // ?
+    [`zha`, `zh`, `a`],
+    [`zhong`, `zhu`, `(e)ng`],
+    [`zhe`, `zh`, `e`],
+    [`ta`, `t`, `a`],
+    [`a`, `∅`, `a`],
+    [`xing`, `xi`, `(e)ng`],
+    [`qing`, `qi`, `(e)ng`],
+  ]);
 });
 
 void test(`hh pinyin covers kangxi pinyin`, async () => {
-  const { initials, finals } = await loadHhPinyinChart();
-  const combined = await loadPinyinWords();
+  const chart = await loadHhPinyinChart();
 
-  for (const x of combined) {
-    assert.notEqual(
-      splitPinyin(x, initials, finals),
-      null,
-      `couldn't split ${x}`,
-    );
-  }
-
-  for (const [input, initial, final] of [
+  await testPinyinChart(chart, [
     [`a`, `_`, `a`],
     [`bi`, `bi`, `_`],
     [`tie`, `ti`, `e`],
     [`zhou`, `zh`, `(o)u`],
     [`zhuo`, `zhu`, `o`],
-  ] as const) {
-    assert.deepEqual(
-      splitPinyin(input, initials, finals),
-      [initial, final],
-      `${input} didn't split as expected`,
-    );
-  }
+  ]);
 });
 
 void test(`hmm pinyin covers kangxi pinyin`, async () => {
-  const { initials, finals } = await loadHmmPinyinChart();
-  const combined = await loadPinyinWords();
+  const chart = await loadHmmPinyinChart();
 
-  assert.equal(
-    initials.flatMap(([, ...x]) => x).length,
-    new Set(initials.flatMap(([, ...x]) => x)).size,
-  );
-  assert.equal(
-    finals.flatMap(([, ...x]) => x).length,
-    new Set(finals.flatMap(([, ...x]) => x)).size,
-  );
+  assert.equal(chart.initials.length, 55);
+  assert.equal(chart.finals.length, 13);
 
-  assert.equal(initials.length, 55);
-  assert.equal(finals.length, 13);
-
-  for (const [input, initial, final] of [
+  await testPinyinChart(chart, [
     [`a`, `∅`, `a`],
     [`er`, `∅`, `∅`],
     [`ci`, `c`, `∅`],
@@ -331,21 +399,7 @@ void test(`hmm pinyin covers kangxi pinyin`, async () => {
     [`zhou`, `zh`, `ou`],
     [`zhuo`, `zhu`, `o`],
     [`shua`, `shu`, `a`],
-  ] as const) {
-    assert.deepEqual(
-      splitPinyin(input, initials, finals),
-      [initial, final],
-      `${input} didn't split as expected`,
-    );
-  }
-
-  for (const x of combined) {
-    assert.notEqual(
-      splitPinyin(x, initials, finals),
-      null,
-      `couldn't split ${x}`,
-    );
-  }
+  ]);
 });
 
 async function debugNonCjkUnifiedIdeographs(chars: string[]): Promise<string> {

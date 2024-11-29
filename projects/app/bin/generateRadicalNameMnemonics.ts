@@ -1,5 +1,4 @@
 import makeDebug from "debug";
-import { writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import OpenAI from "openai";
 import { zodResponseFormat } from "openai/helpers/zod";
@@ -13,6 +12,7 @@ import {
 import { mergeMaps, sortComparatorString } from "../src/util/collections.js";
 import { jsonStringifyIndentOneLevel } from "../src/util/json.js";
 import { makeDbCache } from "./util/cache.js";
+import { writeUtf8FileIfChanged } from "./util/fs.js";
 import { openAiWithCache } from "./util/openai.js";
 
 const debug = makeDebug(`hhh`);
@@ -32,6 +32,7 @@ const argv = await yargs(process.argv.slice(2))
     type: `boolean`,
     default: false,
   })
+  .version(false)
   .strict()
   .parseAsync();
 
@@ -155,12 +156,11 @@ if (argv[`force-write`] || updates.size > 0) {
     // Sort the map for minimal diffs in PR
     .sort(sortComparatorString(([key]) => key));
 
-  await writeFile(
+  await writeUtf8FileIfChanged(
     join(
       import.meta.dirname,
       `../src/dictionary/radicalNameMnemonics.asset.json`,
     ),
     jsonStringifyIndentOneLevel(updatedData),
-    `utf8`,
   );
 }
