@@ -38,6 +38,7 @@ const argv = await yargs(process.argv.slice(2))
     type: `boolean`,
     default: false,
   })
+  .version(false)
   .strict()
   .parseAsync();
 
