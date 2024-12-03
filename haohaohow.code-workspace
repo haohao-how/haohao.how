@@ -24,8 +24,8 @@
       "editor.defaultFormatter": "redhat.vscode-xml",
     },
     "tailwindCSS.experimental.classRegex": [
-      // https://www.tailwind-variants.org/docs/getting-started
-      ["([\"'`][^\"'`]*.*?[\"'`])", "[\"'`]([^\"'`]*).*?[\"'`]"],
+      // https://www.tailwind-variants.org/docs/getting-started suggests something different but it is buggy.
+      ["(`.*?`)", "(\".*?\")", "('.*?')"],
     ],
   },
 }

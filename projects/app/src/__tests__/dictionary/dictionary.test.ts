@@ -17,6 +17,7 @@ import {
   loadStandardPinyinChart,
   loadWords,
   parseIds,
+  walkIdsNode,
 } from "@/dictionary/dictionary";
 import { sortComparatorNumber } from "@/util/collections";
 import assert from "node:assert";
@@ -584,102 +585,102 @@ void test(`parseIds handles 1 depth`, () => {
   ]);
 
   assert.deepEqual(parseIds(`①`), [
-    { type: `LeftUnknownCharacter`, strokeCount: 1 },
+    { type: `LeafUnknownCharacter`, strokeCount: 1 },
     1,
   ]);
 
   assert.deepEqual(parseIds(`②`), [
-    { type: `LeftUnknownCharacter`, strokeCount: 2 },
+    { type: `LeafUnknownCharacter`, strokeCount: 2 },
     1,
   ]);
 
   assert.deepEqual(parseIds(`③`), [
-    { type: `LeftUnknownCharacter`, strokeCount: 3 },
+    { type: `LeafUnknownCharacter`, strokeCount: 3 },
     1,
   ]);
 
   assert.deepEqual(parseIds(`④`), [
-    { type: `LeftUnknownCharacter`, strokeCount: 4 },
+    { type: `LeafUnknownCharacter`, strokeCount: 4 },
     1,
   ]);
 
   assert.deepEqual(parseIds(`⑤`), [
-    { type: `LeftUnknownCharacter`, strokeCount: 5 },
+    { type: `LeafUnknownCharacter`, strokeCount: 5 },
     1,
   ]);
 
   assert.deepEqual(parseIds(`⑥`), [
-    { type: `LeftUnknownCharacter`, strokeCount: 6 },
+    { type: `LeafUnknownCharacter`, strokeCount: 6 },
     1,
   ]);
 
   assert.deepEqual(parseIds(`⑦`), [
-    { type: `LeftUnknownCharacter`, strokeCount: 7 },
+    { type: `LeafUnknownCharacter`, strokeCount: 7 },
     1,
   ]);
 
   assert.deepEqual(parseIds(`⑧`), [
-    { type: `LeftUnknownCharacter`, strokeCount: 8 },
+    { type: `LeafUnknownCharacter`, strokeCount: 8 },
     1,
   ]);
 
   assert.deepEqual(parseIds(`⑨`), [
-    { type: `LeftUnknownCharacter`, strokeCount: 9 },
+    { type: `LeafUnknownCharacter`, strokeCount: 9 },
     1,
   ]);
 
   assert.deepEqual(parseIds(`⑩`), [
-    { type: `LeftUnknownCharacter`, strokeCount: 10 },
+    { type: `LeafUnknownCharacter`, strokeCount: 10 },
     1,
   ]);
 
   assert.deepEqual(parseIds(`⑪`), [
-    { type: `LeftUnknownCharacter`, strokeCount: 11 },
+    { type: `LeafUnknownCharacter`, strokeCount: 11 },
     1,
   ]);
 
   assert.deepEqual(parseIds(`⑫`), [
-    { type: `LeftUnknownCharacter`, strokeCount: 12 },
+    { type: `LeafUnknownCharacter`, strokeCount: 12 },
     1,
   ]);
 
   assert.deepEqual(parseIds(`⑬`), [
-    { type: `LeftUnknownCharacter`, strokeCount: 13 },
+    { type: `LeafUnknownCharacter`, strokeCount: 13 },
     1,
   ]);
 
   assert.deepEqual(parseIds(`⑭`), [
-    { type: `LeftUnknownCharacter`, strokeCount: 14 },
+    { type: `LeafUnknownCharacter`, strokeCount: 14 },
     1,
   ]);
 
   assert.deepEqual(parseIds(`⑮`), [
-    { type: `LeftUnknownCharacter`, strokeCount: 15 },
+    { type: `LeafUnknownCharacter`, strokeCount: 15 },
     1,
   ]);
 
   assert.deepEqual(parseIds(`⑯`), [
-    { type: `LeftUnknownCharacter`, strokeCount: 16 },
+    { type: `LeafUnknownCharacter`, strokeCount: 16 },
     1,
   ]);
 
   assert.deepEqual(parseIds(`⑰`), [
-    { type: `LeftUnknownCharacter`, strokeCount: 17 },
+    { type: `LeafUnknownCharacter`, strokeCount: 17 },
     1,
   ]);
 
   assert.deepEqual(parseIds(`⑱`), [
-    { type: `LeftUnknownCharacter`, strokeCount: 18 },
+    { type: `LeafUnknownCharacter`, strokeCount: 18 },
     1,
   ]);
 
   assert.deepEqual(parseIds(`⑲`), [
-    { type: `LeftUnknownCharacter`, strokeCount: 19 },
+    { type: `LeafUnknownCharacter`, strokeCount: 19 },
     1,
   ]);
 
   assert.deepEqual(parseIds(`⑳`), [
-    { type: `LeftUnknownCharacter`, strokeCount: 20 },
+    { type: `LeafUnknownCharacter`, strokeCount: 20 },
     1,
   ]);
 });
@@ -715,6 +716,21 @@ void test(`parseIds handles 2 depth`, () => {
     },
     8,
   ]);
+});
+
+void test(`walkIdsNode`, () => {
+  const ids = parseIds(`⿰a⿱bc`);
+
+  const leafs = [...walkIdsNode(ids[0])].map((x) => {
+    switch (x.type) {
+      case `LeafCharacter`:
+        return x.character;
+      case `LeafUnknownCharacter`:
+        return x.strokeCount;
+    }
+  });
+
+  assert.deepEqual(leafs, [`a`, `b`, `c`]);
 });
 
 async function debugNonCjkUnifiedIdeographs(chars: string[]): Promise<string> {

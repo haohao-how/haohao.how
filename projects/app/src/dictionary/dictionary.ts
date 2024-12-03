@@ -1,6 +1,7 @@
 import { deepReadonly } from "@/util/collections";
 import { invariant } from "@haohaohow/lib/invariant";
 import memoize from "lodash/memoize";
+import { StrictExtract } from "ts-essentials";
 import { z } from "zod";
 
 export const loadPinyinWords = memoize(async () =>
@@ -12,7 +13,7 @@ export const loadPinyinWords = memoize(async () =>
 
 export const loadHanziDecomposition = memoize(async () =>
   z
-    .array(z.tuple([z.string(), z.array(z.string())]))
+    .array(z.tuple([z.string(), z.string()]))
     .transform((x) => new Map(x))
     .transform(deepReadonly)
     .parse((await import(`./hanziDecomposition.asset.json`)).default),
@@ -419,7 +420,7 @@ export type IdsNode =
       character: string;
     }
   | {
-      type: `LeftUnknownCharacter`;
+      type: `LeafUnknownCharacter`;
       strokeCount: number;
     };
 
@@ -549,67 +550,67 @@ export function parseIds(ids: string, startIndex = 0): [IdsNode, number] {
     }
   }
 
-  if (charCodePoint >= /* ① */ 9312 && charCodePoint <= /* ⑳ */ 9331) {
+  if (isStrokeCountPlaceholder(charCodePoint)) {
     switch (char) {
       case `①`: {
-        return [{ type: `LeftUnknownCharacter`, strokeCount: 1 }, i];
+        return [{ type: `LeafUnknownCharacter`, strokeCount: 1 }, i];
       }
       case `②`: {
-        return [{ type: `LeftUnknownCharacter`, strokeCount: 2 }, i];
+        return [{ type: `LeafUnknownCharacter`, strokeCount: 2 }, i];
       }
       case `③`: {
-        return [{ type: `LeftUnknownCharacter`, strokeCount: 3 }, i];
+        return [{ type: `LeafUnknownCharacter`, strokeCount: 3 }, i];
       }
       case `④`: {
-        return [{ type: `LeftUnknownCharacter`, strokeCount: 4 }, i];
+        return [{ type: `LeafUnknownCharacter`, strokeCount: 4 }, i];
       }
       case `⑤`: {
-        return [{ type: `LeftUnknownCharacter`, strokeCount: 5 }, i];
+        return [{ type: `LeafUnknownCharacter`, strokeCount: 5 }, i];
       }
       case `⑥`: {
-        return [{ type: `LeftUnknownCharacter`, strokeCount: 6 }, i];
+        return [{ type: `LeafUnknownCharacter`, strokeCount: 6 }, i];
       }
       case `⑦`: {
-        return [{ type: `LeftUnknownCharacter`, strokeCount: 7 }, i];
+        return [{ type: `LeafUnknownCharacter`, strokeCount: 7 }, i];
       }
       case `⑧`: {
-        return [{ type: `LeftUnknownCharacter`, strokeCount: 8 }, i];
+        return [{ type: `LeafUnknownCharacter`, strokeCount: 8 }, i];
       }
       case `⑨`: {
-        return [{ type: `LeftUnknownCharacter`, strokeCount: 9 }, i];
+        return [{ type: `LeafUnknownCharacter`, strokeCount: 9 }, i];
       }
       case `⑩`: {
-        return [{ type: `LeftUnknownCharacter`, strokeCount: 10 }, i];
+        return [{ type: `LeafUnknownCharacter`, strokeCount: 10 }, i];
       }
       case `⑪`: {
-        return [{ type: `LeftUnknownCharacter`, strokeCount: 11 }, i];
+        return [{ type: `LeafUnknownCharacter`, strokeCount: 11 }, i];
       }
       case `⑫`: {
-        return [{ type: `LeftUnknownCharacter`, strokeCount: 12 }, i];
+        return [{ type: `LeafUnknownCharacter`, strokeCount: 12 }, i];
       }
       case `⑬`: {
-        return [{ type: `LeftUnknownCharacter`, strokeCount: 13 }, i];
+        return [{ type: `LeafUnknownCharacter`, strokeCount: 13 }, i];
       }
       case `⑭`: {
-        return [{ type: `LeftUnknownCharacter`, strokeCount: 14 }, i];
+        return [{ type: `LeafUnknownCharacter`, strokeCount: 14 }, i];
       }
       case `⑮`: {
-        return [{ type: `LeftUnknownCharacter`, strokeCount: 15 }, i];
+        return [{ type: `LeafUnknownCharacter`, strokeCount: 15 }, i];
       }
       case `⑯`: {
-        return [{ type: `LeftUnknownCharacter`, strokeCount: 16 }, i];
+        return [{ type: `LeafUnknownCharacter`, strokeCount: 16 }, i];
       }
       case `⑰`: {
-        return [{ type: `LeftUnknownCharacter`, strokeCount: 17 }, i];
+        return [{ type: `LeafUnknownCharacter`, strokeCount: 17 }, i];
       }
       case `⑱`: {
-        return [{ type: `LeftUnknownCharacter`, strokeCount: 18 }, i];
+        return [{ type: `LeafUnknownCharacter`, strokeCount: 18 }, i];
       }
       case `⑲`: {
-        return [{ type: `LeftUnknownCharacter`, strokeCount: 19 }, i];
+        return [{ type: `LeafUnknownCharacter`, strokeCount: 19 }, i];
       }
       case `⑳`: {
-        return [{ type: `LeftUnknownCharacter`, strokeCount: 20 }, i];
+        return [{ type: `LeafUnknownCharacter`, strokeCount: 20 }, i];
       }
       default:
         throw new Error(`unexpected stroke count placeholder ${char}`);
@@ -617,4 +618,123 @@ export function parseIds(ids: string, startIndex = 0): [IdsNode, number] {
   }
 
   return [{ type: `LeafCharacter`, character: char }, i];
+}
+
+export function isStrokeCountPlaceholder(
+  charOrCharPoint: string | number,
+): boolean {
+  const charCodePoint =
+    typeof charOrCharPoint === `string`
+      ? charOrCharPoint.codePointAt(0)
+      : charOrCharPoint;
+  invariant(charCodePoint != null);
+  return charCodePoint >= /* ① */ 9312 && charCodePoint <= /* ⑳ */ 9331;
+}
+
+export function* walkIdsNode(
+  ids: IdsNode,
+): Generator<
+  StrictExtract<
+    IdsNode,
+    { type: `LeafCharacter` } | { type: `LeafUnknownCharacter` }
+  >
+> {
+  switch (ids.type) {
+    case `LeftToRight`: {
+      yield* walkIdsNode(ids.left);
+      yield* walkIdsNode(ids.right);
+      return;
+    }
+    case `AboveToBelow`: {
+      yield* walkIdsNode(ids.above);
+      yield* walkIdsNode(ids.below);
+      return;
+    }
+    case `LeftToMiddleToRight`: {
+      yield* walkIdsNode(ids.left);
+      yield* walkIdsNode(ids.middle);
+      yield* walkIdsNode(ids.right);
+      return;
+    }
+    case `AboveToMiddleAndBelow`: {
+      yield* walkIdsNode(ids.above);
+      yield* walkIdsNode(ids.middle);
+      yield* walkIdsNode(ids.below);
+      return;
+    }
+    case `FullSurround`: {
+      yield* walkIdsNode(ids.surrounding);
+      yield* walkIdsNode(ids.surrounded);
+      return;
+    }
+    case `SurroundFromAbove`: {
+      yield* walkIdsNode(ids.above);
+      yield* walkIdsNode(ids.surrounded);
+      return;
+    }
+    case `SurroundFromBelow`: {
+      yield* walkIdsNode(ids.below);
+      yield* walkIdsNode(ids.surrounded);
+      return;
+    }
+    case `SurroundFromLeft`: {
+      yield* walkIdsNode(ids.left);
+      yield* walkIdsNode(ids.surrounded);
+      return;
+    }
+    case `SurroundFromRight`: {
+      yield* walkIdsNode(ids.right);
+      yield* walkIdsNode(ids.surrounded);
+      return;
+    }
+    case `SurroundFromUpperLeft`: {
+      yield* walkIdsNode(ids.upperLeft);
+      yield* walkIdsNode(ids.surrounded);
+      return;
+    }
+    case `SurroundFromUpperRight`: {
+      yield* walkIdsNode(ids.upperRight);
+      yield* walkIdsNode(ids.surrounded);
+      return;
+    }
+    case `SurroundFromLowerLeft`: {
+      yield* walkIdsNode(ids.lowerLeft);
+      yield* walkIdsNode(ids.surrounded);
+      return;
+    }
+    case `SurroundFromLowerRight`: {
+      yield* walkIdsNode(ids.lowerRight);
+      yield* walkIdsNode(ids.surrounded);
+      return;
+    }
+    case `Overlaid`: {
+      yield* walkIdsNode(ids.underlay);
+      yield* walkIdsNode(ids.overlay);
+      return;
+    }
+    case `HorizontalReflection`: {
+      yield* walkIdsNode(ids.reflected);
+      return;
+    }
+    case `Rotation`: {
+      yield* walkIdsNode(ids.rotated);
+      return;
+    }
+    case `LeafCharacter`:
+    case `LeafUnknownCharacter`: {
+      yield ids;
+      return;
+    }
+    default:
+      throw new Error(`unexpected ids node type: ${(ids as IdsNode).type}`);
+  }
+}
+
+export function unicodeShortIdentifier(character: string): string {
+  const codePoint = character.codePointAt(0);
+  invariant(
+    codePoint != null,
+    `could not get code point for: ${JSON.stringify(character)}`,
+  );
+  return `U+${codePoint.toString(16).toUpperCase()}`;
 }
