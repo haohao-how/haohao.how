@@ -419,275 +419,225 @@ void test(`hmm pinyin covers kangxi pinyin`, async () => {
 });
 
 void test(`parseIds handles 1 depth`, () => {
-  assert.deepEqual(parseIds(`木`), [
-    { type: `LeafCharacter`, character: `木` },
-    1,
-  ]);
+  assert.deepEqual(parseIds(`木`), { type: `LeafCharacter`, character: `木` });
 
   // 相
-  assert.deepEqual(parseIds(`⿰木目`), [
-    {
-      type: `LeftToRight`,
-      left: { type: `LeafCharacter`, character: `木` },
-      right: { type: `LeafCharacter`, character: `目` },
-    },
-    3,
-  ]);
+  assert.deepEqual(parseIds(`⿰木目`), {
+    type: `LeftToRight`,
+    left: { type: `LeafCharacter`, character: `木` },
+    right: { type: `LeafCharacter`, character: `目` },
+  });
 
   // 杏
-  assert.deepEqual(parseIds(`⿱木口`), [
-    {
-      type: `AboveToBelow`,
-      above: { type: `LeafCharacter`, character: `木` },
-      below: { type: `LeafCharacter`, character: `口` },
-    },
-    3,
-  ]);
+  assert.deepEqual(parseIds(`⿱木口`), {
+    type: `AboveToBelow`,
+    above: { type: `LeafCharacter`, character: `木` },
+    below: { type: `LeafCharacter`, character: `口` },
+  });
 
   // 衍
-  assert.deepEqual(parseIds(`⿲彳氵亍`), [
-    {
-      type: `LeftToMiddleToRight`,
-      left: { type: `LeafCharacter`, character: `彳` },
-      middle: { type: `LeafCharacter`, character: `氵` },
-      right: { type: `LeafCharacter`, character: `亍` },
-    },
-    4,
-  ]);
+  assert.deepEqual(parseIds(`⿲彳氵亍`), {
+    type: `LeftToMiddleToRight`,
+    left: { type: `LeafCharacter`, character: `彳` },
+    middle: { type: `LeafCharacter`, character: `氵` },
+    right: { type: `LeafCharacter`, character: `亍` },
+  });
 
   // 京
-  assert.deepEqual(parseIds(`⿳亠口小`), [
-    {
-      type: `AboveToMiddleAndBelow`,
-      above: { type: `LeafCharacter`, character: `亠` },
-      middle: { type: `LeafCharacter`, character: `口` },
-      below: { type: `LeafCharacter`, character: `小` },
-    },
-    4,
-  ]);
+  assert.deepEqual(parseIds(`⿳亠口小`), {
+    type: `AboveToMiddleAndBelow`,
+    above: { type: `LeafCharacter`, character: `亠` },
+    middle: { type: `LeafCharacter`, character: `口` },
+    below: { type: `LeafCharacter`, character: `小` },
+  });
 
   // 回
-  assert.deepEqual(parseIds(`⿴囗口`), [
-    {
-      type: `FullSurround`,
-      surrounding: { type: `LeafCharacter`, character: `囗` },
-      surrounded: { type: `LeafCharacter`, character: `口` },
-    },
-    3,
-  ]);
+  assert.deepEqual(parseIds(`⿴囗口`), {
+    type: `FullSurround`,
+    surrounding: { type: `LeafCharacter`, character: `囗` },
+    surrounded: { type: `LeafCharacter`, character: `口` },
+  });
 
   // 凰
-  assert.deepEqual(parseIds(`⿵几皇`), [
-    {
-      type: `SurroundFromAbove`,
-      above: { type: `LeafCharacter`, character: `几` },
-      surrounded: { type: `LeafCharacter`, character: `皇` },
-    },
-    3,
-  ]);
+  assert.deepEqual(parseIds(`⿵几皇`), {
+    type: `SurroundFromAbove`,
+    above: { type: `LeafCharacter`, character: `几` },
+    surrounded: { type: `LeafCharacter`, character: `皇` },
+  });
 
   // 凶
-  assert.deepEqual(parseIds(`⿶凵㐅`), [
-    {
-      type: `SurroundFromBelow`,
-      below: { type: `LeafCharacter`, character: `凵` },
-      surrounded: { type: `LeafCharacter`, character: `㐅` },
-    },
-    3,
-  ]);
+  assert.deepEqual(parseIds(`⿶凵㐅`), {
+    type: `SurroundFromBelow`,
+    below: { type: `LeafCharacter`, character: `凵` },
+    surrounded: { type: `LeafCharacter`, character: `㐅` },
+  });
 
   // 匠
-  assert.deepEqual(parseIds(`⿷匚斤`), [
-    {
-      type: `SurroundFromLeft`,
-      left: { type: `LeafCharacter`, character: `匚` },
-      surrounded: { type: `LeafCharacter`, character: `斤` },
-    },
-    3,
-  ]);
+  assert.deepEqual(parseIds(`⿷匚斤`), {
+    type: `SurroundFromLeft`,
+    left: { type: `LeafCharacter`, character: `匚` },
+    surrounded: { type: `LeafCharacter`, character: `斤` },
+  });
 
   // 㕚
-  assert.deepEqual(parseIds(`⿼叉丶`), [
-    {
-      type: `SurroundFromRight`,
-      right: { type: `LeafCharacter`, character: `叉` },
-      surrounded: { type: `LeafCharacter`, character: `丶` },
-    },
-    3,
-  ]);
+  assert.deepEqual(parseIds(`⿼叉丶`), {
+    type: `SurroundFromRight`,
+    right: { type: `LeafCharacter`, character: `叉` },
+    surrounded: { type: `LeafCharacter`, character: `丶` },
+  });
 
   // 病
-  assert.deepEqual(parseIds(`⿸疒丙`), [
-    {
-      type: `SurroundFromUpperLeft`,
-      upperLeft: { type: `LeafCharacter`, character: `疒` },
-      surrounded: { type: `LeafCharacter`, character: `丙` },
-    },
-    3,
-  ]);
+  assert.deepEqual(parseIds(`⿸疒丙`), {
+    type: `SurroundFromUpperLeft`,
+    upperLeft: { type: `LeafCharacter`, character: `疒` },
+    surrounded: { type: `LeafCharacter`, character: `丙` },
+  });
 
   // 戒
-  assert.deepEqual(parseIds(`⿹戈廾`), [
-    {
-      type: `SurroundFromUpperRight`,
-      upperRight: { type: `LeafCharacter`, character: `戈` },
-      surrounded: { type: `LeafCharacter`, character: `廾` },
-    },
-    3,
-  ]);
+  assert.deepEqual(parseIds(`⿹戈廾`), {
+    type: `SurroundFromUpperRight`,
+    upperRight: { type: `LeafCharacter`, character: `戈` },
+    surrounded: { type: `LeafCharacter`, character: `廾` },
+  });
 
   // 超
-  assert.deepEqual(parseIds(`⿺走召`), [
-    {
-      type: `SurroundFromLowerLeft`,
-      lowerLeft: { type: `LeafCharacter`, character: `走` },
-      surrounded: { type: `LeafCharacter`, character: `召` },
-    },
-    3,
-  ]);
+  assert.deepEqual(parseIds(`⿺走召`), {
+    type: `SurroundFromLowerLeft`,
+    lowerLeft: { type: `LeafCharacter`, character: `走` },
+    surrounded: { type: `LeafCharacter`, character: `召` },
+  });
 
   // 氷
-  assert.deepEqual(parseIds(`⿽水丶`), [
-    {
-      type: `SurroundFromLowerRight`,
-      lowerRight: { type: `LeafCharacter`, character: `水` },
-      surrounded: { type: `LeafCharacter`, character: `丶` },
-    },
-    3,
-  ]);
+  assert.deepEqual(parseIds(`⿽水丶`), {
+    type: `SurroundFromLowerRight`,
+    lowerRight: { type: `LeafCharacter`, character: `水` },
+    surrounded: { type: `LeafCharacter`, character: `丶` },
+  });
 
   // 巫
-  assert.deepEqual(parseIds(`⿻工从`), [
-    {
-      type: `Overlaid`,
-      overlay: { type: `LeafCharacter`, character: `工` },
-      underlay: { type: `LeafCharacter`, character: `从` },
-    },
-    3,
-  ]);
+  assert.deepEqual(parseIds(`⿻工从`), {
+    type: `Overlaid`,
+    overlay: { type: `LeafCharacter`, character: `工` },
+    underlay: { type: `LeafCharacter`, character: `从` },
+  });
 
   // 卐
-  assert.deepEqual(parseIds(`⿾卍`), [
-    {
-      type: `HorizontalReflection`,
-      reflected: { type: `LeafCharacter`, character: `卍` },
-    },
-    2,
-  ]);
+  assert.deepEqual(parseIds(`⿾卍`), {
+    type: `HorizontalReflection`,
+    reflected: { type: `LeafCharacter`, character: `卍` },
+  });
 
   // 𠕄
-  assert.deepEqual(parseIds(`⿿凹`), [
-    {
-      type: `Rotation`,
-      rotated: { type: `LeafCharacter`, character: `凹` },
-    },
-    2,
-  ]);
+  assert.deepEqual(parseIds(`⿿凹`), {
+    type: `Rotation`,
+    rotated: { type: `LeafCharacter`, character: `凹` },
+  });
 
-  assert.deepEqual(parseIds(`①`), [
-    { type: `LeafUnknownCharacter`, strokeCount: 1 },
-    1,
-  ]);
+  assert.deepEqual(parseIds(`①`), {
+    type: `LeafUnknownCharacter`,
+    strokeCount: 1,
+  });
 
-  assert.deepEqual(parseIds(`②`), [
-    { type: `LeafUnknownCharacter`, strokeCount: 2 },
-    1,
-  ]);
+  assert.deepEqual(parseIds(`②`), {
+    type: `LeafUnknownCharacter`,
+    strokeCount: 2,
+  });
 
-  assert.deepEqual(parseIds(`③`), [
-    { type: `LeafUnknownCharacter`, strokeCount: 3 },
-    1,
-  ]);
+  assert.deepEqual(parseIds(`③`), {
+    type: `LeafUnknownCharacter`,
+    strokeCount: 3,
+  });
 
-  assert.deepEqual(parseIds(`④`), [
-    { type: `LeafUnknownCharacter`, strokeCount: 4 },
-    1,
-  ]);
+  assert.deepEqual(parseIds(`④`), {
+    type: `LeafUnknownCharacter`,
+    strokeCount: 4,
+  });
 
-  assert.deepEqual(parseIds(`⑤`), [
-    { type: `LeafUnknownCharacter`, strokeCount: 5 },
-    1,
-  ]);
+  assert.deepEqual(parseIds(`⑤`), {
+    type: `LeafUnknownCharacter`,
+    strokeCount: 5,
+  });
 
-  assert.deepEqual(parseIds(`⑥`), [
-    { type: `LeafUnknownCharacter`, strokeCount: 6 },
-    1,
-  ]);
+  assert.deepEqual(parseIds(`⑥`), {
+    type: `LeafUnknownCharacter`,
+    strokeCount: 6,
+  });
 
-  assert.deepEqual(parseIds(`⑦`), [
-    { type: `LeafUnknownCharacter`, strokeCount: 7 },
-    1,
-  ]);
+  assert.deepEqual(parseIds(`⑦`), {
+    type: `LeafUnknownCharacter`,
+    strokeCount: 7,
+  });
 
-  assert.deepEqual(parseIds(`⑧`), [
-    { type: `LeafUnknownCharacter`, strokeCount: 8 },
-    1,
-  ]);
+  assert.deepEqual(parseIds(`⑧`), {
+    type: `LeafUnknownCharacter`,
+    strokeCount: 8,
+  });
 
-  assert.deepEqual(parseIds(`⑨`), [
-    { type: `LeafUnknownCharacter`, strokeCount: 9 },
-    1,
-  ]);
+  assert.deepEqual(parseIds(`⑨`), {
+    type: `LeafUnknownCharacter`,
+    strokeCount: 9,
+  });
 
-  assert.deepEqual(parseIds(`⑩`), [
-    { type: `LeafUnknownCharacter`, strokeCount: 10 },
-    1,
-  ]);
+  assert.deepEqual(parseIds(`⑩`), {
+    type: `LeafUnknownCharacter`,
+    strokeCount: 10,
+  });
 
-  assert.deepEqual(parseIds(`⑪`), [
-    { type: `LeafUnknownCharacter`, strokeCount: 11 },
-    1,
-  ]);
+  assert.deepEqual(parseIds(`⑪`), {
+    type: `LeafUnknownCharacter`,
+    strokeCount: 11,
+  });
 
-  assert.deepEqual(parseIds(`⑫`), [
-    { type: `LeafUnknownCharacter`, strokeCount: 12 },
-    1,
-  ]);
+  assert.deepEqual(parseIds(`⑫`), {
+    type: `LeafUnknownCharacter`,
+    strokeCount: 12,
+  });
 
-  assert.deepEqual(parseIds(`⑬`), [
-    { type: `LeafUnknownCharacter`, strokeCount: 13 },
-    1,
-  ]);
+  assert.deepEqual(parseIds(`⑬`), {
+    type: `LeafUnknownCharacter`,
+    strokeCount: 13,
+  });
 
-  assert.deepEqual(parseIds(`⑭`), [
-    { type: `LeafUnknownCharacter`, strokeCount: 14 },
-    1,
-  ]);
+  assert.deepEqual(parseIds(`⑭`), {
+    type: `LeafUnknownCharacter`,
+    strokeCount: 14,
+  });
 
-  assert.deepEqual(parseIds(`⑮`), [
-    { type: `LeafUnknownCharacter`, strokeCount: 15 },
-    1,
-  ]);
+  assert.deepEqual(parseIds(`⑮`), {
+    type: `LeafUnknownCharacter`,
+    strokeCount: 15,
+  });
 
-  assert.deepEqual(parseIds(`⑯`), [
-    { type: `LeafUnknownCharacter`, strokeCount: 16 },
-    1,
-  ]);
+  assert.deepEqual(parseIds(`⑯`), {
+    type: `LeafUnknownCharacter`,
+    strokeCount: 16,
+  });
 
-  assert.deepEqual(parseIds(`⑰`), [
-    { type: `LeafUnknownCharacter`, strokeCount: 17 },
-    1,
-  ]);
+  assert.deepEqual(parseIds(`⑰`), {
+    type: `LeafUnknownCharacter`,
+    strokeCount: 17,
+  });
 
-  assert.deepEqual(parseIds(`⑱`), [
-    { type: `LeafUnknownCharacter`, strokeCount: 18 },
-    1,
-  ]);
+  assert.deepEqual(parseIds(`⑱`), {
+    type: `LeafUnknownCharacter`,
+    strokeCount: 18,
+  });
 
-  assert.deepEqual(parseIds(`⑲`), [
-    { type: `LeafUnknownCharacter`, strokeCount: 19 },
-    1,
-  ]);
+  assert.deepEqual(parseIds(`⑲`), {
+    type: `LeafUnknownCharacter`,
+    strokeCount: 19,
+  });
 
-  assert.deepEqual(parseIds(`⑳`), [
-    { type: `LeafUnknownCharacter`, strokeCount: 20 },
-    1,
-  ]);
+  assert.deepEqual(parseIds(`⑳`), {
+    type: `LeafUnknownCharacter`,
+    strokeCount: 20,
+  });
 });
 
 void test(`parseIds handles 2 depth`, () => {
-  assert.deepEqual(parseIds(`⿰a⿱bc`), [
-    {
+  {
+    const cursor = { index: 0 };
+    assert.deepEqual(parseIds(`⿰a⿱bc`, cursor), {
       type: `LeftToRight`,
       left: { type: `LeafCharacter`, character: `a` },
       right: {
@@ -695,12 +645,13 @@ void test(`parseIds handles 2 depth`, () => {
         above: { type: `LeafCharacter`, character: `b` },
         below: { type: `LeafCharacter`, character: `c` },
       },
-    },
-    5,
-  ]);
+    });
+    assert.deepEqual(cursor, { index: 5 });
+  }
 
-  assert.deepEqual(parseIds(`⿱a⿳bc⿴de`), [
-    {
+  {
+    const cursor = { index: 0 };
+    assert.deepEqual(parseIds(`⿱a⿳bc⿴de`, cursor), {
       type: `AboveToBelow`,
       above: { type: `LeafCharacter`, character: `a` },
       below: {
@@ -713,15 +664,15 @@ void test(`parseIds handles 2 depth`, () => {
           surrounded: { type: `LeafCharacter`, character: `e` },
         },
       },
-    },
-    8,
-  ]);
+    });
+    assert.deepEqual(cursor, { index: 8 });
+  }
 });
 
 void test(`walkIdsNode`, () => {
   const ids = parseIds(`⿰a⿱bc`);
 
-  const leafs = [...walkIdsNode(ids[0])].map((x) => {
+  const leafs = [...walkIdsNode(ids)].map((x) => {
     switch (x.type) {
       case `LeafCharacter`:
         return x.character;
