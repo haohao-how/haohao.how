@@ -424,9 +424,11 @@ export type IdsNode =
       strokeCount: number;
     };
 
-export function parseIds(ids: string, startIndex = 0): [IdsNode, number] {
-  let i = startIndex;
-  const char = ids[i++];
+export function parseIds(
+  ids: string,
+  cursor: { index: number } = { index: 0 },
+): IdsNode {
+  const char = ids[cursor.index++];
   invariant(char != null);
   const charCodePoint = char.codePointAt(0);
   invariant(charCodePoint != null);
@@ -434,116 +436,84 @@ export function parseIds(ids: string, startIndex = 0): [IdsNode, number] {
   if (charCodePoint >= /* ⿰ */ 12272 && charCodePoint <= /* ⿿ */ 12287) {
     switch (char) {
       case `⿰`: {
-        const [left, leftEnd] = parseIds(ids, i);
-        i = leftEnd;
-        const [right, rightEnd] = parseIds(ids, i);
-        i = rightEnd;
-        return [{ type: `LeftToRight`, left, right }, i];
+        const left = parseIds(ids, cursor);
+        const right = parseIds(ids, cursor);
+        return { type: `LeftToRight`, left, right };
       }
       case `⿱`: {
-        const [above, aboveEnd] = parseIds(ids, i);
-        i = aboveEnd;
-        const [below, belowEnd] = parseIds(ids, i);
-        i = belowEnd;
-        return [{ type: `AboveToBelow`, above, below }, i];
+        const above = parseIds(ids, cursor);
+        const below = parseIds(ids, cursor);
+        return { type: `AboveToBelow`, above, below };
       }
       case `⿲`: {
-        const [left, leftEnd] = parseIds(ids, i);
-        i = leftEnd;
-        const [middle, middleEnd] = parseIds(ids, i);
-        i = middleEnd;
-        const [right, rightEnd] = parseIds(ids, i);
-        i = rightEnd;
-        return [{ type: `LeftToMiddleToRight`, left, middle, right }, i];
+        const left = parseIds(ids, cursor);
+        const middle = parseIds(ids, cursor);
+        const right = parseIds(ids, cursor);
+        return { type: `LeftToMiddleToRight`, left, middle, right };
       }
       case `⿳`: {
-        const [above, aboveEnd] = parseIds(ids, i);
-        i = aboveEnd;
-        const [middle, middleEnd] = parseIds(ids, i);
-        i = middleEnd;
-        const [below, belowEnd] = parseIds(ids, i);
-        i = belowEnd;
-        return [{ type: `AboveToMiddleAndBelow`, above, middle, below }, i];
+        const above = parseIds(ids, cursor);
+        const middle = parseIds(ids, cursor);
+        const below = parseIds(ids, cursor);
+        return { type: `AboveToMiddleAndBelow`, above, middle, below };
       }
       case `⿴`: {
-        const [surrounding, surroundingEnd] = parseIds(ids, i);
-        i = surroundingEnd;
-        const [surrounded, surroundedEnd] = parseIds(ids, i);
-        i = surroundedEnd;
-        return [{ type: `FullSurround`, surrounding, surrounded }, i];
+        const surrounding = parseIds(ids, cursor);
+        const surrounded = parseIds(ids, cursor);
+        return { type: `FullSurround`, surrounding, surrounded };
       }
       case `⿵`: {
-        const [above, aboveEnd] = parseIds(ids, i);
-        i = aboveEnd;
-        const [surrounded, surroundedEnd] = parseIds(ids, i);
-        i = surroundedEnd;
-        return [{ type: `SurroundFromAbove`, above, surrounded }, i];
+        const above = parseIds(ids, cursor);
+        const surrounded = parseIds(ids, cursor);
+        return { type: `SurroundFromAbove`, above, surrounded };
       }
       case `⿶`: {
-        const [below, belowEnd] = parseIds(ids, i);
-        i = belowEnd;
-        const [surrounded, surroundedEnd] = parseIds(ids, i);
-        i = surroundedEnd;
-        return [{ type: `SurroundFromBelow`, below, surrounded }, i];
+        const below = parseIds(ids, cursor);
+        const surrounded = parseIds(ids, cursor);
+        return { type: `SurroundFromBelow`, below, surrounded };
       }
       case `⿷`: {
-        const [left, leftEnd] = parseIds(ids, i);
-        i = leftEnd;
-        const [surrounded, surroundedEnd] = parseIds(ids, i);
-        i = surroundedEnd;
-        return [{ type: `SurroundFromLeft`, left, surrounded }, i];
+        const left = parseIds(ids, cursor);
+        const surrounded = parseIds(ids, cursor);
+        return { type: `SurroundFromLeft`, left, surrounded };
       }
       case `⿼`: {
-        const [right, rightEnd] = parseIds(ids, i);
-        i = rightEnd;
-        const [surrounded, surroundedEnd] = parseIds(ids, i);
-        i = surroundedEnd;
-        return [{ type: `SurroundFromRight`, right, surrounded }, i];
+        const right = parseIds(ids, cursor);
+        const surrounded = parseIds(ids, cursor);
+        return { type: `SurroundFromRight`, right, surrounded };
       }
       case `⿸`: {
-        const [upperLeft, upperLeftEnd] = parseIds(ids, i);
-        i = upperLeftEnd;
-        const [surrounded, surroundedEnd] = parseIds(ids, i);
-        i = surroundedEnd;
-        return [{ type: `SurroundFromUpperLeft`, upperLeft, surrounded }, i];
+        const upperLeft = parseIds(ids, cursor);
+        const surrounded = parseIds(ids, cursor);
+        return { type: `SurroundFromUpperLeft`, upperLeft, surrounded };
       }
       case `⿹`: {
-        const [upperRight, upperRightEnd] = parseIds(ids, i);
-        i = upperRightEnd;
-        const [surrounded, surroundedEnd] = parseIds(ids, i);
-        i = surroundedEnd;
-        return [{ type: `SurroundFromUpperRight`, upperRight, surrounded }, i];
+        const upperRight = parseIds(ids, cursor);
+        const surrounded = parseIds(ids, cursor);
+        return { type: `SurroundFromUpperRight`, upperRight, surrounded };
       }
       case `⿺`: {
-        const [lowerLeft, lowerLeftEnd] = parseIds(ids, i);
-        i = lowerLeftEnd;
-        const [surrounded, surroundedEnd] = parseIds(ids, i);
-        i = surroundedEnd;
-        return [{ type: `SurroundFromLowerLeft`, lowerLeft, surrounded }, i];
+        const lowerLeft = parseIds(ids, cursor);
+        const surrounded = parseIds(ids, cursor);
+        return { type: `SurroundFromLowerLeft`, lowerLeft, surrounded };
       }
       case `⿽`: {
-        const [lowerRight, lowerRightEnd] = parseIds(ids, i);
-        i = lowerRightEnd;
-        const [surrounded, surroundedEnd] = parseIds(ids, i);
-        i = surroundedEnd;
-        return [{ type: `SurroundFromLowerRight`, lowerRight, surrounded }, i];
+        const lowerRight = parseIds(ids, cursor);
+        const surrounded = parseIds(ids, cursor);
+        return { type: `SurroundFromLowerRight`, lowerRight, surrounded };
       }
       case `⿻`: {
-        const [overlay, overlayEnd] = parseIds(ids, i);
-        i = overlayEnd;
-        const [underlay, underlayEnd] = parseIds(ids, i);
-        i = underlayEnd;
-        return [{ type: `Overlaid`, overlay, underlay }, i];
+        const overlay = parseIds(ids, cursor);
+        const underlay = parseIds(ids, cursor);
+        return { type: `Overlaid`, overlay, underlay };
       }
       case `⿾`: {
-        const [reflected, reflectedEnd] = parseIds(ids, i);
-        i = reflectedEnd;
-        return [{ type: `HorizontalReflection`, reflected }, i];
+        const reflected = parseIds(ids, cursor);
+        return { type: `HorizontalReflection`, reflected };
       }
       case `⿿`: {
-        const [rotated, rotatedEnd] = parseIds(ids, i);
-        i = rotatedEnd;
-        return [{ type: `Rotation`, rotated }, i];
+        const rotated = parseIds(ids, cursor);
+        return { type: `Rotation`, rotated };
       }
       default:
         throw new Error(`unexpected combining character ${char}`);
@@ -553,71 +523,71 @@ export function parseIds(ids: string, startIndex = 0): [IdsNode, number] {
   if (isStrokeCountPlaceholder(charCodePoint)) {
     switch (char) {
       case `①`: {
-        return [{ type: `LeafUnknownCharacter`, strokeCount: 1 }, i];
+        return { type: `LeafUnknownCharacter`, strokeCount: 1 };
       }
       case `②`: {
-        return [{ type: `LeafUnknownCharacter`, strokeCount: 2 }, i];
+        return { type: `LeafUnknownCharacter`, strokeCount: 2 };
       }
       case `③`: {
-        return [{ type: `LeafUnknownCharacter`, strokeCount: 3 }, i];
+        return { type: `LeafUnknownCharacter`, strokeCount: 3 };
       }
       case `④`: {
-        return [{ type: `LeafUnknownCharacter`, strokeCount: 4 }, i];
+        return { type: `LeafUnknownCharacter`, strokeCount: 4 };
       }
       case `⑤`: {
-        return [{ type: `LeafUnknownCharacter`, strokeCount: 5 }, i];
+        return { type: `LeafUnknownCharacter`, strokeCount: 5 };
       }
       case `⑥`: {
-        return [{ type: `LeafUnknownCharacter`, strokeCount: 6 }, i];
+        return { type: `LeafUnknownCharacter`, strokeCount: 6 };
       }
       case `⑦`: {
-        return [{ type: `LeafUnknownCharacter`, strokeCount: 7 }, i];
+        return { type: `LeafUnknownCharacter`, strokeCount: 7 };
       }
       case `⑧`: {
-        return [{ type: `LeafUnknownCharacter`, strokeCount: 8 }, i];
+        return { type: `LeafUnknownCharacter`, strokeCount: 8 };
       }
       case `⑨`: {
-        return [{ type: `LeafUnknownCharacter`, strokeCount: 9 }, i];
+        return { type: `LeafUnknownCharacter`, strokeCount: 9 };
       }
       case `⑩`: {
-        return [{ type: `LeafUnknownCharacter`, strokeCount: 10 }, i];
+        return { type: `LeafUnknownCharacter`, strokeCount: 10 };
       }
       case `⑪`: {
-        return [{ type: `LeafUnknownCharacter`, strokeCount: 11 }, i];
+        return { type: `LeafUnknownCharacter`, strokeCount: 11 };
       }
       case `⑫`: {
-        return [{ type: `LeafUnknownCharacter`, strokeCount: 12 }, i];
+        return { type: `LeafUnknownCharacter`, strokeCount: 12 };
       }
       case `⑬`: {
-        return [{ type: `LeafUnknownCharacter`, strokeCount: 13 }, i];
+        return { type: `LeafUnknownCharacter`, strokeCount: 13 };
       }
       case `⑭`: {
-        return [{ type: `LeafUnknownCharacter`, strokeCount: 14 }, i];
+        return { type: `LeafUnknownCharacter`, strokeCount: 14 };
       }
       case `⑮`: {
-        return [{ type: `LeafUnknownCharacter`, strokeCount: 15 }, i];
+        return { type: `LeafUnknownCharacter`, strokeCount: 15 };
       }
       case `⑯`: {
-        return [{ type: `LeafUnknownCharacter`, strokeCount: 16 }, i];
+        return { type: `LeafUnknownCharacter`, strokeCount: 16 };
       }
       case `⑰`: {
-        return [{ type: `LeafUnknownCharacter`, strokeCount: 17 }, i];
+        return { type: `LeafUnknownCharacter`, strokeCount: 17 };
       }
       case `⑱`: {
-        return [{ type: `LeafUnknownCharacter`, strokeCount: 18 }, i];
+        return { type: `LeafUnknownCharacter`, strokeCount: 18 };
       }
       case `⑲`: {
-        return [{ type: `LeafUnknownCharacter`, strokeCount: 19 }, i];
+        return { type: `LeafUnknownCharacter`, strokeCount: 19 };
       }
       case `⑳`: {
-        return [{ type: `LeafUnknownCharacter`, strokeCount: 20 }, i];
+        return { type: `LeafUnknownCharacter`, strokeCount: 20 };
       }
       default:
         throw new Error(`unexpected stroke count placeholder ${char}`);
     }
   }
 
-  return [{ type: `LeafCharacter`, character: char }, i];
+  return { type: `LeafCharacter`, character: char };
 }
 
 export function isStrokeCountPlaceholder(

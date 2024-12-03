@@ -110,7 +110,7 @@ function parseIdsTxt(txt: string): ReadonlyMap<string, Decomposition[]> {
       if (tags != null) {
         assert.match(tags, /[AGHJKMOSTUVX]+/);
       }
-      const [parsed] = parseIds(ids);
+      const parsed = parseIds(ids);
       parsedDecompositions.push({
         ids,
         idsNode: parsed,
