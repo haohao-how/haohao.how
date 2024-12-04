@@ -336,83 +336,83 @@ const isPinyinVowel = (
 
 export type IdsNode =
   | {
-      type: `LeftToRight`;
+      type: IdsOperator.LeftToRight;
       left: IdsNode;
       right: IdsNode;
     }
   | {
-      type: `AboveToBelow`;
+      type: IdsOperator.AboveToBelow;
       above: IdsNode;
       below: IdsNode;
     }
   | {
-      type: `LeftToMiddleToRight`;
+      type: IdsOperator.LeftToMiddleToRight;
       left: IdsNode;
       middle: IdsNode;
       right: IdsNode;
     }
   | {
-      type: `AboveToMiddleAndBelow`;
+      type: IdsOperator.AboveToMiddleAndBelow;
       above: IdsNode;
       middle: IdsNode;
       below: IdsNode;
     }
   | {
-      type: `FullSurround`;
+      type: IdsOperator.FullSurround;
       surrounding: IdsNode;
       surrounded: IdsNode;
     }
   | {
-      type: `SurroundFromAbove`;
+      type: IdsOperator.SurroundFromAbove;
       above: IdsNode;
       surrounded: IdsNode;
     }
   | {
-      type: `SurroundFromBelow`;
+      type: IdsOperator.SurroundFromBelow;
       below: IdsNode;
       surrounded: IdsNode;
     }
   | {
-      type: `SurroundFromLeft`;
+      type: IdsOperator.SurroundFromLeft;
       left: IdsNode;
       surrounded: IdsNode;
     }
   | {
-      type: `SurroundFromRight`;
+      type: IdsOperator.SurroundFromRight;
       right: IdsNode;
       surrounded: IdsNode;
     }
   | {
-      type: `SurroundFromUpperLeft`;
+      type: IdsOperator.SurroundFromUpperLeft;
       upperLeft: IdsNode;
       surrounded: IdsNode;
     }
   | {
-      type: `SurroundFromUpperRight`;
+      type: IdsOperator.SurroundFromUpperRight;
       upperRight: IdsNode;
       surrounded: IdsNode;
     }
   | {
-      type: `SurroundFromLowerLeft`;
+      type: IdsOperator.SurroundFromLowerLeft;
       lowerLeft: IdsNode;
       surrounded: IdsNode;
     }
   | {
-      type: `SurroundFromLowerRight`;
+      type: IdsOperator.SurroundFromLowerRight;
       lowerRight: IdsNode;
       surrounded: IdsNode;
     }
   | {
-      type: `Overlaid`;
+      type: IdsOperator.Overlaid;
       overlay: IdsNode;
       underlay: IdsNode;
     }
   | {
-      type: `HorizontalReflection`;
+      type: IdsOperator.HorizontalReflection;
       reflected: IdsNode;
     }
   | {
-      type: `Rotation`;
+      type: IdsOperator.Rotation;
       rotated: IdsNode;
     }
   | {
@@ -424,6 +424,27 @@ export type IdsNode =
       strokeCount: number;
     };
 
+export enum IdsOperator {
+  LeftToRight = `⿰`,
+  AboveToBelow = `⿱`,
+  LeftToMiddleToRight = `⿲`,
+  AboveToMiddleAndBelow = `⿳`,
+  FullSurround = `⿴`,
+  SurroundFromAbove = `⿵`,
+  SurroundFromBelow = `⿶`,
+  SurroundFromLeft = `⿷`,
+  SurroundFromRight = `⿼`,
+  SurroundFromUpperLeft = `⿸`,
+  SurroundFromUpperRight = `⿹`,
+  SurroundFromLowerLeft = `⿺`,
+  SurroundFromLowerRight = `⿽`,
+  Overlaid = `⿻`,
+  HorizontalReflection = `⿾`,
+  Rotation = `⿿`,
+}
+
+const idsOperatorSchema = z.nativeEnum(IdsOperator);
+
 export function parseIds(
   ids: string,
   cursor: { index: number } = { index: 0 },
@@ -434,171 +455,137 @@ export function parseIds(
   invariant(charCodePoint != null);
 
   if (charCodePoint >= /* ⿰ */ 12272 && charCodePoint <= /* ⿿ */ 12287) {
-    switch (char) {
-      case `⿰`: {
+    const operator = idsOperatorSchema.parse(char);
+    switch (operator) {
+      case IdsOperator.LeftToRight: {
         const left = parseIds(ids, cursor);
         const right = parseIds(ids, cursor);
-        return { type: `LeftToRight`, left, right };
+        return { type: IdsOperator.LeftToRight, left, right };
       }
-      case `⿱`: {
+      case IdsOperator.AboveToBelow: {
         const above = parseIds(ids, cursor);
         const below = parseIds(ids, cursor);
-        return { type: `AboveToBelow`, above, below };
+        return { type: IdsOperator.AboveToBelow, above, below };
       }
-      case `⿲`: {
+      case IdsOperator.LeftToMiddleToRight: {
         const left = parseIds(ids, cursor);
         const middle = parseIds(ids, cursor);
         const right = parseIds(ids, cursor);
-        return { type: `LeftToMiddleToRight`, left, middle, right };
+        return { type: IdsOperator.LeftToMiddleToRight, left, middle, right };
       }
-      case `⿳`: {
+      case IdsOperator.AboveToMiddleAndBelow: {
         const above = parseIds(ids, cursor);
         const middle = parseIds(ids, cursor);
         const below = parseIds(ids, cursor);
-        return { type: `AboveToMiddleAndBelow`, above, middle, below };
+        return {
+          type: IdsOperator.AboveToMiddleAndBelow,
+          above,
+          middle,
+          below,
+        };
       }
-      case `⿴`: {
+      case IdsOperator.FullSurround: {
         const surrounding = parseIds(ids, cursor);
         const surrounded = parseIds(ids, cursor);
-        return { type: `FullSurround`, surrounding, surrounded };
+        return { type: IdsOperator.FullSurround, surrounding, surrounded };
       }
-      case `⿵`: {
+      case IdsOperator.SurroundFromAbove: {
         const above = parseIds(ids, cursor);
         const surrounded = parseIds(ids, cursor);
-        return { type: `SurroundFromAbove`, above, surrounded };
+        return { type: IdsOperator.SurroundFromAbove, above, surrounded };
       }
-      case `⿶`: {
+      case IdsOperator.SurroundFromBelow: {
         const below = parseIds(ids, cursor);
         const surrounded = parseIds(ids, cursor);
-        return { type: `SurroundFromBelow`, below, surrounded };
+        return { type: IdsOperator.SurroundFromBelow, below, surrounded };
       }
-      case `⿷`: {
+      case IdsOperator.SurroundFromLeft: {
         const left = parseIds(ids, cursor);
         const surrounded = parseIds(ids, cursor);
-        return { type: `SurroundFromLeft`, left, surrounded };
+        return { type: IdsOperator.SurroundFromLeft, left, surrounded };
       }
-      case `⿼`: {
+      case IdsOperator.SurroundFromRight: {
         const right = parseIds(ids, cursor);
         const surrounded = parseIds(ids, cursor);
-        return { type: `SurroundFromRight`, right, surrounded };
+        return { type: IdsOperator.SurroundFromRight, right, surrounded };
       }
-      case `⿸`: {
+      case IdsOperator.SurroundFromUpperLeft: {
         const upperLeft = parseIds(ids, cursor);
         const surrounded = parseIds(ids, cursor);
-        return { type: `SurroundFromUpperLeft`, upperLeft, surrounded };
+        return {
+          type: IdsOperator.SurroundFromUpperLeft,
+          upperLeft,
+          surrounded,
+        };
       }
-      case `⿹`: {
+      case IdsOperator.SurroundFromUpperRight: {
         const upperRight = parseIds(ids, cursor);
         const surrounded = parseIds(ids, cursor);
-        return { type: `SurroundFromUpperRight`, upperRight, surrounded };
+        return {
+          type: IdsOperator.SurroundFromUpperRight,
+          upperRight,
+          surrounded,
+        };
       }
-      case `⿺`: {
+      case IdsOperator.SurroundFromLowerLeft: {
         const lowerLeft = parseIds(ids, cursor);
         const surrounded = parseIds(ids, cursor);
-        return { type: `SurroundFromLowerLeft`, lowerLeft, surrounded };
+        return {
+          type: IdsOperator.SurroundFromLowerLeft,
+          lowerLeft,
+          surrounded,
+        };
       }
-      case `⿽`: {
+      case IdsOperator.SurroundFromLowerRight: {
         const lowerRight = parseIds(ids, cursor);
         const surrounded = parseIds(ids, cursor);
-        return { type: `SurroundFromLowerRight`, lowerRight, surrounded };
+        return {
+          type: IdsOperator.SurroundFromLowerRight,
+          lowerRight,
+          surrounded,
+        };
       }
-      case `⿻`: {
+      case IdsOperator.Overlaid: {
         const overlay = parseIds(ids, cursor);
         const underlay = parseIds(ids, cursor);
-        return { type: `Overlaid`, overlay, underlay };
+        return { type: IdsOperator.Overlaid, overlay, underlay };
       }
-      case `⿾`: {
+      case IdsOperator.HorizontalReflection: {
         const reflected = parseIds(ids, cursor);
-        return { type: `HorizontalReflection`, reflected };
+        return { type: IdsOperator.HorizontalReflection, reflected };
       }
-      case `⿿`: {
+      case IdsOperator.Rotation: {
         const rotated = parseIds(ids, cursor);
-        return { type: `Rotation`, rotated };
+        return { type: IdsOperator.Rotation, rotated };
       }
       default:
         throw new Error(`unexpected combining character ${char}`);
     }
   }
 
-  if (isStrokeCountPlaceholder(charCodePoint)) {
-    switch (char) {
-      case `①`: {
-        return { type: `LeafUnknownCharacter`, strokeCount: 1 };
-      }
-      case `②`: {
-        return { type: `LeafUnknownCharacter`, strokeCount: 2 };
-      }
-      case `③`: {
-        return { type: `LeafUnknownCharacter`, strokeCount: 3 };
-      }
-      case `④`: {
-        return { type: `LeafUnknownCharacter`, strokeCount: 4 };
-      }
-      case `⑤`: {
-        return { type: `LeafUnknownCharacter`, strokeCount: 5 };
-      }
-      case `⑥`: {
-        return { type: `LeafUnknownCharacter`, strokeCount: 6 };
-      }
-      case `⑦`: {
-        return { type: `LeafUnknownCharacter`, strokeCount: 7 };
-      }
-      case `⑧`: {
-        return { type: `LeafUnknownCharacter`, strokeCount: 8 };
-      }
-      case `⑨`: {
-        return { type: `LeafUnknownCharacter`, strokeCount: 9 };
-      }
-      case `⑩`: {
-        return { type: `LeafUnknownCharacter`, strokeCount: 10 };
-      }
-      case `⑪`: {
-        return { type: `LeafUnknownCharacter`, strokeCount: 11 };
-      }
-      case `⑫`: {
-        return { type: `LeafUnknownCharacter`, strokeCount: 12 };
-      }
-      case `⑬`: {
-        return { type: `LeafUnknownCharacter`, strokeCount: 13 };
-      }
-      case `⑭`: {
-        return { type: `LeafUnknownCharacter`, strokeCount: 14 };
-      }
-      case `⑮`: {
-        return { type: `LeafUnknownCharacter`, strokeCount: 15 };
-      }
-      case `⑯`: {
-        return { type: `LeafUnknownCharacter`, strokeCount: 16 };
-      }
-      case `⑰`: {
-        return { type: `LeafUnknownCharacter`, strokeCount: 17 };
-      }
-      case `⑱`: {
-        return { type: `LeafUnknownCharacter`, strokeCount: 18 };
-      }
-      case `⑲`: {
-        return { type: `LeafUnknownCharacter`, strokeCount: 19 };
-      }
-      case `⑳`: {
-        return { type: `LeafUnknownCharacter`, strokeCount: 20 };
-      }
-      default:
-        throw new Error(`unexpected stroke count placeholder ${char}`);
-    }
+  const strokeCount = strokeCountPlaceholderOrNull(charCodePoint);
+  if (strokeCount != null) {
+    return { type: `LeafUnknownCharacter`, strokeCount };
   }
 
   return { type: `LeafCharacter`, character: char };
 }
 
-export function isStrokeCountPlaceholder(
+export function strokeCountPlaceholderOrNull(
   charOrCharPoint: string | number,
-): boolean {
+): number | undefined {
   const charCodePoint =
     typeof charOrCharPoint === `string`
       ? charOrCharPoint.codePointAt(0)
       : charOrCharPoint;
   invariant(charCodePoint != null);
-  return charCodePoint >= /* ① */ 9312 && charCodePoint <= /* ⑳ */ 9331;
+  if (charCodePoint >= /* ① */ 9312 && charCodePoint <= /* ⑳ */ 9331) {
+    return charCodePoint - 9311;
+  }
+}
+
+export function strokeCountToCharacter(strokeCount: number): string {
+  return String.fromCodePoint(strokeCount + 9311);
 }
 
 export function* walkIdsNode(
@@ -610,83 +597,83 @@ export function* walkIdsNode(
   >
 > {
   switch (ids.type) {
-    case `LeftToRight`: {
+    case IdsOperator.LeftToRight: {
       yield* walkIdsNode(ids.left);
       yield* walkIdsNode(ids.right);
       return;
     }
-    case `AboveToBelow`: {
+    case IdsOperator.AboveToBelow: {
       yield* walkIdsNode(ids.above);
       yield* walkIdsNode(ids.below);
       return;
     }
-    case `LeftToMiddleToRight`: {
+    case IdsOperator.LeftToMiddleToRight: {
       yield* walkIdsNode(ids.left);
       yield* walkIdsNode(ids.middle);
       yield* walkIdsNode(ids.right);
       return;
     }
-    case `AboveToMiddleAndBelow`: {
+    case IdsOperator.AboveToMiddleAndBelow: {
       yield* walkIdsNode(ids.above);
       yield* walkIdsNode(ids.middle);
       yield* walkIdsNode(ids.below);
       return;
     }
-    case `FullSurround`: {
+    case IdsOperator.FullSurround: {
       yield* walkIdsNode(ids.surrounding);
       yield* walkIdsNode(ids.surrounded);
       return;
     }
-    case `SurroundFromAbove`: {
+    case IdsOperator.SurroundFromAbove: {
       yield* walkIdsNode(ids.above);
       yield* walkIdsNode(ids.surrounded);
       return;
     }
-    case `SurroundFromBelow`: {
+    case IdsOperator.SurroundFromBelow: {
       yield* walkIdsNode(ids.below);
       yield* walkIdsNode(ids.surrounded);
       return;
     }
-    case `SurroundFromLeft`: {
+    case IdsOperator.SurroundFromLeft: {
       yield* walkIdsNode(ids.left);
       yield* walkIdsNode(ids.surrounded);
       return;
     }
-    case `SurroundFromRight`: {
+    case IdsOperator.SurroundFromRight: {
       yield* walkIdsNode(ids.right);
       yield* walkIdsNode(ids.surrounded);
       return;
     }
-    case `SurroundFromUpperLeft`: {
+    case IdsOperator.SurroundFromUpperLeft: {
       yield* walkIdsNode(ids.upperLeft);
       yield* walkIdsNode(ids.surrounded);
       return;
     }
-    case `SurroundFromUpperRight`: {
+    case IdsOperator.SurroundFromUpperRight: {
       yield* walkIdsNode(ids.upperRight);
       yield* walkIdsNode(ids.surrounded);
       return;
     }
-    case `SurroundFromLowerLeft`: {
+    case IdsOperator.SurroundFromLowerLeft: {
       yield* walkIdsNode(ids.lowerLeft);
       yield* walkIdsNode(ids.surrounded);
       return;
     }
-    case `SurroundFromLowerRight`: {
+    case IdsOperator.SurroundFromLowerRight: {
       yield* walkIdsNode(ids.lowerRight);
       yield* walkIdsNode(ids.surrounded);
       return;
     }
-    case `Overlaid`: {
+    case IdsOperator.Overlaid: {
       yield* walkIdsNode(ids.underlay);
       yield* walkIdsNode(ids.overlay);
       return;
     }
-    case `HorizontalReflection`: {
+    case IdsOperator.HorizontalReflection: {
       yield* walkIdsNode(ids.reflected);
       return;
     }
-    case `Rotation`: {
+    case IdsOperator.Rotation: {
       yield* walkIdsNode(ids.rotated);
       return;
     }
@@ -707,4 +694,96 @@ export function unicodeShortIdentifier(character: string): string {
     `could not get code point for: ${JSON.stringify(character)}`,
   );
   return `U+${codePoint.toString(16).toUpperCase()}`;
+}
+
+export function flattenIds(ids: IdsNode): IdsNode {
+  if (ids.type === IdsOperator.AboveToBelow) {
+    if (ids.above.type === IdsOperator.AboveToBelow) {
+      return {
+        type: IdsOperator.AboveToMiddleAndBelow,
+        above: flattenIds(ids.above.above),
+        middle: flattenIds(ids.above.below),
+        below: flattenIds(ids.below),
+      };
+    } else if (ids.below.type === IdsOperator.AboveToBelow) {
+      return {
+        type: IdsOperator.AboveToMiddleAndBelow,
+        above: flattenIds(ids.above),
+        middle: flattenIds(ids.below.above),
+        below: flattenIds(ids.below.below),
+      };
+    }
+  } else if (ids.type === IdsOperator.LeftToRight) {
+    if (ids.left.type === IdsOperator.LeftToRight) {
+      return {
+        type: IdsOperator.LeftToMiddleToRight,
+        left: flattenIds(ids.left.left),
+        middle: flattenIds(ids.left.right),
+        right: flattenIds(ids.right),
+      };
+    } else if (ids.right.type === IdsOperator.LeftToRight) {
+      return {
+        type: IdsOperator.LeftToMiddleToRight,
+        left: flattenIds(ids.left),
+        middle: flattenIds(ids.right.left),
+        right: flattenIds(ids.right.right),
+      };
+    }
+  }
+  return ids;
+}
+
+export function idsNodeToString(ids: IdsNode): string {
+  switch (ids.type) {
+    case IdsOperator.LeftToRight:
+      return `${ids.type}${idsNodeToString(ids.left)}${idsNodeToString(ids.right)}`;
+    case IdsOperator.AboveToBelow:
+      return `${ids.type}${idsNodeToString(ids.above)}${idsNodeToString(ids.below)}`;
+    case IdsOperator.LeftToMiddleToRight:
+      return `${ids.type}${idsNodeToString(ids.left)}${idsNodeToString(
+        ids.middle,
+      )}${idsNodeToString(ids.right)}`;
+    case IdsOperator.AboveToMiddleAndBelow:
+      return `${ids.type}${idsNodeToString(ids.above)}${idsNodeToString(
+        ids.middle,
+      )}${idsNodeToString(ids.below)}`;
+    case IdsOperator.FullSurround:
+      return `${ids.type}${idsNodeToString(ids.surrounding)}${idsNodeToString(
+        ids.surrounded,
+      )}`;
+    case IdsOperator.SurroundFromAbove:
+      return `${ids.type}${idsNodeToString(ids.above)}${idsNodeToString(ids.surrounded)}`;
+    case IdsOperator.SurroundFromBelow:
+      return `${ids.type}${idsNodeToString(ids.below)}${idsNodeToString(ids.surrounded)}`;
+    case IdsOperator.SurroundFromLeft:
+      return `${ids.type}${idsNodeToString(ids.left)}${idsNodeToString(ids.surrounded)}`;
+    case IdsOperator.SurroundFromRight:
+      return `${ids.type}${idsNodeToString(ids.right)}${idsNodeToString(ids.surrounded)}`;
+    case IdsOperator.SurroundFromUpperLeft:
+      return `${ids.type}${idsNodeToString(ids.upperLeft)}${idsNodeToString(
+        ids.surrounded,
+      )}`;
+    case IdsOperator.SurroundFromUpperRight:
+      return `${ids.type}${idsNodeToString(ids.upperRight)}${idsNodeToString(
+        ids.surrounded,
+      )}`;
+    case IdsOperator.SurroundFromLowerLeft:
+      return `${ids.type}${idsNodeToString(ids.lowerLeft)}${idsNodeToString(
+        ids.surrounded,
+      )}`;
+    case IdsOperator.SurroundFromLowerRight:
+      return `${ids.type}${idsNodeToString(ids.lowerRight)}${idsNodeToString(
+        ids.surrounded,
+      )}`;
+    case IdsOperator.Overlaid:
+      return `${ids.type}${idsNodeToString(ids.overlay)}${idsNodeToString(ids.underlay)}`;
+    case IdsOperator.HorizontalReflection:
+      return `${ids.type}${idsNodeToString(ids.reflected)}`;
+    case IdsOperator.Rotation:
+      return `${ids.type}${idsNodeToString(ids.rotated)}`;
+    case `LeafCharacter`:
+      return ids.character;
+    case `LeafUnknownCharacter`:
+      return strokeCountToCharacter(ids.strokeCount);
+  }
 }
