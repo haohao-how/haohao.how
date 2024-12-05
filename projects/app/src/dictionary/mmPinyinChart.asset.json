@@ -1,4 +1,26 @@
 {
 "initials":[["∅",""],"b","p","m","f","d","t","n","l","g","k","h","zh",["ch","ch","chi"],"sh","r","z",["c","c","ci"],"s",["y","y","yi"],"bi","pi","mi","di","ti","ni","li","ji","qi","xi","w","bu","pu","mu","fu","du","tu","nu","lu","gu","ku","hu",["zhu","zhu","zho"],["chu","chu","cho"],"shu","ru","zu",["cu","cu","co"],"su","yu","nü","lü","ju","qu","xu"],
-"finals":[["∅","","er"],"a","o",["e","e","ê"],"ai",["ei","ei","i"],"ao",["ou","ou","u"],"an",["(e)n","n","en"],"ang",["(e)ng","ng","eng","ong"]]
+"finals":[["∅","","er"],"a","o",["e","e","ê"],"ai",["ei","ei","i"],"ao",["ou","ou","u"],"an",["(e)n","n","en"],"ang",["(e)ng","ng","eng","ong"]],
+"initialGrouping": {
+  "∅": {
+    "desc": "null special case",
+    "initials": ["∅"]
+  },
+  "basic": {
+    "desc": "are basic distinct sounds",
+    "initials": ["b", "p", "m", "f", "d", "t", "n", "l", "g", "k", "h", "zh", "ch", "sh", "r", "z", "c", "s"]
+  },
+  "-i": {
+    "desc": "end with an 'i' (ee) sound",
+    "initials": ["y", "bi", "pi", "mi", "di", "ti", "ni", "li", "ji", "qi", "xi"]
+  },
+  "-u": {
+    "desc": "end with an 'u' (oo) sound",
+    "initials": ["w", "bu", "pu", "mu", "fu", "du", "tu", "nu", "lu", "gu", "ku", "hu", "zhu", "chu", "shu", "ru", "zu", "cu", "su"]
+  },
+  "-ü": {
+    "desc": "end with an 'ü' (ü) sound",
+    "initials": ["yu", "nü", "lü", "ju", "qu", "xu"]
+  }
+}
 }

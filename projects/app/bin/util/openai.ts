@@ -15,8 +15,21 @@ export const openAiWithCache = async (
   const openai = ctx.openai ?? new OpenAI();
   const debug = ctx.debug?.extend(`openAi`);
   const cached = ctx.dbCache.get(body);
+
+  if (debug?.enabled === true) {
+    for (const message of body.messages) {
+      debug(`Role: %s`, message.role);
+      if (typeof message.content === `string`) {
+        debug(`Content:\n%s`, message.content);
+      } else {
+        debug(`Content:\%O`, message.content);
+      }
+      debug(``);
+    }
+  }
+
   if (cached == null) {
-    debug?.(`Making OpenAI chat request: %O`, body);
+    debug?.(`Making OpenAI chat request (not cached): %O`, body);
     const completion = await openai.chat.completions.create(body);
     const result = completion.choices[0]?.message.content;
     debug?.(`OpenAI chat response: %O`, result);

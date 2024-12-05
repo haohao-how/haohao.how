@@ -11,6 +11,33 @@ export const loadPinyinWords = memoize(async () =>
     .parse((await import(`./pinyinWords.asset.json`)).default),
 );
 
+export const loadMnemonicThemeChoices = memoize(async () =>
+  z
+    .record(
+      z.string(), // themeId
+      z.record(
+        z.string(), // initial
+        z.record(z.string(), z.string()),
+      ),
+    )
+    .transform(
+      (x) =>
+        new Map(
+          Object.entries(x).map(([k, v]) => [
+            k,
+            new Map(
+              Object.entries(v).map(([k2, v2]) => [
+                k2,
+                new Map(Object.entries(v2)),
+              ]),
+            ),
+          ]),
+        ),
+    )
+    .transform(deepReadonly)
+    .parse((await import(`./mnemonicThemeChoices.asset.json`)).default),
+);
+
 export const loadHanziDecomposition = memoize(async () =>
   z
     .array(z.tuple([z.string(), z.string()]))
@@ -40,10 +67,15 @@ export const loadMmPinyinChart = memoize(async () =>
     .object({
       initials: z.array(z.union([z.string(), z.array(z.string())])),
       finals: z.array(z.union([z.string(), z.array(z.string())])),
+      initialGrouping: z.record(
+        z.string(),
+        z.object({ desc: z.string(), initials: z.array(z.string()) }),
+      ),
     })
-    .transform(({ initials, finals }) => ({
+    .transform(({ initials, finals, initialGrouping }) => ({
       initials: initials.map((x) => (typeof x === `string` ? [x, x] : x)),
       finals: finals.map((x) => (typeof x === `string` ? [x, x] : x)),
+      initialGrouping,
     }))
     .transform(deepReadonly)
     .parse((await import(`./mmPinyinChart.asset.json`)).default),
@@ -81,8 +113,9 @@ export const loadMnemonicTheme = memoize(async () =>
   z
     .object({
       tones: z.array(z.object({ tone: z.number(), desc: z.string() })),
-      initials: z.array(
-        z.object({ prefix: z.string(), n: z.string(), desc: z.string() }),
+      initials: z.record(
+        z.string(),
+        z.object({ n: z.string(), desc: z.string() }),
       ),
       finals: z.array(
         z.object({
@@ -94,7 +127,7 @@ export const loadMnemonicTheme = memoize(async () =>
     })
     .transform((x) => ({
       tones: new Map(x.tones.map((t) => [t.tone, t.desc])),
-      initials: new Map(x.initials.map((i) => [i.prefix, i])),
+      initials: new Map(Object.entries(x.initials)),
       finals: new Map(x.finals.map((f) => [f.suffix, f])),
     }))
     .transform(deepReadonly)
