@@ -7,6 +7,7 @@ import yargs from "yargs";
 import { z } from "zod";
 import {
   allRadicalPrimaryForms,
+  loadHanziDecomposition,
   loadMnemonicTheme,
   loadRadicalPinyinMnemonics,
   loadRadicalsByHanzi,
@@ -74,16 +75,13 @@ const radicalsToCheck = argv.update ?? [
 
 const updates = new Map<string, { mnemonic: string; strategy: string }[]>();
 
-const decompositions: Record<string, string> = {
-  无: `⿱一尢`,
-  一: `？`,
-};
+const decompositions = await loadHanziDecomposition();
 
 for (const char of radicalsToCheck) {
   const lookup = (await loadRadicalsByHanzi()).get(char);
   const name = lookup?.name[0];
   const pinyin = lookup?.pinyin[0];
-  const decomposition = decompositions[char];
+  const decomposition = decompositions.get(char);
   invariant(name != null, `Missing name data for ${char}`);
   invariant(pinyin != null, `Missing pinyin data for ${char}`);
   invariant(decomposition != null, `Missing decomposition data for ${char}`);
@@ -143,7 +141,7 @@ ${[...theme.tones.entries()]
 |---------|-------------------------------|
 ${[...theme.initials.entries()]
   .sort(sortComparatorString(([initial]) => initial))
-  .map(([, { n, prefix, desc }]) => `| **${prefix}** | ${n} (${desc}) |`)
+  .map(([, { n, desc }]) => `| **{TODOFIXprefix}** | ${n} (${desc}) |`)
   .join(`\n`)}
 
 

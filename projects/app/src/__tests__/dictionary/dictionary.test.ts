@@ -13,6 +13,7 @@ import {
   loadHmmPinyinChart,
   loadMmPinyinChart,
   loadMnemonicTheme,
+  loadMnemonicThemeChoices,
   loadPinyinWords,
   loadRadicalNameMnemonics,
   loadRadicalPinyinMnemonics,
@@ -37,20 +38,22 @@ void test(`radical groups have the right number of elements`, async () => {
 });
 
 void test(`json data can be loaded and passes the schema validation`, async () => {
-  await loadHanziDecomposition();
-  await loadPinyinWords();
-  await loadStandardPinyinChart();
-  await loadHhPinyinChart();
-  await loadHmmPinyinChart();
-  await loadMnemonicTheme();
   await allHsk1Words();
   await allHsk2Words();
   await allHsk3Words();
+  await allRadicalPrimaryForms();
+  await loadHanziDecomposition();
+  await loadHhPinyinChart();
+  await loadHmmPinyinChart();
+  await loadMmPinyinChart();
+  await loadMnemonicTheme();
+  await loadMnemonicThemeChoices();
+  await loadPinyinWords();
   await loadRadicalNameMnemonics();
   await loadRadicalPinyinMnemonics();
-  await loadWords();
   await loadRadicals();
-  await allRadicalPrimaryForms();
+  await loadStandardPinyinChart();
+  await loadWords();
 });
 
 void test(`there are no pronunciations mixed into word definitions`, async () => {
@@ -253,6 +256,9 @@ interface PinyinChart {
   initials: readonly PinyinProduction[];
   finals: readonly PinyinProduction[];
   overrides?: DeepReadonly<Record<string, [initial: string, final: string]>>;
+  initialGrouping?: DeepReadonly<
+    Record<string, { desc: string; initials: string[] }>
+  >;
 }
 
 async function testPinyinChart(
@@ -277,6 +283,31 @@ async function testPinyinChart(
   // Ensure that there are no duplicates initials or finals.
   assertUniqueArray(chart.initials.flatMap(([, ...x]) => x));
   assertUniqueArray(chart.finals.flatMap(([, ...x]) => x));
+
+  // Initials can be grouped into different sets, this allows for more
+  // separation between similar sounds.
+  if (chart.initialGrouping) {
+    const chartInitials = new Set(chart.initials.map(([x]) => x));
+    const allGroupInitials = new Set(
+      Object.values(chart.initialGrouping).flatMap((x) => x.initials),
+    );
+
+    // `.symmetricDifference` would be shorter, but error messages are more ambiguous.
+    assert.deepEqual(
+      chartInitials.difference(allGroupInitials),
+      new Set(),
+      `initial grouping doesn't cover all initials`,
+    );
+    assert.deepEqual(
+      allGroupInitials.difference(chartInitials),
+      new Set(),
+      `initial grouping has undeclared initials`,
+    );
+
+    assertUniqueArray(
+      Object.values(chart.initialGrouping).flatMap((x) => x.initials),
+    );
+  }
 }
 
 function assertUniqueArray<T>(items: readonly T[]): void {
@@ -714,6 +745,38 @@ void test(`idsNodeToString roundtrips`, () => {
   ].flatMap((x) => x)) {
     assert.equal(idsNodeToString(parseIds(input)), input);
   }
+});
+
+void test(`mnemonicTheme covers pinyin chart`, async () => {
+  const chart = await loadMmPinyinChart();
+  const theme = await loadMnemonicTheme();
+
+  const chartInitials = new Set(chart.initials.map(([x]) => x));
+  const themeInitials = new Set(theme.initials.keys());
+  const chartFinals = new Set(chart.finals.map(([x]) => x));
+  const themeFinals = new Set(theme.finals.values().map((x) => x.suffix));
+
+  // `.symmetricDifference` would be shorter, but error messages are more ambiguous.
+  assert.deepEqual(
+    chartInitials.difference(themeInitials),
+    new Set(),
+    `theme is missing initials`,
+  );
+  assert.deepEqual(
+    themeInitials.difference(chartInitials),
+    new Set(),
+    `theme has extra initials`,
+  );
+  assert.deepEqual(
+    chartFinals.difference(themeFinals),
+    new Set(),
+    `theme is missing finals`,
+  );
+  assert.deepEqual(
+    themeFinals.difference(chartFinals),
+    new Set(),
+    `theme has extra finals`,
+  );
 });
 
 async function debugNonCjkUnifiedIdeographs(chars: string[]): Promise<string> {

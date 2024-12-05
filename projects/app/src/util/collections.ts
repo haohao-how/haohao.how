@@ -52,6 +52,47 @@ export function mergeMaps<K, V>(
   return result;
 }
 
+// a merge function that can recursively merge objects
+export function merge<T>(a: T, b: T): unknown {
+  if (a == null || b == null) {
+    return a ?? b;
+  } else if (a instanceof Map) {
+    invariant(b instanceof Map);
+    return new Map(
+      [...a.keys(), ...b.keys()].map((key) => {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        const aVal = a.get(key);
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        const bVal = b.get(key);
+        return [key, merge(aVal, bVal)] as const;
+      }),
+    ) as T;
+  } else if (Array.isArray(a)) {
+    invariant(Array.isArray(b));
+    return [...a, ...b] as T;
+  } else if (typeof a === `object`) {
+    return {
+      ...a,
+      ...b,
+    };
+  }
+  return b;
+}
+
+export function deepTransform(
+  x: unknown,
+  transform: (x: unknown) => unknown,
+): unknown {
+  if (x instanceof Map) {
+    return transform(
+      new Map(x.entries().map(([k, v]) => [k, deepTransform(v, transform)])),
+    );
+  } else if (Array.isArray(x)) {
+    return transform(x.map((y) => deepTransform(y, transform)));
+  }
+  return transform(x);
+}
+
 export function randomOne<T>(items: readonly T[]): T {
   invariant(
     items.length > 0,
