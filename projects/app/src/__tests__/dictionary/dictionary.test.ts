@@ -14,6 +14,7 @@ import {
   loadMmPinyinChart,
   loadMnemonicTheme,
   loadMnemonicThemeChoices,
+  loadMnemonicThemes,
   loadPinyinWords,
   loadRadicalNameMnemonics,
   loadRadicalPinyinMnemonics,
@@ -48,6 +49,7 @@ void test(`json data can be loaded and passes the schema validation`, async () =
   await loadMmPinyinChart();
   await loadMnemonicTheme();
   await loadMnemonicThemeChoices();
+  await loadMnemonicThemes();
   await loadPinyinWords();
   await loadRadicalNameMnemonics();
   await loadRadicalPinyinMnemonics();
