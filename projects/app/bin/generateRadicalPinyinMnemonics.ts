@@ -8,7 +8,6 @@ import { z } from "zod";
 import {
   allRadicalPrimaryForms,
   loadHanziDecomposition,
-  loadMnemonicTheme,
   loadRadicalPinyinMnemonics,
   loadRadicalsByHanzi,
 } from "../src/dictionary/dictionary.js";
@@ -47,7 +46,11 @@ if (argv.debug) {
   makeDebug.enable(`${debug.namespace},${debug.namespace}:*`);
 }
 
-const theme = await loadMnemonicTheme();
+const theme = {
+  tones: new Map<number, string>(),
+  initials: new Map<string, { n: string; desc: string }>(),
+  finals: new Map<string, { suffix: string; location: string }>(),
+};
 
 const dbCache = makeDbCache(import.meta.filename, `openai_chat_cache`, debug);
 

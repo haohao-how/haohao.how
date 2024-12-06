@@ -23,7 +23,7 @@ const debug = makeDebug(`hhh`);
 
 const themes = await loadMnemonicThemes();
 const pinyinChart = await loadMmPinyinChart();
-const groupIds = Object.keys(pinyinChart.initialGrouping);
+const groupIds = pinyinChart.initials.map((x) => x.id);
 
 const argv = await yargs(process.argv.slice(2))
   .usage(`$0 [args]`)
@@ -79,7 +79,7 @@ for (const groupId of groupIds) {
       continue;
     }
 
-    const group = pinyinChart.initialGrouping[groupId];
+    const group = pinyinChart.initials.find((x) => x.id === groupId);
     invariant(group != null, `Missing group for ${groupId}`);
 
     const rawJson = await openAiWithCache(
