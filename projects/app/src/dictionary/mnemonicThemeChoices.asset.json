@@ -2,34 +2,37 @@
  "AnimalSpecies": {
   "b": {
    "Baboon": "A type of monkey found in Africa.",
-   "Bald Eagle": "Bird of prey, a symbol of the United States.",
-   "Barn Owl": "Common owl found worldwide.",
    "Barracuda": "Large, predatory fish known for its fearsome appearance.",
    "Barramundi": "Large species of fish from Australia.",
    "Bat": "Flying mammal known for echolocation.",
-   "Bear": "Large mammal known for strength and hibernation.",
-   "Beaver": "Rodent known for building dams.",
+   "Bear": "Large mammal found in many movies and documentaries, known for its strength and size.",
+   "Beaver": "A semiaquatic rodent known for building dams. Commonly seen in nature documentaries.",
    "Beetle": "Insect known for its hardened forewings.",
    "Bison": "Large animal found in North American plains.",
    "Blue Whale": "The largest animal known to have ever existed.",
-   "Boa Constrictor": "Large, non-venomous snake found in tropical America.",
    "Bongo": "Antelope native to Africa.",
    "Bonobo": "A great ape known for its social behavior.",
    "Booby": "Seabird known for its bright blue feet.",
-   "Buffalo": "Large herd animal, similar to bison.",
+   "Buffalo": "Large herbivore often featured in documentaries about the plains or savannas.",
    "Bumblebee": "Bee known for its large size and characteristic buzz.",
-   "Butterfly": "Insect known for its colorful wings.",
+   "Butterfly": "Insect with vibrant wings, featured in nature documentaries and art.",
    "Buzzard": "Bird of prey known for scavenging."
+  },
+  "bu": {
+   "Bat": "Mammals capable of flight, often featured in horror and nature documentaries.",
+   "Bear": "Highly recognizable animals, often used in stories and media.",
+   "Buffalo": "Large grazers found in Africa and North America, often featured in wildlife documentaries.",
+   "Bulldog": "A popular dog breed often seen in shows and movies as pets."
   },
   "c": {
    "Capybara": "Largest rodent species in the world, native to South America.",
    "Cardinal": "Brightly colored birds found in North and South America.",
    "Carp": "Freshwater fish found in Asia and Europe.",
    "Cassowary": "Large flightless birds native to Indonesia, Papua New Guinea, and Australia.",
-   "Cat": "Small domesticated carnivorous mammals known for companionship.",
+   "Cat": "Domestic feline, beloved pet often seen in films and on social media.",
    "Caterpillar": "Larval stage of butterflies and moths.",
    "Chameleon": "Old World lizards known for their ability to change color.",
-   "Cheetah": "Large cats known for being the fastest land animals.",
+   "Cheetah": "Known for being the fastest land animal.",
    "Chinchilla": "Small rodents known for their thick, soft fur.",
    "Chipmunk": "Small striped rodents of the family Sciuridae, native to North America.",
    "Cicada": "Insects known for their loud, distinctive sound.",
@@ -38,9 +41,10 @@
    "Cockatoo": "Parrots known for their crests and curves.",
    "Cockroach": "Common pest insects known for their resilience.",
    "Cormorant": "Water birds known for their diving capabilities.",
+   "Cougar": "Also known as the mountain lion, found in the Americas.",
    "Coyote": "Canid native to North America, similar to but smaller than the wolf.",
    "Crab": "Crustaceans known for their pincers and sideways walking.",
-   "Crocodile": "Large aquatic reptiles found in tropics across Africa, Asia, the Americas, and Australia.",
+   "Crocodile": "Large aquatic reptile often featured in documentaries about the Nile.",
    "Crow": "Birds known for their intelligence and adaptability."
   },
   "ch": {
@@ -50,123 +54,160 @@
    "Caribou": "Reindeers native to North America and Greenland.",
    "Cassowary": "Large flightless birds native to Indonesia, Papua New Guinea, and Australia.",
    "Cavy": "Rodents including guinea pigs in South America.",
-   "Chameleon": "Old World lizards known for their ability to change color.",
-   "Cheetah": "Large cats known for being the fastest land animals.",
+   "Chameleon": "Lizard known for its ability to change colors, seen in nature programs.",
+   "Cheetah": "Fastest land animal, known for its speed and grace, featured in wildlife shows.",
    "Chickadee": "Small songbirds often found in North America.",
-   "Chimpanzee": "Great apes known for their close genetic relation to humans.",
+   "Chimpanzee": "Highly intelligent primate, often seen in documentaries and studies.",
    "Chinchilla": "Small rodents known for their thick, soft fur.",
    "Cicada": "Insects known for their loud, distinctive sound.",
    "Cichlid": "Large family of fish found in freshwater habitats around the globe.",
    "Cobra": "Venomous snakes known for their ability to expand the neck ribs to form a 'hood'.",
    "Cockatoo": "Parrots known for their crests and curved bills.",
    "Cougar": "Large felines known also as mountain lions or pumas.",
+   "Crab": "Crustacean often depicted in beach and tide pool documentaries.",
    "Crocodile": "Large aquatic reptiles found in tropics across Africa, Asia, the Americas, and Australia.",
    "Crow": "Bird known for its intelligence and adaptability.",
    "Cuttlefish": "Marine animals known for their ability to change color and produce ink."
+  },
+  "chu": {
+   "Caribou": "Known as reindeer when domesticated, found in Arctic and subarctic regions.",
+   "Cheetah": "The fastest land animals, often depicted in African wildlife documentaries.",
+   "Chimpanzee": "Highly intelligent primates known for their close relation to humans.",
+   "Crocodile": "Large predatory reptiles often seen in documentaries about wetlands."
+  },
+  "cu": {
+   "Caiman": "Alligatorid crocodilians often found in wetlands, frequently shown in nature programs.",
+   "Cat": "Domesticated animals frequently seen in households and media.",
+   "Crane": "Large birds often seen in wetlands and open spaces.",
+   "Cuttlefish": "Molluscs known for their intelligence and camouflage capabilities."
   },
   "d": {
    "Dabbling Duck": "Type of duck that feeds mainly on the surface of the water or by tipping forward.",
    "Dabchick": "Small waterbird also known as a little grebe.",
    "Dachshund": "Small dog breed notable for its long body and short legs.",
    "Dalmatian": "Dog breed known for its unique black-spotted coat.",
-   "Deer": "Hoofed grazing mammals known for antlers on the males.",
-   "Desert Tortoise": "Large tortoise native to the Mojave and Sonoran Deserts.",
+   "Deer": "Herbivore often depicted in nature documentaries and tales.",
    "Devilfish": "Alternate name for large cephalopods like the octopus.",
    "Dhole": "Wild canids native to Asia, also known as Asiatic wild dogs.",
    "Dik-dik": "Small antelope species found in Africa.",
    "Dingo": "Wild dog found in Australia.",
    "Dodo": "Extinct flightless bird that once lived on the island of Mauritius.",
-   "Dog": "Domestic mammals known for being loyal and friendly pets.",
-   "Dolphin": "Highly intelligent marine mammals known for their social behavior.",
+   "Dog": "Domesticated animal and loyal companion featured in countless films.",
+   "Dolphin": "Intelligent marine mammal often featured in documentaries and movies.",
    "Donkey": "Domesticated hoofed mammal known for its stamina.",
    "Dormouse": "Small rodents known for their lengthy hibernation.",
-   "Dragonfly": "Insects known for their long bodies and large eyes.",
+   "Dragonfly": "Insect known for its agility in flight, often featured in summer scenes.",
    "Dromedary": "Type of camel with a single hump, found in the Middle East and Africa.",
    "Duck": "Waterfowl species known for their broad bills and webbed feet.",
-   "Duckbill Platypus": "Mammal notable for its duck-bill shaped snout.",
    "Dugong": "Marine mammals related to manatees."
   },
+  "du": {
+   "Deer": "Graceful and often depicted in forest settings in movies and literature.",
+   "Dolphin": "Intelligent marine mammals often highlighted in ocean-themed programs.",
+   "Duck": "Commonly seen in waterways and often depicted in children's stories.",
+   "Dugong": "Marine mammals found in coastal waters, similar to manatees."
+  },
   "f": {
-   "Falcon": "Bird of prey known for its speed and hunting prowess.",
-   "Fallow Deer": "Medium-sized deer with a notable range of coat colors.",
-   "Fennec Fox": "Small nocturnal fox found in the Sahara Desert, known for its large ears.",
+   "Falcon": "Bird of prey known for its speed and sometimes depicted in movies and books.",
    "Ferret": "Small carnivorous mammals kept as pets.",
-   "Fiddler Crab": "Small crustaceans known for their large claw.",
    "Finch": "Small to medium-sized passerine birds.",
    "Firefly": "Beetles capable of producing a cold light.",
-   "Flamingo": "Wading birds known for their pink feathers and long legs.",
+   "Flamingo": "Wading bird known for its pink color, often featured in travel and nature media.",
    "Flounder": "Flatfish species known for its camouflaging abilities.",
-   "Flying Fish": "Fish known for its ability to glide above water.",
-   "Flying Squirrel": "Rodents known for their ability to glide.",
    "Fossa": "Unique carnivore from Madagascar.",
-   "Fox": "Small to medium-sized omnivorous mammals famous for their cunning behavior.",
-   "Fox Bat": "Largest species of bat known for its appearance similar to a fox.",
+   "Fox": "Cunning carnivore often featured in folklore and wildlife documentaries.",
    "Frigatebird": "Large seabirds with prominent gull-like shape.",
-   "Frog": "Amphibians known for their jumping abilities and croaking sounds.",
-   "Fruit Bat": "Bats known for their diet consisting mainly of fruits.",
+   "Frog": "Amphibian known for its jumping abilities, featured in many children's tales.",
    "Fulmar": "Seabird known for its stiff-winged flight."
   },
+  "fu": {
+   "Falcon": "Birds of prey often depicted in stories involving speed and agility.",
+   "Flamingo": "Tall wading birds known for their striking pink color.",
+   "Fox": "Known for its cunning, appearing in various folklores and stories.",
+   "Frog": "Amphibians well known from nature documentaries and popular culture."
+  },
   "g": {
-   "Galapagos Tortoise": "Large tortoises native to the Galapagos Islands.",
    "Gannet": "Seabirds known for their diving skills.",
    "Gar": "Long and narrow fish known for their elongated bodies and sharp teeth.",
    "Gazelle": "Small antelopes known for their speed and grace.",
-   "Gecko": "Lizards known for their vocalizations and sticky toepads.",
+   "Gecko": "Small lizard, often highlighted for its adaptive ability, featured in nature media.",
    "Gibbon": "Small apes known for their long arms and singing capabilities.",
-   "Giraffe": "Tallest land animals known for their long necks.",
+   "Giraffe": "Tall mammal known for its long neck, often shown in savanna documentaries.",
    "Glowworm": "Insect known for emitting light.",
    "Gnu": "Also called wildebeests, they are large antelopes found in Africa.",
+   "Goat": "Domesticated animal common in farming videos and agriculture documentaries.",
    "Goldfish": "Popular freshwater aquarium fish.",
    "Goose": "Large waterfowl known for their migratory behavior.",
    "Gopher": "Small burrowing rodents native to North America.",
-   "Gorilla": "Largest primates known for their gentle demeanor and strength.",
+   "Gorilla": "Large primate, often featured in jungle documentaries.",
    "Grasshopper": "Insects known for their jumping abilities and chirping calls.",
    "Grebe": "Diving water birds known for their elaborate courtship dances.",
-   "Grizzly Bear": "Subspecies of the brown bear found in North America.",
    "Grouse": "Birds known for their loud calls and displays.",
    "Guanaco": "Wild South American camelid, related to the llama.",
-   "Guinea Pig": "Domesticated rodents often kept as pets.",
    "Gull": "Seabirds known for their adaptability and opportunistic feeding behavior."
+  },
+  "gu": {
+   "Gecko": "Small lizards found worldwide, known for their distinctive sounds.",
+   "Giraffe": "Known for their long necks and tall stature, often seen in African wildlife media.",
+   "Goat": "Domestic animals known for their agility and curiosity.",
+   "Gorilla": "Large primates often depicted in both narratives and nature documentaries."
   },
   "h": {
    "Hagfish": "Jawless marine fish known for their slime production.",
    "Hamster": "Small rodents often kept as pets.",
    "Hare": "Leporids known for their long ears and strong hind legs.",
-   "Harpy Eagle": "One of the largest and most powerful eagles found in the rainforests.",
-   "Hawk": "Birds of prey known for their sharp vision and hunting abilities.",
-   "Hawk Moth": "Moth species known for their impressively large size.",
-   "Hedgehog": "Small spiny mammal found in Europe, Africa, and Asia.",
-   "Hermit Crab": "Crustaceans known for using discarded shells for protection.",
+   "Hawk": "Bird of prey, symbolizing keen sight and focus, seen in documentaries.",
+   "Hedgehog": "Small spiny mammal often featured in nature and children's programming.",
    "Heron": "Long-legged wading birds typically found in wetlands.",
-   "Hippopotamus": "Large mammals known for spending most of their time in water.",
+   "Hippopotamus": "Large semi-aquatic mammal often featured in riverine habitats of documentaries.",
    "Hoatzin": "Unique bird found near swamps and river forests in Amazonia.",
    "Hornet": "Large wasps known for their aggressive nature.",
-   "Horse": "Large domesticated mammals known for their speed and strength.",
-   "Horseshoe Crab": "Marine arthropods known for their distinctive horseshoe-shaped shells.",
-   "Howler Monkey": "New World monkeys famous for their loud calls.",
+   "Horse": "Domesticated animal widely used throughout history and depicted in many films.",
    "Hummingbird": "Tiny birds capable of hovering and moving in unusual ways.",
    "Hyena": "Carnivorous mammals known for their laughter-like calls.",
    "Hyrax": "Small mammals that resemble guinea pigs, found in Africa and the Middle East."
   },
+  "hu": {
+   "Hawk": "Birds of prey often featured in nature films.",
+   "Hedgehog": "Small mammals known for their spiny coats, often seen in European wildlife programs.",
+   "Hippopotamus": "Large semi-aquatic mammals depicted in many African wildlife documentaries.",
+   "Horse": "Widely recognized domesticated animals known for their speed and strength."
+  },
+  "ju": {
+   "Jabiru": "A large stork species native to the Americas, recognizable by its black and white plumage.",
+   "Jacana": "A wading bird known for its huge feet and claws, which enable it to walk on floating vegetation.",
+   "Jackal": "A medium-sized omnivorous mammal of the genus Canis, which includes wolves and domestic dogs.",
+   "Jackdaw": "A small black bird of the crow family, notable for its intelligence and sociability.",
+   "Jackrabbit": "A large North American hare, noted for its long legs and ears.",
+   "Jaguar": "A large feline known for its striking coat and powerful build.",
+   "Japanese Macaque": "An Old World monkey species often found in northern Japan, famous for bathing in hot springs.",
+   "Javelina": "A medium-sized mammal, also known as a collared peccary, often found in the southwestern United States.",
+   "Jay": "A medium-sized, brightly colored bird known for its intelligence and complex behavior.",
+   "Jellyfish": "A gelatinous marine animal, known for its umbrella-shaped bell and tentacles.",
+   "Jerboa": "A hopping desert rodent, known for its long hind legs.",
+   "Junco": "A type of small bird commonly found in North America, also known as the snowbird."
+  },
   "k": {
-   "Kangaroo": "Marsupials from Australia known for their large hind legs and jumping ability.",
-   "Kangaroo Rat": "Small rodents adapted to desert habitats in North America.",
+   "Kangaroo": "Marsupial known for its unique hopping and pouch, featured in Australian wildlife media.",
    "Kea": "Highly intelligent parrot native to the South Island of New Zealand.",
-   "Kermode Bear": "Subspecies of the American black bear found in the rainforests of British Columbia.",
    "Kestrel": "Small falcons known for their hunting abilities and hovering flight.",
-   "Kingfisher": "Small to medium-sized birds known for their vibrant colors and fishing abilities.",
+   "Kingfisher": "Bird known for its vibrant plumage and fishing skills.",
    "Kinkajou": "Arboreal mammals native to Central and South America.",
    "Kite": "Birds of prey known for their graceful flight.",
-   "Kiwi": "Flightless birds native to New Zealand.",
-   "Koala": "Herbivorous marsupials native to Australia.",
+   "Kiwi": "Flightless bird endemic to New Zealand, often featured in conservation media.",
+   "Koala": "Tree-dwelling marsupial commonly associated with Australia.",
    "Kodiak": "Referring to the Kodiak bear, a large brown bear from the Kodiak Archipelago.",
-   "Kodiak Bear": "Subspecies of brown bear found in Alaska.",
    "Koel": "Type of cuckoo bird found in Australasia.",
    "Komainu": "Statue form of mythical lions or dogs thought to ward off evil spirits, seen in Japan.",
-   "Komodo Dragon": "Large lizards known for their impressive size and strength.",
    "Kookaburra": "Also known as the laughing bird, native to Australia.",
    "Krill": "Small crustaceans found in all the world's oceans.",
    "Kudu": "Antelope found in the woodlands of Africa."
+  },
+  "ku": {
+   "Kangaroo": "Marsupials known for hopping and carrying their young in pouches, iconic of Australia.",
+   "Kestrel": "Small falcons often seen in wildlife documentaries.",
+   "Koala": "Tree-dwelling marsupials known for their diet of eucalyptus leaves.",
+   "Kudu": "Large African antelopes, known for their twisted horns."
   },
   "l": {
    "Labrador": "Dog breed known for being friendly and good-natured.",
@@ -175,19 +216,37 @@
    "Langur": "Monkeys found in Asia known for their long tails.",
    "Lapras": "A fictional water-type Pokémon known for its ability to carry people across water.",
    "Lapwing": "Types of birds known for their tumbling flight.",
-   "Leafcutter Ant": "Ant species known for cutting and transporting leaves.",
    "Lemming": "Small rodents known for their migratory behavior.",
-   "Lemur": "Primates found only on the island of Madagascar.",
-   "Leopard": "Large felines known for their spotted coats.",
+   "Lemur": "Primate native to Madagascar, well-known from cartoons and docs.",
+   "Leopard": "Large cat known for its spotted coat, featured in wildlife shows.",
    "Lice": "Small parasites known for living on mammals and birds.",
-   "Lion": "Big cats known for living in prides, found mostly in Africa.",
+   "Lion": "'King of the Jungle', often depicted in wildlife documentaries.",
    "Lionfish": "Marine fish known for its venomous spines.",
-   "Lizard": "Reptiles known for their elongated bodies and tails, and scales.",
+   "Lizard": "Reptile often featured in desert and tropical documentaries.",
    "Llama": "Domesticated South American camelid, used as a pack animal.",
    "Lobster": "Marine crustaceans known for their large pincers.",
    "Loon": "Large aquatic birds, known for their eerie calls.",
    "Lorikeet": "Small, brightly colored parrots native to Australia.",
    "Lynx": "Wildcats known for their tufted ears."
+  },
+  "lu": {
+   "Leopard": "Big cats known for their spots and stealth, often featured in media.",
+   "Lion": "Referred to as the king of the jungle and often depicted in documentaries.",
+   "Llama": "Domesticated animals known for their use as pack animals.",
+   "Lynx": "Wild cats with tufted ears found in Northern Hemisphere forests."
+  },
+  "lü": {
+   "Lamprey": "An eel-like fish known for its toothed, funnel-like sucking mouth.",
+   "Leatherback": "The largest sea turtle species, known for its leather-like shell.",
+   "Leech": "A parasitic or predatory worm, known for feeding on blood.",
+   "Lemur": "A primate from Madagascar known for its large eyes and reflective tapetum lucidum.",
+   "Leopard": "A member of the big cat family, known for its spotted coat.",
+   "Liger": "A hybrid of a male lion and a female tiger, bred for entertainment purposes.",
+   "Lion": "A large, social feline known as the 'king of the jungle.'",
+   "Lizard": "A widespread group of squamate reptiles, including over 6,000 species.",
+   "Llama": "A domesticated South American camelid, widely used as a meat and pack animal.",
+   "Lobster": "A large marine crustacean with a muscular tail and large claws.",
+   "Lynx": "A solitary, elusive wild cat with a short tail and a tuft of black hair on each ear."
   },
   "m": {
    "Macaw": "Large colorful parrots native to Central and South America.",
@@ -196,6 +255,7 @@
    "Mallard": "Common type of wild duck.",
    "Manatee": "Large aquatic herbivores known as sea cows.",
    "Mandrill": "Large primates found in Africa, known for their colorful faces.",
+   "Manta ray": "Large, graceful marine creature, seen in ocean documentaries.",
    "Manta Ray": "Large ray found in tropical and subtropical waters.",
    "Manx Cat": "Breed of domestic cats without tails.",
    "Marmoset": "Small monkeys native to South America.",
@@ -204,44 +264,68 @@
    "Mink": "Small semiaquatic mammals related to weasels.",
    "Mole": "Small burrowing mammals found in various regions.",
    "Mongoose": "Small carnivorous mammals from Asia and Africa.",
-   "Monitor Lizard": "Large and powerful lizards found in Africa, Asia, and Oceania.",
-   "Monkey": "Primates found all over the world.",
-   "Moose": "Large deer species native to North America and Eurasia.",
-   "Moray Eel": "Ferocious eels found in all temperate and tropical seas.",
+   "Monkey": "Primate known for its intelligence and playfulness, often in media and zoos.",
+   "Moose": "Large herbivore, commonly shown in wilderness documentaries.",
    "Moth": "Insect known for flying at night, related to butterflies.",
+   "Mouse": "Small rodent, often featured in cartoons and children's stories.",
    "Muskox": "Arctic mammals known for their thick coats and strong odor."
+  },
+  "mu": {
+   "Mandrill": "A large monkey known for its colorful face.",
+   "Mongoose": "Known for their conflict with snakes, sometimes seen in wildlife films.",
+   "Moose": "Large, easily recognizable deer from the Northern Hemisphere.",
+   "Mule": "Known as sturdy work animals, often depicted in old Westerns."
   },
   "n": {
    "Nabarlek": "Very small species of rock-wallaby found in Australia.",
    "Nandu": "Large flightless birds native to South America, similar to ostriches.",
    "Napoleon Wrasse": "Large fish found in coral reefs of the Indo-Pacific.",
-   "Narwhal": "Marine mammals known for their long tusk, found in Arctic waters.",
+   "Narwhal": "Marine mammal known for its long, spiral tusk, featured in cold-water documentaries.",
    "Nautilus": "Marine mollusks known for their distinctive coiled shells.",
    "Neanderthal": "Although not a distinct animal species today, it refers to a species or subspecies of archaic humans.",
    "Needlefish": "Predatory fish known for their slender bodies and long jaws.",
    "Nematode": "Also known as roundworms, a diverse animal phylum inhabiting a wide range of environments.",
    "Nene": "Endemic to the Hawaiian Islands, also known as the Hawaiian goose.",
    "Nettlefish": "Alternate name for certain jellyfish types.",
-   "Newt": "Small amphibians with distinctively colorful skin.",
+   "Newt": "Small amphibian, often shown in nature documentaries about wetlands.",
    "Nighthawk": "Birds known for their nocturnal hunting habits.",
-   "Nightingale": "Small passerine bird famed for its powerful and beautiful song.",
-   "Nine-banded Armadillo": "Species of armadillo native to the Americas.",
+   "Nightingale": "Bird celebrated for its song, often mentioned in literature and music.",
    "Noctule": "One of the largest bat species found in Europe.",
    "Norwegian Rat": "Also known as the brown rat or common rat.",
-   "Numbat": "Small insectivorous marsupial native to Australia.",
+   "Numbat": "Small marsupial native to Australia, occasionally seen in wildlife shows.",
    "Numida": "Genus of birds also known as guinea fowl.",
    "Nuthatch": "Birds known for climbing down trees head-first.",
    "Nutria": "Semi-aquatic rodent also known as coypu."
   },
+  "nu": {
+   "Nautilus": "A deep-sea creature known for its spiral shell.",
+   "Newt": "Small amphibians often depicted in documentaries.",
+   "Nightingale": "A bird known for its melodic song, often mentioned in literature and media.",
+   "Numbat": "A small, insectivorous marsupial native to Australia."
+  },
+  "nü": {
+   "Nandu": "A large, flightless bird native to South America, similar to an ostrich.",
+   "Narwhal": "A medium-sized toothed whale known for its long, spiral tusk.",
+   "Nautilus": "A marine mollusk with a distinctive spiral shell.",
+   "Nene": "Hawaiian goose, which is the state bird of Hawaii.",
+   "Newt": "A salamander-like amphibian, often found in moist environments.",
+   "Nighthawk": "A nocturnal bird known for its silent, acrobatic flight.",
+   "Nightingale": "A migratory bird celebrated for its powerful and beautiful song.",
+   "Nilgai": "The largest Asian antelope, native to the Indian subcontinent.",
+   "Numbat": "A small marsupial from Australia, famous for its diet of termites.",
+   "Nunlet": "A small bird from Central and South America, known for its plump body and large head.",
+   "Nuthatch": "A small passerine bird known for its habit of climbing down tree trunks.",
+   "Nutria": "A large, semi-aquatic rodent native to South America, also known as coypu."
+  },
   "p": {
-   "Panda": "Large bear known for its distinctive black and white coat.",
+   "Panda": "Endangered bear native to China, popular in documentaries and symbolism.",
    "Pangolin": "Mammal known for its protective keratin scales.",
    "Panther": "Large wild cat, often black-colored, also known as a leopard or puma.",
-   "Parrot": "Birds known for their ability to mimic sounds.",
+   "Parrot": "Colorful bird often featured in stories about pirates and the tropics.",
    "Partridge": "Bird known for being a game bird and found in various regions.",
-   "Peacock": "Bird known for its colorful and iridescent tail feathers.",
+   "Peacock": "Known for its vibrant feather display, featured in gardens and documentaries.",
    "Pelican": "Large water bird known for its distinctive bill.",
-   "Penguin": "Flightless birds known for their distinctive black and white coloring.",
+   "Penguin": "Flightless bird from cold regions, popular in animation and nature documentaries.",
    "Pig": "Domesticated animal known for its intelligence.",
    "Pigeon": "Bird commonly found in urban areas, known for its adaptability.",
    "Platypus": "Unique mammal known for laying eggs and having a duckbill.",
@@ -255,18 +339,37 @@
    "Puma": "Large feline of North and South America, also known as a cougar or mountain lion.",
    "Python": "Large constrictor snakes found in Africa, Asia, and Australia."
   },
+  "pu": {
+   "Panther": "A term often used for black leopards or jaguars, well known from popular culture.",
+   "Penguin": "Flightless birds often depicted in documentaries and movies set in icy landscapes.",
+   "Puffin": "Sea birds often featured in marine documentaries for their colorful beaks.",
+   "Puma": "A large cat famous for its strength and stealth."
+  },
+  "qu": {
+   "Quagga": "An extinct subspecies of plains zebra that lived in South Africa.",
+   "Quahog": "A hard-shelled clam native to the eastern shores of North America.",
+   "Quail": "A small bird from the pheasant family, often found in meadows and forests.",
+   "Queen Alexandra's Birdwing": "The largest butterfly species in the world, found in Papua New Guinea.",
+   "Queen Angelfish": "A brightly colored species of marine angelfish found in coral reefs.",
+   "Queen Bee": "The reproductive female in a bee colony, especially in honeybee species.",
+   "Quelea": "A small bird considered the most abundant wild bird species on earth, found in sub-Saharan Africa.",
+   "Quelonio": "An alternative term used for large sea turtles.",
+   "Quetzal": "A strikingly colored bird native to Central America, known for its iridescent green plumage and long tail feathers.",
+   "Quiver Tree": "Although not an animal, it's a distinct tree in southern Africa, sometimes noted in natural documentaries or narratives.",
+   "Quokka": "A small macropod found in southwestern Australia, known for its friendly and inquisitive nature.",
+   "Quoll": "A carnivorous marsupial native to Australia and New Guinea."
+  },
   "r": {
-   "Rabbit": "Small mammals known for their long ears and reproductive rate.",
-   "Raccoon": "Omnivorous mammals known for their masked faces and dexterous front paws.",
+   "Rabbit": "Small mammal known for its reproductive rate, often depicted in children's stories.",
+   "Raccoon": "Nocturnal mammal known for its masked face and dexterous paws.",
    "Rat": "Rodents known for their adaptability and rapid breeding.",
-   "Raven": "Large black birds known for their intelligence and adaptability.",
+   "Raven": "Large black bird known for its intelligence, often seen in mythology.",
    "Razorback": "Term for a feral pig commonly found in the Southern U.S.",
-   "Red Fox": "Small omnivorous mammal known for its reddish-brown fur.",
    "Red Panda": "Small arboreal mammal native to the eastern Himalayas and southwestern China.",
    "Reedbuck": "Antelopes found in Sub-Saharan Africa.",
    "Reindeer": "Large deer species known for their migrations.",
    "Rhea": "Large, flightless birds native to South America.",
-   "Rhinoceros": "Large herbivorous mammals known for their distinctive horned snouts.",
+   "Rhinoceros": "Large, threatened mammal often mentioned in conservation efforts.",
    "Ringtail": "Cat-sized carnivore native to North America, known for its long tail.",
    "Roadrunner": "Birds known for their speed on feet native to the Americas.",
    "Robin": "Songbirds found in North America and Europe, known for their red or orange breasts.",
@@ -277,6 +380,12 @@
    "Rosella": "A genus of colorful parrots native to Australia.",
    "Rough Collie": "Dog breed known for its long, rough coat and herding abilities."
   },
+  "ru": {
+   "Rabbit": "Small mammals known for their soft fur and hopping.",
+   "Raccoon": "Known for their masked faces and dexterous front paws.",
+   "Raven": "Large black birds often associated with myths and legends.",
+   "Rhino": "Large, commonly depicted in African wildlife media and focused conservation efforts."
+  },
   "s": {
    "Saber-toothed Tiger": "Extinct predatory mammal known for its large, saber-shaped canine teeth.",
    "Sailfish": "Fastest marine reserve fish known for its speed and elegant sailing fin.",
@@ -284,17 +393,17 @@
    "Sandpiper": "Shorebirds known for their distinctive “peeping” calls.",
    "Scorpion": "Arachnids known for their pincers and venomous stinger.",
    "Seahorse": "Marine fish known for their horse-like head and upright swimming.",
-   "Seal": "Marine mammals found in cold seas, known for their streamlined bodies.",
+   "Seal": "Marine mammal known for its playful nature, featured in ocean and zoo documentaries.",
    "Serpent": "Another term for snakes, often used in mythological contexts.",
-   "Shark": "Large predatory fish known for their sharp teeth and keen sense of smell.",
+   "Shark": "A powerful predator of the oceans, often featured in marine documentaries.",
    "Shrimp": "Decapod crustaceans found in both fresh and saltwater.",
    "Siberian Husky": "Dog breed known for its thick coat and endurance, originally bred as sled dogs.",
    "Siberian Tiger": "Large tiger subspecies found in the forests of eastern Russia.",
    "Sloth": "Slow-moving arboreal mammals found in tropical rainforests.",
-   "Snake": "Legless reptiles known for their elongated bodies and diverse habitats.",
+   "Snake": "Common reptile, often featured in jungle and desert documentaries.",
    "Sparrow": "Small passerine bird known for its adaptability to many environments.",
    "Spider": "Arachnids known for their ability to spin webs.",
-   "Squirrel": "Small to medium-sized rodents known for their bushy tails.",
+   "Squirrel": "Energetic rodent often seen in urban and forest settings.",
    "Starfish": "Echinoderms known for their star-shaped bodies.",
    "Stork": "Large birds known for their migratory patterns and long legs.",
    "Swan": "Large waterfowl known for their grace and beauty."
@@ -304,10 +413,10 @@
    "Scorpion": "Arachnids known for their pincers and venomous sting.",
    "Seagull": "Seabirds known for their adaptability and opportunistic feeding habits.",
    "Seal": "Marine mammals found in cold seas.",
-   "Shark": "Large predatory fish known for their sharp teeth and keen sense of smell.",
-   "Sheep": "Domesticated ruminant animals raised for wool and meat.",
-   "Shrew": "Small mammals with pointed noses.",
-   "Shrimp": "Decapod crustaceans found in both fresh and saltwater.",
+   "Shark": "Apex predator in the ocean, highly popular in marine documentaries.",
+   "Sheep": "Domesticated animal, often seen in farming and pastoral settings.",
+   "Shrew": "Small mammal known for its high metabolism, sometimes featured in forest documentaries.",
+   "Shrimp": "Invertebrate featured in ocean documentaries and culinary contexts.",
    "Siberian Husky": "Dog breed known for its thick coat and endurance, originally bred as sled dogs.",
    "Skunk": "Mammals known for their ability to spray a foul-smelling liquid.",
    "Sloth": "Slow-moving arboreal mammals found in tropical rainforests.",
@@ -321,68 +430,111 @@
    "Swan": "Large waterfowl known for their grace and beauty.",
    "Swordfish": "Large predatory fish known for their long, flat bills."
   },
+  "shu": {
+   "Shark": "Top ocean predators often highlighted in marine biology documentaries.",
+   "Sheep": "Domestic animals often seen in farming communities and nature documentaries.",
+   "Shrew": "Small mole-like mammals often seen in forest documentaries.",
+   "Shrimp": "Crustaceans often mentioned in ocean-related content and cuisine discussions."
+  },
+  "su": {
+   "Seal": "Marine mammals often featured in ocean documentaries.",
+   "Sloth": "Known for their slow movement, often featured in tropical rainforest media.",
+   "Squirrel": "Commonly seen in urban and forested areas worldwide.",
+   "Swan": "Large birds known for their grace and beauty, frequently seen in parks and lakes."
+  },
   "t": {
    "Tamarin": "Small New World monkeys found in Central and South America.",
    "Tapeworm": "Parasitic worms living in the intestines of animals.",
    "Tapir": "Mammals related to horses and rhinos, known for their distinctive snouts.",
    "Tarantula": "Large hairy spiders found around the world.",
-   "Tarantula Hawk": "Large wasp known for its sting used to paralyze tarantulas.",
    "Tasmanian Devil": "Carnivorous marsupial from Tasmania known for its loud and disturbing screeches.",
    "Teal": "Small freshwater ducks known for their rapid flight.",
    "Tegenaria": "Genus of spiders known for their large funnels.",
    "Termite": "Insects known for consuming wood.",
    "Terrier": "Dog breed known for their feisty nature.",
-   "Thornback Ray": "Type of ray fish known for its thorny appearance.",
-   "Thresher Shark": "Sharks known for their distinctive long tail fins.",
    "Tick": "Arachnids known for feeding on the blood of mammals and birds.",
-   "Tiger": "Large predatory cats found in Asia famed for their orange coats with black stripes.",
+   "Tiger": "Large feline known for its stripes and grace, featured in documentaries.",
    "Tortoise": "Land-dwelling turtles well known for their long lives.",
-   "Toucan": "Bird known for its large colorful beak.",
+   "Toucan": "Bird with a large colorful beak, seen in tropical media.",
    "Toucanet": "Smaller relative of the toucan, known for a similar large colorful beak.",
-   "Tree Frog": "Small frogs noted for their climbing abilities.",
-   "Turkey": "Large birds native to North America.",
-   "Turtle": "Reptiles known for their bony or cartilaginous shells and slow movement."
+   "Turkey": "Large bird commonly associated with Thanksgiving, depicted in various media.",
+   "Turtle": "Reptile often shown in both terrestrial and aquatic environments."
+  },
+  "tu": {
+   "Tiger": "A large cat often depicted in nature documentaries and folklore.",
+   "Tortoise": "Land-dwelling reptile known for its longevity and often seen in various content.",
+   "Toucan": "Colorful birds known for their large beaks, often seen in tropical media.",
+   "Turtle": "Reptiles known for their shells, appearing in many forms of media."
+  },
+  "w": {
+   "Walrus": "Known for their distinctive tusks, featured in arctic-themed shows.",
+   "Weasel": "Commonly portrayed in fiction as sly and quick.",
+   "Whale": "Large marine mammals often featured in documentaries and ocean-themed media.",
+   "Wolf": "A common animal depicted in stories and movies as cunning and a symbol of wilderness."
+  },
+  "xu": {
+   "Xantus's Hummingbird": "A hummingbird species found in Baja California.",
+   "Xeme": "Alternative name for the Sabine's gull, a small but unique gull.",
+   "Xenarthra": "Although technically not an animal, it is the superorder that includes armadillos and sloths.",
+   "Xenopus": "A genus of aquatic frogs known for their flat bodies and fully webbed feet.",
+   "Xerces Blue": "An extinct species of butterfly that was native to coastal California.",
+   "Xerus": "Found in many wildlife documentaries exploring African ecosystems.",
+   "Xingu River Ray": "A species of freshwater ray found in the Xingu River Basin in Brazil.",
+   "Xiphias": "Scientific name for the swordfish, known for its elongated, flat bill.",
+   "Xoloitzcuintli": "A rare, hairless breed of dog native to Mexico, often considered sacred by Aztecs."
+  },
+  "yu": {
+   "Yabby": "A small, freshwater crayfish native to Australia.",
+   "Yaffle": "A term sometimes used for the European green woodpecker, known for its laughing call.",
+   "Yak": "A large, long-haired bovine that lives in mountainous regions, especially the Himalayas.",
+   "Yapok": "A semiaquatic opossum found in Central and South America.",
+   "Yarkand Deer": "A rare species of deer found in specific regions of China.",
+   "Yellow Mongoose": "A small, fast-moving mongoose found in southern Africa.",
+   "Yellow-eyed Penguin": "A penguin species native to New Zealand, known for its distinct yellow eyes.",
+   "Yellowfin Tuna": "A species of tuna found in pelagic waters of tropical and subtropical oceans.",
+   "Yellowjacket": "A type of wasp notable for its bright yellow and black markings.",
+   "Yeti Crab": "A deep-sea crustacean known for its hairy pincers.",
+   "Yorkshire Terrier": "A small breed of terrier known for its distinctive tan coat and lively personality.",
+   "Yunnan Snub-nosed Monkey": "A rare species of monkey found in the mountainous forests of Yunnan, China."
   },
   "z": {
-   "Zambian Mole Rat": "Mammal species native to parts of Africa.",
    "Zamite": "Fossils of a gymnosperm plant, not actually an animal.",
    "Zamurro": "Also known as the king vulture in the scientific community.",
    "Zander": "Type of fish related to perch found in Europe.",
-   "Zander Pike": "A predatory fish found in northern Europe.",
-   "Zapatero Bird": "Species of bird known for nesting in wooden huts in Central America.",
-   "Zebra": "African equines known for their distinctive black and white stripes.",
-   "Zebra Finch": "Small finch from Australia, popular as a pet bird.",
+   "Zebra": "African horse with distinctive black and white stripes.",
    "Zebrafish": "Small freshwater fish often used in scientific research.",
    "Zebroid": "Hybrid animals from mating zebra with other equines.",
-   "Zebu": "Bos indicus, a species of cattle originating in South Asia.",
+   "Zebu": "Humped cattle often used as draught animals.",
    "Zebu Cattle": "Domestic cattle originating in the Asian subcontinent.",
-   "Zenaida Dove": "Bird often found in the Caribbean, known for its mournful call.",
-   "Zeus Bug": "Small insect known for its role in some mating rituals.",
    "Zilant": "A legendary creature from Tatar folklore, a type of dragon.",
    "Ziphius": "Species of oceanic dolphins known as beaked whales.",
    "Zokor": "Subterranean rodents found in East Asia.",
-   "Zorilla": "Striped polecat known for its strong musky odor.",
-   "Zorille": "Another name for the African polecat."
+   "Zorilla": "African member of the weasel family, known for its strong odor."
   },
   "zh": {
-   "Zambian Barbet": "Rare species of bird endemic to Zambia.",
    "Zanate": "Name given to the large grackles found in Mexico.",
-   "Zander": "Type of fish related to perch found in Europe.",
-   "Zanzibar Red Colobus": "Type of monkey indigenous to Zanzibar, known for its distinctive call.",
+   "Zander": "A fish native to European and Asian lakes and rivers, often featured in fishing shows.",
    "Zapatero": "Species of fish native to freshwaters in Central America.",
-   "Zebra": "African equines known for their distinctive black and white stripes.",
-   "Zebrafish": "Small freshwater fish often used in scientific research.",
+   "Zebra": "African equid known for its distinctive black-and-white stripes.",
    "Zebroid": "Hybrid animals from mating zebra with other equines.",
-   "Zebu": "Species of domestic cattle with a distinctive hump found over the shoulders.",
-   "Zebu Cattle": "Domestic cattle originating in the Asian subcontinent.",
-   "Zenaida Dove": "Bird often found in the Caribbean, known for its mournful call.",
+   "Zebu": "Bos indicus, often seen in Indian and African farming documentaries.",
    "Zeus Bug": "Small insect known for its role in some mating rituals.",
-   "Zigzag Eel": "Type of eel known for its distinctive zigzag body pattern.",
-   "Zigzag Goldenback": "Species of bird with distinctive golden zigzag patterns.",
    "Zilla": "A genus of plants, also a fictional giant monster character known as Godzilla in popular culture.",
    "Zokor": "Type of burrowing rodent found in Asia.",
-   "Zorilla": "Also known as the striped polecat, found in Central and Southern Africa.",
+   "Zorilla": "African skunk with a distinct appearance, sometimes shown in wildlife films.",
    "Zygentoma": "Insect order including silverfish and firebrats."
+  },
+  "zhu": {
+   "Zander": "A type of fish similar to pike-perches, sometimes seen in fishing shows.",
+   "Zebra": "Known for their distinctive black and white stripes, often seen in savannah documentaries.",
+   "Zebu": "A type of cattle from South Asia, often depicted in agriculture-themed media.",
+   "Zorilla": "Also known as the striped polecat, native to sub-Saharan Africa."
+  },
+  "zu": {
+   "Zander": "A type of fish similar to pike-perches, sometimes seen in fishing shows.",
+   "Zebra": "Known for their distinctive black and white stripes, often seen in savannah documentaries.",
+   "Zebu": "A type of cattle from South Asia, often depicted in agriculture-themed media.",
+   "Zorilla": "Also known as the striped polecat, native to sub-Saharan Africa."
   }
  },
  "GreekMythologyCharacter": {
@@ -407,6 +559,12 @@
    "Persephone": "Queen of the Underworld, goddess of spring growth.",
    "Poseidon": "God of the sea, earthquakes, and horses.",
    "Zeus": "King of the Gods, ruler of Mount Olympus."
+  },
+  "bu": {
+   "Achilles": "Hero of the Trojan War, invulnerable except for his heel.",
+   "Hercules": "Hero known for his strength and twelve labors.",
+   "Jason": "Leader of the Argonauts in search of the Golden Fleece.",
+   "Odysseus": "Hero of Homer's epic, 'The Odyssey.'"
   },
   "c": {
    "Calliope": "Muse of epic poetry, motherly and shrewd spirit.",
@@ -452,6 +610,18 @@
    "Cratos": "Personification of strength and power.",
    "Cronus": "Leader of the Titans, father of Zeus."
   },
+  "chu": {
+   "Calypso": "Nymph who detained Odysseus on her island.",
+   "Cassandra": "Trojan princess and prophetess.",
+   "Chiron": "Wise centaur who tutored many heroes.",
+   "Cronus": "Leader of the Titans, father of Zeus."
+  },
+  "cu": {
+   "Clytemnestra": "Wife of Agamemnon, known for her role in his murder.",
+   "Cupid": "Roman god of love, equivalent to Greek Eros.",
+   "Cura": "Creator of humanity and a minor god.",
+   "Cybele": "Mother of gods, goddess of nature and fertility."
+  },
   "d": {
    "Dactyls": "Mythical beings associated with metalwork.",
    "Daedalus": "Skilled craftsman and artist, father of Icarus.",
@@ -471,6 +641,12 @@
    "Dirce": "Tied to a bull by sons of Antiope.",
    "Doris": "Sea nymph, mother of the Nereids.",
    "Dryads": "Tree nymphs."
+  },
+  "du": {
+   "Danae": "Mother of Perseus, visited by Zeus in the form of a golden shower.",
+   "Demeter": "Goddess of the harvest and agriculture.",
+   "Diomedes": "Hero who fought in the Trojan War.",
+   "Dionysus": "God of wine, pleasure, and festivity."
   },
   "f": {
    "Fadrus": "Made up as addition, could relate to many minor figures.",
@@ -494,6 +670,12 @@
    "Furies": "Deities of vengeance, also known as Erinyes.",
    "Furina": "Roman goddess of thieves."
   },
+  "fu": {
+   "Fates": "Three sisters who determined the destinies of humans.",
+   "Faunus": "Roman counterpart of Greek Pan, god of the forest and fields.",
+   "Flora": "Goddess of flowers and spring.",
+   "Furies": "Deities of vengeance and retribution."
+  },
   "g": {
    "Gaea": "Alternative spelling for Gaia, earth mother.",
    "Gaia": "Primordial Earth goddess.",
@@ -513,6 +695,12 @@
    "Graeae": "Three sisters sharing one eye and tooth.",
    "Griffin": "Creature with the body of a lion and the head of an eagle.",
    "Gyges": "One of the Hecatoncheires, fell in battle fighting Typhon."
+  },
+  "gu": {
+   "Gaia": "Primordial goddess of the Earth.",
+   "Ganymede": "Beautiful youth taken by Zeus to be the cupbearer of the gods.",
+   "Glaucus": "Sea god and a fisherman turned into a god.",
+   "Gorgons": "Three monstrous sisters; Medusa being the most famous."
   },
   "h": {
    "Hades": "God of the underworld and the dead.",
@@ -536,6 +724,12 @@
    "Hylas": "Companion of Heracles, abducted by water nymphs.",
    "Hypnos": "God of sleep."
   },
+  "hu": {
+   "Hades": "God of the Underworld.",
+   "Hera": "Queen of the gods and goddess of marriage and family.",
+   "Hercules": "Hero known for his strength and completion of the twelve labors.",
+   "Hermes": "God of travel, trade, and communication."
+  },
   "k": {
    "Kadmos": "Founder of Thebes, brother of Europa.",
    "Kairatos": "Minor location spirit or name, not heavily featured.",
@@ -543,10 +737,8 @@
    "Kassiopeia": "Boasted about her daughter's beauty.",
    "Kastor": "One of the Dioscuri twins.",
    "Kelaino": "One of the Harpies, daughter of Thaumas and Electra.",
-   "Kentaurs (Centaurs)": "Half-human, half-horse creatures.",
    "Kerkopes": "Two mischievous dwarfs caught by Hercules.",
    "Khione": "Goddess of snow.",
-   "Kirke (Circe)": "Enchantress who transformed Odysseus's men into swine.",
    "Kleio": "Muse of history.",
    "Kleobis": "Paired with Biton in a story of familial devotion.",
    "Klytemnestra": "Wife of Agamemnon, involved in his murder.",
@@ -557,6 +749,12 @@
    "Kreusa": "Daughter of Priam, wife of Aeneas in some tales.",
    "Kronion": "Another name for Zeus, acknowledging his father Kronos.",
    "Kronos": "Leader of the first generation of Titans."
+  },
+  "ku": {
+   "Calliope": "Muse of epic poetry.",
+   "Cerberus": "Multi-headed dog that guarded the gates of the Underworld.",
+   "Chimera": "Monstrous fire-breathing creature with a lion's head, goat's body, and serpent's tail.",
+   "Cronus": "Leader of the Titans and father of Zeus."
   },
   "l": {
    "Lachesis": "One of the three Fates, measures the thread of life.",
@@ -575,6 +773,12 @@
    "Lycaon": "King transformed into a wolf by Zeus.",
    "Lycurgus": "King opposed Dionysus.",
    "Lydian": "Cultural or myth reference, pertaining to location."
+  },
+  "lu": {
+   "Laertes": "Father of Odysseus.",
+   "Leda": "Mother of Helen of Troy, seduced by Zeus in the form of a swan.",
+   "Leto": "Mother of Apollo and Artemis.",
+   "Linus": "Son of Apollo and a hero."
   },
   "m": {
    "Maia": "One of the Pleiades and mother of Hermes.",
@@ -597,6 +801,12 @@
    "Morpheus": "God of dreams.",
    "Muses": "Goddesses of the inspiration for literature and the arts."
   },
+  "mu": {
+   "Medusa": "Gorgon with snakes for hair who turned people to stone.",
+   "Midas": "King known for his ability to turn everything he touched into gold.",
+   "Minotaur": "Monster with the head of a bull and the body of a man.",
+   "Morpheus": "God of dreams."
+  },
   "n": {
    "Naiads": "Freshwater nymphs.",
    "Narcissus": "Young man who becomes a flower.",
@@ -617,6 +827,12 @@
    "Notus": "God of the south wind.",
    "Nysa": "Mythical place related to Dionysus's upbringing.",
    "Nyx": "Primordial goddess of the night."
+  },
+  "nu": {
+   "Narcissus": "Hunter who fell in love with his own reflection.",
+   "Nemesis": "Goddess of retribution and vengeance.",
+   "Nereus": "Old man of the sea and a god of the sea's rich bounty.",
+   "Nike": "Goddess of victory."
   },
   "p": {
    "Pallas": "Son of Evander, killed by Turnus.",
@@ -640,6 +856,12 @@
    "Psyche": "Mortal woman who became the goddess of the soul.",
    "Pygmalion": "Sculptor who fell in love with his statue."
   },
+  "pu": {
+   "Pandora": "First woman who opened a forbidden box, releasing evils into the world.",
+   "Perseus": "Hero known for slaying Medusa.",
+   "Poseidon": "God of the sea, earthquakes, and horses.",
+   "Prometheus": "Titan who gave fire to humanity."
+  },
   "r": {
    "Raids": "Common in stories involving divine intervention or influence.",
    "Rampi": "Derivative name used in adaptations or less known tales.",
@@ -661,6 +883,12 @@
    "Ruffled": "Term might apply to deities like Phobos in symbolic interps.",
    "Ruins": "Often used to symbolize or describe aftermath in myth.",
    "Rumor": "Personified as a spreader of news and gossip."
+  },
+  "ru": {
+   "Rhadamanthus": "Wise king and judge of the dead in the underworld.",
+   "Rhea": "Mother of the Olympian gods and wife of Cronus.",
+   "Romulus": "Founder of Rome and brother of Remus.",
+   "Rumina": "Roman goddess who protected nursing infants."
   },
   "s": {
    "Salmoneus": "Pretender to deity retribution by Zeus, thunderbolt myth.",
@@ -705,6 +933,18 @@
    "Styx": "River forming boundary between Earth and the Underworld.",
    "Sybil": "Alternate spelling for Sibyl, prophetess."
   },
+  "shu": {
+   "Scylla": "Sea monster who lived opposite Charybdis.",
+   "Selene": "Goddess of the moon.",
+   "Sisyphus": "King punished to eternally roll a boulder uphill.",
+   "Sphinx": "Creature with the head of a human and body of a lion."
+  },
+  "su": {
+   "Selene": "Goddess of the moon.",
+   "Silvanus": "Roman god of the countryside and forests.",
+   "Stheno": "One of the Gorgons, immortal sister of Medusa.",
+   "Syrinx": "Nymph who escaped pursuit by being turned into reeds."
+  },
   "t": {
    "Tantalus": "Eternal punishment in Tartarus for dining crimes.",
    "Teiresias": "Renowned prophet of Apollo, transformed into a woman.",
@@ -726,6 +966,18 @@
    "Triton": "Messenger of the sea, son of Poseidon.",
    "Troilus": "Young Trojan prince and tragic hero.",
    "Typhon": "Father of all monsters."
+  },
+  "tu": {
+   "Tantalus": "King punished in the afterlife with eternal hunger and thirst.",
+   "Themis": "Titaness of divine law and order.",
+   "Theseus": "Hero and king of Athens, known for slaying the Minotaur.",
+   "Typhon": "Gigantic monster with a hundred dragon heads."
+  },
+  "w": {
+   "Apollo": "God of the sun, music, and prophecy.",
+   "Dionysus": "God of wine, pleasure, and festivity.",
+   "Hermes": "Messenger of the gods, known for his winged sandals.",
+   "Zeus": "King of the Gods in Mount Olympus."
   },
   "z": {
    "Zacynthos": "Mythical founder linked to the island of Zakynthos.",
@@ -768,6 +1020,134 @@
    "Zigura": "Rare, linked to adaptations or geographic names.",
    "Zikum": "Name found in cross-cultural myth discussions.",
    "Zion": "Mythologized concept, not directly Greco-Roman."
+  },
+  "zhu": {
+   "Zagreus": "An underworld god who later merged with the myth of Dionysus.",
+   "Zelus": "Spirit of eager rivalry, emulation, envy, jealousy, and zeal.",
+   "Zephyrus": "God of the west wind.",
+   "Zeus": "King of the gods and ruler of Mount Olympus."
+  },
+  "zu": {
+   "Zagreus": "Mythical counterpart of Dionysus in his underworld aspect.",
+   "Zelus": "Spirited representation of envy, zeal, and rivalry.",
+   "Zephyrus": "God of the west wind.",
+   "Zeus": "King of the gods, ruler of Mount Olympus."
+  }
+ },
+ "MythologyCharacter": {
+  "bu": {
+   "Ba (罢)": "An ancient king of water demons from the 'Fengshen Yanyi' Chinese epic fantasy.",
+   "Bixia Yuanjun (碧霞元君)": "A Taoist goddess widely respected in Chinese folk religion.",
+   "Buddha (佛陀, Fótuó)": "A key figure in many mythologies and spiritual texts, often seen as a symbol of enlightenment.",
+   "Nuwa (女娲)": "The goddess who created mankind and repaired the sky in Chinese mythology, sometimes depicted with serpent features."
+  },
+  "chu": {
+   "Chang'e (嫦娥)": "The moon goddess known for her beauty and grace.",
+   "Chu Jiang (楚江王)": "One of the ten Yama kings who judge souls in the afterlife.",
+   "Chunhua (春华)": "Blossom spirits, embodying spring and renewal.",
+   "Chunxia (春霞)": "Dawn goddesses illuminating winter paths."
+  },
+  "cu": {
+   "Cui Wenwen (崔文文)": "A legendary scribe whose writing was said to shape reality itself.",
+   "Cui Xin (崔心)": "Spirit representing the human heart's passions and emotions.",
+   "Cusima (楚司马)": "Figures interfacing warfare and peace in mythology.",
+   "Cute Tian (粗特天)": "A fertility goddess patronizing agricultural clans."
+  },
+  "du": {
+   "Doumu (斗母)": "Known as the mother of all stars and heavenly figures in Taoist belief.",
+   "Dugong (杜公)": "A figure sometimes depicted in Chinese folklore with mystical affiliations.",
+   "Dugujia Luo (独孤伽罗)": "Not strictly mythological, but a symbol of power and wisdom in stories.",
+   "Duguzhao (独孤兆)": "A mythical figure known for mysterious prophecies."
+  },
+  "fu": {
+   "Feng Bo (风伯)": "The Earl of Wind, a deity responsible for winds in Chinese mythology.",
+   "Fenghuang (凤凰)": "The Phoenix, representing the union of yin and yang and often seen as a sign of peace.",
+   "Fu Xi (福喜)": "Another name for Fuxi, the cultural ancestor of humanity in Chinese creation myth.",
+   "Fuxi (伏羲)": "A culture hero often depicted as the original human in Chinese mythology, known for creating the Ba Gua."
+  },
+  "gu": {
+   "Guanyin (观音)": "The bodhisattva of compassion, often depicted in various retelling of Chinese myths.",
+   "Gujingwen (古井纹)": "Ancestor spirits known for their wisdom passed through family lines.",
+   "Gun (鲧)": "A mythical figure that attempted to control floods, often reverenced in ancient tales.",
+   "Guojia (国佳)": "A god of special place and vitality in certain regions."
+  },
+  "hu": {
+   "Hou Yi (后羿)": "The legendary archer who shot down nine suns to save humanity.",
+   "Hu Jing (胡敬)": "Metaphoric reference addressing national brotherhood creatures.",
+   "Huang Di (黄帝)": "The Yellow Emperor, regarded as a cultural hero and inventor in Chinese legend.",
+   "Huli Jing (狐狸精)": "A fox spirit from Chinese folklore, embodying transformation and trickery."
+  },
+  "ku": {
+   "Kua Fu (夸父)": "A giant who chased the sun in one of the most popular Chinese myths.",
+   "Kuafu (夸父)": "Alternative name and depiction of the sun-chasing giant.",
+   "Kui (夔)": "A dragon-like creature emblematic of powerful music in Chinese legend.",
+   "Kuixing (魁星)": "A deity associated with examinations and scholars, depicted as stepping on an ao (a mythical turtle) and pointing at the dipper stars."
+  },
+  "lu": {
+   "Lu Wu (禄武)": "A guardian figure in Taoist mythology.",
+   "Luban (鲁班)": "Though historical, regarded mythologically for his inventions and craftsmanship.",
+   "Lubu (吕布)": "A historical warrior often romanticized into a god-like figure in folk tales.",
+   "Luguan (禄馆)": "Mythically considered a guide for spirits to the underworld."
+  },
+  "mu": {
+   "Mazu (妈祖)": "The goddess of the sea, worshipped by seafarers and fishermen.",
+   "Mo Xie (莫邪)": "A legendary sword with mythological status in Chinese culture.",
+   "Mochizuki Chiyome (望月千代女)": "A historical female ninja, often romanticized in stories and legends.",
+   "Mulan (木兰)": "A legendary figure who took her father's place in the army, gaining fame for her bravery."
+  },
+  "nu": {
+   "Nügu (女姑)": "A mystical woman often featured in regional tales for her prophecy skills.",
+   "Nüshen (女神)": "Generic term for goddess, often referencing many female deities in folklore.",
+   "Nuwa (女娲)": "The goddess who created mankind and mended the heavens. A significant figure in mythology.",
+   "Nüwa Wuhua (女娲无华)": "A slight variation of Nuwa's myth, reflecting her multifaceted nature."
+  },
+  "pu": {
+   "Pangu (盘古)": "The creator god who separated the sky from the earth in Chinese mythology.",
+   "Piluohuo (辟罗火)": "A mythical bird akin to the phoenix, celebrated in various tales.",
+   "Pu Gong Ying （蒲公英)": "Commonly known as dandelion, but its linguistic reference is often creatively described in stories.",
+   "Pu Lao (蒲牢)": "One of the nine sons of the dragon, known for its voice and as a representation of bells."
+  },
+  "ru": {
+   "Runxiang (润象)": "Rain deities implored for agricultural crisis aversion.",
+   "Ruo Wang Dan (若王丹)": "Elixirs serving royal patrons in epic tales.",
+   "Ruyi Jingu Bang (如意金箍棒)": "A powerful weapon wielded by Sun Wukong, the Monkey King.",
+   "Ruyun (如云)": "Cloud deities depicted in vibrant Spring tales."
+  },
+  "shu": {
+   "Shu Gang (术刚)": "A character embodying magical strength in lesser-known myths.",
+   "Shu Jun (叔均)": "A figure in ancient texts symbolizing the youth and innocence in noble lineage.",
+   "Shun (舜)": "A legendary emperor known for his moral character and ability to unify the people.",
+   "Shun Wu (顺武)": "Often mythologized for his military prowess."
+  },
+  "su": {
+   "Su Daji (苏妲己)": "An infamous historical figure whose story has been mythologized, often portrayed as a femme fatale with supernatural origins.",
+   "Suiren (燧人)": "A mythological figure credited with bringing fire to humanity.",
+   "Sun Ce (孙策)": "A warlord and historical figure, often romanticized in Chinese storytelling.",
+   "Sun Wukong (孙悟空)": "Also known as the Monkey King, a central figure in Chinese mythology celebrated for his mischief and strength."
+  },
+  "tu": {
+   "Tu Di Gong (土地公)": "The Earth God, who watches over households and their fortune.",
+   "Tu Xingsun (土行孙)": "A character in 'Fengshen Yanyi' known for his burrowing ability.",
+   "Tubo (土拨)": "A mythical land creature known to plow the earth.",
+   "Tushan (涂山)": "Several tales are associated with the name, signifying mythical and historical occurrences."
+  },
+  "w": {
+   "Wenchang Wang": "The Taoist deity of culture and literature, often respected by scholars and students.",
+   "Wukong (孙悟空)": "The Monkey King from 'Journey to the West', known for his incredible strength and mischievous nature.",
+   "Wutuo (乌陀)": "A lesser-known guardian god in Chinese folklore.",
+   "Wuzhiqi (无支祁)": "A water demon from Chinese myth, often depicted as a giant ape or monkey."
+  },
+  "zhu": {
+   "Zhu Bajie (猪八戒)": "The Pigsy character from 'Journey to the West', known for gluttony and strength.",
+   "Zhuge Liang (诸葛亮) (though historical)": "His wisdom and magical abilities have been mythologized.",
+   "Zhulong (烛龙)": "A mythical creature often depicted as a dragon associated with light.",
+   "Zhusheng Niangniang (注生娘娘)": "A goddess who bestows births in Chinese tradition."
+  },
+  "zu": {
+   "Zudou (祖斗)": "Spirits battling negative forces based on ancient folklore.",
+   "Zunware (尊瓦尔)": "Mythical guardians crowned in regal stories as ultimate protectors.",
+   "Zuolong (佐隆)": "Dragons serving as cultural myths, demonstrating strength and vitality.",
+   "Zusang (祖桑)": "Agricultural deities fostering crop growth and prosperity."
   }
  },
  "WesternCultureFamousMen": {
@@ -792,6 +1172,12 @@
    "Bryan Cranston": "Actor best known for his role as Walter White in 'Breaking Bad.'",
    "Burt Reynolds": "Iconic American actor known for films like 'Smokey and the Bandit.'",
    "Buster Keaton": "Famous silent film actor and director known for comedy."
+  },
+  "bu": {
+   "Beethoven": "German composer and pianist, a crucial figure in the transition between the Classical and Romantic eras in classical music.",
+   "Benedict Cumberbatch": "English actor known for his roles in 'Sherlock' and 'Doctor Strange.'",
+   "Bruce Willis": "American actor famous for his role in the 'Die Hard' series.",
+   "Burt Reynolds": "American actor known for his roles in 'Smokey and the Bandit' and 'Boogie Nights.'"
   },
   "c": {
    "Cary Grant (Corthas)": "Dapper British-American actor known for classic films.",
@@ -837,6 +1223,18 @@
    "Christopher Walken": "Oscar-winning actor known for his unique voice and roles in 'Catch Me If You Can' and 'Pulp Fiction.'",
    "Chuck Norris": "Martial artist and actor known for his roles in action films and TV series."
   },
+  "chu": {
+   "Charles Dickens": "Renowned English writer and social critic, famous for novels such as 'Oliver Twist' and 'A Christmas Carol.'",
+   "Charlie Chaplin": "Legendary English comic actor, filmmaker, and composer best known for his work during the silent film era.",
+   "Chris Hemsworth": "Australian actor known for his role as Thor in the Marvel Cinematic Universe.",
+   "Chuck Norris": "American martial artist, actor, and television host known for his role in 'Walker, Texas Ranger.'"
+  },
+  "cu": {
+   "Charlie Chaplin": "Legendary English film actor and director known for his work in the silent film era, particularly as the character 'The Tramp.'",
+   "Chris Evans": "American actor known for portraying Captain America in the Marvel Cinematic Universe.",
+   "Christopher Columbus": "Italian explorer and navigator who completed four voyages across the Atlantic Ocean, opening the way for the widespread European exploration of the Americas.",
+   "Clint Eastwood": "Acclaimed American actor, director, and producer known for films like 'Unforgiven' and 'The Good, the Bad and the Ugly.'"
+  },
   "d": {
    "Damian Lewis": "British actor known for roles in 'Homeland' and 'Billions.'",
    "Damon Albarn": "Lead singer of British band Blur and co-creator of Gorillaz.",
@@ -859,6 +1257,12 @@
    "Dwayne Johnson": "American actor and former professional wrestler known as 'The Rock.'",
    "Dylan Thomas": "Welsh poet known for works such as 'Do not go gentle into that good night.'"
   },
+  "du": {
+   "Daniel Day-Lewis": "Retired English actor widely regarded for his talent and dedication to roles.",
+   "David Bowie": "Influential English singer, songwriter, and actor, known for his distinctive music and visual presentation.",
+   "Dustin Hoffman": "Celebrated American actor known for films like 'Rain Man' and 'The Graduate.'",
+   "Dwayne Johnson": "American actor and former professional wrestler, also known as 'The Rock.'"
+  },
   "f": {
    "F. Murray Abraham": "American actor known for his role in 'Amadeus.'",
    "F. Scott Fitzgerald": "Famous American novelist known for 'The Great Gatsby.'",
@@ -878,8 +1282,13 @@
    "Fred Rogers": "Beloved television personality known for 'Mister Rogers' Neighborhood.'",
    "Freddie Mercury": "Legendary British singer and frontman of the band Queen.",
    "Friedrich Engels": "German philosopher and father of socialist theory.",
-   "Friedrich Nietzsche": "Influential German philosopher known for works on existentialism.",
-   "Frodo Baggins": "Fictional character from 'The Lord of the Rings' series."
+   "Friedrich Nietzsche": "Influential German philosopher known for works on existentialism."
+  },
+  "fu": {
+   "F. Scott Fitzgerald": "American novelist known for works like 'The Great Gatsby.'",
+   "Francis Ford Coppola": "American film director, producer, and screenwriter, known for 'The Godfather' series and 'Apocalypse Now.'",
+   "Frank Sinatra": "American singer and actor, one of the most popular and influential music artists of the 20th century.",
+   "Freddie Mercury": "Legendary British singer, songwriter, and lead vocalist of the rock band Queen."
   },
   "g": {
    "G-Eazy": "American rapper known for his contemporary hip-hop and mainstream success.",
@@ -903,27 +1312,35 @@
    "Groucho Marx": "Legendary comedian and star of stage and screen.",
    "Guy Pearce": "Australian actor known for 'Memento' and 'L.A. Confidential.'"
   },
+  "gu": {
+   "George Clooney": "American actor and filmmaker known for his roles in 'Ocean's Eleven' and 'Gravity.'",
+   "George Washington": "First President of the United States and a Founding Father.",
+   "Gérard Depardieu": "French actor prominent in international cinema.",
+   "Gustav Klimt": "Austrian symbolist painter known for works like 'The Kiss.'"
+  },
   "h": {
    "Halle Berry": "Award-winning actress known for 'Monster's Ball' and 'X-Men.'",
-   "Hannibal Lecter": "Fictional character from 'The Silence of the Lambs' series.",
    "Hans Christian Andersen": "Danish author famous for his fairy tales.",
    "Hans Zimmer": "Renowned film composer known for his work on 'The Lion King' and 'Inception.'",
    "Harrison Ford": "Legendary actor best known for roles in 'Star Wars' and 'Indiana Jones.'",
-   "Harrison Wells": "Fictional character from DC Comics, particularly known in 'The Flash' series.",
    "Harry Connick Jr.": "American singer, pianist, and actor.",
-   "Harry Potter": "Fictional character and protagonist of J.K. Rowling's popular book series.",
    "Harry Styles": "British singer and actor, formerly of One Direction.",
    "Harvey Weinstein": "Disgraced film producer known for his influence in Hollywood.",
    "Heath Ledger": "Acclaimed actor known for his role as the Joker in 'The Dark Knight.'",
    "Henry Cavill": "British actor known for his portrayal of Superman in the DC Extended Universe.",
    "Henry Kissinger": "German-born American political scientist and former U.S. Secretary of State.",
-   "Homer Simpson": "Fictional character from the animated television series 'The Simpsons.'",
    "Howard Hughes": "Business magnate, aviator, and film director known for his eccentric lifestyle.",
    "Howard Stern": "American radio and TV personality known for his controversial style.",
    "Hozier": "Irish musician known for his hit song 'Take Me to Church.'",
    "Hugh Grant": "British actor known for romantic comedies like 'Notting Hill' and 'Love Actually.'",
    "Hugh Jackman": "Australian actor known for playing Wolverine and roles in musicals like 'Les Misérables.'",
    "Hulk Hogan": "Iconic professional wrestler and TV personality."
+  },
+  "hu": {
+   "Harrison Ford": "American actor famously known for his roles as Han Solo and Indiana Jones.",
+   "Harvey Milk": "American politician and the first openly gay elected official in the history of California.",
+   "Heath Ledger": "Acclaimed Australian actor known for his role as the Joker in 'The Dark Knight.'",
+   "Hugh Jackman": "Australian actor, singer, and producer known for his role as Wolverine in the 'X-Men' film series."
   },
   "k": {
    "Kanye West": "American rapper and producer known for his impactful career in music and fashion.",
@@ -940,12 +1357,17 @@
    "Kevin James": "Actor and comedian known for 'The King of Queens.'",
    "Kevin Spacey": "American actor known for roles in 'American Beauty' and 'House of Cards.'",
    "Kiefer Sutherland": "Canadian actor known for his role in '24.'",
-   "King Kong": "Fictional giant ape featured in various films, known for its monumental battles.",
    "Kirk Douglas": "Legendary actor known for classic films like 'Spartacus.'",
    "Kirk Hammett": "Lead guitarist of the heavy metal band Metallica.",
    "Kit Harington": "British actor known for his role as Jon Snow in 'Game of Thrones.'",
    "Kris Kristofferson": "Singer-songwriter and actor known for his contributions to country music.",
    "Kurt Cobain": "Late lead singer of the iconic rock band Nirvana."
+  },
+  "ku": {
+   "Keanu Reeves": "Canadian actor known for roles in 'The Matrix' series and 'John Wick.'",
+   "Kevin Costner": "American actor and filmmaker known for his roles in 'Dances with Wolves' and 'The Bodyguard.'",
+   "Kirk Douglas": "American actor, producer, and author, known for his role in 'Spartacus.'",
+   "Kurt Cobain": "American singer-songwriter and musician, best known as the lead guitarist and frontman of Nirvana."
   },
   "l": {
    "L. Frank Baum": "American author best known for writing 'The Wonderful Wizard of Oz.'",
@@ -966,8 +1388,12 @@
    "Louis Tomlinson": "Singer and former member of One Direction.",
    "Luciano Pavarotti": "Legendary Italian operatic tenor known for his powerful voice.",
    "Ludwig van Beethoven": "Renowned composer whose works are still widely celebrated.",
-   "Luke Skywalker": "Fictional character from the 'Star Wars' franchise, portrayed by Mark Hamill.",
    "Luther Vandross": "American singer-songwriter known for R&B and soul music hits."
+  },
+  "lu": {
+   "Leonardo DiCaprio": "Famous American actor and environmental activist, known for roles in 'Titanic' and 'Inception.'",
+   "Liam Neeson": "Northern Irish actor known for his role in 'Schindler's List' and the 'Taken' series.",
+   "Luciano Pavarotti": "Italian operatic tenor, one of the most commercially successful tenors of all time."
   },
   "m": {
    "Mac Miller": "Popular American rapper and music artist.",
@@ -991,6 +1417,12 @@
    "Morgan Freeman": "Acclaimed American actor known for his distinctive voice and roles in films like 'The Shawshank Redemption.'",
    "Muhammad Ali": "American boxer widely regarded as one of the greatest athletes in history."
   },
+  "mu": {
+   "Mark Twain": "American writer and humorist, known for 'Adventures of Huckleberry Finn' and 'The Adventures of Tom Sawyer.'",
+   "Marlon Brando": "Iconic American actor known for performances in 'The Godfather' and 'A Streetcar Named Desire.'",
+   "Michael Jackson": "American singer, songwriter, and dancer, dubbed the 'King of Pop.'",
+   "Morgan Freeman": "Distinguished American actor known for his deep voice and diverse range of roles."
+  },
   "n": {
    "Nas": "American rapper and entrepreneur.",
    "Nash Grier": "American internet personality and actor.",
@@ -1012,6 +1444,11 @@
    "Noah Centineo": "American actor known for his roles in teen romance films.",
    "Norman Reedus": "American actor known for 'The Walking Dead' and 'The Boondock Saints.'",
    "Norman Rockwell": "American painter and illustrator known for his depictions of American culture."
+  },
+  "nu": {
+   "Neil Armstrong": "American astronaut and aeronautical engineer who was the first person to walk on the Moon.",
+   "Nikola Tesla": "Serbian-American inventor, electrical engineer, mechanical engineer, and futurist.",
+   "Noah Wyle": "American actor known for his role as Dr. John Carter on the TV series 'ER.'"
   },
   "p": {
    "P. Diddy": "American rapper and music producer also known as Sean Combs.",
@@ -1035,6 +1472,12 @@
    "Piers Morgan": "British journalist and television personality.",
    "Prince": "Innovative musician known for hits like 'Purple Rain' and his flamboyant style."
   },
+  "pu": {
+   "Pablo Picasso": "Spanish painter, sculptor, and one of the most influential artists of the 20th century.",
+   "Paul McCartney": "English singer-songwriter from 'The Beatles,' one of the most famous and successful bands in history.",
+   "Peter Jackson": "New Zealand film director, screenwriter, and producer known for 'The Lord of the Rings' film series.",
+   "Pierce Brosnan": "Irish actor known for his role as James Bond in several films."
+  },
   "r": {
    "Ralph Fiennes": "Acclaimed actor known for roles in 'Schindler's List' and 'Harry Potter.'",
    "Rami Malek": "Actor known for his portrayal of Freddie Mercury in 'Bohemian Rhapsody.'",
@@ -1056,6 +1499,12 @@
    "Russell Crowe": "Actor known for his role in 'Gladiator' and 'A Beautiful Mind.'",
    "Ryan Gosling": "Actor known for 'La La Land' and 'The Notebook.'",
    "Ryan Reynolds": "Actor known for 'Deadpool' and his comedic roles."
+  },
+  "ru": {
+   "Richard Nixon": "The 37th President of the United States, known for the Watergate scandal leading to his resignation.",
+   "Robert Downey Jr.": "Celebrated American actor known for his role as Iron Man in the Marvel Cinematic Universe.",
+   "Robin Williams": "Beloved American actor and comedian known for films like 'Mrs. Doubtfire' and 'Dead Poets Society.'",
+   "Russell Crowe": "New Zealand actor, film producer, and musician, famous for his role in 'Gladiator.'"
   },
   "s": {
    "Sacha Baron Cohen": "Comedian and actor known for characters like Borat and Ali G.",
@@ -1101,6 +1550,18 @@
    "Steven Tyler": "Lead singer of the band Aerosmith.",
    "Sylvester Stallone": "Famous for his roles in action films like 'Rocky' and 'Rambo.'"
   },
+  "shu": {
+   "Sam Smith": "English singer and songwriter, known for hits like 'Stay With Me' and 'I'm Not the Only One.'",
+   "Sean Connery": "Iconic Scottish actor best known as the first actor to portray James Bond in film.",
+   "Steve Jobs": "American business magnate, industrial designer, investor, and media proprietor, chairman, and CEO of Apple Inc.",
+   "Steven Spielberg": "American filmmaker and one of the most successful film directors and producers in history."
+  },
+  "su": {
+   "Stephen King": "Celebrated American author known for his horror, supernatural fiction, suspense, and fantasy novels.",
+   "Steve Jobs": "Co-founder and former CEO of Apple, influential figure in the technology industry.",
+   "Steven Spielberg": "Acclaimed American filmmaker known for directing classics such as 'Jaws,' 'E.T.,' and 'Jurassic Park.'",
+   "Sylvester Stallone": "Famed American actor, screenwriter, and filmmaker known for his role as Rocky Balboa in the 'Rocky' series."
+  },
   "t": {
    "Ted Danson": "American actor known for his role in 'Cheers' and 'The Good Place.'",
    "Terry Crews": "American actor and former NFL player known for comedy roles.",
@@ -1123,25 +1584,30 @@
    "Trent Reznor": "Musician and lead of the band Nine Inch Nails.",
    "Tyler Perry": "American actor, producer, and author known for his 'Madea' movies."
   },
+  "tu": {
+   "Tiger Woods": "American professional golfer, considered one of the greatest in the sport's history.",
+   "Tim Burton": "American filmmaker known for his dark, gothic, quirky fantasy films.",
+   "Tom Hanks": "Renowned American actor and filmmaker, known for films like 'Forrest Gump' and 'Saving Private Ryan.'",
+   "Tony Blair": "British politician who served as Prime Minister of the United Kingdom from 1997 to 2007."
+  },
+  "w": {
+   "Walt Disney": "American entrepreneur and animator, co-founder of The Walt Disney Company.",
+   "Will Smith": "Renowned American actor and rapper, known for roles in films like 'Men in Black' and 'The Pursuit of Happyness.'",
+   "Winston Churchill": "Former Prime Minister of the United Kingdom, famous for his leadership during World War II.",
+   "Woody Allen": "American filmmaker, actor, and comedian, known for films like 'Annie Hall.'"
+  },
   "z": {
    "Zac Efron": "American actor known for 'High School Musical' and 'The Greatest Showman.'",
    "Zach Braff": "American actor known for his role in 'Scrubs.'",
    "Zach Galifianakis": "Comedian and actor known for 'The Hangover' series.",
    "Zachary Levi": "Actor known for 'Shazam!' and 'Chuck.'",
    "Zack Snyder": "Film director known for movies like '300' and 'Justice League.'",
-   "Zane Grey": "Prolific author known for his popular western novels.",
-   "Zaphod Beeblebrox (fictional)": "Character from 'The Hitchhiker's Guide to the Galaxy' series.",
    "Zayn Malik": "Singer and former member of One Direction.",
-   "Zeb Macahan (fictional)": "Fictional character from the TV series 'How the West Was Won.'",
-   "Zebedee": "Biblical figure, father of James and John.",
-   "Zeus (fictional)": "King of the gods in Greek mythology, often represented in various films and literature.",
-   "Zhu Bajie (fictional)": "Character from the Chinese classical novel 'Journey to the West', often depicted with human traits.",
    "Zig Ziglar": "Motivational speaker and author.",
    "Zinedine Zidane": "Legendary French footballer and esteemed manager.",
    "Zlatan Ibrahimović": "Famous Swedish professional footballer known for his charisma and skill.",
    "Zooey Deschanel": "Actress known for 'New Girl' (fictional character portraying a male in character representations).",
    "Zorro (character)": "Fictional character, known as a masked outlaw defending the people of California.",
-   "Zorro (fictional)": "A masked vigilante character popularized in films and books.",
    "Zsa Zsa Gabor": "Famous actress and socialite (while primarily a woman's name, this is recognizable due to the male-related context)."
   },
   "zh": {
@@ -1165,6 +1631,18 @@
    "Zhu Ling": "Chinese actress known for various television roles and her involvement in dramatic music videos.",
    "Zhu Rongji": "Former Premier of the People's Republic of China.",
    "Zhuge Liang": "Historical Chinese military strategist and statesman."
+  },
+  "zhu": {
+   "Zac Efron": "American actor and singer, known for his roles in 'High School Musical' and 'The Greatest Showman.'",
+   "Zachary Levi": "American actor and singer known for his role as Chuck in the TV series 'Chuck' and as Shazam in the DC film 'Shazam!'",
+   "Zig Ziglar": "American author, salesman, and motivational speaker.",
+   "Zinedine Zidane": "French former professional football player and current football manager, widely considered one of the greatest players of all time."
+  },
+  "zu": {
+   "Zane Grey": "American author known for his popular adventure novels and stories associated with the Western genre.",
+   "Zeus": "Mythological king of the gods in ancient Greek religion, though not a real historical figure could symbolize larger-than-life figures.",
+   "Zlatan Ibrahimović": "Swedish professional football player known for his techniques and competitive presence.",
+   "Zuckerberg (Mark Zuckerberg)": "American media magnate, internet entrepreneur, and philanthropist known for co-founding Facebook."
   }
  },
  "WesternCultureFamousWomen": {
@@ -1189,6 +1667,24 @@
    "Brooke Shields": "American actress and model, famous for her early film roles and modeling career.",
    "Bryce Dallas Howard": "American actress and director, known for her roles in films like 'Jurassic World.'"
   },
+  "bu": {
+   "Beyoncé": "Globally acclaimed American singer, songwriter, actress, and philanthropist.",
+   "Billie Eilish": "American singer-songwriter known for her unique style and voice.",
+   "Brigitte Bardot": "French actress, singer, and fashion model.",
+   "Britney Spears": "Iconic pop singer known for hits like '...Baby One More Time'."
+  },
+  "chu": {
+   "Charlize Theron": "South African and American actress and producer known for 'Monster' and 'Mad Max: Fury Road'.",
+   "Cher": "American singer, actress, and television personality, known as the 'Goddess of Pop'.",
+   "Cheryl Cole": "English singer, dancer, and television personality.",
+   "Christina Aguilera": "American singer, songwriter, and television personality known for her powerful singing voice."
+  },
+  "cu": {
+   "Carrie Fisher": "American actress known for her role as Princess Leia in 'Star Wars'.",
+   "Cate Blanchett": "Australian actress known for her diverse roles and two Academy Awards.",
+   "Coco Chanel": "French fashion designer and businesswoman.",
+   "Cyndi Lauper": "American singer-songwriter known for 'Girls Just Want to Have Fun'."
+  },
   "d": {
    "Dakota Fanning": "American actress known from a young age in films like 'I Am Sam.'",
    "Dakota Johnson": "American actress known for her role in the 'Fifty Shades' film series.",
@@ -1210,6 +1706,12 @@
    "Donna Summer": "American singer, songwriter, known as the 'Queen of Disco.'",
    "Dove Cameron": "American singer and actress known for her roles on Disney Channel.",
    "Drew Barrymore": "American actress known for her role in 'E.T.' and her talk show 'The Drew Barrymore Show.'"
+  },
+  "du": {
+   "Demi Moore": "American actress known for films like 'Ghost' and 'G.I. Jane'.",
+   "Diane Keaton": "American actress known for her roles in Woody Allen films.",
+   "Dolly Parton": "American singer, songwriter, and actress.",
+   "Drew Barrymore": "American actress and talk show host, known for her roles in 'E.T.' and 'Charlie's Angels'."
   },
   "f": {
    "Faith Hill": "American country music singer.",
@@ -1233,6 +1735,36 @@
    "Frida Kahlo": "Mexican painter known for her self-portraits.",
    "Frieda Pinto": "Indian actress known for her role in 'Slumdog Millionaire.'"
   },
+  "fu": {
+   "Faye Dunaway": "American actress known for classics like 'Bonnie and Clyde' and 'Network.'",
+   "Fiona Apple": "American singer-songwriter known for her distinctive voice and lyrics.",
+   "Florence Nightingale": "Founder of modern nursing and a social reformer.",
+   "Frida Kahlo": "Mexican artist known for her self-portraits and emotional depth."
+  },
+  "gu": {
+   "Gal Gadot": "Israeli actress known for playing Wonder Woman in the DC Universe.",
+   "Gloria Steinem": "American feminist, journalist, and social political activist.",
+   "Grace Kelly": "American actress who became Princess Grace of Monaco.",
+   "Gwyneth Paltrow": "American actress and founder of the lifestyle brand Goop."
+  },
+  "hu": {
+   "Halle Berry": "American actress known for roles in 'Monster's Ball' and 'X-Men'.",
+   "Helen Mirren": "British actress known for her versatile roles in theatre, film, and television.",
+   "Helena Bonham Carter": "British actress known for her collaborations with Tim Burton and roles in 'Harry Potter'.",
+   "Hillary Clinton": "American politician, diplomat, lawyer, and writer who served as Secretary of State."
+  },
+  "ku": {
+   "Kate Winslet": "British actress known for her role in 'Titanic' and various critically acclaimed films.",
+   "Keira Knightley": "British actress known for films like 'Pride & Prejudice' and 'Pirates of the Caribbean'.",
+   "Kim Kardashian": "American media personality and businesswoman known for her influential social media presence.",
+   "Kylie Minogue": "Australian-British singer and actress known for her pop hits."
+  },
+  "lu": {
+   "Lady Gaga": "American singer and actress known for her flamboyant style and hits like 'Poker Face'.",
+   "Lena Headey": "British actress known for her role as Cersei Lannister in 'Game of Thrones'.",
+   "Lucy Liu": "American actress known for 'Kill Bill' and 'Charlie's Angels'.",
+   "Lupita Nyong'o": "Academy Award-winning actress known for '12 Years a Slave' and 'Black Panther'."
+  },
   "m": {
    "Madonna": "Iconic American singer and actress known as the 'Queen of Pop.'",
    "Mae West": "American actress and sex symbol, known for her provocative movies.",
@@ -1255,6 +1787,18 @@
    "Minnie Driver": "English actress and singer known for her role in 'Good Will Hunting.'",
    "Miranda Lambert": "American country music singer-songwriter."
   },
+  "mu": {
+   "Madonna": "Queen of Pop, known for her influence in music and culture.",
+   "Marilyn Monroe": "Iconic American actress and symbol of Hollywood elegance.",
+   "Meryl Streep": "American actress regarded as one of the greatest actresses of her generation.",
+   "Michelle Obama": "American attorney and author who was the First Lady of the United States from 2009 to 2017."
+  },
+  "nu": {
+   "Naomi Campbell": "British supermodel and actress.",
+   "Natalie Portman": "Academy Award-winning actress known for 'Black Swan' and 'Star Wars'.",
+   "Nicole Kidman": "Australian actress known for films like 'Moulin Rouge!' and 'The Others'.",
+   "Nina Simone": "American singer and civil rights activist known for her soulful music."
+  },
   "p": {
    "P!nk (Alecia Moore)": "American singer known for her distinctive raspy voice and acrobatic live shows.",
    "Pam Grier": "American actress best known for her roles in blaxploitation films.",
@@ -1276,6 +1820,308 @@
    "Princess Diana": "British royal and beloved humanitarian known for her charitable work.",
    "Princess Margaret": "Countess of Snowdon and sister of Queen Elizabeth II.",
    "Priyanka Chopra": "Indian actress and singer who has appeared in Bollywood and Hollywood films."
+  },
+  "pu": {
+   "P!nk": "American singer and songwriter known for her powerful singing voice and acrobatic stage presence.",
+   "Pamela Anderson": "Canadian-American actress and model, known for 'Baywatch'.",
+   "Penélope Cruz": "Academy Award-winning Spanish actress known for her roles in films like 'Vicky Cristina Barcelona'.",
+   "Princess Diana": "Beloved former Princess of Wales and humanitarian."
+  },
+  "ru": {
+   "Rachel McAdams": "Canadian actress known for 'The Notebook' and 'Mean Girls'.",
+   "Reese Witherspoon": "American actress and producer known for 'Legally Blonde' and 'Big Little Lies'.",
+   "Rihanna": "Barbadian singer, actress, and businesswoman.",
+   "Ruth Bader Ginsburg": "Former Associate Justice of the Supreme Court of the United States known for her legal work on gender equality."
+  },
+  "shu": {
+   "Sandra Bullock": "American actress and producer known for 'The Blind Side' and 'Gravity'.",
+   "Scarlett Johansson": "American actress known for her roles in 'Lost in Translation' and the Marvel Cinematic Universe.",
+   "Shakira": "Colombian singer and songwriter known for her unique voice and hip-shaking dance moves.",
+   "Sofia Vergara": "Colombian-American actress and model, known for 'Modern Family'."
+  },
+  "su": {
+   "Samantha Bee": "Canadian-American comedian, writer, producer, and television host.",
+   "Sofia Coppola": "American filmmaker and actress known for 'Lost in Translation'.",
+   "Susan B. Anthony": "American social reformer and women's rights activist.",
+   "Suzanne Collins": "American author known for 'The Hunger Games' trilogy."
+  },
+  "tu": {
+   "Taylor Swift": "American singer-songwriter known for her narrative songwriting.",
+   "Tilda Swinton": "British actress known for her roles in 'The Chronicles of Narnia' and 'Doctor Strange'.",
+   "Tina Turner": "Legendary performer known for her powerful voice and stage presence.",
+   "Tyra Banks": "American television personality and former supermodel."
+  },
+  "w": {
+   "Whitney Houston": "Legendary American pop and R&B singer known for her powerful voice.",
+   "Whoopi Goldberg": "American actress and comedian, EGOT winner.",
+   "Winona Ryder": "American actress known for her roles in 'Beetlejuice' and 'Stranger Things'.",
+   "Wonder Woman": "Iconic comic book character and subject of a major movie franchise."
+  },
+  "zhu": {
+   "Zelda Fitzgerald": "American socialite and novelist, known as the wife of F. Scott Fitzgerald.",
+   "Zendaya": "American actress and singer known for 'Euphoria' and 'Shake It Up'.",
+   "Zoe Saldana": "American actress known for her roles in 'Avatar' and 'Guardians of the Galaxy'.",
+   "Zsa Zsa Gabor": "Hungarian-American actress and socialite."
+  },
+  "zu": {
+   "Zadie Smith": "British novelist known for books like 'White Teeth'.",
+   "Zara Tindall": "Member of the British royal family and equestrian.",
+   "Zelda Fitzgerald": "American socialite and novelist, known as the wife of F. Scott Fitzgerald.",
+   "Zoe Saldana": "American actress known for her roles in 'Avatar' and 'Guardians of the Galaxy'."
+  }
+ },
+ "WesternMythologyCharacter": {
+  "b": {
+   "Achilles": "Greek hero of the Trojan War, known for his strength and vulnerability.",
+   "Apollo": "Greek god of music, arts, knowledge, and healing.",
+   "Ares": "Greek god of war, often depicted as a powerful and tumultuous warrior.",
+   "Artemis": "Greek goddess of the hunt, wilderness, and childbirth.",
+   "Athena": "Greek goddess of wisdom, courage, and warfare.",
+   "Demeter": "Greek goddess of the harvest and agriculture.",
+   "Hades": "Greek god of the underworld, brother of Zeus and Poseidon.",
+   "Hera": "Queen of the Greek gods, goddess of marriage and birth.",
+   "Hercules": "Roman name for Heracles, known for his incredible strength and the Twelve Labors.",
+   "Hermes": "Greek god of trade, wealth, luck, fertility, and travel.",
+   "Kronos": "Leader of the first generation of Titans in Greek mythology.",
+   "Zeus": "King of the Greek gods and ruler of Mount Olympus."
+  },
+  "c": {
+   "Cacus": "Fire-breathing giant in Roman mythology.",
+   "Calypso": "Nymph who detained Odysseus on her island, Ogygia.",
+   "Cassandra": "Trojan priestess cursed to utter prophecies that would not be believed.",
+   "Centaurs": "Creatures with the upper body of a human and lower body of a horse.",
+   "Cerberus": "Three-headed dog guarding the entrance to the Underworld.",
+   "Ceres": "Roman goddess of agriculture, crops, fertility, and motherly relationships.",
+   "Chimaera": "Fire-breathing monster composed of parts of multiple animals.",
+   "Circe": "Enchantress known for her knowledge of potions and herbs.",
+   "Clytemnestra": "Wife of Agamemnon, known for her role in his murder.",
+   "Crius": "One of the Titans in Greek mythology.",
+   "Cupid": "Roman god of love.",
+   "Cyclops": "One-eyed giants in Greek mythology."
+  },
+  "ch": {
+   "Calypso": "Nymph in Greek mythology who detained Odysseus for many years.",
+   "Cassandra": "Priestess of Apollo cursed to utter true prophecies that were never believed.",
+   "Centaurs": "Mythical creatures with the upper body of a human and lower body of a horse.",
+   "Cerberus": "Three-headed dog guarding the gates of the Underworld.",
+   "Ceres": "Roman goddess of agriculture, counterpart to the Greek Demeter.",
+   "Charon": "Ferryman of the dead in Greek mythology.",
+   "Charybdis": "Sea monster in Greek mythology that swallowed the sea thrice a day.",
+   "Chiron": "Wise centaur in Greek mythology who tutored many heroes.",
+   "Circe": "Enchantress in Greek mythology known for transforming men into animals.",
+   "Cronus": "Titan god of time, ruler of the cosmos during the Golden Age.",
+   "Cuchulain": "Hero from Irish mythology known for his super strength.",
+   "Cupid": "Roman god of love, counterpart to the Greek Eros."
+  },
+  "d": {
+   "Daedalus": "Skillful craftsman and artist in Greek mythology.",
+   "Damaris": "Name not directly linked to a deity but is a classical name in Greek history.",
+   "Danaë": "Mother of Perseus in Greek mythology.",
+   "Daphne": "Naiad nymph in Greek mythology associated with fountains and water bodies.",
+   "Deimos": "Personification of dread, son of Ares and Aphrodite.",
+   "Demeter": "Greek goddess of the harvest and agriculture.",
+   "Deucalion": "Son of Prometheus, survivor of the great flood in Greek mythology.",
+   "Dictys": "Fisherman who rescued Danaë and Perseus.",
+   "Dido": "Founder and first queen of Carthage in Roman mythology.",
+   "Diomedes": "Greek hero of the Trojan War, known for his boldness.",
+   "Dionysus": "Greek god of wine, pleasure, and festivity.",
+   "Dryads": "Nymphs associated with oak trees and forests."
+  },
+  "f": {
+   "Fafnir": "Dwarf who transformed into a dragon in Norse mythology.",
+   "Fates": "Three goddesses who control the destinies of both mortals and gods.",
+   "Faun": "Half-human, half-goat creatures associated with forests and fields.",
+   "Faunus": "Roman god of the forest, plains, and fields.",
+   "Fenrir": "Monstrous wolf in Norse mythology, involved in Ragnarok.",
+   "Flora": "Roman goddess of flowers and spring.",
+   "Fortuna": "Roman goddess of fortune and the personification of luck.",
+   "Freya": "Norse goddess associated with love, fertility, and battle.",
+   "Freyja": "Alternate spelling of Freya, Norse goddess of love and fertility.",
+   "Freyr": "Norse god associated with fertility, prosperity, and fair weather.",
+   "Frigg": "Norse goddess, wife of Odin, associated with foresight and wisdom.",
+   "Fury": "Deities of vengeance in Roman mythology."
+  },
+  "g": {
+   "Gaea": "Alternate spelling for Gaia, Earth personified.",
+   "Gaia": "Greek primordial deity symbolizing the Earth.",
+   "Galahad": "Pure knight of Arthurian legend, known for his quest for the Holy Grail.",
+   "Galatea": "Sea nymph loved by the Cyclops Polyphemus.",
+   "Ganymede": "Trojan prince carried off to be the cupbearer of the gods.",
+   "Geri": "One of Odin’s wolves in Norse mythology.",
+   "Geryon": "Three-bodied giant slain by Heracles.",
+   "Gorgon": "Terrifying creature, the most famous of which is Medusa.",
+   "Grendel": "Monster from Anglo-Saxon epic Beowulf.",
+   "Griffin": "Mythical creature with the body of a lion and the head of an eagle.",
+   "Gullveig": "Figure from Norse mythology who sparked the war between Aesir and Vanir.",
+   "Gunnlod": "Norse giantess who guarded the mead of poetry."
+  },
+  "h": {
+   "Hades": "Greek god of the underworld, brother of Zeus and Poseidon.",
+   "Harpy": "Winged spirits of sudden, sharp gusts of wind in Greek mythology.",
+   "Hebe": "Greek goddess of youth.",
+   "Hecate": "Goddess of magic, witchcraft, and ghosts.",
+   "Hel": "Goddess of the Norse underworld.",
+   "Helios": "Greek god of the sun before Apollo.",
+   "Hephaestus": "Greek god of fire and metalworking.",
+   "Hera": "Queen of the Greek gods, goddess of marriage and birth.",
+   "Hercules": "Roman hero and demigod known for his strength and the Twelve Labors.",
+   "Hermes": "Greek god of trade, wealth, luck, fertility, and travel.",
+   "Hyperion": "One of the Titans, father of Helios.",
+   "Hypnos": "Greek god of sleep."
+  },
+  "k": {
+   "Kaikeyi": "Queen in Hindu mythology, involved in the epic Ramayana.",
+   "Kali": "Hindu goddess of destruction and transformation.",
+   "Kalypso": "Sea nymph who detained Odysseus on her island of Ogygia.",
+   "Kastor": "One of the Dioscuri, twin brothers in Greek mythology known for horsemanship.",
+   "Kelpie": "Shape-shifting water spirit from Scottish folklore.",
+   "Keres": "Female spirits of violent death in Greek mythology.",
+   "Khepri": "Egyptian god associated with the rising sun and creation.",
+   "Khonsu": "Egyptian god of the moon.",
+   "Kraken": "Legendary sea monster of gigantic size.",
+   "Kratos": "Divine personification of strength in Greek mythology.",
+   "Kronos": "Leader of the Titans, father of Zeus in Greek mythology.",
+   "Kvasir": "Wise being created from the spit of the Aesir and Vanir in Norse mythology."
+  },
+  "l": {
+   "Labyrinth": "Structure designed by Daedalus in Greek mythology.",
+   "Lachesis": "One of the three Fates who measured the thread of life.",
+   "Ladon": "Dragon that guarded the golden apples in Greek mythology.",
+   "Lamia": "Child-eating monster in Greek mythology.",
+   "Lamiae": "Mythical creatures that consumed the blood of children.",
+   "Leda": "Mythical queen of Sparta who was seduced by Zeus.",
+   "Legacy": "Not a direct character but a concept often alluded to in myths.",
+   "Legion": "Name associated with many demons in Christian demonology.",
+   "Leviathan": "Sea monster from Hebrew and biblical mythology.",
+   "Loki": "Norse trickster god associated with mischief and chaos.",
+   "Lotus-Eaters": "People in Odyssey who lived on lotus flowers and forgot their purpose.",
+   "Lugh": "Celtic god associated with skill, crafts, and the arts."
+  },
+  "m": {
+   "Maenads": "Female followers of Dionysus, known for their ecstatic frenzy.",
+   "Maia": "Mother of Hermes and one of the Pleiades in Greek mythology.",
+   "Mars": "Roman god of war, counterpart to the Greek Ares.",
+   "Medea": "Sorceress who helped Jason obtain the Golden Fleece.",
+   "Medusa": "Gorgon with snakes for hair, killed by Perseus.",
+   "Mentor": "Character in Greek mythology who advised Telemachus, son of Odysseus.",
+   "Metis": "Titaness and first wife of Zeus, associated with wisdom.",
+   "Midas": "King famous for his ability to turn anything he touched into gold.",
+   "Minos": "King of Crete, who ordered the construction of the Labyrinth.",
+   "Minotaur": "Half-man, half-bull monster kept in the Labyrinth in Crete.",
+   "Mnemosyne": "Titaness of memory and mother of the Muses.",
+   "Morpheus": "Greek god of dreams."
+  },
+  "n": {
+   "Nanna": "Goddess associated with the god Baldr in Norse mythology.",
+   "Narcissus": "Hunter known for his beauty, became the origin of the Narcissus flower.",
+   "Nemesis": "Goddess of retribution and revenge in Greek mythology.",
+   "Neptune": "Roman god of the sea, equivalent to the Greek Poseidon.",
+   "Nereids": "Sea nymphs in Greek mythology.",
+   "Nereus": "Old man of the sea and father of the Nereids.",
+   "Nessus": "Famous centaur who was killed by Heracles.",
+   "Nidhogg": "Dragon who gnaws at the roots of Yggdrasil in Norse mythology.",
+   "Nike": "Greek goddess of victory.",
+   "Njord": "Norse god of sea, wind, and fishing.",
+   "Norns": "Norse goddesses of fate.",
+   "Nyx": "Personification of the night in Greek mythology."
+  },
+  "p": {
+   "Pallas": "Titan associated with warfare, father of Nike.",
+   "Pan": "Greek god of the wild, shepherds, and flocks.",
+   "Pandora": "First human woman created by the gods, known for Pandora's box.",
+   "Paris": "Prince of Troy whose abduction of Helen sparked the Trojan War.",
+   "Pegasus": "Mythical winged divine horse in Greek mythology.",
+   "Penelope": "Wife of Odysseus, known for her fidelity.",
+   "Persephone": "Greek goddess of the underworld and springtime, daughter of Demeter.",
+   "Perseus": "Greek hero known for killing the Gorgon Medusa.",
+   "Phaethon": "Son of Helios who lost control of his father's sun chariot.",
+   "Poseidon": "Greek god of the sea, earthquakes, and horses.",
+   "Priam": "King of Troy during the Trojan War.",
+   "Prometheus": "Titan who stole fire from the gods and gave it to mankind."
+  },
+  "r": {
+   "Ra": "Egyptian sun god and creator of the world.",
+   "Ragnar": "Hero from Norse sagas, leader in Viking history.",
+   "Ragnarok": "Not a character, but the end of the world event in Norse mythology.",
+   "Ragnora": "Invented name; associated with Norse myths thematically.",
+   "Rama": "Hero of the Ramayana, prince in Hindu mythology.",
+   "Ramesses": "Not a myth but a historical figure often featured in myth-like narratives.",
+   "Ran": "Norse goddess of the sea who captures sailors.",
+   "Raven": "Trickster figure in Native American mythology.",
+   "Remus": "Twin brother of Romulus, involved in the mythical founding of Rome.",
+   "Rhadamanthus": "Wise king and judge of the dead in Greek mythology.",
+   "Rhea": "Titaness, the mother of the Olympian gods in Greek mythology.",
+   "Romulus": "Founder and first king of Rome, raised by a she-wolf."
+  },
+  "s": {
+   "Saturn": "Roman god of time, agriculture, liberation and wealth.",
+   "Scylla": "Sea monster that haunted the rocks of a narrow strait opposite Charybdis.",
+   "Selene": "Greek goddess of the moon.",
+   "Selkhet": "Egyptian goddess, guardian against venomous bites.",
+   "Set": "Egyptian god of deserts, storms, and disorder.",
+   "Siren": "Creatures who lured sailors to destruction with their enchanting voices.",
+   "Sirona": "Celtic goddess of healing springs.",
+   "Sisyphus": "King cursed to roll a boulder up a hill for eternity.",
+   "Sobek": "Crocodile-headed Egyptian god associated with the Nile.",
+   "Soma": "Vedic god and ritual drink linked to immortality in Indian mythology.",
+   "Sphinx": "Mythical creature with the body of a lion and the head of a human.",
+   "Sylvanus": "Roman god of woods and fields."
+  },
+  "sh": {
+   "Satyr": "Mythical creature half-human and half-goat, associated with Dionysus.",
+   "Scylla": "Sea monster on the opposite side of Charybdis in Greek mythology.",
+   "Sekhmet": "Egyptian goddess of war and healing.",
+   "Selene": "Greek goddess of the moon.",
+   "Selkhet": "Egyptian goddess, protector of life.",
+   "Set": "Egyptian god of deserts, storms, and foreigners.",
+   "Silvanus": "Roman god of woods and fields.",
+   "Sindri": "Dwarf in Norse mythology, known for crafting magical items.",
+   "Sirius": "Brightest star in the sky, associated with the hound of Orion.",
+   "Sisyphus": "King punished to roll a boulder up a hill only for it to roll down each time.",
+   "Sol": "Roman god of the sun.",
+   "Soma": "Vedic ritual drink and its associated deity."
+  },
+  "t": {
+   "Talos": "Giant bronze man who protected Europa in Greek mythology.",
+   "Tantalus": "King punished in Tartarus with eternal hunger and thirst.",
+   "Tartarus": "Deep abyss in Greek mythology, used as a dungeon of torment.",
+   "Telemachus": "Son of Odysseus in Greek mythology.",
+   "Thalia": "One of the Muses, goddess of comedy.",
+   "Themis": "Titaness of divine law and order in Greek mythology.",
+   "Theseus": "Greek hero and king known for slaying the Minotaur.",
+   "Thor": "Norse god of thunder, lightning, and storms.",
+   "Titan": "Ancient Greek deities who preceded the Olympian gods.",
+   "Tithonus": "Trojan prince loved by the dawn goddess Eos.",
+   "Triton": "Merman and demigod of the sea, son of Poseidon.",
+   "Typhon": "Monstrous serpentine giant and one of the deadliest creatures in Greek mythology."
+  },
+  "z": {
+   "Zagreus": "Mystical figure sometimes linked to Dionysus in Greek mythology.",
+   "Zarathustra": "Prophet of Zoroastrianism, integral to mythic religious stories.",
+   "Zephyrus": "God of the west wind in Greek mythology.",
+   "Zethus": "Brother of Amphion, known for building Thebes' walls.",
+   "Zeus": "King of the Greek gods and ruler of Mount Olympus.",
+   "Ziggurat": "Not a character, but a structure heavily associated with myths and godly worships.",
+   "Ziusudra": "Sumerian flood hero, parallel to biblical Noah.",
+   "Zoe": "While not a mythological figure, Zoe means life and can relate to mythical contexts.",
+   "Zoroaster": "Considered a prophet, central figure in Zoroastrianism, not myth but carries mythic tales.",
+   "Zorya": "Slavic mythology's twin goddesses guarding the universe.",
+   "Zosimus": "Historian with works holding elements of myth.",
+   "Zoster": "Not directly mythical, but echoing mythical tones."
+  },
+  "zh": {
+   "Zagreus": "Mystical figure sometimes associated with Dionysus.",
+   "Zaraaspa": "Not directly linked to a character but an invented name based on myths.",
+   "Zarina": "Legendary Scythian queen.",
+   "Zeno": "Philosopher whose concepts echo mythological ones.",
+   "Zephyrus": "God of the west wind in Greek mythology.",
+   "Zethus": "One of the twin brothers with Amphion who built the walls of Thebes.",
+   "Zeus": "King of the Greek gods, ruler of Mount Olympus.",
+   "Ziggurat": "Not a god or character, but a structure associated with many myths.",
+   "Zonaras": "Byzantine historian, not a mythological figure but related to myth recording.",
+   "Zorya": "Slavic mythology's twin goddesses who guard the sky.",
+   "Zorya Utrennyaya": "One of the Zorya goddesses, morning star.",
+   "Zorya Vechernyaya": "One of the Zorya goddesses, evening star."
   }
  }
 }

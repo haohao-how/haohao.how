@@ -1,0 +1,22 @@
+{
+  "WesternCultureFamousWomen": {
+    "noun": "person",
+    "description": "famous females in western culture (e.g. actresses, influencers, celebrities, politicians, etc)"
+  },
+  "WesternCultureFamousMen": {
+    "noun": "person",
+    "description": "famous males in western culture (e.g. actors, influencers, celebrities, politicians, etc)"
+  },
+  "WesternMythologyCharacter": {
+    "noun": "character",
+    "description": "greek/roman/norse mythology characters (e.g. gods, heroes, monsters, etc)"
+  },
+  "MythologyCharacter": {
+    "noun": "character",
+    "description": "mythology characters (e.g. gods, heroes, monsters, etc)"
+  },
+  "AnimalSpecies": {
+    "noun": "animal",
+    "description": "single-word animal species (e.g. zebra, dog, orangutan, etc)"
+  }
+}

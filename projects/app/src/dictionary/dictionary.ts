@@ -11,6 +11,20 @@ export const loadPinyinWords = memoize(async () =>
     .parse((await import(`./pinyinWords.asset.json`)).default),
 );
 
+export const loadMnemonicThemes = memoize(async () =>
+  z
+    .record(
+      z.string(), // themeId
+      z.object({
+        noun: z.string(),
+        description: z.string(),
+      }),
+    )
+    .transform((x) => new Map(Object.entries(x)))
+    .transform(deepReadonly)
+    .parse((await import(`./mnemonicThemes.asset.json`)).default),
+);
+
 export const loadMnemonicThemeChoices = memoize(async () =>
   z
     .record(
