@@ -23,7 +23,7 @@
     },
     {
       "matchDatasources": ["npm"],
-      "matchDepPatterns": ["@types/*"],
+      "matchDepNames": ["@types/*"],
       "rangeStrategy": "in-range-only"
     },
     {
