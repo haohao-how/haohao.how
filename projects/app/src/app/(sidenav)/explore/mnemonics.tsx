@@ -1,4 +1,6 @@
+import { loadMmPinyinChart } from "@/dictionary/dictionary";
 import { useQuery } from "@tanstack/react-query";
+import { Fragment } from "react";
 import { ScrollView, Text, View } from "react-native";
 
 const associations = {
@@ -228,11 +230,9 @@ const widths = [
 
 export default function MnemonicsPage() {
   const query = useQuery({
-    queryKey: [MnemonicsPage.name, `initials`],
+    queryKey: [MnemonicsPage.name, `chart`],
     queryFn: async () => {
-      return new Promise<typeof associations>((resolve) => {
-        resolve(associations);
-      });
+      return await loadMmPinyinChart();
     },
     throwOnError: true,
   });
@@ -263,7 +263,7 @@ export default function MnemonicsPage() {
               <Text className="text-lg font-bold text-text">Tones</Text>
             </View>
             <View className="flex-row flex-wrap gap-3.5 lg:gap-4">
-              {query.data.tones.map(({ tone, desc }, i) => (
+              {associations.tones.map(({ tone, desc }, i) => (
                 <View
                   key={tone}
                   className="size-24 justify-center gap-2 rounded-xl bg-primary-3 px-2 hover:bg-primary-5 lg:size-24"
@@ -291,28 +291,39 @@ export default function MnemonicsPage() {
             <View className="">
               <Text className="text-lg font-bold text-text">Initials</Text>
             </View>
-            <View className="flex-row flex-wrap gap-3.5 lg:gap-4">
-              {query.data.initials.map(({ prefix, n }, i) => (
-                <View
-                  key={prefix}
-                  className="size-24 justify-center gap-2 rounded-xl bg-primary-3 px-2 hover:bg-primary-5 lg:size-24"
-                >
-                  <Text className="text-center font-cursive text-2xl text-text">
-                    {prefix}_
-                  </Text>
-                  <Text
-                    className="text-md text-md text-center text-primary-10"
-                    numberOfLines={1}
-                  >
-                    {n}
-                  </Text>
-                  <View className="h-2 rounded bg-primary-5">
-                    <View
-                      className={`h-2 ${widths[1 + (i % widths.length)] ?? ``} rounded bg-[yellow]`}
-                    ></View>
-                  </View>
-                </View>
-              ))}
+            <View className="gap-3.5 lg:gap-4">
+              {Object.entries(query.data.initialGrouping).map(
+                ([, { initials, desc }], i) => (
+                  <Fragment key={desc}>
+                    <View className="flex-0">
+                      <Text className="text-md text-text">{desc}</Text>
+                    </View>
+                    <View className="flex-0 flex-row flex-wrap gap-3.5">
+                      {initials.map((prefix) => (
+                        <View
+                          key={prefix}
+                          className="size-24 justify-center gap-2 rounded-xl bg-primary-3 px-2 hover:bg-primary-5 lg:size-24"
+                        >
+                          <Text className="text-center font-cursive text-2xl text-text">
+                            {prefix}-
+                          </Text>
+                          <Text
+                            className="text-md text-md text-center text-primary-10"
+                            numberOfLines={1}
+                          >
+                            {`??`}
+                          </Text>
+                          <View className="h-2 rounded bg-primary-5">
+                            <View
+                              className={`h-2 ${widths[1 + (i % widths.length)] ?? ``} rounded bg-[yellow]`}
+                            ></View>
+                          </View>
+                        </View>
+                      ))}
+                    </View>
+                  </Fragment>
+                ),
+              )}
             </View>
 
             <View className="border-t-2 border-primary-5"></View>
@@ -321,21 +332,24 @@ export default function MnemonicsPage() {
               <Text className="text-lg font-bold text-text">Finals</Text>
             </View>
             <View className="flex-row flex-wrap gap-3.5 lg:gap-4">
-              {query.data.finals.map(({ suffix, location }, i) => (
+              {query.data.finals.map(([final, ...alts], i) => (
                 <View
-                  key={suffix}
-                  className="size-24 justify-center gap-2 rounded-xl bg-primary-3 px-2 hover:bg-primary-5 lg:size-24"
+                  key={i}
+                  className="size-24 justify-center gap-1 rounded-xl bg-primary-3 px-2 hover:bg-primary-5 lg:size-24"
                 >
                   <Text className="text-center font-cursive text-2xl text-text">
-                    _{suffix}
+                    -{final}
                   </Text>
                   <Text
-                    className="text-md text-md text-center text-primary-10"
+                    className="text-center text-xs text-primary-10"
                     numberOfLines={1}
                   >
-                    {location}
+                    {alts
+                      .filter((x) => x.length > 0)
+                      .map((x) => `` + x)
+                      .join(` `)}
                   </Text>
-                  <View className="h-2 rounded bg-primary-5">
+                  <View className="mt-2 h-2 rounded bg-primary-5">
                     <View
                       className={`h-2 ${widths[5 + (i % widths.length)] ?? ``} rounded bg-[yellow]`}
                     ></View>
