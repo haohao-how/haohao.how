@@ -60,92 +60,51 @@ export const loadHanziDecomposition = memoize(async () =>
     .parse((await import(`./hanziDecomposition.asset.json`)).default),
 );
 
+const pinyinChartSchema = z
+  .object({
+    initials: z.array(
+      z.object({
+        id: z.string(),
+        desc: z.string(),
+        initials: z.array(z.union([z.string(), z.array(z.string())])),
+      }),
+    ),
+    finals: z.array(z.union([z.string(), z.array(z.string())])),
+    overrides: z.record(z.tuple([z.string(), z.string()])),
+  })
+  .transform(({ initials: initialGroups, finals, overrides }) => ({
+    initials: initialGroups.map((group) => ({
+      ...group,
+      initials: group.initials.map((initial) =>
+        typeof initial === `string` ? ([initial, initial] as const) : initial,
+      ),
+    })),
+    finals: finals.map((x) => (typeof x === `string` ? [x, x] : x)),
+    overrides,
+  }));
+
 export const loadStandardPinyinChart = memoize(async () =>
-  z
-    .object({
-      initials: z.array(z.union([z.string(), z.array(z.string())])),
-      finals: z.array(z.union([z.string(), z.array(z.string())])),
-      overrides: z.record(z.tuple([z.string(), z.string()])),
-    })
-    .transform(({ initials, finals, overrides }) => ({
-      initials: initials.map((x) => (typeof x === `string` ? [x, x] : x)),
-      finals: finals.map((x) => (typeof x === `string` ? [x, x] : x)),
-      overrides,
-    }))
+  pinyinChartSchema
     .transform(deepReadonly)
     .parse((await import(`./standardPinyinChart.asset.json`)).default),
 );
 
 export const loadMmPinyinChart = memoize(async () =>
-  z
-    .object({
-      initials: z.array(z.union([z.string(), z.array(z.string())])),
-      finals: z.array(z.union([z.string(), z.array(z.string())])),
-      initialGrouping: z.record(
-        z.string(),
-        z.object({ desc: z.string(), initials: z.array(z.string()) }),
-      ),
-    })
-    .transform(({ initials, finals, initialGrouping }) => ({
-      initials: initials.map((x) => (typeof x === `string` ? [x, x] : x)),
-      finals: finals.map((x) => (typeof x === `string` ? [x, x] : x)),
-      initialGrouping,
-    }))
+  pinyinChartSchema
     .transform(deepReadonly)
     .parse((await import(`./mmPinyinChart.asset.json`)).default),
 );
 
 export const loadHhPinyinChart = memoize(async () =>
-  z
-    .object({
-      initials: z.array(z.union([z.string(), z.array(z.string())])),
-      finals: z.array(z.union([z.string(), z.array(z.string())])),
-    })
-    .transform(({ initials, finals }) => ({
-      initials: initials.map((x) => (typeof x === `string` ? [x, x] : x)),
-      finals: finals.map((x) => (typeof x === `string` ? [x, x] : x)),
-    }))
+  pinyinChartSchema
     .transform(deepReadonly)
     .parse((await import(`./hhPinyinChart.asset.json`)).default),
 );
 
 export const loadHmmPinyinChart = memoize(async () =>
-  z
-    .object({
-      initials: z.array(z.union([z.string(), z.array(z.string())])),
-      finals: z.array(z.union([z.string(), z.array(z.string())])),
-    })
-    .transform(({ initials, finals }) => ({
-      initials: initials.map((x) => (typeof x === `string` ? [x, x] : x)),
-      finals: finals.map((x) => (typeof x === `string` ? [x, x] : x)),
-    }))
+  pinyinChartSchema
     .transform(deepReadonly)
     .parse((await import(`./hmmPinyinChart.asset.json`)).default),
-);
-
-export const loadMnemonicTheme = memoize(async () =>
-  z
-    .object({
-      tones: z.array(z.object({ tone: z.number(), desc: z.string() })),
-      initials: z.record(
-        z.string(),
-        z.object({ n: z.string(), desc: z.string() }),
-      ),
-      finals: z.array(
-        z.object({
-          suffix: z.string(),
-          location: z.string(),
-          rationale: z.string(),
-        }),
-      ),
-    })
-    .transform((x) => ({
-      tones: new Map(x.tones.map((t) => [t.tone, t.desc])),
-      initials: new Map(Object.entries(x.initials)),
-      finals: new Map(x.finals.map((f) => [f.suffix, f])),
-    }))
-    .transform(deepReadonly)
-    .parse((await import(`./mnemonicTheme.asset.json`)).default),
 );
 
 export const loadRadicalNameMnemonics = memoize(async () =>

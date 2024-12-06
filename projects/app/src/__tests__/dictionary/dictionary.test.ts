@@ -12,7 +12,6 @@ import {
   loadHhPinyinChart,
   loadHmmPinyinChart,
   loadMmPinyinChart,
-  loadMnemonicTheme,
   loadMnemonicThemeChoices,
   loadMnemonicThemes,
   loadPinyinWords,
@@ -47,7 +46,6 @@ void test(`json data can be loaded and passes the schema validation`, async () =
   await loadHhPinyinChart();
   await loadHmmPinyinChart();
   await loadMmPinyinChart();
-  await loadMnemonicTheme();
   await loadMnemonicThemeChoices();
   await loadMnemonicThemes();
   await loadPinyinWords();
@@ -224,7 +222,9 @@ function splitPinyin(
   pinyin: string,
   chart: PinyinChart,
 ): readonly [initial: string, final: string] | null {
-  const initialsList = expandCombinations(chart.initials)
+  const initialsList = expandCombinations(
+    chart.initials.flatMap((x) => x.initials),
+  )
     // There's some overlap with initials and finals, the algorithm should use
     // the longest possible initial.
     .toSorted(sortComparatorNumber(([, x]) => x.length))
@@ -255,12 +255,9 @@ function splitPinyin(
 }
 
 interface PinyinChart {
-  initials: readonly PinyinProduction[];
+  initials: DeepReadonly<{ id: string; desc: string; initials: string[][] }[]>;
   finals: readonly PinyinProduction[];
   overrides?: DeepReadonly<Record<string, [initial: string, final: string]>>;
-  initialGrouping?: DeepReadonly<
-    Record<string, { desc: string; initials: string[] }>
-  >;
 }
 
 async function testPinyinChart(
@@ -283,33 +280,10 @@ async function testPinyinChart(
   }
 
   // Ensure that there are no duplicates initials or finals.
-  assertUniqueArray(chart.initials.flatMap(([, ...x]) => x));
+  assertUniqueArray(
+    chart.initials.map((x) => x.initials).flatMap(([, ...x]) => x),
+  );
   assertUniqueArray(chart.finals.flatMap(([, ...x]) => x));
-
-  // Initials can be grouped into different sets, this allows for more
-  // separation between similar sounds.
-  if (chart.initialGrouping) {
-    const chartInitials = new Set(chart.initials.map(([x]) => x));
-    const allGroupInitials = new Set(
-      Object.values(chart.initialGrouping).flatMap((x) => x.initials),
-    );
-
-    // `.symmetricDifference` would be shorter, but error messages are more ambiguous.
-    assert.deepEqual(
-      chartInitials.difference(allGroupInitials),
-      new Set(),
-      `initial grouping doesn't cover all initials`,
-    );
-    assert.deepEqual(
-      allGroupInitials.difference(chartInitials),
-      new Set(),
-      `initial grouping has undeclared initials`,
-    );
-
-    assertUniqueArray(
-      Object.values(chart.initialGrouping).flatMap((x) => x.initials),
-    );
-  }
 }
 
 function assertUniqueArray<T>(items: readonly T[]): void {
@@ -439,7 +413,7 @@ void test(`hh pinyin covers kangxi pinyin`, async () => {
 void test(`hmm pinyin covers kangxi pinyin`, async () => {
   const chart = await loadHmmPinyinChart();
 
-  assert.equal(chart.initials.length, 55);
+  assert.equal(chart.initials.flatMap((i) => i.initials).length, 55);
   assert.equal(chart.finals.length, 13);
 
   await testPinyinChart(chart, [
@@ -747,38 +721,6 @@ void test(`idsNodeToString roundtrips`, () => {
   ].flatMap((x) => x)) {
     assert.equal(idsNodeToString(parseIds(input)), input);
   }
-});
-
-void test(`mnemonicTheme covers pinyin chart`, async () => {
-  const chart = await loadMmPinyinChart();
-  const theme = await loadMnemonicTheme();
-
-  const chartInitials = new Set(chart.initials.map(([x]) => x));
-  const themeInitials = new Set(theme.initials.keys());
-  const chartFinals = new Set(chart.finals.map(([x]) => x));
-  const themeFinals = new Set(theme.finals.values().map((x) => x.suffix));
-
-  // `.symmetricDifference` would be shorter, but error messages are more ambiguous.
-  assert.deepEqual(
-    chartInitials.difference(themeInitials),
-    new Set(),
-    `theme is missing initials`,
-  );
-  assert.deepEqual(
-    themeInitials.difference(chartInitials),
-    new Set(),
-    `theme has extra initials`,
-  );
-  assert.deepEqual(
-    chartFinals.difference(themeFinals),
-    new Set(),
-    `theme is missing finals`,
-  );
-  assert.deepEqual(
-    themeFinals.difference(chartFinals),
-    new Set(),
-    `theme has extra finals`,
-  );
 });
 
 async function debugNonCjkUnifiedIdeographs(chars: string[]): Promise<string> {
