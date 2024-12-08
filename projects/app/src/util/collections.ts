@@ -41,6 +41,27 @@ export function readonlyMapSet<K, V>(
   return copy;
 }
 
+export function objectInvert<K extends PropertyKey, V extends PropertyKey>(
+  obj: Record<K, V>,
+): Record<V, K> {
+  const result: Partial<Record<V, K>> = {};
+  for (const key in obj) {
+    if (Object.prototype.hasOwnProperty.call(obj, key)) {
+      const value = obj[key];
+      result[value] = key;
+    }
+  }
+  return result as Record<V, K>;
+}
+
+export function mapInvert<K, V>(map: ReadonlyMap<K, V>): Map<V, K> {
+  const result = new Map<V, K>();
+  for (const [k, v] of map) {
+    result.set(v, k);
+  }
+  return result;
+}
+
 export function mergeMaps<K, V>(
   a: ReadonlyMap<K, V>,
   b: ReadonlyMap<K, V>,
@@ -85,7 +106,9 @@ export function deepTransform(
 ): unknown {
   if (x instanceof Map) {
     return transform(
-      new Map(x.entries().map(([k, v]) => [k, deepTransform(v, transform)])),
+      new Map(
+        [...x.entries()].map(([k, v]) => [k, deepTransform(v, transform)]),
+      ),
     );
   } else if (Array.isArray(x)) {
     return transform(x.map((y) => deepTransform(y, transform)));

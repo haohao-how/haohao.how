@@ -1,6 +1,8 @@
 import {
   deepTransform,
+  mapInvert,
   merge,
+  objectInvert,
   sortComparatorNumber,
   sortComparatorString,
 } from "@/util/collections";
@@ -82,5 +84,26 @@ void test(`deepTransform`, () => {
       x instanceof Map ? Object.fromEntries(x.entries()) : x,
     ),
     { key1: `value1` },
+  );
+});
+
+void test(`objectInvert`, () => {
+  assert.deepEqual(objectInvert({}), {});
+  assert.deepEqual(objectInvert({ a: 1, b: 2 }), { 1: `a`, 2: `b` });
+});
+
+void test(`mapInvert`, () => {
+  assert.deepEqual(mapInvert(new Map()), new Map());
+  assert.deepEqual(
+    mapInvert(
+      new Map<string | number, string | number>([
+        [1, 2],
+        [`a`, `b`],
+      ]),
+    ),
+    new Map<string | number, string | number>([
+      [2, 1],
+      [`b`, `a`],
+    ]),
   );
 });
