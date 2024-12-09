@@ -151,3 +151,8 @@ export interface OneCorrectPairQuestion {
 }
 
 export type Question = MultipleChoiceQuestion | OneCorrectPairQuestion;
+
+export interface PinyinInitialAssociation {
+  initial: string;
+  name: string;
+}
