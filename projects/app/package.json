@@ -45,7 +45,7 @@
     "lodash": "^4.17.21",
     "lucia": "^3.2.0",
     "moti": "^0.29.0",
-    "nanoid": "^5.0.7",
+    "nanoid": "^5.0.9",
     "nativewind": "patch:nativewind@npm%3A4.1.23#~/.yarn/patches/nativewind-npm-4.1.23-ea5a3f1461.patch",
     "oslo": "^1.2.1",
     "pg": "^8.12.0",
