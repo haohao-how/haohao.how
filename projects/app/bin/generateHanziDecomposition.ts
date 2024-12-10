@@ -95,7 +95,7 @@ function parseIdsTxt(txt: string): ReadonlyMap<string, Decomposition[]> {
     const codePoint = parseInt(unicodeShortIdentifier.replace(`U+`, ``), 16);
     const characterFromCodePoint = String.fromCodePoint(codePoint);
 
-    assert.equal(character, characterFromCodePoint);
+    assert.strictEqual(character, characterFromCodePoint);
 
     const parsedDecompositions = [];
 

@@ -147,19 +147,19 @@ void suite(`rizzle`, () => {
     const { mockTx, rtx, wtx, tx } = makeMockTx(t);
 
     await posts.get(tx, { id: `1` });
-    assert.equal(mockTx.get.mock.callCount(), 1);
-    assert.deepEqual(mockTx.get.mock.calls[0]?.arguments, [`foo/1`]);
+    assert.strictEqual(mockTx.get.mock.callCount(), 1);
+    assert.deepStrictEqual(mockTx.get.mock.calls[0]?.arguments, [`foo/1`]);
 
     // Check that a ReadonlyJSONValue is parsed correctly.
     mockTx.get.mock.mockImplementationOnce(() =>
       Promise.resolve({ name: `foo` }),
     );
-    assert.deepEqual(await posts.get(tx, { id: `1` }), { name: `foo` });
+    assert.deepStrictEqual(await posts.get(tx, { id: `1` }), { name: `foo` });
 
     // Check that a value is encoded correctly.
     await posts.set(tx, { id: `1` }, { name: `foo` });
-    assert.equal(mockTx.set.mock.callCount(), 1);
-    assert.deepEqual(mockTx.set.mock.calls[0]?.arguments, [
+    assert.strictEqual(mockTx.set.mock.callCount(), 1);
+    assert.deepStrictEqual(mockTx.set.mock.calls[0]?.arguments, [
       `foo/1`,
       { name: `foo` },
     ]);
@@ -192,19 +192,19 @@ void suite(`rizzle`, () => {
       });
 
       await posts.get(tx, { id: `1` });
-      assert.equal(mockTx.get.mock.callCount(), 1);
-      assert.deepEqual(mockTx.get.mock.calls[0]?.arguments, [`foo/1`]);
+      assert.strictEqual(mockTx.get.mock.callCount(), 1);
+      assert.deepStrictEqual(mockTx.get.mock.calls[0]?.arguments, [`foo/1`]);
 
       // Check that a ReadonlyJSONValue is parsed correctly.
       mockTx.get.mock.mockImplementationOnce(() =>
         Promise.resolve({ n: `foo` }),
       );
-      assert.deepEqual(await posts.get(tx, { id: `1` }), { name: `foo` });
+      assert.deepStrictEqual(await posts.get(tx, { id: `1` }), { name: `foo` });
 
       // Check that a value is encoded correctly.
       await posts.set(tx, { id: `1` }, { name: `foo` });
-      assert.equal(mockTx.set.mock.callCount(), 1);
-      assert.deepEqual(mockTx.set.mock.calls[0]?.arguments, [
+      assert.strictEqual(mockTx.set.mock.callCount(), 1);
+      assert.deepStrictEqual(mockTx.set.mock.calls[0]?.arguments, [
         `foo/1`,
         { n: `foo` },
       ]);
@@ -270,8 +270,8 @@ void suite(`rizzle`, () => {
     const { mockTx, tx } = makeMockTx(t);
 
     await posts.get(tx, { id: `1` });
-    assert.equal(mockTx.get.mock.callCount(), 1);
-    assert.deepEqual(mockTx.get.mock.calls[0]?.arguments, [`foo/1`]);
+    assert.strictEqual(mockTx.get.mock.callCount(), 1);
+    assert.deepStrictEqual(mockTx.get.mock.calls[0]?.arguments, [`foo/1`]);
 
     // Unmarshalling
     {
@@ -284,7 +284,7 @@ void suite(`rizzle`, () => {
         mockTx.get.mock.mockImplementationOnce(() =>
           Promise.resolve({ due: marshaled }),
         );
-        assert.deepEqual(
+        assert.deepStrictEqual(
           await posts.get(tx, { id: `1` }),
           {
             due: unmarshaled,
@@ -302,8 +302,8 @@ void suite(`rizzle`, () => {
         [date.getTime(), date.getTime()], // timestamp as number
       ] as const) {
         await posts.set(tx, { id: `1` }, { due: unmarshaled });
-        assert.equal(mockTx.set.mock.callCount(), 1);
-        assert.deepEqual(mockTx.set.mock.calls[0]?.arguments, [
+        assert.strictEqual(mockTx.set.mock.callCount(), 1);
+        assert.deepStrictEqual(mockTx.set.mock.calls[0]?.arguments, [
           `foo/1`,
           { due: marshaled },
         ]);
@@ -339,7 +339,7 @@ void suite(`rizzle`, () => {
       mockTx.get.mock.mockImplementationOnce(() =>
         Promise.resolve(marshaledData as object),
       );
-      assert.deepEqual(await posts.get(tx, { id: `1` }), {
+      assert.deepStrictEqual(await posts.get(tx, { id: `1` }), {
         skill: skillType,
       });
 
@@ -365,7 +365,7 @@ void suite(`rizzle`, () => {
       mockTx.get.mock.mockImplementationOnce(() =>
         Promise.resolve(marshaledData as object),
       );
-      assert.deepEqual(await posts.get(tx, { id: `1` }), {
+      assert.deepStrictEqual(await posts.get(tx, { id: `1` }), {
         skill,
       });
 
@@ -387,11 +387,11 @@ void suite(`rizzle`, () => {
     mockTx.get.mock.mockImplementationOnce(() =>
       Promise.resolve(marshaledData as object),
     );
-    assert.deepEqual(await posts.get(tx, { id1: `1` }), {
+    assert.deepStrictEqual(await posts.get(tx, { id1: `1` }), {
       text: `hello`,
     });
-    assert.equal(mockTx.get.mock.callCount(), 1);
-    assert.deepEqual(mockTx.get.mock.calls[0]?.arguments, [`foo/1`]);
+    assert.strictEqual(mockTx.get.mock.callCount(), 1);
+    assert.deepStrictEqual(mockTx.get.mock.calls[0]?.arguments, [`foo/1`]);
 
     mockTx.get.mock.resetCalls();
     mockTx.set.mock.resetCalls();
@@ -411,11 +411,11 @@ void suite(`rizzle`, () => {
     mockTx.get.mock.mockImplementationOnce(() =>
       Promise.resolve(marshaledData as object),
     );
-    assert.deepEqual(await posts.get(tx, { id1: `1`, id2: `2` }), {
+    assert.deepStrictEqual(await posts.get(tx, { id1: `1`, id2: `2` }), {
       text: `hello`,
     });
-    assert.equal(mockTx.get.mock.callCount(), 1);
-    assert.deepEqual(mockTx.get.mock.calls[0]?.arguments, [`foo/1/2`]);
+    assert.strictEqual(mockTx.get.mock.callCount(), 1);
+    assert.deepStrictEqual(mockTx.get.mock.calls[0]?.arguments, [`foo/1/2`]);
 
     mockTx.get.mock.resetCalls();
     mockTx.set.mock.resetCalls();
@@ -446,11 +446,13 @@ void suite(`rizzle`, () => {
       mockTx.get.mock.mockImplementationOnce(() =>
         Promise.resolve(marshaledData as object),
       );
-      assert.deepEqual(await posts.get(tx, { skill }), {
+      assert.deepStrictEqual(await posts.get(tx, { skill }), {
         text: `hello`,
       });
-      assert.equal(mockTx.get.mock.callCount(), 1);
-      assert.deepEqual(mockTx.get.mock.calls[0]?.arguments, [`foo/${skillId}`]);
+      assert.strictEqual(mockTx.get.mock.callCount(), 1);
+      assert.deepStrictEqual(mockTx.get.mock.calls[0]?.arguments, [
+        `foo/${skillId}`,
+      ]);
 
       mockTx.get.mock.resetCalls();
       mockTx.set.mock.resetCalls();
@@ -512,7 +514,7 @@ void suite(`rizzle`, () => {
       { author: { name: `foo`, email: `f@o`, id: 1 } },
     );
     const [, marshaledData] = mockTx.set.mock.calls[0]!.arguments;
-    assert.deepEqual(marshaledData, {
+    assert.deepStrictEqual(marshaledData, {
       author: { name: `foo`, e: `f@o`, i: 1 },
     });
 
@@ -540,7 +542,7 @@ void suite(`rizzle`, () => {
     // Marshal and unmarshal round tripping
     await posts.set(tx, { id: `1` }, { author: { name: `foo` } });
     const [, marshaledData] = mockTx.set.mock.calls[0]!.arguments;
-    assert.deepEqual(marshaledData, { author: { name: `foo` } });
+    assert.deepStrictEqual(marshaledData, { author: { name: `foo` } });
 
     mockTx.get.mock.mockImplementationOnce(() =>
       Promise.resolve(marshaledData as object),
@@ -562,13 +564,13 @@ void suite(`rizzle`, () => {
         }),
       });
 
-      assert.deepEqual(posts.valueCodec._getIndexes(), {
+      assert.deepStrictEqual(posts.valueCodec._getIndexes(), {
         byAuthorName: {
           allowEmpty: false,
           jsonPointer: `/author/name`,
         },
       });
-      assert.deepEqual(posts.getIndexes(), {
+      assert.deepStrictEqual(posts.getIndexes(), {
         byAuthorName: {
           allowEmpty: false,
           prefix: `foo/`,
@@ -576,17 +578,6 @@ void suite(`rizzle`, () => {
         },
       });
     }
-
-    // set(tx, { id: `1` }, { author: { name: `foo`, email: `f@o` } });
-    // const [, marshaledData] = mockTx.set.mock.calls[0]!.arguments;
-    // assert.deepEqual(marshaledData, { author: { name: `foo`, e: `f@o` } });
-
-    // mockTx.get.mock.mockImplementationOnce(() =>
-    //   Promise.resolve(marshaledData as object),
-    // );
-    // assert.deepStrictEqual(await posts.get(tx, { id: `1` }), {
-    //   author: { name: `foo`, email: `f@o` },
-    // });
   });
 
   void test(`index scan`, async (t) => {
@@ -600,7 +591,7 @@ void suite(`rizzle`, () => {
     const { mockTx, tx } = makeMockTx(t);
 
     mockTx.scan.mock.mockImplementationOnce((options) => {
-      assert.deepEqual(options, {
+      assert.deepStrictEqual(options, {
         indexName: `byAuthorName`,
         start: undefined,
       });
@@ -612,7 +603,7 @@ void suite(`rizzle`, () => {
       };
     }, 0);
     mockTx.scan.mock.mockImplementationOnce((options) => {
-      assert.deepEqual(options, {
+      assert.deepStrictEqual(options, {
         indexName: `byAuthorName`,
         start: {
           exclusive: true,
@@ -630,7 +621,9 @@ void suite(`rizzle`, () => {
     for await (const post of posts.scan.byAuthorName(tx)) {
       results.push(post);
     }
-    assert.deepEqual(results, [[{ id: `1` }, { author: { name: `brad` } }]]);
+    assert.deepStrictEqual(results, [
+      [{ id: `1` }, { author: { name: `brad` } }],
+    ]);
 
     typeChecks(async () => {
       const posts = rizzle.schema(`foo/[id]`, {
@@ -641,7 +634,7 @@ void suite(`rizzle`, () => {
           })
           .alias(`a`),
       });
-      assert.deepEqual(posts.getIndexes(), {
+      assert.deepStrictEqual(posts.getIndexes(), {
         byAuthorName: {
           allowEmpty: false,
           prefix: `foo/`,
@@ -659,10 +652,10 @@ void suite(`rizzle`, () => {
   });
 
   void test(`parseKeyPath`, () => {
-    assert.deepEqual(parseKeyPath(`foo/$[id]`, `foo/$1`), { id: `1` });
-    assert.deepEqual(parseKeyPath(`^foo/$[id]`, `^foo/$1`), { id: `1` });
-    assert.deepEqual(parseKeyPath(`foo/[id]`, `foo/1`), { id: `1` });
-    assert.deepEqual(parseKeyPath(`foo/[id1]/[id2]`, `foo/1/2`), {
+    assert.deepStrictEqual(parseKeyPath(`foo/$[id]`, `foo/$1`), { id: `1` });
+    assert.deepStrictEqual(parseKeyPath(`^foo/$[id]`, `^foo/$1`), { id: `1` });
+    assert.deepStrictEqual(parseKeyPath(`foo/[id]`, `foo/1`), { id: `1` });
+    assert.deepStrictEqual(parseKeyPath(`foo/[id1]/[id2]`, `foo/1/2`), {
       id1: `1`,
       id2: `2`,
     });
@@ -679,7 +672,7 @@ void suite(`rizzle`, () => {
     // Marshal and unmarshal round tripping
     await posts.set(tx, { id: `1` }, { count: 5 });
     const [, marshaledData] = mockTx.set.mock.calls[0]!.arguments;
-    assert.deepEqual(marshaledData, { c: 5 });
+    assert.deepStrictEqual(marshaledData, { c: 5 });
 
     mockTx.get.mock.mockImplementationOnce(() =>
       Promise.resolve(marshaledData as object),

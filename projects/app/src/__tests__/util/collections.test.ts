@@ -21,13 +21,13 @@ void test(`sortComparatorString`, () => {
   {
     const arr = [`c`, `a`, `b`];
     arr.sort(sortComparatorString());
-    assert.deepEqual(arr, [`a`, `b`, `c`]);
+    assert.deepStrictEqual(arr, [`a`, `b`, `c`]);
   }
 
   {
     const arr = [[`c`], [`a`], [`b`]];
     arr.sort(sortComparatorString(([x]) => x!));
-    assert.deepEqual(arr, [[`a`], [`b`], [`c`]]);
+    assert.deepStrictEqual(arr, [[`a`], [`b`], [`c`]]);
   }
 });
 
@@ -35,29 +35,29 @@ void test(`sortComparatorNumber`, () => {
   {
     const arr = [3, 1, 2];
     arr.sort(sortComparatorNumber());
-    assert.deepEqual(arr, [1, 2, 3]);
+    assert.deepStrictEqual(arr, [1, 2, 3]);
   }
 
   {
     const arr = [[3], [1], [2]];
     arr.sort(sortComparatorNumber(([x]) => x!));
-    assert.deepEqual(arr, [[1], [2], [3]]);
+    assert.deepStrictEqual(arr, [[1], [2], [3]]);
   }
 });
 
 void test(`merge`, () => {
-  assert.deepEqual(merge(null, null), null);
-  assert.deepEqual(merge(null, 1), 1);
-  assert.deepEqual(merge(1, null), 1);
-  assert.deepEqual(merge([1], [2]), [1, 2]);
-  assert.deepEqual(
+  assert.deepStrictEqual(merge(null, null), null);
+  assert.deepStrictEqual(merge(null, 1), 1);
+  assert.deepStrictEqual(merge(1, null), 1);
+  assert.deepStrictEqual(merge([1], [2]), [1, 2]);
+  assert.deepStrictEqual(
     merge(new Map([[`key1`, `value1`]]), new Map([[`key2`, `value2`]])),
     new Map([
       [`key1`, `value1`],
       [`key2`, `value2`],
     ]),
   );
-  assert.deepEqual(
+  assert.deepStrictEqual(
     merge(
       new Map([[`key1`, new Map([[`key1.1`, `value1.1`]])]]),
       new Map([[`key1`, new Map([[`key2.1`, `value2.1`]])]]),
@@ -75,11 +75,11 @@ void test(`merge`, () => {
 });
 
 void test(`deepTransform`, () => {
-  assert.deepEqual(
+  assert.deepStrictEqual(
     deepTransform(null, (x) => x),
     null,
   );
-  assert.deepEqual(
+  assert.deepStrictEqual(
     deepTransform(new Map([[`key1`, `value1`]]), (x) =>
       x instanceof Map ? Object.fromEntries(x.entries()) : x,
     ),
@@ -88,13 +88,13 @@ void test(`deepTransform`, () => {
 });
 
 void test(`objectInvert`, () => {
-  assert.deepEqual(objectInvert({}), {});
-  assert.deepEqual(objectInvert({ a: 1, b: 2 }), { 1: `a`, 2: `b` });
+  assert.deepStrictEqual(objectInvert({}), {});
+  assert.deepStrictEqual(objectInvert({ a: 1, b: 2 }), { 1: `a`, 2: `b` });
 });
 
 void test(`mapInvert`, () => {
-  assert.deepEqual(mapInvert(new Map()), new Map());
-  assert.deepEqual(
+  assert.deepStrictEqual(mapInvert(new Map()), new Map());
+  assert.deepStrictEqual(
     mapInvert(
       new Map<string | number, string | number>([
         [1, 2],
