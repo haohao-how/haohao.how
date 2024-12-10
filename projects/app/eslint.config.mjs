@@ -178,6 +178,9 @@ export default tseslint.config(
       "@typescript-eslint/no-unnecessary-condition": `error`,
       // Expo/metro stuff still uses require().
       "@typescript-eslint/no-require-imports": `off`,
+      // A bit buggy when vars are only used as types, sticking with
+      // noUnusedLocals and noUnusedParameters.
+      "@typescript-eslint/no-unused-vars": `off`,
 
       //
       // @stylistic
@@ -209,6 +212,7 @@ export default tseslint.config(
     rules: {
       "@typescript-eslint/no-non-null-assertion": `off`,
       "@typescript-eslint/restrict-template-expressions": `off`,
+      "@typescript-eslint/require-await": `off`, // this is annoying when you want a little function to return a promise
     },
   },
 

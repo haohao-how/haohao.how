@@ -6,6 +6,7 @@ import mapValues from "lodash/mapValues";
 import omit from "lodash/omit";
 import pick from "lodash/pick";
 import {
+  IndexDefinition,
   IndexDefinitions,
   ReadonlyJSONValue,
   ReadTransaction,
@@ -368,7 +369,9 @@ abstract class RizzleType<
     return RizzleAliased.create(this, alias);
   }
 
-  indexed(indexName: string): RizzleIndexed<this> {
+  indexed<IndexName extends string>(
+    indexName: IndexName,
+  ): RizzleIndexed<this, IndexName> {
     return RizzleIndexed.create(this, indexName);
   }
 }
@@ -408,16 +411,19 @@ export class RizzleAliased<T extends RizzleType> extends RizzleType<
   };
 }
 
-interface RizzleIndexedDef<T extends RizzleCodecAny = RizzleCodecAny>
+interface RizzleIndexedDef<T extends RizzleCodecAny, IndexName extends string>
   extends RizzleTypeDef {
   innerType: T;
-  indexName: string;
+  indexName: IndexName;
   typeName: `indexed`;
 }
 
-export class RizzleIndexed<T extends RizzleType> extends RizzleType<
+export class RizzleIndexed<
+  T extends RizzleType,
+  IndexName extends string,
+> extends RizzleType<
   T[`_input`],
-  RizzleIndexedDef<T>,
+  RizzleIndexedDef<T, IndexName>,
   T[`_output`]
 > {
   getMarshal() {
@@ -439,10 +445,10 @@ export class RizzleIndexed<T extends RizzleType> extends RizzleType<
     return this._def.innerType._getAlias();
   }
 
-  static create = <T extends RizzleCodecAny>(
+  static create = <T extends RizzleCodecAny, IndexName extends string>(
     type: T,
-    indexName: string,
-  ): RizzleIndexed<T> => {
+    indexName: IndexName,
+  ): RizzleIndexed<T, IndexName> => {
     return new RizzleIndexed({
       innerType: type,
       indexName,
@@ -462,35 +468,34 @@ export class RizzleObject<T extends RizzleRawShape> extends RizzleType<
   RizzleObjectDef<T>,
   RizzleObjectOutput<T>
 > {
-  getMarshal() {
-    const keyMarshal = mapValues(
-      this._def.shape,
-      (v, k) => (v instanceof RizzleAliased ? v._def.alias : null) ?? k,
-    );
+  #keyToAlias: Record<string, string>;
+  #aliasToKey: Record<string, string>;
 
+  constructor(def: RizzleObjectDef<T>) {
+    super(def);
+
+    this.#keyToAlias = mapValues(this._def.shape, (v, k) => v._getAlias() ?? k);
+    this.#aliasToKey = objectInvert(this.#keyToAlias);
+  }
+
+  getMarshal() {
     return z
       .object(mapValues(this._def.shape, (v) => v.getMarshal()))
       .transform((x) =>
-        mapKeys(x, (_v, k) => keyMarshal[k]),
+        mapKeys(x, (_v, k) => this.#keyToAlias[k]),
       ) as unknown as z.ZodType<this[`_output`], z.ZodAnyDef, this[`_input`]>;
   }
 
   getUnmarshal() {
-    const keyMarshal = mapValues(
-      this._def.shape,
-      (v, k) => (v instanceof RizzleAliased ? v._def.alias : null) ?? k,
-    );
-    const keyUnmarshal = objectInvert(keyMarshal);
-
     return z
       .object(
         mapValues(
-          mapKeys(this._def.shape, (_v, k) => keyMarshal[k]),
+          mapKeys(this._def.shape, (_v, k) => this.#keyToAlias[k]),
           (x) => x.getUnmarshal(),
         ),
       )
       .transform((x) =>
-        mapKeys(x, (_v, k) => keyUnmarshal[k]),
+        mapKeys(x, (_v, k) => this.#aliasToKey[k]),
       ) as unknown as z.ZodType<this[`_input`], z.ZodAnyDef, this[`_output`]>;
   }
 
@@ -560,6 +565,18 @@ export type RizzleObjectOutput<T extends RizzleRawShape> = {
   // TODO: this is missing key aliases
   [K in keyof T]: T[K][`_output`];
 };
+
+export type RizzleIndexNames<T extends RizzleType> =
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  T extends RizzleIndexed<any, infer IndexName>
+    ? IndexName
+    : T extends RizzleAliased<infer Wrapped>
+      ? RizzleIndexNames<Wrapped>
+      : T extends RizzleObject<infer Shape>
+        ? {
+            [K in keyof Shape]: RizzleIndexNames<Shape[K]>;
+          }[keyof Shape]
+        : never;
 
 export const rizzle = {
   string: (alias?: string) => {
@@ -745,9 +762,28 @@ export const rizzle = {
       );
     };
 
+    const uninterpolateKey = buildKeyPathRegex(keyPath);
+
+    const indexes = mapValues(valueRizzle._getIndexes(), (v) => ({
+      ...v,
+      prefix: keyPath.slice(0, keyPath.indexOf(`[`)),
+    })) as Record<RizzleIndexNames<typeof valueRizzle>, IndexDefinition>;
+
+    const scan = mapValues(
+      indexes,
+      (_v, k) => (tx: ReadTransaction) =>
+        indexScanIter(
+          tx,
+          k,
+          (k) => keyRizzle.getUnmarshal().parse(uninterpolateKey(k)),
+          (v) => valueRizzle.getUnmarshal().parse(v),
+        ),
+    );
+
     return {
       prefix: keyPath,
       valueCodec: valueRizzle,
+      scan,
       getIndexes(): IndexDefinitions {
         return mapValues(valueRizzle._getIndexes(), (v) => ({
           ...v,
@@ -818,7 +854,32 @@ export const keyPathVariableNames = <T extends string>(
   );
 };
 
+export const parseKeyPath = <T extends string>(
+  keyPath: T,
+  key: string,
+): Record<ExtractVariableNames<T>, string> => {
+  return buildKeyPathRegex(keyPath)(key);
+};
+
+export const buildKeyPathRegex = <T extends string>(keyPath: T) => {
+  const keyPathVars = keyPathVariableNames(keyPath);
+
+  const regexString = keyPathVars.reduce<string>((acc, key) => {
+    return acc.replace(regexpEscape(`[${key}]`), `(?<${key}>.+?)`);
+  }, regexpEscape(keyPath));
+  const regex = new RegExp(`^${regexString}$`);
+
+  return (input: string) => {
+    const result = regex.exec(input)?.groups;
+    invariant(result != null, `couldn't parse key ${input} using ${keyPath}`);
+    return result as Record<ExtractVariableNames<T>, string>;
+  };
+};
 export type Timestamp = number;
+
+function regexpEscape(s: string): string {
+  return s.replace(/[-\/\\^$*+?.()|[\]{}]/g, `\\$&`);
+}
 
 export enum IndexName {
   Null = `Null`,
@@ -861,7 +922,7 @@ export async function indexScan<
   );
 }
 
-export async function* indexScanIter<
+export async function* legacyIndexScanIter<
   I extends IndexName,
   Unmarshaled = ReturnType<(typeof indexUnmarshalers)[I]>,
 >(tx: ReadTransaction, indexName: I): AsyncGenerator<Unmarshaled> {
@@ -903,6 +964,52 @@ export async function* indexScanIter<
 
     for (const kv of page) {
       yield unmarshal(kv) as Unmarshaled;
+    }
+  } while (page.length > 0);
+}
+
+export async function* indexScanIter<K, V>(
+  tx: ReadTransaction,
+  indexName: string,
+  unmarshalKey: (v: string) => K,
+  unmarshalValue: (k: unknown) => V,
+): AsyncGenerator<[K, V]> {
+  // HACK: convoluted workaround to fix a bug in Safari where the transaction
+  // would be prematurely closed with:
+  //
+  // > InvalidStateError: Failed to execute 'objectStore' on 'IDBTransaction':
+  // > The transaction finished.
+  //
+  // See also https://github.com/rocicorp/replicache/issues/486
+  //
+  // This approach synchronously loads a page of results at a time and then
+  // releases the transaction. This is not ideal, but seems better than using
+  // `.toArray()` which doesn't honor `limit` when using an index, so it would
+  // load the entire index at a time (see
+  // https://github.com/rocicorp/replicache/issues/1039).
+
+  const pageSize = 50;
+  let page: [string, ReadonlyJSONValue][];
+  let startKey: string | undefined;
+
+  do {
+    page = [];
+    for await (const [[indexKey, key], value] of tx
+      .scan({
+        indexName,
+        start:
+          startKey != null ? { key: startKey, exclusive: true } : undefined,
+      })
+      .entries()) {
+      startKey = indexKey;
+      page.push([key, value]);
+      if (page.length === pageSize) {
+        break;
+      }
+    }
+
+    for (const [k, v] of page) {
+      yield [unmarshalKey(k), unmarshalValue(v)] as const;
     }
   } while (page.length > 0);
 }
