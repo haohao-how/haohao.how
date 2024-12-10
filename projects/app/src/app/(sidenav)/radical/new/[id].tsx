@@ -218,9 +218,8 @@ export default function RadicalPage() {
               <View className="flex-1">
                 <Text className="text-text">
                   <Text className="opacity-50">The</Text> 一 at the top{` `}
-                  <Text className="opacity-50">
-                    is like a
-                  </Text> straight line or a boundary.
+                  <Text className="opacity-50">is like a</Text> straight line or
+                  a boundary.
                 </Text>
               </View>
             </View>
@@ -252,13 +251,10 @@ export default function RadicalPage() {
               <View className="flex-1">
                 <Text className="text-text">
                   <Text className="opacity-50">The</Text> 尢 underneath{` `}
-                  <Text className="opacity-50">
-                    looks like a
-                  </Text> person trying to stand{` `}
-                  <Text className="opacity-50">
-                    but bending in a way
-                  </Text> they can <Text className="underline">not</Text> fully
-                  rise.
+                  <Text className="opacity-50">looks like a</Text> person trying
+                  to stand{` `}
+                  <Text className="opacity-50">but bending in a way</Text> they
+                  can <Text className="underline">not</Text> fully rise.
                 </Text>
               </View>
             </View>
