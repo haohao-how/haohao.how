@@ -872,7 +872,8 @@ export const buildKeyPathRegex = <T extends string>(keyPath: T) => {
   return (input: string) => {
     const result = regex.exec(input)?.groups;
     invariant(result != null, `couldn't parse key ${input} using ${keyPath}`);
-    return result as Record<ExtractVariableNames<T>, string>;
+    // fix the prototype
+    return { ...result } as Record<ExtractVariableNames<T>, string>;
   };
 };
 export type Timestamp = number;

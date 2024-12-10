@@ -1,0 +1,37 @@
+diff --git a/out/replicache.d.ts b/out/replicache.d.ts
+index 00c15e9b300defc0f1df7779cf25edf348cd864c..3ce8194a2788b4b36272f1f24fddf2038c1774b2 100644
+--- a/out/replicache.d.ts
++++ b/out/replicache.d.ts
+@@ -10,7 +10,7 @@ type JSONValue =
+   | string
+   | boolean
+   | number
+-  | Array<JSONValue>
++  | Array<unknown>
+   | JSONObject;
+ 
+ /**
+@@ -27,7 +27,7 @@ type JSONValue =
+  * console.log(v); // either {a: undefined} or {}
+  * ```
+  */
+-type JSONObject = {[key: string]: JSONValue | undefined};
++type JSONObject = {[key: string]: unknown};
+ 
+ /** Like {@link JSONValue} but deeply readonly */
+ type ReadonlyJSONValue =
+@@ -35,12 +35,12 @@ type ReadonlyJSONValue =
+   | string
+   | boolean
+   | number
+-  | ReadonlyArray<ReadonlyJSONValue>
++  | ReadonlyArray<unknown>
+   | ReadonlyJSONObject;
+ 
+ /** Like {@link JSONObject} but deeply readonly */
+ type ReadonlyJSONObject = {
+-  readonly [key: string]: ReadonlyJSONValue | undefined;
++  readonly [key: string]: unknown;
+ };
+ 
+ /**

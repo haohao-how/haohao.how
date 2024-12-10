@@ -2768,7 +2768,7 @@ __metadata:
     react-native-svg: "npm:15.8.0"
     react-native-web: "npm:^0.19.13"
     react-responsive: "npm:^10.0.0"
-    replicache: "npm:^14.2.2"
+    replicache: "patch:replicache@patch%3Areplicache@npm%253A14.2.2%23~/.yarn/patches/replicache-npm-14.2.2-d99f6a2b5c.patch%3A%3Aversion=14.2.2&hash=f2490e#~/.yarn/patches/replicache-patch-e568419bdf.patch"
     replicache-react: "npm:^5.0.1"
     tailwind-variants: "npm:^0.2.1"
     tailwindcss: "npm:^3.4.14"
@@ -15982,7 +15982,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"replicache@npm:^14.2.2":
+"replicache@npm:14.2.2":
   version: 14.2.2
   resolution: "replicache@npm:14.2.2"
   dependencies:
@@ -15993,6 +15993,34 @@ __metadata:
   bin:
     replicache: out/cli.cjs
   checksum: 10c0/6448b6b68a249044ad9be6077a7b2537f9e67e0400b20e2ea7bd5354337b1aaad36b6ff616150259ae13686d65039e0385d06d09f75e291703af77f1bdc462fa
+  languageName: node
+  linkType: hard
+
+"replicache@patch:replicache@npm%3A14.2.2#~/.yarn/patches/replicache-npm-14.2.2-d99f6a2b5c.patch::version=14.2.2&hash=f2490e":
+  version: 14.2.2
+  resolution: "replicache@patch:replicache@npm%3A14.2.2#~/.yarn/patches/replicache-npm-14.2.2-d99f6a2b5c.patch::version=14.2.2&hash=f2490e"
+  dependencies:
+    "@badrap/valita": "npm:^0.3.0"
+    "@rocicorp/lock": "npm:^1.0.3"
+    "@rocicorp/logger": "npm:^5.2.1"
+    "@rocicorp/resolver": "npm:^1.0.1"
+  bin:
+    replicache: out/cli.cjs
+  checksum: 10c0/ab9d1746c7daf8de309c8c4fd55c252246fb2c92d9c2bebaa045f0af3415911c655b754d75400a6c08c17e7a0662cbdc5915da97deb01e5f90f0f8793be35bfc
+  languageName: node
+  linkType: hard
+
+"replicache@patch:replicache@patch%3Areplicache@npm%253A14.2.2%23~/.yarn/patches/replicache-npm-14.2.2-d99f6a2b5c.patch%3A%3Aversion=14.2.2&hash=f2490e#~/.yarn/patches/replicache-patch-e568419bdf.patch":
+  version: 14.2.2
+  resolution: "replicache@patch:replicache@patch%3Areplicache@npm%253A14.2.2%23~/.yarn/patches/replicache-npm-14.2.2-d99f6a2b5c.patch%3A%3Aversion=14.2.2&hash=f2490e#~/.yarn/patches/replicache-patch-e568419bdf.patch::version=14.2.2&hash=58fef1"
+  dependencies:
+    "@badrap/valita": "npm:^0.3.0"
+    "@rocicorp/lock": "npm:^1.0.3"
+    "@rocicorp/logger": "npm:^5.2.1"
+    "@rocicorp/resolver": "npm:^1.0.1"
+  bin:
+    replicache: out/cli.cjs
+  checksum: 10c0/79c315c1be60c096f11df7c89d4e1a355785fdacf34d4c4009bfb59ea4ded0f7f023177647f0df0e584e548bfe8808c0e978113f4ffd75cea8153f6a035770de
   languageName: node
   linkType: hard
 
