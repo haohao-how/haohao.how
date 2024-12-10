@@ -15,6 +15,46 @@ const semver = require("semver");
  */
 
 /**
+ * This rule checks that Moon's toolchain versions match Yarn's. It's *supposed*
+ * to just work, but sometimes Renovate gets things out of sync so this is a
+ * safety net.
+ *
+ * @param {Context} ctx
+ */
+async function enforceMoonToolchainVersion(ctx) {
+  const toolchainYaml = await fs.readFile(__dirname + "/.moon/toolchain.yml", {
+    encoding: "utf-8",
+  });
+  const toolchainNodeVersion =
+    /"(.+?)" # renovate: datasource=npm depName=node/.exec(toolchainYaml)?.[1];
+  const toolchainYarnVersion =
+    /"(.+?)" # renovate: datasource=npm depName=@yarnpkg\/cli/.exec(
+      toolchainYaml,
+    )?.[1];
+
+  const packageJson = JSON.parse(
+    await fs.readFile(__dirname + "/package.json", { encoding: "utf-8" }),
+  );
+  const packageNodeVersion = packageJson.engines.node;
+  const packageYarnVersion = packageJson.packageManager.split("yarn@")[1];
+
+  if (toolchainNodeVersion != packageNodeVersion) {
+    reportRootError(
+      ctx,
+      `Node version mismatch: ${toolchainNodeVersion} != ${packageNodeVersion}`,
+    );
+  }
+  if (toolchainYarnVersion != packageYarnVersion) {
+    reportRootError(
+      ctx,
+      `Yarn version mismatch: ${toolchainNodeVersion} != ${packageNodeVersion}`,
+    );
+  }
+  invariant(toolchainNodeVersion == packageNodeVersion);
+  invariant(toolchainYarnVersion == packageYarnVersion);
+}
+
+/**
  * This rule will enforce that a workspace MUST depend on the same version of
  * a dependency as the one used by the other workspaces.
  *
@@ -199,5 +239,6 @@ module.exports = defineConfig({
       "ws@^8.17.1": "^8 <=8.17.x",
       "yargs@^17.7.2": "^17 <=17.7.x",
     });
+    await enforceMoonToolchainVersion(ctx);
   },
 });
