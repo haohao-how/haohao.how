@@ -8,10 +8,12 @@
     "composite": true,
     "declaration": true,
     "declarationMap": true,
-    "noEmit": false,
     "emitDeclarationOnly": true,
     "incremental": true,
+    "noEmit": false,
     "noEmitOnError": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
     "skipLibCheck": true
   }
 }

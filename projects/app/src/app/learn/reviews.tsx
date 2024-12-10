@@ -2,7 +2,7 @@ import { QuizDeck } from "@/components/QuizDeck";
 import { RectButton } from "@/components/RectButton";
 import { useQueryOnce } from "@/components/ReplicacheContext";
 import { generateQuestionForSkillOrThrow } from "@/data/generator";
-import { IndexName, indexScanIter } from "@/data/marshal";
+import { IndexName, legacyIndexScanIter } from "@/data/marshal";
 import { questionsForReview } from "@/data/query";
 import { formatDuration } from "date-fns/formatDuration";
 import { interval } from "date-fns/interval";
@@ -26,7 +26,7 @@ export default function ReviewsPage() {
 
   const nextNotYetDueSkillState = useQueryOnce(async (tx) => {
     const now = new Date();
-    for await (const [skill, skillState] of indexScanIter(
+    for await (const [skill, skillState] of legacyIndexScanIter(
       tx,
       IndexName.SkillStateByDue,
     )) {

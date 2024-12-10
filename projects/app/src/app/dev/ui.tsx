@@ -300,7 +300,7 @@ const Section = ({
         <View className="light-theme flex-1 bg-primary-4 p-2 hover:bg-primary-5">
           <Pressable
             onPress={() => {
-              ref.current?.measure((x, y) => {
+              ref.current?.measure((_x, y) => {
                 scrollTo(y);
               });
             }}

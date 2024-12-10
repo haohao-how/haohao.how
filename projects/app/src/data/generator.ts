@@ -47,7 +47,6 @@ const choicePair = (
 });
 
 function keyForChoice(choice: OneCorrectPairQuestionChoice) {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { skill, type, ...rest } = choice;
   return JSON.stringify(rest);
 }

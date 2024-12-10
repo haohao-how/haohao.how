@@ -3,7 +3,7 @@ import shuffle from "lodash/shuffle";
 import take from "lodash/take";
 import { ReadTransaction } from "replicache";
 import { generateQuestionForSkillOrThrow } from "./generator";
-import { IndexName, indexScanIter } from "./marshal";
+import { IndexName, legacyIndexScanIter } from "./marshal";
 import { Question, Skill, SkillState, SkillType } from "./model";
 
 export async function questionsForReview(
@@ -20,7 +20,7 @@ export async function questionsForReview(
   const now = new Date();
   const skillTypesFilter =
     options?.skillTypes != null ? new Set(options.skillTypes) : null;
-  for await (const [skill, skillState] of indexScanIter(
+  for await (const [skill, skillState] of legacyIndexScanIter(
     tx,
     IndexName.SkillStateByDue,
   )) {

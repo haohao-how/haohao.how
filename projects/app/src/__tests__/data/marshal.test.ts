@@ -4,7 +4,12 @@ import {
   keyPathVariableNames,
   marshalSkillStateJson,
   marshalSrsStateJson,
+  parseKeyPath,
   rizzle,
+  RizzleAliased,
+  RizzleIndexed,
+  RizzleIndexNames,
+  RizzleObject,
   RizzleObjectInput,
   RizzleObjectOutput,
   RizzlePrimitive,
@@ -17,6 +22,10 @@ import assert from "node:assert";
 import test, { suite, TestContext } from "node:test";
 import { ReadTransaction, WriteTransaction } from "replicache";
 import { Prettify } from "ts-essentials";
+
+function typeChecks(..._args: unknown[]) {
+  // This function is only used for type checking, so it should never be called.
+}
 
 void test(`Skill`, () => {
   const skill = {
@@ -49,21 +58,37 @@ void test(`SrsState`, () => {
 
 // Utility type to check if two types are identical
 
+const debug = Symbol(`debug`);
 type AssertEqual<T, U> =
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters
   (<G>() => G extends T ? 1 : 2) extends <G>() => G extends U ? 1 : 2
     ? true
-    : false | /* debug intellisense hint */ Prettify<T>;
+    : false | { [debug]: Prettify<T> };
 
-void test.skip(`AssertEqual`, () => {
+typeChecks(`AssertEqual`, () => {
   true satisfies AssertEqual<`a`, `a`>;
   false satisfies AssertEqual<`a`, `b`>;
 
   true satisfies AssertEqual<`a` | undefined, `a` | undefined>;
-  true satisfies AssertEqual<`a` | null, `a` | null>;
+
+  // @ts-expect-error object with a key isn't equal to empty object
+  true satisfies AssertEqual<{ key: `value` }, object>;
+  false satisfies AssertEqual<{ key: `value` }, object>;
+  // @ts-expect-error unknown isn't equal to object
+  true satisfies AssertEqual<unknown, { key: `value` }>;
+  false satisfies AssertEqual<unknown, { key: `value` }>;
+  // @ts-expect-error unknown isn't equal to string
+  true satisfies AssertEqual<unknown, `a`>;
+  false satisfies AssertEqual<unknown, `a`>;
+  // @ts-expect-error object isn't equal to unknown
+  true satisfies AssertEqual<{ key: `value` }, unknown>;
+  false satisfies AssertEqual<{ key: `value` }, unknown>;
+  // @ts-expect-error object isn't equal to never
+  true satisfies AssertEqual<{ key: `value` }, never>;
+  false satisfies AssertEqual<{ key: `value` }, never>;
 });
 
-void test.skip(`ExtractKeys`, () => {
+typeChecks(`ExtractKeys`, () => {
   true satisfies AssertEqual<ExtractVariableNames<`a[b]`>, `b`>;
   true satisfies AssertEqual<ExtractVariableNames<`a[b][c]`>, `b` | `c`>;
   true satisfies AssertEqual<
@@ -72,8 +97,7 @@ void test.skip(`ExtractKeys`, () => {
   >;
 });
 
-void test.skip(`schema introspection helpers`, () => {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+typeChecks(`schema introspection helpers`, () => {
   const schema = { id: rizzle.string(), name: rizzle.string() };
 
   true satisfies AssertEqual<
@@ -85,24 +109,20 @@ void test.skip(`schema introspection helpers`, () => {
     ValueSchemaShape<`path/[id]`, typeof schema>,
     Pick<typeof schema, `name`>
   >;
-
-  // true satisfies AssertEqual<
-  //   SchemaShapeUnmarshaled<typeof schema>,
-  //   { id: string; name: string }
-  // >;
 });
 
 function makeMockTx(t: TestContext) {
   const mockRtx = {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    get: t.mock.fn((id: string) =>
+    get: t.mock.fn((_id: string) =>
       Promise.resolve<object | undefined>(undefined),
     ),
+    scan: t.mock.fn((_options: { indexName: string }): unknown => {
+      return;
+    }),
   };
   const mockWtx = {
     ...mockRtx,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    set: t.mock.fn((id: string, data: unknown) =>
+    set: t.mock.fn((_id: string, _data: unknown) =>
       Promise.resolve<object | undefined>(undefined),
     ),
   };
@@ -118,13 +138,13 @@ function makeMockTx(t: TestContext) {
 }
 
 void suite(`rizzle`, () => {
-  void test(`string key and value`, async (t) => {
+  void test(`string() key and value`, async (t) => {
     const posts = rizzle.schema(`foo/[id]`, {
       id: rizzle.string(),
       name: rizzle.string(),
     });
 
-    const { mockTx, tx } = makeMockTx(t);
+    const { mockTx, rtx, wtx, tx } = makeMockTx(t);
 
     await posts.get(tx, { id: `1` });
     assert.equal(mockTx.get.mock.callCount(), 1);
@@ -143,34 +163,105 @@ void suite(`rizzle`, () => {
       `foo/1`,
       { name: `foo` },
     ]);
+
+    typeChecks(async () => {
+      // .get()
+      void posts.get(rtx, { id: `1` });
+      // @ts-expect-error `id` is the key, not `name`
+      void posts.get(rtx, { name: `1` });
+      {
+        const post = await posts.get(rtx, { id: `1` });
+        true satisfies AssertEqual<typeof post, { name: string } | undefined>;
+      }
+
+      // .set()
+      void posts.set(wtx, { id: `1` }, { name: `foo` });
+      // @ts-expect-error `id` is the key, not `name`
+      void posts.set(wtx, { name: `1` }, { name: `foo` });
+    });
   });
 
-  void test(`object key alias`, async (t) => {
-    const posts = rizzle.schema(`foo/[id]`, {
-      id: rizzle.string(),
-      name: rizzle.string(`n`),
+  void test(`object()`, async (t) => {
+    const { mockTx, tx, rtx, wtx } = makeMockTx(t);
+
+    {
+      // key alias
+      const posts = rizzle.schema(`foo/[id]`, {
+        id: rizzle.string(),
+        name: rizzle.string(`n`),
+      });
+
+      await posts.get(tx, { id: `1` });
+      assert.equal(mockTx.get.mock.callCount(), 1);
+      assert.deepEqual(mockTx.get.mock.calls[0]?.arguments, [`foo/1`]);
+
+      // Check that a ReadonlyJSONValue is parsed correctly.
+      mockTx.get.mock.mockImplementationOnce(() =>
+        Promise.resolve({ n: `foo` }),
+      );
+      assert.deepEqual(await posts.get(tx, { id: `1` }), { name: `foo` });
+
+      // Check that a value is encoded correctly.
+      await posts.set(tx, { id: `1` }, { name: `foo` });
+      assert.equal(mockTx.set.mock.callCount(), 1);
+      assert.deepEqual(mockTx.set.mock.calls[0]?.arguments, [
+        `foo/1`,
+        { n: `foo` },
+      ]);
+    }
+
+    typeChecks(`simple, no aliases`, async () => {
+      const posts = rizzle.schema(`foo/[id]`, {
+        id: rizzle.string(),
+        name: rizzle.string(),
+      });
+
+      // .get()
+      void posts.get(rtx, { id: `1` });
+      // @ts-expect-error `id` is the key, not `name`
+      void posts.get(rtx, { name: `1` });
+      {
+        const post = await posts.get(rtx, { id: `1` });
+        true satisfies AssertEqual<typeof post, { name: string } | undefined>;
+      }
+
+      // .set()
+      void posts.set(wtx, { id: `1` }, { name: `foo` });
+      // @ts-expect-error `id` is the key, not `name`
+      void posts.set(wtx, { name: `1` }, { name: `foo` });
     });
 
-    const { mockTx, tx } = makeMockTx(t);
+    typeChecks(`nested with aliases`, async () => {
+      const posts = rizzle.schema(`foo/[id]`, {
+        id: rizzle.string(),
+        author: rizzle.object({
+          name: rizzle.string(),
+          email: rizzle.string(`e`),
+        }),
+      });
 
-    await posts.get(tx, { id: `1` });
-    assert.equal(mockTx.get.mock.callCount(), 1);
-    assert.deepEqual(mockTx.get.mock.calls[0]?.arguments, [`foo/1`]);
+      // .get()
+      void posts.get(tx, { id: `1` });
+      // @ts-expect-error `id` is the key, not `name`
+      void posts.get(tx, { name: `1` });
+      {
+        const post = await posts.get(tx, { id: `1` });
+        true satisfies AssertEqual<
+          typeof post,
+          { author: { name: string; email: string } } | undefined
+        >;
+      }
 
-    // Check that a ReadonlyJSONValue is parsed correctly.
-    mockTx.get.mock.mockImplementationOnce(() => Promise.resolve({ n: `foo` }));
-    assert.deepEqual(await posts.get(tx, { id: `1` }), { name: `foo` });
-
-    // Check that a value is encoded correctly.
-    await posts.set(tx, { id: `1` }, { name: `foo` });
-    assert.equal(mockTx.set.mock.callCount(), 1);
-    assert.deepEqual(mockTx.set.mock.calls[0]?.arguments, [
-      `foo/1`,
-      { n: `foo` },
-    ]);
+      // .set()
+      void posts.set(tx, { id: `1` }, { author: { name: `foo`, email: `` } });
+      // @ts-expect-error `id` is the key, not `name`
+      void posts.set(tx, { name: `1` }, { author: { id: `foo`, email: `` } });
+      // @ts-expect-error `email` alias should not be used as the input
+      void posts.set(tx, { name: `1` }, { author: { name: `foo`, e: `` } });
+    });
   });
 
-  void test(`timestamp`, async (t) => {
+  void test(`timestamp()`, async (t) => {
     const posts = rizzle.schema(`foo/[id]`, {
       id: rizzle.string(),
       due: rizzle.timestamp(),
@@ -221,7 +312,7 @@ void suite(`rizzle`, () => {
     }
   });
 
-  void test(`skillType`, async (t) => {
+  void test(`skillType()`, async (t) => {
     const posts = rizzle.schema(`foo/[id]`, {
       id: rizzle.string(),
       skill: rizzle.skillType(),
@@ -257,7 +348,7 @@ void suite(`rizzle`, () => {
     }
   });
 
-  void test(`skillId value`, async (t) => {
+  void test(`skillId()`, async (t) => {
     const posts = rizzle.schema(`foo/[id]`, {
       id: rizzle.string(),
       skill: rizzle.skillId(),
@@ -366,7 +457,7 @@ void suite(`rizzle`, () => {
     }
   });
 
-  void test(`enum`, async (t) => {
+  void test(`enum()`, async (t) => {
     enum Colors {
       RED,
       BLUE,
@@ -402,27 +493,34 @@ void suite(`rizzle`, () => {
     }
   });
 
-  void test(`object`, async (t) => {
+  void test(`object() with alias`, async (t) => {
     const posts = rizzle.schema(`foo/[id]`, {
       id: rizzle.string(),
       author: rizzle.object({
         name: rizzle.string(),
         email: rizzle.string(`e`),
+        id: rizzle.number(`i`).indexed(`byAuthorId`),
       }),
     });
 
     const { mockTx, tx } = makeMockTx(t);
 
     // Marshal and unmarshal round tripping
-    await posts.set(tx, { id: `1` }, { author: { name: `foo`, email: `f@o` } });
+    await posts.set(
+      tx,
+      { id: `1` },
+      { author: { name: `foo`, email: `f@o`, id: 1 } },
+    );
     const [, marshaledData] = mockTx.set.mock.calls[0]!.arguments;
-    assert.deepEqual(marshaledData, { author: { name: `foo`, e: `f@o` } });
+    assert.deepEqual(marshaledData, {
+      author: { name: `foo`, e: `f@o`, i: 1 },
+    });
 
     mockTx.get.mock.mockImplementationOnce(() =>
       Promise.resolve(marshaledData as object),
     );
     assert.deepStrictEqual(await posts.get(tx, { id: `1` }), {
-      author: { name: `foo`, email: `f@o` },
+      author: { name: `foo`, email: `f@o`, id: 1 },
     });
 
     mockTx.get.mock.resetCalls();
@@ -479,7 +577,62 @@ void suite(`rizzle`, () => {
       });
     }
 
-    {
+    // set(tx, { id: `1` }, { author: { name: `foo`, email: `f@o` } });
+    // const [, marshaledData] = mockTx.set.mock.calls[0]!.arguments;
+    // assert.deepEqual(marshaledData, { author: { name: `foo`, e: `f@o` } });
+
+    // mockTx.get.mock.mockImplementationOnce(() =>
+    //   Promise.resolve(marshaledData as object),
+    // );
+    // assert.deepStrictEqual(await posts.get(tx, { id: `1` }), {
+    //   author: { name: `foo`, email: `f@o` },
+    // });
+  });
+
+  void test(`index scan`, async (t) => {
+    const posts = rizzle.schema(`foo/[id]`, {
+      id: rizzle.string(),
+      author: rizzle.object({
+        name: rizzle.string().alias(`n`).indexed(`byAuthorName`),
+      }),
+    });
+
+    const { mockTx, tx } = makeMockTx(t);
+
+    mockTx.scan.mock.mockImplementationOnce((options) => {
+      assert.deepEqual(options, {
+        indexName: `byAuthorName`,
+        start: undefined,
+      });
+      return {
+        async *entries() {
+          const value = [[`brad`, `foo/1`], { author: { n: `brad` } }];
+          yield await Promise.resolve(value);
+        },
+      };
+    }, 0);
+    mockTx.scan.mock.mockImplementationOnce((options) => {
+      assert.deepEqual(options, {
+        indexName: `byAuthorName`,
+        start: {
+          exclusive: true,
+          key: `brad`,
+        },
+      });
+      return {
+        async *entries() {
+          return;
+        },
+      };
+    }, 1);
+
+    const results = [];
+    for await (const post of posts.scan.byAuthorName(tx)) {
+      results.push(post);
+    }
+    assert.deepEqual(results, [[{ id: `1` }, { author: { name: `brad` } }]]);
+
+    typeChecks(async () => {
       const posts = rizzle.schema(`foo/[id]`, {
         id: rizzle.string(),
         author: rizzle
@@ -495,20 +648,24 @@ void suite(`rizzle`, () => {
           jsonPointer: `/a/n`,
         },
       });
-    }
+      const tx = null as unknown as ReadTransaction;
+      for await (const [key, value] of posts.scan.byAuthorName(tx)) {
+        true satisfies AssertEqual<typeof key, { id: string }>;
+        true satisfies AssertEqual<typeof value, { author: { name: string } }>;
+      }
+      // @ts-expect-error does not take extra parameters
+      posts.scan.byAuthorName(tx, `a`, `b`, `c`);
+    });
+  });
 
-    // await posts.scan.byAuthorName(tx, 20)
-
-    // set(tx, { id: `1` }, { author: { name: `foo`, email: `f@o` } });
-    // const [, marshaledData] = mockTx.set.mock.calls[0]!.arguments;
-    // assert.deepEqual(marshaledData, { author: { name: `foo`, e: `f@o` } });
-
-    // mockTx.get.mock.mockImplementationOnce(() =>
-    //   Promise.resolve(marshaledData as object),
-    // );
-    // assert.deepStrictEqual(await posts.get(tx, { id: `1` }), {
-    //   author: { name: `foo`, email: `f@o` },
-    // });
+  void test(`parseKeyPath`, () => {
+    assert.deepEqual(parseKeyPath(`foo/$[id]`, `foo/$1`), { id: `1` });
+    assert.deepEqual(parseKeyPath(`^foo/$[id]`, `^foo/$1`), { id: `1` });
+    assert.deepEqual(parseKeyPath(`foo/[id]`, `foo/1`), { id: `1` });
+    assert.deepEqual(parseKeyPath(`foo/[id1]/[id2]`, `foo/1/2`), {
+      id1: `1`,
+      id2: `2`,
+    });
   });
 
   void test(`number`, async (t) => {
@@ -535,147 +692,62 @@ void suite(`rizzle`, () => {
     mockTx.set.mock.resetCalls();
   });
 
-  void suite.skip(`static type checks`, () => {
-    void test(`RizzleObjectInput / RizzleObjectOutput`, () => {
-      {
-        const rawShape = null as unknown as {
+  typeChecks(`RizzleIndexNames`, () => {
+    // Outer wrapping is RizzleIndexed.
+    true satisfies AssertEqual<
+      RizzleIndexNames<
+        RizzleObject<{
           id: RizzlePrimitive<string, string>;
-          date: RizzlePrimitive<Date, string>;
-        };
+          date: RizzleIndexed<RizzlePrimitive<Date, string>, `byDate`>;
+          name: RizzleIndexed<RizzlePrimitive<Date, string>, `byName`>;
+        }>
+      >,
+      `byDate` | `byName`
+    >;
 
-        true satisfies AssertEqual<
-          RizzleObjectInput<typeof rawShape>,
-          { id: string; date: Date }
-        >;
+    // Inner wrapping is RizzleIndexed.
+    true satisfies AssertEqual<
+      Prettify<
+        RizzleIndexNames<
+          RizzleObject<{
+            id: RizzlePrimitive<string, string>;
+            date: RizzleAliased<
+              RizzleIndexed<RizzlePrimitive<Date, string>, `byDate`>
+            >;
+          }>
+        >
+      >,
+      `byDate`
+    >;
+  });
 
-        true satisfies AssertEqual<
-          RizzleObjectOutput<typeof rawShape>,
-          { id: string; date: string }
-        >;
+  typeChecks(`RizzleObjectInput / RizzleObjectOutput`, () => {
+    const rawShape = null as unknown as {
+      id: RizzlePrimitive<string, string>;
+      date: RizzlePrimitive<Date, string>;
+    };
 
-        {
-          // eslint-disable-next-line @typescript-eslint/no-unused-vars
-          const obj = rizzle.object(rawShape);
-          true satisfies AssertEqual<
-            (typeof obj)[`_input`],
-            { id: string; date: Date }
-          >;
-          true satisfies AssertEqual<
-            (typeof obj)[`_output`],
-            { id: string; date: string }
-          >;
-        }
-      }
-    });
+    true satisfies AssertEqual<
+      RizzleObjectInput<typeof rawShape>,
+      { id: string; date: Date }
+    >;
 
-    void test(`object() string key and value`, async () => {
-      const posts = rizzle.schema(`foo/[id]`, {
-        id: rizzle.string(),
-        name: rizzle.string(),
-      });
+    true satisfies AssertEqual<
+      RizzleObjectOutput<typeof rawShape>,
+      { id: string; date: string }
+    >;
 
-      const rtx = null as unknown as ReadTransaction;
-      const wtx = null as unknown as WriteTransaction;
-
-      // .get()
-      void posts.get(rtx, { id: `1` });
-      // @ts-expect-error `id` is the key, not `name`
-      void posts.get(rtx, { name: `1` });
-      {
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const post = await posts.get(rtx, { id: `1` });
-        true satisfies AssertEqual<typeof post, { name: string } | undefined>;
-      }
-
-      // .set()
-      void posts.set(wtx, { id: `1` }, { name: `foo` });
-      // @ts-expect-error `id` is the key, not `name`
-      void posts.set(wtx, { name: `1` }, { name: `foo` });
-    });
-
-    void test(`string key and value`, async () => {
-      const posts = rizzle.schema(`foo/[id]`, {
-        id: rizzle.string(),
-        name: rizzle.string(),
-      });
-
-      const rtx = null as unknown as ReadTransaction;
-      const wtx = null as unknown as WriteTransaction;
-
-      // .get()
-      void posts.get(rtx, { id: `1` });
-      // @ts-expect-error `id` is the key, not `name`
-      void posts.get(rtx, { name: `1` });
-      {
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const post = await posts.get(rtx, { id: `1` });
-        true satisfies AssertEqual<typeof post, { name: string } | undefined>;
-      }
-
-      // .set()
-      void posts.set(wtx, { id: `1` }, { name: `foo` });
-      // @ts-expect-error `id` is the key, not `name`
-      void posts.set(wtx, { name: `1` }, { name: `foo` });
-    });
-
-    void test(`object`, async () => {
-      const tx = null as unknown as WriteTransaction;
-      const posts = rizzle.schema(`foo/[id]`, {
-        id: rizzle.string(),
-        author: rizzle.object({
-          name: rizzle.string(),
-          email: rizzle.string(`e`),
-        }),
-      });
-
-      // .get()
-      void posts.get(tx, { id: `1` });
-      // @ts-expect-error `id` is the key, not `name`
-      void posts.get(tx, { name: `1` });
-      {
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const post = await posts.get(tx, { id: `1` });
-        true satisfies AssertEqual<
-          typeof post,
-          { author: { name: string; email: string } } | undefined
-        >;
-      }
-
-      // .set()
-      void posts.set(tx, { id: `1` }, { author: { name: `foo`, email: `` } });
-      // @ts-expect-error `id` is the key, not `name`
-      void posts.set(tx, { name: `1` }, { author: { id: `foo`, email: `` } });
-      // @ts-expect-error `email` alias should not be used as the input
-      void posts.set(tx, { name: `1` }, { author: { name: `foo`, e: `` } });
-    });
-
-    void test(`object with aliases`, async () => {
-      const tx = null as unknown as WriteTransaction;
-      const posts = rizzle.schema(`foo/[id]`, {
-        id: rizzle.string(),
-        author: rizzle.object({
-          name: rizzle.string(`n`),
-        }),
-      });
-
-      // .get()
-      void posts.get(tx, { id: `1` });
-      // @ts-expect-error `id` is the key, not `name`
-      void posts.get(tx, { name: `1` });
-      {
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const post = await posts.get(tx, { id: `1` });
-        true satisfies AssertEqual<
-          typeof post,
-          { author: { name: string } } | undefined
-        >;
-      }
-
-      // .set()
-      void posts.set(tx, { id: `1` }, { author: { name: `foo` } });
-      // @ts-expect-error `id` is the key, not `name`
-      void posts.set(tx, { name: `1` }, { author: { id: `foo` } });
-    });
+    {
+      const obj = rizzle.object(rawShape);
+      true satisfies AssertEqual<
+        (typeof obj)[`_input`],
+        { id: string; date: Date }
+      >;
+      true satisfies AssertEqual<
+        (typeof obj)[`_output`],
+        { id: string; date: string }
+      >;
+    }
   });
 });
 

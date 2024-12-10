@@ -12,7 +12,7 @@ yargs(hideBin(process.argv))
     "$0",
     "generate audio files for each phrase and voice",
     (y) => y,
-    async (argv) => {
+    async () => {
       for (const voice of voices) {
         for (const phrase of phrases) {
           const tempPath = "speech.aac";
