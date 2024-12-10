@@ -112,28 +112,35 @@ typeChecks(`schema introspection helpers`, () => {
 });
 
 function makeMockTx(t: TestContext) {
-  const mockRtx = {
-    get: t.mock.fn((_id: string) =>
-      Promise.resolve<object | undefined>(undefined),
-    ),
-    scan: t.mock.fn((_options: { indexName: string }): unknown => {
-      return;
+  const readTx = {
+    get: t.mock.fn<ReadTransaction[`get`]>(async () => undefined),
+    scan: t.mock.fn<ReadTransaction[`scan`]>(() => {
+      return null as never;
     }),
-  };
-  const mockWtx = {
-    ...mockRtx,
-    set: t.mock.fn((_id: string, _data: unknown) =>
-      Promise.resolve<object | undefined>(undefined),
-    ),
-  };
+    clientID: null as never,
+    environment: null as never,
+    location: null as never,
+    has: null as never,
+    isEmpty: null as never,
+  } satisfies ReadTransaction;
+
+  const writeTx = {
+    ...readTx,
+    set: t.mock.fn<WriteTransaction[`set`]>(async () => undefined),
+    mutationID: null as never,
+    reason: null as never,
+    put: null as never,
+    del: null as never,
+  } satisfies WriteTransaction;
 
   return {
-    mockRtx,
-    mockWtx,
-    rtx: mockRtx as unknown as ReadTransaction,
-    wtx: mockWtx as unknown as WriteTransaction,
-    mockTx: mockWtx,
-    tx: mockWtx as unknown as WriteTransaction,
+    ...writeTx,
+    readonly: readTx,
+    [Symbol.dispose]: () => {
+      writeTx.get.mock.resetCalls();
+      writeTx.set.mock.resetCalls();
+      writeTx.scan.mock.resetCalls();
+    },
   };
 }
 
@@ -144,45 +151,43 @@ void suite(`rizzle`, () => {
       name: rizzle.string(),
     });
 
-    const { mockTx, rtx, wtx, tx } = makeMockTx(t);
+    using tx = makeMockTx(t);
 
     await posts.get(tx, { id: `1` });
-    assert.equal(mockTx.get.mock.callCount(), 1);
-    assert.deepEqual(mockTx.get.mock.calls[0]?.arguments, [`foo/1`]);
+    assert.strictEqual(tx.get.mock.callCount(), 1);
+    assert.deepStrictEqual(tx.get.mock.calls[0]?.arguments, [`foo/1`]);
 
     // Check that a ReadonlyJSONValue is parsed correctly.
-    mockTx.get.mock.mockImplementationOnce(() =>
-      Promise.resolve({ name: `foo` }),
-    );
-    assert.deepEqual(await posts.get(tx, { id: `1` }), { name: `foo` });
+    tx.get.mock.mockImplementationOnce(() => Promise.resolve({ name: `foo` }));
+    assert.deepStrictEqual(await posts.get(tx, { id: `1` }), { name: `foo` });
 
     // Check that a value is encoded correctly.
     await posts.set(tx, { id: `1` }, { name: `foo` });
-    assert.equal(mockTx.set.mock.callCount(), 1);
-    assert.deepEqual(mockTx.set.mock.calls[0]?.arguments, [
+    assert.strictEqual(tx.set.mock.callCount(), 1);
+    assert.deepStrictEqual(tx.set.mock.calls[0]?.arguments, [
       `foo/1`,
       { name: `foo` },
     ]);
 
     typeChecks(async () => {
       // .get()
-      void posts.get(rtx, { id: `1` });
+      void posts.get(tx.readonly, { id: `1` });
       // @ts-expect-error `id` is the key, not `name`
-      void posts.get(rtx, { name: `1` });
+      void posts.get(tx.readonly, { name: `1` });
       {
-        const post = await posts.get(rtx, { id: `1` });
+        const post = await posts.get(tx.readonly, { id: `1` });
         true satisfies AssertEqual<typeof post, { name: string } | undefined>;
       }
 
       // .set()
-      void posts.set(wtx, { id: `1` }, { name: `foo` });
+      void posts.set(tx, { id: `1` }, { name: `foo` });
       // @ts-expect-error `id` is the key, not `name`
-      void posts.set(wtx, { name: `1` }, { name: `foo` });
+      void posts.set(tx, { name: `1` }, { name: `foo` });
     });
   });
 
   void test(`object()`, async (t) => {
-    const { mockTx, tx, rtx, wtx } = makeMockTx(t);
+    using tx = makeMockTx(t);
 
     {
       // key alias
@@ -192,19 +197,17 @@ void suite(`rizzle`, () => {
       });
 
       await posts.get(tx, { id: `1` });
-      assert.equal(mockTx.get.mock.callCount(), 1);
-      assert.deepEqual(mockTx.get.mock.calls[0]?.arguments, [`foo/1`]);
+      assert.strictEqual(tx.get.mock.callCount(), 1);
+      assert.deepStrictEqual(tx.get.mock.calls[0]?.arguments, [`foo/1`]);
 
       // Check that a ReadonlyJSONValue is parsed correctly.
-      mockTx.get.mock.mockImplementationOnce(() =>
-        Promise.resolve({ n: `foo` }),
-      );
-      assert.deepEqual(await posts.get(tx, { id: `1` }), { name: `foo` });
+      tx.get.mock.mockImplementationOnce(() => Promise.resolve({ n: `foo` }));
+      assert.deepStrictEqual(await posts.get(tx, { id: `1` }), { name: `foo` });
 
       // Check that a value is encoded correctly.
       await posts.set(tx, { id: `1` }, { name: `foo` });
-      assert.equal(mockTx.set.mock.callCount(), 1);
-      assert.deepEqual(mockTx.set.mock.calls[0]?.arguments, [
+      assert.strictEqual(tx.set.mock.callCount(), 1);
+      assert.deepStrictEqual(tx.set.mock.calls[0]?.arguments, [
         `foo/1`,
         { n: `foo` },
       ]);
@@ -217,18 +220,18 @@ void suite(`rizzle`, () => {
       });
 
       // .get()
-      void posts.get(rtx, { id: `1` });
+      void posts.get(tx.readonly, { id: `1` });
       // @ts-expect-error `id` is the key, not `name`
-      void posts.get(rtx, { name: `1` });
+      void posts.get(tx.readonly, { name: `1` });
       {
-        const post = await posts.get(rtx, { id: `1` });
+        const post = await posts.get(tx.readonly, { id: `1` });
         true satisfies AssertEqual<typeof post, { name: string } | undefined>;
       }
 
       // .set()
-      void posts.set(wtx, { id: `1` }, { name: `foo` });
+      void posts.set(tx, { id: `1` }, { name: `foo` });
       // @ts-expect-error `id` is the key, not `name`
-      void posts.set(wtx, { name: `1` }, { name: `foo` });
+      void posts.set(tx, { name: `1` }, { name: `foo` });
     });
 
     typeChecks(`nested with aliases`, async () => {
@@ -267,11 +270,11 @@ void suite(`rizzle`, () => {
       due: rizzle.timestamp(),
     });
 
-    const { mockTx, tx } = makeMockTx(t);
+    using tx = makeMockTx(t);
 
     await posts.get(tx, { id: `1` });
-    assert.equal(mockTx.get.mock.callCount(), 1);
-    assert.deepEqual(mockTx.get.mock.calls[0]?.arguments, [`foo/1`]);
+    assert.strictEqual(tx.get.mock.callCount(), 1);
+    assert.deepStrictEqual(tx.get.mock.calls[0]?.arguments, [`foo/1`]);
 
     // Unmarshalling
     {
@@ -281,10 +284,10 @@ void suite(`rizzle`, () => {
         [date.getTime(), date], // timestamp as number
         [date.getTime().toString(), date], // timestamp as string
       ]) {
-        mockTx.get.mock.mockImplementationOnce(() =>
+        tx.get.mock.mockImplementationOnce(() =>
           Promise.resolve({ due: marshaled }),
         );
-        assert.deepEqual(
+        assert.deepStrictEqual(
           await posts.get(tx, { id: `1` }),
           {
             due: unmarshaled,
@@ -302,12 +305,12 @@ void suite(`rizzle`, () => {
         [date.getTime(), date.getTime()], // timestamp as number
       ] as const) {
         await posts.set(tx, { id: `1` }, { due: unmarshaled });
-        assert.equal(mockTx.set.mock.callCount(), 1);
-        assert.deepEqual(mockTx.set.mock.calls[0]?.arguments, [
+        assert.strictEqual(tx.set.mock.callCount(), 1);
+        assert.deepStrictEqual(tx.set.mock.calls[0]?.arguments, [
           `foo/1`,
           { due: marshaled },
         ]);
-        mockTx.set.mock.resetCalls();
+        tx.set.mock.resetCalls();
       }
     }
   });
@@ -317,8 +320,6 @@ void suite(`rizzle`, () => {
       id: rizzle.string(),
       skill: rizzle.skillType(),
     });
-
-    const { mockTx, tx } = makeMockTx(t);
 
     // Marshal and unmarshal round tripping
     for (const skillType of [
@@ -334,17 +335,16 @@ void suite(`rizzle`, () => {
       SkillType.PinyinToHanzi,
       SkillType.ImageToHanzi,
     ] as const) {
+      using tx = makeMockTx(t);
+
       await posts.set(tx, { id: `1` }, { skill: skillType });
-      const [, marshaledData] = mockTx.set.mock.calls[0]!.arguments;
-      mockTx.get.mock.mockImplementationOnce(() =>
+      const [, marshaledData] = tx.set.mock.calls[0]!.arguments;
+      tx.get.mock.mockImplementationOnce(() =>
         Promise.resolve(marshaledData as object),
       );
-      assert.deepEqual(await posts.get(tx, { id: `1` }), {
+      assert.deepStrictEqual(await posts.get(tx, { id: `1` }), {
         skill: skillType,
       });
-
-      mockTx.get.mock.resetCalls();
-      mockTx.set.mock.resetCalls();
     }
   });
 
@@ -354,23 +354,19 @@ void suite(`rizzle`, () => {
       skill: rizzle.skillId(),
     });
 
-    const { mockTx, tx } = makeMockTx(t);
-
     // Marshal and unmarshal round tripping
     for (const skill of [
       { type: SkillType.EnglishToHanzi, hanzi: `好` },
     ] as const) {
+      using tx = makeMockTx(t);
       await posts.set(tx, { id: `1` }, { skill });
-      const [, marshaledData] = mockTx.set.mock.calls[0]!.arguments;
-      mockTx.get.mock.mockImplementationOnce(() =>
+      const [, marshaledData] = tx.set.mock.calls[0]!.arguments;
+      tx.get.mock.mockImplementationOnce(() =>
         Promise.resolve(marshaledData as object),
       );
-      assert.deepEqual(await posts.get(tx, { id: `1` }), {
+      assert.deepStrictEqual(await posts.get(tx, { id: `1` }), {
         skill,
       });
-
-      mockTx.get.mock.resetCalls();
-      mockTx.set.mock.resetCalls();
     }
   });
 
@@ -380,21 +376,18 @@ void suite(`rizzle`, () => {
       text: rizzle.string(),
     });
 
-    const { mockTx, tx } = makeMockTx(t);
+    using tx = makeMockTx(t);
 
     await posts.set(tx, { id1: `1` }, { text: `hello` });
-    const [, marshaledData] = mockTx.set.mock.calls[0]!.arguments;
-    mockTx.get.mock.mockImplementationOnce(() =>
+    const [, marshaledData] = tx.set.mock.calls[0]!.arguments;
+    tx.get.mock.mockImplementationOnce(() =>
       Promise.resolve(marshaledData as object),
     );
-    assert.deepEqual(await posts.get(tx, { id1: `1` }), {
+    assert.deepStrictEqual(await posts.get(tx, { id1: `1` }), {
       text: `hello`,
     });
-    assert.equal(mockTx.get.mock.callCount(), 1);
-    assert.deepEqual(mockTx.get.mock.calls[0]?.arguments, [`foo/1`]);
-
-    mockTx.get.mock.resetCalls();
-    mockTx.set.mock.resetCalls();
+    assert.strictEqual(tx.get.mock.callCount(), 1);
+    assert.deepStrictEqual(tx.get.mock.calls[0]?.arguments, [`foo/1`]);
   });
 
   void test(`two keys`, async (t) => {
@@ -404,21 +397,18 @@ void suite(`rizzle`, () => {
       text: rizzle.string(),
     });
 
-    const { mockTx, tx } = makeMockTx(t);
+    using tx = makeMockTx(t);
 
     await posts.set(tx, { id1: `1`, id2: `2` }, { text: `hello` });
-    const [, marshaledData] = mockTx.set.mock.calls[0]!.arguments;
-    mockTx.get.mock.mockImplementationOnce(() =>
+    const [, marshaledData] = tx.set.mock.calls[0]!.arguments;
+    tx.get.mock.mockImplementationOnce(() =>
       Promise.resolve(marshaledData as object),
     );
-    assert.deepEqual(await posts.get(tx, { id1: `1`, id2: `2` }), {
+    assert.deepStrictEqual(await posts.get(tx, { id1: `1`, id2: `2` }), {
       text: `hello`,
     });
-    assert.equal(mockTx.get.mock.callCount(), 1);
-    assert.deepEqual(mockTx.get.mock.calls[0]?.arguments, [`foo/1/2`]);
-
-    mockTx.get.mock.resetCalls();
-    mockTx.set.mock.resetCalls();
+    assert.strictEqual(tx.get.mock.callCount(), 1);
+    assert.deepStrictEqual(tx.get.mock.calls[0]?.arguments, [`foo/1/2`]);
   });
 
   void test(`non-string key codec`, async (t) => {
@@ -426,8 +416,6 @@ void suite(`rizzle`, () => {
       skill: rizzle.skillId(),
       text: rizzle.string(),
     });
-
-    const { mockTx, tx } = makeMockTx(t);
 
     // Marshal and unmarshal round tripping
     for (const [skill, skillId] of [
@@ -441,19 +429,19 @@ void suite(`rizzle`, () => {
         `rp:好:hǎo`,
       ],
     ] as const) {
+      using tx = makeMockTx(t);
       await posts.set(tx, { skill }, { text: `hello` });
-      const [, marshaledData] = mockTx.set.mock.calls[0]!.arguments;
-      mockTx.get.mock.mockImplementationOnce(() =>
+      const [, marshaledData] = tx.set.mock.calls[0]!.arguments;
+      tx.get.mock.mockImplementationOnce(() =>
         Promise.resolve(marshaledData as object),
       );
-      assert.deepEqual(await posts.get(tx, { skill }), {
+      assert.deepStrictEqual(await posts.get(tx, { skill }), {
         text: `hello`,
       });
-      assert.equal(mockTx.get.mock.callCount(), 1);
-      assert.deepEqual(mockTx.get.mock.calls[0]?.arguments, [`foo/${skillId}`]);
-
-      mockTx.get.mock.resetCalls();
-      mockTx.set.mock.resetCalls();
+      assert.strictEqual(tx.get.mock.callCount(), 1);
+      assert.deepStrictEqual(tx.get.mock.calls[0]?.arguments, [
+        `foo/${skillId}`,
+      ]);
     }
   });
 
@@ -471,13 +459,13 @@ void suite(`rizzle`, () => {
       }),
     });
 
-    const { mockTx, tx } = makeMockTx(t);
-
     // Marshal and unmarshal round tripping
     for (const color of [Colors.BLUE, Colors.RED]) {
+      using tx = makeMockTx(t);
+
       await posts.set(tx, { id: `1` }, { color });
-      const [, marshaledData] = mockTx.set.mock.calls[0]!.arguments;
-      mockTx.get.mock.mockImplementationOnce(() =>
+      const [, marshaledData] = tx.set.mock.calls[0]!.arguments;
+      tx.get.mock.mockImplementationOnce(() =>
         Promise.resolve(marshaledData as object),
       );
       // Make sure the enum isn't just being marshaled to its runtime value,
@@ -487,9 +475,6 @@ void suite(`rizzle`, () => {
       assert.deepStrictEqual(await posts.get(tx, { id: `1` }), {
         color,
       });
-
-      mockTx.get.mock.resetCalls();
-      mockTx.set.mock.resetCalls();
     }
   });
 
@@ -503,7 +488,7 @@ void suite(`rizzle`, () => {
       }),
     });
 
-    const { mockTx, tx } = makeMockTx(t);
+    using tx = makeMockTx(t);
 
     // Marshal and unmarshal round tripping
     await posts.set(
@@ -511,20 +496,17 @@ void suite(`rizzle`, () => {
       { id: `1` },
       { author: { name: `foo`, email: `f@o`, id: 1 } },
     );
-    const [, marshaledData] = mockTx.set.mock.calls[0]!.arguments;
-    assert.deepEqual(marshaledData, {
+    const [, marshaledData] = tx.set.mock.calls[0]!.arguments;
+    assert.deepStrictEqual(marshaledData, {
       author: { name: `foo`, e: `f@o`, i: 1 },
     });
 
-    mockTx.get.mock.mockImplementationOnce(() =>
+    tx.get.mock.mockImplementationOnce(() =>
       Promise.resolve(marshaledData as object),
     );
     assert.deepStrictEqual(await posts.get(tx, { id: `1` }), {
       author: { name: `foo`, email: `f@o`, id: 1 },
     });
-
-    mockTx.get.mock.resetCalls();
-    mockTx.set.mock.resetCalls();
   });
 
   void test(`object()`, async (t) => {
@@ -535,22 +517,19 @@ void suite(`rizzle`, () => {
       }),
     });
 
-    const { mockTx, tx } = makeMockTx(t);
+    using tx = makeMockTx(t);
 
     // Marshal and unmarshal round tripping
     await posts.set(tx, { id: `1` }, { author: { name: `foo` } });
-    const [, marshaledData] = mockTx.set.mock.calls[0]!.arguments;
-    assert.deepEqual(marshaledData, { author: { name: `foo` } });
+    const [, marshaledData] = tx.set.mock.calls[0]!.arguments;
+    assert.deepStrictEqual(marshaledData, { author: { name: `foo` } });
 
-    mockTx.get.mock.mockImplementationOnce(() =>
+    tx.get.mock.mockImplementationOnce(() =>
       Promise.resolve(marshaledData as object),
     );
     assert.deepStrictEqual(await posts.get(tx, { id: `1` }), {
       author: { name: `foo` },
     });
-
-    mockTx.get.mock.resetCalls();
-    mockTx.set.mock.resetCalls();
   });
 
   void test(`object indexes`, () => {
@@ -562,13 +541,13 @@ void suite(`rizzle`, () => {
         }),
       });
 
-      assert.deepEqual(posts.valueCodec._getIndexes(), {
+      assert.deepStrictEqual(posts.valueCodec._getIndexes(), {
         byAuthorName: {
           allowEmpty: false,
           jsonPointer: `/author/name`,
         },
       });
-      assert.deepEqual(posts.getIndexes(), {
+      assert.deepStrictEqual(posts.getIndexes(), {
         byAuthorName: {
           allowEmpty: false,
           prefix: `foo/`,
@@ -576,17 +555,6 @@ void suite(`rizzle`, () => {
         },
       });
     }
-
-    // set(tx, { id: `1` }, { author: { name: `foo`, email: `f@o` } });
-    // const [, marshaledData] = mockTx.set.mock.calls[0]!.arguments;
-    // assert.deepEqual(marshaledData, { author: { name: `foo`, e: `f@o` } });
-
-    // mockTx.get.mock.mockImplementationOnce(() =>
-    //   Promise.resolve(marshaledData as object),
-    // );
-    // assert.deepStrictEqual(await posts.get(tx, { id: `1` }), {
-    //   author: { name: `foo`, email: `f@o` },
-    // });
   });
 
   void test(`index scan`, async (t) => {
@@ -597,10 +565,11 @@ void suite(`rizzle`, () => {
       }),
     });
 
-    const { mockTx, tx } = makeMockTx(t);
+    using tx = makeMockTx(t);
 
-    mockTx.scan.mock.mockImplementationOnce((options) => {
-      assert.deepEqual(options, {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    tx.scan.mock.mockImplementationOnce((options: any): any => {
+      assert.deepStrictEqual(options, {
         indexName: `byAuthorName`,
         start: undefined,
       });
@@ -611,8 +580,9 @@ void suite(`rizzle`, () => {
         },
       };
     }, 0);
-    mockTx.scan.mock.mockImplementationOnce((options) => {
-      assert.deepEqual(options, {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    tx.scan.mock.mockImplementationOnce((options: any): any => {
+      assert.deepStrictEqual(options, {
         indexName: `byAuthorName`,
         start: {
           exclusive: true,
@@ -630,7 +600,9 @@ void suite(`rizzle`, () => {
     for await (const post of posts.scan.byAuthorName(tx)) {
       results.push(post);
     }
-    assert.deepEqual(results, [[{ id: `1` }, { author: { name: `brad` } }]]);
+    assert.deepStrictEqual(results, [
+      [{ id: `1` }, { author: { name: `brad` } }],
+    ]);
 
     typeChecks(async () => {
       const posts = rizzle.schema(`foo/[id]`, {
@@ -641,7 +613,7 @@ void suite(`rizzle`, () => {
           })
           .alias(`a`),
       });
-      assert.deepEqual(posts.getIndexes(), {
+      assert.deepStrictEqual(posts.getIndexes(), {
         byAuthorName: {
           allowEmpty: false,
           prefix: `foo/`,
@@ -659,10 +631,10 @@ void suite(`rizzle`, () => {
   });
 
   void test(`parseKeyPath`, () => {
-    assert.deepEqual(parseKeyPath(`foo/$[id]`, `foo/$1`), { id: `1` });
-    assert.deepEqual(parseKeyPath(`^foo/$[id]`, `^foo/$1`), { id: `1` });
-    assert.deepEqual(parseKeyPath(`foo/[id]`, `foo/1`), { id: `1` });
-    assert.deepEqual(parseKeyPath(`foo/[id1]/[id2]`, `foo/1/2`), {
+    assert.deepStrictEqual(parseKeyPath(`foo/$[id]`, `foo/$1`), { id: `1` });
+    assert.deepStrictEqual(parseKeyPath(`^foo/$[id]`, `^foo/$1`), { id: `1` });
+    assert.deepStrictEqual(parseKeyPath(`foo/[id]`, `foo/1`), { id: `1` });
+    assert.deepStrictEqual(parseKeyPath(`foo/[id1]/[id2]`, `foo/1/2`), {
       id1: `1`,
       id2: `2`,
     });
@@ -674,22 +646,19 @@ void suite(`rizzle`, () => {
       count: rizzle.number(`c`),
     });
 
-    const { mockTx, tx } = makeMockTx(t);
+    using tx = makeMockTx(t);
 
     // Marshal and unmarshal round tripping
     await posts.set(tx, { id: `1` }, { count: 5 });
-    const [, marshaledData] = mockTx.set.mock.calls[0]!.arguments;
-    assert.deepEqual(marshaledData, { c: 5 });
+    const [, marshaledData] = tx.set.mock.calls[0]!.arguments;
+    assert.deepStrictEqual(marshaledData, { c: 5 });
 
-    mockTx.get.mock.mockImplementationOnce(() =>
+    tx.get.mock.mockImplementationOnce(() =>
       Promise.resolve(marshaledData as object),
     );
     assert.deepStrictEqual(await posts.get(tx, { id: `1` }), {
       count: 5,
     });
-
-    mockTx.get.mock.resetCalls();
-    mockTx.set.mock.resetCalls();
   });
 
   typeChecks(`RizzleIndexNames`, () => {

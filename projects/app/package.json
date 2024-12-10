@@ -59,7 +59,7 @@
     "react-native-svg": "15.8.0",
     "react-native-web": "^0.19.13",
     "react-responsive": "^10.0.0",
-    "replicache": "^14.2.2",
+    "replicache": "patch:replicache@patch%3Areplicache@npm%253A14.2.2%23~/.yarn/patches/replicache-npm-14.2.2-d99f6a2b5c.patch%3A%3Aversion=14.2.2&hash=f2490e#~/.yarn/patches/replicache-patch-e568419bdf.patch",
     "replicache-react": "^5.0.1",
     "tailwind-variants": "^0.2.1",
     "tailwindcss": "^3.4.14",
