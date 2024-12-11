@@ -109,6 +109,11 @@ export default tseslint.config(
               name: `lodash`,
               message: `Please use lodash/* instead.`,
             },
+
+            {
+              name: `node:assert`,
+              message: `Please use node:assert/strict`,
+            },
           ],
         },
       ],

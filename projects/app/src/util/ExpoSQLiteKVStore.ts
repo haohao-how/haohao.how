@@ -1,15 +1,10 @@
 import { deepFreeze } from "@react-native-replicache/deep-freeze";
 import * as SQLite from "expo-sqlite";
-import type {
-  ExperimentalKVRead,
-  ExperimentalKVStore,
-  ExperimentalKVWrite,
-  ReadonlyJSONValue,
-} from "replicache";
+import type { KVRead, KVStore, KVWrite, ReadonlyJSONValue } from "replicache";
 
 const log: typeof console.log | undefined = undefined;
 
-export class ExpoSQLiteKVStore implements ExperimentalKVStore {
+export class ExpoSQLiteKVStore implements KVStore {
   private _busyDbs: SQLite.SQLiteDatabase[] = [];
   private _idleDbs: SQLite.SQLiteDatabase[] = [];
   private _closed = false;
@@ -26,7 +21,7 @@ export class ExpoSQLiteKVStore implements ExperimentalKVStore {
     await SQLite.deleteDatabaseAsync(this.name);
   }
 
-  async read(): Promise<ExperimentalKVRead> {
+  async read(): Promise<KVRead> {
     log?.(`ExpoSQLiteKVStore#read()`);
     const db = await this.open();
 
@@ -36,7 +31,7 @@ export class ExpoSQLiteKVStore implements ExperimentalKVStore {
     });
   }
 
-  async write(): Promise<ExperimentalKVWrite> {
+  async write(): Promise<KVWrite> {
     log?.(`ExpoSQLiteKVStore#write()`);
     const db = await this.open();
     await db.execAsync(`BEGIN`);
@@ -101,7 +96,7 @@ export class ExpoSQLiteKVStore implements ExperimentalKVStore {
 // connection specific).
 const txIds: Record<string, number> = {};
 
-export class ExpoSQLiteKVStoreReadImpl implements ExperimentalKVRead {
+export class ExpoSQLiteKVStoreReadImpl implements KVRead {
   protected _db: SQLite.SQLiteDatabase | null;
   protected _txId: number;
 
@@ -114,7 +109,7 @@ export class ExpoSQLiteKVStoreReadImpl implements ExperimentalKVRead {
     this._db = db;
   }
 
-  async has(key: string): ReturnType<ExperimentalKVRead[`has`]> {
+  async has(key: string): ReturnType<KVRead[`has`]> {
     log?.(`KV[${this._txId.toString()}]#has()`);
     const row = await this.txOrThrow().getFirstAsync<object>(
       `SELECT 1 FROM entry WHERE key = ?`,
@@ -123,7 +118,7 @@ export class ExpoSQLiteKVStoreReadImpl implements ExperimentalKVRead {
     return row !== null;
   }
 
-  async get(key: string): ReturnType<ExperimentalKVRead[`get`]> {
+  async get(key: string): ReturnType<KVRead[`get`]> {
     log?.(`KV[${this._txId.toString()}]#get()`);
     const row = await this.txOrThrow().getFirstAsync<{ value: string }>(
       `SELECT value FROM entry WHERE key = ?`,
@@ -162,7 +157,7 @@ export class ExpoSQLiteKVStoreReadImpl implements ExperimentalKVRead {
 
 export class ExpoSQLiteKVStoreWriteImpl
   extends ExpoSQLiteKVStoreReadImpl
-  implements ExperimentalKVWrite
+  implements KVWrite
 {
   async put(key: string, value: ReadonlyJSONValue) {
     log?.(`KV[${this._txId.toString()}]#put()`);

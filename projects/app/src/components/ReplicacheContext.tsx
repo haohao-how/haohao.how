@@ -15,7 +15,7 @@ import {
   useSubscribe as replicacheReactUseSubscribe,
   UseSubscribeOptions,
 } from "replicache-react";
-import { experimentalCreateKVStore } from "./replicacheOptions";
+import { kvStore } from "./replicacheOptions";
 
 const ReplicacheContext = createContext<Replicache<typeof mutators> | null>(
   null,
@@ -54,7 +54,7 @@ export function ReplicacheProvider({ children }: React.PropsWithChildren) {
         //     },
         //   } satisfies PullerResultV1);
         // },
-        experimentalCreateKVStore,
+        kvStore,
         mutators,
         indexes,
       }),

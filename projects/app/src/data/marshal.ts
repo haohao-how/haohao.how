@@ -8,8 +8,11 @@ import pick from "lodash/pick";
 import {
   IndexDefinition,
   IndexDefinitions,
+  MutatorDefs,
   ReadonlyJSONValue,
   ReadTransaction,
+  Replicache,
+  ReplicacheOptions,
   WriteTransaction,
 } from "replicache";
 import z from "zod";
@@ -365,8 +368,8 @@ abstract class RizzleType<
     this._def = def;
   }
 
-  alias(alias: string | undefined): RizzleAliased<this> {
-    return RizzleAliased.create(this, alias);
+  alias(alias: string): RizzleTypeAlias<this> {
+    return RizzleTypeAlias.create(this, alias);
   }
 
   indexed<IndexName extends string>(
@@ -376,18 +379,16 @@ abstract class RizzleType<
   }
 }
 
-type RizzleCodecAny = RizzleType;
-
-interface RizzleAliasedDef<T extends RizzleCodecAny = RizzleCodecAny>
+interface RizzleTypeAliasDef<T extends RizzleType = RizzleType>
   extends RizzleTypeDef {
   innerType: T;
   alias?: string | undefined;
-  typeName: `aliased`;
+  typeName: `alias`;
 }
 
-export class RizzleAliased<T extends RizzleType> extends RizzleType<
+export class RizzleTypeAlias<T extends RizzleType> extends RizzleType<
   T[`_input`],
-  RizzleAliasedDef<T>,
+  RizzleTypeAliasDef<T>,
   T[`_output`]
 > {
   getMarshal() {
@@ -403,15 +404,15 @@ export class RizzleAliased<T extends RizzleType> extends RizzleType<
     return this._def.alias;
   }
 
-  static create = <T extends RizzleCodecAny>(
+  static create = <T extends RizzleType>(
     type: T,
     alias: string | undefined,
-  ): RizzleAliased<T> => {
-    return new RizzleAliased({ innerType: type, alias, typeName: `aliased` });
+  ): RizzleTypeAlias<T> => {
+    return new RizzleTypeAlias({ innerType: type, alias, typeName: `alias` });
   };
 }
 
-interface RizzleIndexedDef<T extends RizzleCodecAny, IndexName extends string>
+interface RizzleIndexedDef<T extends RizzleType, IndexName extends string>
   extends RizzleTypeDef {
   innerType: T;
   indexName: IndexName;
@@ -445,7 +446,7 @@ export class RizzleIndexed<
     return this._def.innerType._getAlias();
   }
 
-  static create = <T extends RizzleCodecAny, IndexName extends string>(
+  static create = <T extends RizzleType, IndexName extends string>(
     type: T,
     indexName: IndexName,
   ): RizzleIndexed<T, IndexName> => {
@@ -457,13 +458,13 @@ export class RizzleIndexed<
   };
 }
 
-interface RizzleObjectDef<T extends RizzleRawShape = RizzleRawShape>
+interface RizzleObjectDef<T extends RizzleRawObject = RizzleRawObject>
   extends RizzleTypeDef {
   shape: T;
   typeName: `object`;
 }
 
-export class RizzleObject<T extends RizzleRawShape> extends RizzleType<
+export class RizzleObject<T extends RizzleRawObject> extends RizzleType<
   RizzleObjectInput<T>,
   RizzleObjectDef<T>,
   RizzleObjectOutput<T>
@@ -512,7 +513,7 @@ export class RizzleObject<T extends RizzleRawShape> extends RizzleType<
     );
   }
 
-  static create = <T extends RizzleRawShape>(shape: T): RizzleObject<T> => {
+  static create = <T extends RizzleRawObject>(shape: T): RizzleObject<T> => {
     return new RizzleObject({ shape, typeName: `object` });
   };
 }
@@ -555,13 +556,163 @@ export class RizzlePrimitive<I, O> extends RizzleType<
   };
 }
 
-export type RizzleRawShape = Record<string, RizzleCodecAny>;
+abstract class RizzleRoot<Def extends RizzleTypeDef = RizzleTypeDef> {
+  _def: Def;
 
-export type RizzleObjectInput<T extends RizzleRawShape> = {
+  constructor(def: Def) {
+    this._def = def;
+  }
+}
+
+type KVKeyType<
+  S extends RizzleRawObject,
+  KeyPath extends string,
+> = RizzleObject<Pick<S, ExtractVariableNames<KeyPath>>>;
+type KVKeyInput<S extends RizzleRawObject, KeyPath extends string> = KVKeyType<
+  S,
+  KeyPath
+>[`_input`];
+type KVValueType<
+  S extends RizzleRawObject,
+  KeyPath extends string,
+> = RizzleObject<Omit<S, ExtractVariableNames<KeyPath>>>;
+type KVValueInput<
+  S extends RizzleRawObject,
+  KeyPath extends string,
+> = KVValueType<S, KeyPath>[`_input`];
+
+interface RizzleKVDef<KeyPath extends string, S extends RizzleRawObject>
+  extends RizzleTypeDef {
+  keyPath: KeyPath;
+  keyType: KVKeyType<S, KeyPath>;
+  valueType: KVValueType<S, KeyPath>;
+  interpolateKey: (key: KVKeyInput<S, KeyPath>) => string;
+  uninterpolateKey: (key: string) => KVKeyInput<S, KeyPath> | undefined;
+  typeName: `keyValue`;
+}
+
+export class RizzleKV<
+  KeyPath extends string,
+  S extends RizzleRawObject,
+> extends RizzleRoot<RizzleKVDef<KeyPath, S>> {
+  // _def: RizzleKVDef<KeyPath, S>;
+  // scan: Record<
+  //   RizzleIndexNames<KVValueType<S, KeyPath>>,
+  //   (tx: ReadTransaction) => ReturnType<typeof indexScanIter>
+  // >;
+
+  // constructor(_def: RizzleKVDef<KeyPath, S>) {
+  //   this._def = _def;
+  //   // this.scan = mapValues(
+  //   //   this.getIndexes(),
+  //   //   (_v, k) => (tx: ReadTransaction) =>
+  //   //     indexScanIter(
+  //   //       tx,
+  //   //       k,
+  //   //       (k) =>
+  //   //         this._def.keyType
+  //   //           .getUnmarshal()
+  //   //           .parse(this._def.uninterpolateKey(k)),
+  //   //       (v) => this._def.valueType.getUnmarshal().parse(v),
+  //   //     ),
+  //   // );
+  // }
+
+  async get(
+    tx: ReadTransaction,
+    key: KVKeyInput<S, KeyPath>,
+  ): Promise<KVValueInput<S, KeyPath> | undefined> {
+    const valueData = await tx.get(this._def.interpolateKey(key));
+    if (valueData === undefined) {
+      return valueData;
+    }
+    return this._def.valueType.getUnmarshal().parse(valueData);
+  }
+
+  async set(
+    tx: WriteTransaction,
+    key: KVKeyInput<S, KeyPath>,
+    value: KVValueInput<S, KeyPath>,
+  ) {
+    await tx.set(
+      this._def.interpolateKey(key),
+      this._def.valueType.getMarshal().parse(value) as ReadonlyJSONValue,
+    );
+  }
+
+  getIndexes() {
+    return mapValues(this._def.valueType._getIndexes(), (v) => ({
+      ...v,
+      prefix: this._def.keyPath.slice(0, this._def.keyPath.indexOf(`[`)),
+    })) as Record<RizzleIndexNames<KVValueType<S, KeyPath>>, IndexDefinition>;
+  }
+
+  static create = <KeyPath extends string, S extends RizzleRawObject>(
+    keyPath: KeyPath,
+    shape: S,
+  ): RizzleKV<KeyPath, S> => {
+    const keyPathVars = keyPathVariableNames(keyPath);
+
+    const keyType = rizzle.object(pick(shape, keyPathVars));
+    const valueType = rizzle.object(omit(shape, keyPathVars));
+
+    const interpolateKey = (key: KVKeyType<S, KeyPath>[`_input`]): string => {
+      return Object.entries(keyType.getMarshal().parse(key)).reduce<string>(
+        (acc, [k, v]): string => acc.replace(`[${k}]`, v as string),
+        keyPath,
+      );
+    };
+
+    const uninterpolateKey = buildKeyPathRegex(keyPath);
+
+    return new RizzleKV({
+      keyPath,
+      keyType,
+      valueType,
+      interpolateKey,
+      uninterpolateKey,
+      typeName: `keyValue`,
+    });
+  };
+}
+
+interface RizzleMutatorDef<P extends RizzleRawObject> extends RizzleTypeDef {
+  parameters: RizzleObject<P>;
+  alias?: string;
+  typeName: `mutator`;
+}
+
+export class RizzleMutator<P extends RizzleRawObject> extends RizzleRoot<
+  RizzleMutatorDef<P>
+> {
+  alias(alias: string): RizzleMutator<P> {
+    return new RizzleMutator({
+      ...this._def,
+      alias,
+    });
+  }
+
+  static create = <P extends RizzleRawObject>(
+    parameters: RizzleObject<P>,
+  ): RizzleMutator<P> => {
+    return new RizzleMutator({ parameters, typeName: `mutator` });
+  };
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type RizzleAnyMutator = RizzleMutator<any>;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type RizzleAnyKV = RizzleKV<string, any>;
+
+export type RizzleRawObject = Record<string, RizzleType>;
+
+export type RizzleRawSchema = Record<string, RizzleRoot>;
+
+export type RizzleObjectInput<T extends RizzleRawObject> = {
   [K in keyof T]: T[K][`_input`];
 };
 
-export type RizzleObjectOutput<T extends RizzleRawShape> = {
+export type RizzleObjectOutput<T extends RizzleRawObject> = {
   // TODO: this is missing key aliases
   [K in keyof T]: T[K][`_output`];
 };
@@ -570,13 +721,69 @@ export type RizzleIndexNames<T extends RizzleType> =
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   T extends RizzleIndexed<any, infer IndexName>
     ? IndexName
-    : T extends RizzleAliased<infer Wrapped>
+    : T extends RizzleTypeAlias<infer Wrapped>
       ? RizzleIndexNames<Wrapped>
       : T extends RizzleObject<infer Shape>
         ? {
             [K in keyof Shape]: RizzleIndexNames<Shape[K]>;
           }[keyof Shape]
         : never;
+
+type WithoutFirstArgument<T> = T extends (
+  arg1: never,
+  ...args: infer P
+) => infer R
+  ? (...args: P) => R
+  : never;
+
+export type RizzleReplicacheMutatorTx<S extends RizzleRawSchema> = {
+  [K in keyof S as S[K] extends RizzleAnyKV
+    ? K
+    : never]: S[K] extends RizzleAnyKV
+    ? { [KK in `get` | `set`]: WithoutFirstArgument<S[K][KK]> }
+    : never;
+} & { tx: WriteTransaction };
+
+export type RizzleReplicacheMutators<S extends RizzleRawSchema> = {
+  [K in keyof S as S[K] extends RizzleMutator<infer _>
+    ? K
+    : never]: S[K] extends RizzleMutator<infer P>
+    ? (
+        tx: RizzleReplicacheMutatorTx<S>,
+        options: RizzleObject<P>[`_input`],
+      ) => Promise<void>
+    : never;
+};
+
+export type RizzleReplicacheAnyMutator = (
+  tx: RizzleReplicacheMutatorTx<never>,
+  options: unknown,
+) => Promise<void>;
+
+export type RizzleReplicacheMutate<S extends RizzleRawSchema> = {
+  [K in keyof S]: S[K] extends RizzleMutator<infer P>
+    ? (options: RizzleObject<P>[`_input`]) => Promise<void>
+    : never;
+};
+
+export type RizzleReplicacheQuery<S extends RizzleRawSchema> = {
+  [K in keyof S as S[K] extends RizzleAnyKV
+    ? K
+    : never]: S[K] extends RizzleAnyKV
+    ? Record<
+        RizzleIndexNames<S[K][`_def`][`valueType`]>,
+        (
+          tx: ReadTransaction,
+        ) => AsyncGenerator<
+          [
+            S[K][`_def`][`keyType`][`_input`],
+            S[K][`_def`][`valueType`][`_input`],
+          ]
+        >
+      > &
+        Pick<S[K], `get`>
+    : never;
+};
 
 export const rizzle = {
   string: (alias?: string) => {
@@ -638,7 +845,7 @@ export const rizzle = {
       }),
     );
   },
-  object: <S extends RizzleRawShape>(shape: S) => {
+  object: <S extends RizzleRawObject>(shape: S) => {
     return RizzleObject.create(shape);
   },
   skillId: (alias?: string) => {
@@ -743,66 +950,154 @@ export const rizzle = {
     );
     return alias != null ? result.alias(alias) : result;
   },
-  schema: <KeyPath extends string, S extends Record<string, RizzleCodecAny>>(
+  keyValue: <KeyPath extends string, S extends Record<string, RizzleType>>(
     keyPath: KeyPath,
     shape: S,
   ) => {
-    const keyPathVars = keyPathVariableNames(keyPath);
-
-    const keyRizzle = rizzle.object(pick(shape, keyPathVars));
-    const valueRizzle = rizzle.object(omit(shape, keyPathVars));
-
-    type Key = (typeof keyRizzle)[`_input`];
-    type Value = (typeof valueRizzle)[`_input`];
-
-    const interpolateKey = (key: Key): string => {
-      return Object.entries(keyRizzle.getMarshal().parse(key)).reduce<string>(
-        (acc, [k, v]): string => acc.replace(`[${k}]`, v as string),
-        keyPath,
-      );
-    };
-
-    const uninterpolateKey = buildKeyPathRegex(keyPath);
-
-    const indexes = mapValues(valueRizzle._getIndexes(), (v) => ({
-      ...v,
-      prefix: keyPath.slice(0, keyPath.indexOf(`[`)),
-    })) as Record<RizzleIndexNames<typeof valueRizzle>, IndexDefinition>;
-
-    const scan = mapValues(
-      indexes,
-      (_v, k) => (tx: ReadTransaction) =>
-        indexScanIter(
-          tx,
-          k,
-          (k) => keyRizzle.getUnmarshal().parse(uninterpolateKey(k)),
-          (v) => valueRizzle.getUnmarshal().parse(v),
-        ),
+    return RizzleKV.create(keyPath, shape);
+  },
+  mutator: <I extends RizzleRawObject>(input: I) =>
+    RizzleMutator.create(rizzle.object(input)),
+  replicache: <S extends RizzleRawSchema>(
+    replicacheOptions: Omit<ReplicacheOptions<never>, `indexes` | `mutators`>,
+    schema: S,
+    mutators: RizzleReplicacheMutators<S>,
+    ctor?: <T extends MutatorDefs>(
+      options: ReplicacheOptions<T>,
+    ) => Replicache<T>,
+  ) => {
+    const indexes = Object.fromEntries(
+      Object.entries(schema).flatMap(([k, v]) =>
+        v instanceof RizzleKV
+          ? Object.entries(
+              mapKeys(v.getIndexes(), (_v, indexName) => `${k}.${indexName}`),
+            )
+          : [],
+      ),
     );
 
+    const mutate = Object.fromEntries(
+      Object.entries(schema).flatMap(([k, v]) =>
+        v instanceof RizzleMutator
+          ? [
+              [
+                k,
+                (options: typeof v._def.parameters._input) => {
+                  const mutator = replicache.mutate[v._def.alias ?? k];
+                  invariant(mutator != null, `mutator ${k} not found`);
+                  return mutator(v._def.parameters.getMarshal().parse(options));
+                },
+              ],
+            ]
+          : [],
+      ),
+    ) as RizzleReplicacheMutate<S>;
+
+    const mutatorsWithMarhsaling = Object.fromEntries(
+      Object.entries(schema).flatMap(([k, v]) =>
+        v instanceof RizzleMutator
+          ? [
+              [
+                v._def.alias ?? k,
+                (
+                  tx: WriteTransaction,
+                  options: typeof v._def.parameters._input,
+                ) => {
+                  const mutator = mutators[k as keyof typeof mutators];
+                  invariant(
+                    (mutator as unknown) != null,
+                    `mutator ${k} not found`,
+                  );
+
+                  const tx2 = Object.assign(
+                    { tx },
+                    Object.fromEntries(
+                      Object.entries(schema).flatMap(([k, v]) =>
+                        v instanceof RizzleKV
+                          ? [
+                              [
+                                k,
+                                Object.assign(
+                                  {
+                                    get: v.get.bind(v, tx),
+                                    set: v.set.bind(v, tx),
+                                  },
+                                  mapValues(
+                                    v.getIndexes(),
+                                    (_v, indexName) => (tx: ReadTransaction) =>
+                                      indexScanIter(
+                                        tx,
+                                        `${k}.${indexName}`,
+                                        (k) =>
+                                          v._def.keyType
+                                            .getUnmarshal()
+                                            .parse(v._def.uninterpolateKey(k)),
+                                        (x) =>
+                                          v._def.valueType
+                                            .getUnmarshal()
+                                            .parse(x),
+                                      ),
+                                  ),
+                                ),
+                              ],
+                            ]
+                          : [],
+                      ),
+                    ),
+                  ) as unknown as RizzleReplicacheMutatorTx<S>;
+
+                  return mutator(
+                    tx2,
+                    v._def.parameters.getUnmarshal().parse(options),
+                  );
+                },
+              ],
+            ]
+          : [],
+      ),
+    ) as unknown as MutatorDefs;
+
+    const options = {
+      ...replicacheOptions,
+      indexes,
+      mutators: mutatorsWithMarhsaling,
+    };
+    const replicache = ctor?.(options) ?? new Replicache(options);
+
+    const query = Object.fromEntries(
+      Object.entries(schema).flatMap(([k, v]) =>
+        v instanceof RizzleKV
+          ? [
+              [
+                k,
+                Object.assign(
+                  { get: v.get.bind(v) } as { get: typeof v.get },
+                  mapValues(
+                    v.getIndexes(),
+                    (_v, indexName) => (tx: ReadTransaction) => {
+                      return indexScanIter(
+                        tx,
+                        `${k}.${indexName}`,
+                        (k) =>
+                          v._def.keyType
+                            .getUnmarshal()
+                            .parse(v._def.uninterpolateKey(k)),
+                        (x) => v._def.valueType.getUnmarshal().parse(x),
+                      );
+                    },
+                  ),
+                ),
+              ],
+            ]
+          : [],
+      ),
+    ) as unknown as RizzleReplicacheQuery<S>;
+
     return {
-      prefix: keyPath,
-      valueCodec: valueRizzle,
-      scan,
-      getIndexes(): IndexDefinitions {
-        return mapValues(valueRizzle._getIndexes(), (v) => ({
-          ...v,
-          prefix: keyPath.slice(0, keyPath.indexOf(`[`)),
-        }));
-      },
-      async get(tx: ReadTransaction, key: Key): Promise<Value | undefined> {
-        const valueData = await tx.get(interpolateKey(key));
-        if (valueData === undefined) {
-          return valueData;
-        }
-        return valueRizzle.getUnmarshal().parse(valueData);
-      },
-      async set(tx: WriteTransaction, key: Key, value: Value) {
-        await tx.set(
-          interpolateKey(key),
-          valueRizzle.getMarshal().parse(value) as ReadonlyJSONValue,
-        );
-      },
+      replicache,
+      query,
+      mutate,
+      [Symbol.asyncDispose]: () => replicache.close(),
     };
   },
 };
@@ -833,11 +1128,6 @@ export type ExtractVariableNames<T extends string> =
   T extends `${string}[${infer Key}]${infer Rest}`
     ? Key | ExtractVariableNames<Rest>
     : never;
-
-export type KeyPathSchemaShape<
-  Prefix extends string,
-  T extends Record<string, unknown>,
-> = Pick<T, ExtractVariableNames<Prefix>>;
 
 export type ValueSchemaShape<
   Prefix extends string,
@@ -887,6 +1177,29 @@ export enum IndexName {
   SkillStateByDue = `SkillStateByDue`,
 }
 
+export const pinyinInitialAssociation = rizzle.keyValue(`pi/[initial]`, {
+  initial: rizzle.string(),
+  name: rizzle.string().alias(`n`),
+});
+
+// export const setPinyinInitialAssociation = rizzle.mutator(
+//   `spia`,
+//   {
+//     initial: rizzle.string().alias(`i`),
+//     name: rizzle.string().alias(`n`),
+//   },
+//   async (tx, { initial, name }) => {
+//     const quantity = options?.quantity ?? 1;
+//     const counter = await pinyinInitialAssociation.set(
+//       tx,
+//       { initial },
+//       { name },
+//     );
+//   },
+// );
+
+// setPinyinInitialAssociation();
+
 export const indexes = {
   [IndexName.Null]: {
     allowEmpty: true,
@@ -898,6 +1211,7 @@ export const indexes = {
     prefix: skillStatePrefix,
     jsonPointer: `/d` satisfies MarshaledSkillStateValueJsonPath,
   },
+  ...pinyinInitialAssociation.getIndexes(),
 } satisfies IndexDefinitions;
 
 export const indexUnmarshalers = {

@@ -1,6 +1,6 @@
 import { differenceInMilliseconds } from "date-fns/differenceInMilliseconds";
 import { intervalToDuration } from "date-fns/intervalToDuration";
-import assert from "node:assert";
+import assert from "node:assert/strict";
 import test, { TestContext } from "node:test";
 import z from "zod";
 import { Rating, UpcomingReview, nextReview } from "./fsrs";
@@ -253,10 +253,10 @@ function assertFsrsSequence(sequence: readonly (ExpectedReview | Rating)[]) {
 
       if (lastReview !== null) {
         const lastReviewDue: Date = lastReview.due; // HACK: work around TS bug
-        assert.deepStrictEqual(review.created, lastReviewDue);
+        assert.deepEqual(review.created, lastReviewDue);
       }
 
-      assert.deepStrictEqual(
+      assert.deepEqual(
         {
           difficulty: review.difficulty,
           stability: review.stability,

@@ -1,7 +1,10 @@
 import { ExpoSQLiteKVStore } from "@/util/ExpoSQLiteKVStore";
+import * as SQLite from "expo-sqlite";
+import { ReplicacheOptions } from "replicache";
 
-export const experimentalCreateKVStore = (name: string) => {
-  // eslint-disable-next-line no-console
-  console.log(`experimentalCreateKVStore(${name})`);
-  return new ExpoSQLiteKVStore(`replicache-${name}.sqlite`);
+export const kvStore: ReplicacheOptions<never>[`kvStore`] = {
+  create: (name: string) => new ExpoSQLiteKVStore(`replicache-${name}.sqlite`),
+  drop: async (name: string) => {
+    await SQLite.deleteDatabaseAsync(`replicache-${name}.sqlite`);
+  },
 };
