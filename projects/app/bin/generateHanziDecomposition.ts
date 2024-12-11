@@ -1,6 +1,6 @@
 import { invariant } from "@haohaohow/lib/invariant";
 import makeDebug from "debug";
-import assert from "node:assert";
+import assert from "node:assert/strict";
 import { join } from "node:path";
 import yargs from "yargs";
 import {
@@ -95,7 +95,7 @@ function parseIdsTxt(txt: string): ReadonlyMap<string, Decomposition[]> {
     const codePoint = parseInt(unicodeShortIdentifier.replace(`U+`, ``), 16);
     const characterFromCodePoint = String.fromCodePoint(codePoint);
 
-    assert.strictEqual(character, characterFromCodePoint);
+    assert.equal(character, characterFromCodePoint);
 
     const parsedDecompositions = [];
 

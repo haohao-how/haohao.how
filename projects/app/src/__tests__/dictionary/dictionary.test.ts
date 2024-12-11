@@ -24,7 +24,7 @@ import {
   walkIdsNode,
 } from "@/dictionary/dictionary";
 import { sortComparatorNumber } from "@/util/collections";
-import assert from "node:assert";
+import assert from "node:assert/strict";
 import test from "node:test";
 import { DeepReadonly } from "ts-essentials";
 
@@ -70,7 +70,7 @@ void test(`there are no pronunciations mixed into word definitions`, async () =>
 
 void test(`there are 214 radicals to match official kangxi radicals`, async () => {
   const radicals = await loadRadicals();
-  assert.strictEqual(radicals.length, 214);
+  assert.equal(radicals.length, 214);
 });
 
 void test(`radical name mnemonics don't include radical alternatives`, async () => {
@@ -79,10 +79,7 @@ void test(`radical name mnemonics don't include radical alternatives`, async () 
 
   const radicalsWithNameMnemonics = new Set(radicalNameMnemonics.keys());
 
-  assert.deepStrictEqual(
-    radicalsWithNameMnemonics.difference(primarySet),
-    new Set(),
-  );
+  assert.deepEqual(radicalsWithNameMnemonics.difference(primarySet), new Set());
 });
 
 void test(`radical pinyin mnemonics don't include radical alternatives`, async () => {
@@ -91,10 +88,7 @@ void test(`radical pinyin mnemonics don't include radical alternatives`, async (
 
   const radicalsWithNameMnemonics = new Set(pinyinMnemonics.keys());
 
-  assert.deepStrictEqual(
-    radicalsWithNameMnemonics.difference(primarySet),
-    new Set(),
-  );
+  assert.deepEqual(radicalsWithNameMnemonics.difference(primarySet), new Set());
 });
 
 void test(`radical data uses consistent unicode characters`, async () => {
@@ -103,7 +97,7 @@ void test(`radical data uses consistent unicode characters`, async () => {
 
   {
     const violations = primary.filter(isNotCjkUnifiedIdeograph);
-    assert.deepStrictEqual(
+    assert.deepEqual(
       violations,
       [],
       await debugNonCjkUnifiedIdeographs(violations),
@@ -112,8 +106,8 @@ void test(`radical data uses consistent unicode characters`, async () => {
 
   {
     const sample = [...(await loadRadicalNameMnemonics()).keys()];
-    assert.deepStrictEqual(new Set(sample).difference(primarySet), new Set());
-    assert.deepStrictEqual(sample.filter(isNotCjkUnifiedIdeograph), []);
+    assert.deepEqual(new Set(sample).difference(primarySet), new Set());
+    assert.deepEqual(sample.filter(isNotCjkUnifiedIdeograph), []);
   }
 
   {
@@ -123,13 +117,13 @@ void test(`radical data uses consistent unicode characters`, async () => {
 
     {
       const diff = new Set(sample).difference(primarySet);
-      assert.deepStrictEqual(
+      assert.deepEqual(
         diff,
         new Set(),
         await debugNonCjkUnifiedIdeographs([...diff]),
       );
     }
-    assert.deepStrictEqual([...sample].filter(isNotCjkUnifiedIdeograph), []);
+    assert.deepEqual([...sample].filter(isNotCjkUnifiedIdeograph), []);
   }
 });
 
@@ -196,7 +190,7 @@ void test(`convertPinyinWithToneNumberToToneMark`, () => {
     [`zhu5`, `zhu`],
     [`zi5`, `zi`],
   ] as const) {
-    assert.strictEqual(convertPinyinWithToneNumberToToneMark(input), expected);
+    assert.equal(convertPinyinWithToneNumberToToneMark(input), expected);
   }
 });
 
@@ -207,7 +201,7 @@ void test(`flattenIds handles ⿱⿱ to ⿳ and ⿰⿰ to ⿲`, () => {
     [`⿰⿰abc`, `⿲abc`],
     [`⿰a⿰bc`, `⿲abc`],
   ] as const) {
-    assert.strictEqual(idsNodeToString(flattenIds(parseIds(input))), expected);
+    assert.equal(idsNodeToString(flattenIds(parseIds(input))), expected);
   }
 });
 
@@ -274,7 +268,7 @@ async function testPinyinChart(
 
   // Start with test cases first as these are easier to debug.
   for (const [input, initial, final] of testCases) {
-    assert.deepStrictEqual(
+    assert.deepEqual(
       splitPinyin(input, chart),
       [initial, final],
       `${input} didn't split as expected`,
@@ -302,7 +296,7 @@ function assertUniqueArray<T>(items: readonly T[]): void {
       duplicates.push(x);
     }
   }
-  assert.deepStrictEqual(duplicates, [], `expected no duplicates`);
+  assert.deepEqual(duplicates, [], `expected no duplicates`);
 }
 
 void test(`standard pinyin covers kangxi pinyin`, async () => {
@@ -419,8 +413,8 @@ void test(`hh pinyin covers kangxi pinyin`, async () => {
 void test(`hmm pinyin covers kangxi pinyin`, async () => {
   const chart = await loadHmmPinyinChart();
 
-  assert.strictEqual(chart.initials.flatMap((i) => i.initials).length, 55);
-  assert.strictEqual(chart.finals.length, 13);
+  assert.equal(chart.initials.flatMap((i) => i.initials).length, 55);
+  assert.equal(chart.finals.length, 13);
 
   await testPinyinChart(chart, [
     [`a`, `∅`, `a`],
@@ -446,27 +440,27 @@ void test(`hmm pinyin covers kangxi pinyin`, async () => {
 });
 
 void test(`parseIds handles 1 depth`, () => {
-  assert.deepStrictEqual(parseIds(`木`), {
+  assert.deepEqual(parseIds(`木`), {
     type: `LeafCharacter`,
     character: `木`,
   });
 
   // 相
-  assert.deepStrictEqual(parseIds(`⿰木目`), {
+  assert.deepEqual(parseIds(`⿰木目`), {
     type: IdsOperator.LeftToRight,
     left: { type: `LeafCharacter`, character: `木` },
     right: { type: `LeafCharacter`, character: `目` },
   });
 
   // 杏
-  assert.deepStrictEqual(parseIds(`⿱木口`), {
+  assert.deepEqual(parseIds(`⿱木口`), {
     type: IdsOperator.AboveToBelow,
     above: { type: `LeafCharacter`, character: `木` },
     below: { type: `LeafCharacter`, character: `口` },
   });
 
   // 衍
-  assert.deepStrictEqual(parseIds(`⿲彳氵亍`), {
+  assert.deepEqual(parseIds(`⿲彳氵亍`), {
     type: IdsOperator.LeftToMiddleToRight,
     left: { type: `LeafCharacter`, character: `彳` },
     middle: { type: `LeafCharacter`, character: `氵` },
@@ -474,7 +468,7 @@ void test(`parseIds handles 1 depth`, () => {
   });
 
   // 京
-  assert.deepStrictEqual(parseIds(`⿳亠口小`), {
+  assert.deepEqual(parseIds(`⿳亠口小`), {
     type: IdsOperator.AboveToMiddleAndBelow,
     above: { type: `LeafCharacter`, character: `亠` },
     middle: { type: `LeafCharacter`, character: `口` },
@@ -482,183 +476,183 @@ void test(`parseIds handles 1 depth`, () => {
   });
 
   // 回
-  assert.deepStrictEqual(parseIds(`⿴囗口`), {
+  assert.deepEqual(parseIds(`⿴囗口`), {
     type: IdsOperator.FullSurround,
     surrounding: { type: `LeafCharacter`, character: `囗` },
     surrounded: { type: `LeafCharacter`, character: `口` },
   });
 
   // 凰
-  assert.deepStrictEqual(parseIds(`⿵几皇`), {
+  assert.deepEqual(parseIds(`⿵几皇`), {
     type: IdsOperator.SurroundFromAbove,
     above: { type: `LeafCharacter`, character: `几` },
     surrounded: { type: `LeafCharacter`, character: `皇` },
   });
 
   // 凶
-  assert.deepStrictEqual(parseIds(`⿶凵㐅`), {
+  assert.deepEqual(parseIds(`⿶凵㐅`), {
     type: IdsOperator.SurroundFromBelow,
     below: { type: `LeafCharacter`, character: `凵` },
     surrounded: { type: `LeafCharacter`, character: `㐅` },
   });
 
   // 匠
-  assert.deepStrictEqual(parseIds(`⿷匚斤`), {
+  assert.deepEqual(parseIds(`⿷匚斤`), {
     type: IdsOperator.SurroundFromLeft,
     left: { type: `LeafCharacter`, character: `匚` },
     surrounded: { type: `LeafCharacter`, character: `斤` },
   });
 
   // 㕚
-  assert.deepStrictEqual(parseIds(`⿼叉丶`), {
+  assert.deepEqual(parseIds(`⿼叉丶`), {
     type: IdsOperator.SurroundFromRight,
     right: { type: `LeafCharacter`, character: `叉` },
     surrounded: { type: `LeafCharacter`, character: `丶` },
   });
 
   // 病
-  assert.deepStrictEqual(parseIds(`⿸疒丙`), {
+  assert.deepEqual(parseIds(`⿸疒丙`), {
     type: IdsOperator.SurroundFromUpperLeft,
     upperLeft: { type: `LeafCharacter`, character: `疒` },
     surrounded: { type: `LeafCharacter`, character: `丙` },
   });
 
   // 戒
-  assert.deepStrictEqual(parseIds(`⿹戈廾`), {
+  assert.deepEqual(parseIds(`⿹戈廾`), {
     type: IdsOperator.SurroundFromUpperRight,
     upperRight: { type: `LeafCharacter`, character: `戈` },
     surrounded: { type: `LeafCharacter`, character: `廾` },
   });
 
   // 超
-  assert.deepStrictEqual(parseIds(`⿺走召`), {
+  assert.deepEqual(parseIds(`⿺走召`), {
     type: IdsOperator.SurroundFromLowerLeft,
     lowerLeft: { type: `LeafCharacter`, character: `走` },
     surrounded: { type: `LeafCharacter`, character: `召` },
   });
 
   // 氷
-  assert.deepStrictEqual(parseIds(`⿽水丶`), {
+  assert.deepEqual(parseIds(`⿽水丶`), {
     type: IdsOperator.SurroundFromLowerRight,
     lowerRight: { type: `LeafCharacter`, character: `水` },
     surrounded: { type: `LeafCharacter`, character: `丶` },
   });
 
   // 巫
-  assert.deepStrictEqual(parseIds(`⿻工从`), {
+  assert.deepEqual(parseIds(`⿻工从`), {
     type: IdsOperator.Overlaid,
     overlay: { type: `LeafCharacter`, character: `工` },
     underlay: { type: `LeafCharacter`, character: `从` },
   });
 
   // 卐
-  assert.deepStrictEqual(parseIds(`⿾卍`), {
+  assert.deepEqual(parseIds(`⿾卍`), {
     type: IdsOperator.HorizontalReflection,
     reflected: { type: `LeafCharacter`, character: `卍` },
   });
 
   // 𠕄
-  assert.deepStrictEqual(parseIds(`⿿凹`), {
+  assert.deepEqual(parseIds(`⿿凹`), {
     type: IdsOperator.Rotation,
     rotated: { type: `LeafCharacter`, character: `凹` },
   });
 
-  assert.deepStrictEqual(parseIds(`①`), {
+  assert.deepEqual(parseIds(`①`), {
     type: `LeafUnknownCharacter`,
     strokeCount: 1,
   });
 
-  assert.deepStrictEqual(parseIds(`②`), {
+  assert.deepEqual(parseIds(`②`), {
     type: `LeafUnknownCharacter`,
     strokeCount: 2,
   });
 
-  assert.deepStrictEqual(parseIds(`③`), {
+  assert.deepEqual(parseIds(`③`), {
     type: `LeafUnknownCharacter`,
     strokeCount: 3,
   });
 
-  assert.deepStrictEqual(parseIds(`④`), {
+  assert.deepEqual(parseIds(`④`), {
     type: `LeafUnknownCharacter`,
     strokeCount: 4,
   });
 
-  assert.deepStrictEqual(parseIds(`⑤`), {
+  assert.deepEqual(parseIds(`⑤`), {
     type: `LeafUnknownCharacter`,
     strokeCount: 5,
   });
 
-  assert.deepStrictEqual(parseIds(`⑥`), {
+  assert.deepEqual(parseIds(`⑥`), {
     type: `LeafUnknownCharacter`,
     strokeCount: 6,
   });
 
-  assert.deepStrictEqual(parseIds(`⑦`), {
+  assert.deepEqual(parseIds(`⑦`), {
     type: `LeafUnknownCharacter`,
     strokeCount: 7,
   });
 
-  assert.deepStrictEqual(parseIds(`⑧`), {
+  assert.deepEqual(parseIds(`⑧`), {
     type: `LeafUnknownCharacter`,
     strokeCount: 8,
   });
 
-  assert.deepStrictEqual(parseIds(`⑨`), {
+  assert.deepEqual(parseIds(`⑨`), {
     type: `LeafUnknownCharacter`,
     strokeCount: 9,
   });
 
-  assert.deepStrictEqual(parseIds(`⑩`), {
+  assert.deepEqual(parseIds(`⑩`), {
     type: `LeafUnknownCharacter`,
     strokeCount: 10,
   });
 
-  assert.deepStrictEqual(parseIds(`⑪`), {
+  assert.deepEqual(parseIds(`⑪`), {
     type: `LeafUnknownCharacter`,
     strokeCount: 11,
   });
 
-  assert.deepStrictEqual(parseIds(`⑫`), {
+  assert.deepEqual(parseIds(`⑫`), {
     type: `LeafUnknownCharacter`,
     strokeCount: 12,
   });
 
-  assert.deepStrictEqual(parseIds(`⑬`), {
+  assert.deepEqual(parseIds(`⑬`), {
     type: `LeafUnknownCharacter`,
     strokeCount: 13,
   });
 
-  assert.deepStrictEqual(parseIds(`⑭`), {
+  assert.deepEqual(parseIds(`⑭`), {
     type: `LeafUnknownCharacter`,
     strokeCount: 14,
   });
 
-  assert.deepStrictEqual(parseIds(`⑮`), {
+  assert.deepEqual(parseIds(`⑮`), {
     type: `LeafUnknownCharacter`,
     strokeCount: 15,
   });
 
-  assert.deepStrictEqual(parseIds(`⑯`), {
+  assert.deepEqual(parseIds(`⑯`), {
     type: `LeafUnknownCharacter`,
     strokeCount: 16,
   });
 
-  assert.deepStrictEqual(parseIds(`⑰`), {
+  assert.deepEqual(parseIds(`⑰`), {
     type: `LeafUnknownCharacter`,
     strokeCount: 17,
   });
 
-  assert.deepStrictEqual(parseIds(`⑱`), {
+  assert.deepEqual(parseIds(`⑱`), {
     type: `LeafUnknownCharacter`,
     strokeCount: 18,
   });
 
-  assert.deepStrictEqual(parseIds(`⑲`), {
+  assert.deepEqual(parseIds(`⑲`), {
     type: `LeafUnknownCharacter`,
     strokeCount: 19,
   });
 
-  assert.deepStrictEqual(parseIds(`⑳`), {
+  assert.deepEqual(parseIds(`⑳`), {
     type: `LeafUnknownCharacter`,
     strokeCount: 20,
   });
@@ -667,7 +661,7 @@ void test(`parseIds handles 1 depth`, () => {
 void test(`parseIds handles 2 depth`, () => {
   {
     const cursor = { index: 0 };
-    assert.deepStrictEqual(parseIds(`⿰a⿱bc`, cursor), {
+    assert.deepEqual(parseIds(`⿰a⿱bc`, cursor), {
       type: IdsOperator.LeftToRight,
       left: { type: `LeafCharacter`, character: `a` },
       right: {
@@ -676,12 +670,12 @@ void test(`parseIds handles 2 depth`, () => {
         below: { type: `LeafCharacter`, character: `c` },
       },
     });
-    assert.deepStrictEqual(cursor, { index: 5 });
+    assert.deepEqual(cursor, { index: 5 });
   }
 
   {
     const cursor = { index: 0 };
-    assert.deepStrictEqual(parseIds(`⿱a⿳bc⿴de`, cursor), {
+    assert.deepEqual(parseIds(`⿱a⿳bc⿴de`, cursor), {
       type: IdsOperator.AboveToBelow,
       above: { type: `LeafCharacter`, character: `a` },
       below: {
@@ -695,7 +689,7 @@ void test(`parseIds handles 2 depth`, () => {
         },
       },
     });
-    assert.deepStrictEqual(cursor, { index: 8 });
+    assert.deepEqual(cursor, { index: 8 });
   }
 });
 
@@ -711,7 +705,7 @@ void test(`walkIdsNode`, () => {
     }
   });
 
-  assert.deepStrictEqual(leafs, [`a`, `b`, `c`]);
+  assert.deepEqual(leafs, [`a`, `b`, `c`]);
 });
 
 void test(`idsNodeToString roundtrips`, () => {
@@ -728,7 +722,7 @@ void test(`idsNodeToString roundtrips`, () => {
     [`①`, `②`, `③`, `④`, `⑤`, `⑥`, `⑦`, `⑧`, `⑨`, `⑩`],
     [`⑪`, `⑫`, `⑬`, `⑭`, `⑮`, `⑯`, `⑰`, `⑱`, `⑲`, `⑳`],
   ].flatMap((x) => x)) {
-    assert.strictEqual(idsNodeToString(parseIds(input)), input);
+    assert.equal(idsNodeToString(parseIds(input)), input);
   }
 });
 

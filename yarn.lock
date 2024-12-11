@@ -2768,7 +2768,7 @@ __metadata:
     react-native-svg: "npm:15.8.0"
     react-native-web: "npm:^0.19.13"
     react-responsive: "npm:^10.0.0"
-    replicache: "patch:replicache@patch%3Areplicache@npm%253A14.2.2%23~/.yarn/patches/replicache-npm-14.2.2-d99f6a2b5c.patch%3A%3Aversion=14.2.2&hash=f2490e#~/.yarn/patches/replicache-patch-e568419bdf.patch"
+    replicache: "patch:replicache@patch%3Areplicache@npm%253A15.0.1%23~/.yarn/patches/replicache-npm-15.0.1-daaa5044ba.patch%3A%3Aversion=15.0.1&hash=c643a4#~/.yarn/patches/replicache-patch-1cf70e7f66.patch"
     replicache-react: "npm:^5.0.1"
     tailwind-variants: "npm:^0.2.1"
     tailwindcss: "npm:^3.4.14"
@@ -5099,26 +5099,26 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@rocicorp/lock@npm:^1.0.3":
-  version: 1.0.3
-  resolution: "@rocicorp/lock@npm:1.0.3"
+"@rocicorp/lock@npm:^1.0.4":
+  version: 1.0.4
+  resolution: "@rocicorp/lock@npm:1.0.4"
   dependencies:
-    "@rocicorp/resolver": "npm:^1.0.1"
-  checksum: 10c0/b2b48e17afd396419be535d1cb01d916288f908596bce3b24190a9f51567d4bc47239ad4e3034071e5a76c35caca9ffb0359a3d6e73514045f2625aa4d04af74
+    "@rocicorp/resolver": "npm:^1.0.2"
+  checksum: 10c0/2aaba529ec2e217194edaa7c0d2a45ff676f5de593791d26125ec7a606fe55b69657c8bc6fe537a984291d6b7785df076e8805c6b28e71dcc896034f82d85bc8
   languageName: node
   linkType: hard
 
-"@rocicorp/logger@npm:^5.2.1":
-  version: 5.2.1
-  resolution: "@rocicorp/logger@npm:5.2.1"
-  checksum: 10c0/2625fd3148c738aaf8ff4219391b8f694181f4a666bd115eaab2ab03b41868a1d4406213c4446aa2f4c7579e27d6e49dc42fa50c697b19faa99674f24ed14e6b
+"@rocicorp/logger@npm:^5.2.2":
+  version: 5.3.0
+  resolution: "@rocicorp/logger@npm:5.3.0"
+  checksum: 10c0/20604635e993348d83cd4f8809fc298ebbfa6602b7e8d57e47a9df613740f8b0331345d0fc5eac8d5f2eaf08a8764e75361852a70799e59f9bd29f93982507aa
   languageName: node
   linkType: hard
 
-"@rocicorp/resolver@npm:^1.0.1":
-  version: 1.0.1
-  resolution: "@rocicorp/resolver@npm:1.0.1"
-  checksum: 10c0/6d5a7d7b842a56844b74384cacb3213f233df26253174a5f478478eaa02da45e263d0f7332c75300beb91762bd64ab6271ba629e27b18342d78f9d6663aa6578
+"@rocicorp/resolver@npm:^1.0.2":
+  version: 1.0.2
+  resolution: "@rocicorp/resolver@npm:1.0.2"
+  checksum: 10c0/e43dee1f0162f4d126f4211a21e29bffa1de39df47705ec7e47e1c7127cdfb522dfb7ca9ffd85b85471a344e157d1e4c4fdbc1e7b8fa3906bdd2084cb8a815e0
   languageName: node
   linkType: hard
 
@@ -15982,45 +15982,45 @@ __metadata:
   languageName: node
   linkType: hard
 
-"replicache@npm:14.2.2":
-  version: 14.2.2
-  resolution: "replicache@npm:14.2.2"
+"replicache@npm:15.0.1":
+  version: 15.0.1
+  resolution: "replicache@npm:15.0.1"
   dependencies:
     "@badrap/valita": "npm:^0.3.0"
-    "@rocicorp/lock": "npm:^1.0.3"
-    "@rocicorp/logger": "npm:^5.2.1"
-    "@rocicorp/resolver": "npm:^1.0.1"
+    "@rocicorp/lock": "npm:^1.0.4"
+    "@rocicorp/logger": "npm:^5.2.2"
+    "@rocicorp/resolver": "npm:^1.0.2"
   bin:
     replicache: out/cli.cjs
-  checksum: 10c0/6448b6b68a249044ad9be6077a7b2537f9e67e0400b20e2ea7bd5354337b1aaad36b6ff616150259ae13686d65039e0385d06d09f75e291703af77f1bdc462fa
+  checksum: 10c0/a5cc46a08ceee807d1d26856c6cbb11ed0627687f2a8493a04131de7011a0863e040e42e0c9f8011966e3c13b1603b9b36725384e70e31d81d1ecf20f52bcb17
   languageName: node
   linkType: hard
 
-"replicache@patch:replicache@npm%3A14.2.2#~/.yarn/patches/replicache-npm-14.2.2-d99f6a2b5c.patch::version=14.2.2&hash=f2490e":
-  version: 14.2.2
-  resolution: "replicache@patch:replicache@npm%3A14.2.2#~/.yarn/patches/replicache-npm-14.2.2-d99f6a2b5c.patch::version=14.2.2&hash=f2490e"
+"replicache@patch:replicache@npm%3A15.0.1#~/.yarn/patches/replicache-npm-15.0.1-daaa5044ba.patch::version=15.0.1&hash=c643a4":
+  version: 15.0.1
+  resolution: "replicache@patch:replicache@npm%3A15.0.1#~/.yarn/patches/replicache-npm-15.0.1-daaa5044ba.patch::version=15.0.1&hash=c643a4"
   dependencies:
     "@badrap/valita": "npm:^0.3.0"
-    "@rocicorp/lock": "npm:^1.0.3"
-    "@rocicorp/logger": "npm:^5.2.1"
-    "@rocicorp/resolver": "npm:^1.0.1"
+    "@rocicorp/lock": "npm:^1.0.4"
+    "@rocicorp/logger": "npm:^5.2.2"
+    "@rocicorp/resolver": "npm:^1.0.2"
   bin:
     replicache: out/cli.cjs
-  checksum: 10c0/ab9d1746c7daf8de309c8c4fd55c252246fb2c92d9c2bebaa045f0af3415911c655b754d75400a6c08c17e7a0662cbdc5915da97deb01e5f90f0f8793be35bfc
+  checksum: 10c0/1ba961b8b0d8945211f8b053561292e7b4ee9a0a426cb3fb62dc5b42be804641b3aae74fc571c8ff6f8d9f7ff6d195f370ed49d15af37b35d4bcf4e234fb80a9
   languageName: node
   linkType: hard
 
-"replicache@patch:replicache@patch%3Areplicache@npm%253A14.2.2%23~/.yarn/patches/replicache-npm-14.2.2-d99f6a2b5c.patch%3A%3Aversion=14.2.2&hash=f2490e#~/.yarn/patches/replicache-patch-e568419bdf.patch":
-  version: 14.2.2
-  resolution: "replicache@patch:replicache@patch%3Areplicache@npm%253A14.2.2%23~/.yarn/patches/replicache-npm-14.2.2-d99f6a2b5c.patch%3A%3Aversion=14.2.2&hash=f2490e#~/.yarn/patches/replicache-patch-e568419bdf.patch::version=14.2.2&hash=58fef1"
+"replicache@patch:replicache@patch%3Areplicache@npm%253A15.0.1%23~/.yarn/patches/replicache-npm-15.0.1-daaa5044ba.patch%3A%3Aversion=15.0.1&hash=c643a4#~/.yarn/patches/replicache-patch-1cf70e7f66.patch":
+  version: 15.0.1
+  resolution: "replicache@patch:replicache@patch%3Areplicache@npm%253A15.0.1%23~/.yarn/patches/replicache-npm-15.0.1-daaa5044ba.patch%3A%3Aversion=15.0.1&hash=c643a4#~/.yarn/patches/replicache-patch-1cf70e7f66.patch::version=15.0.1&hash=acf7d2"
   dependencies:
     "@badrap/valita": "npm:^0.3.0"
-    "@rocicorp/lock": "npm:^1.0.3"
-    "@rocicorp/logger": "npm:^5.2.1"
-    "@rocicorp/resolver": "npm:^1.0.1"
+    "@rocicorp/lock": "npm:^1.0.4"
+    "@rocicorp/logger": "npm:^5.2.2"
+    "@rocicorp/resolver": "npm:^1.0.2"
   bin:
     replicache: out/cli.cjs
-  checksum: 10c0/79c315c1be60c096f11df7c89d4e1a355785fdacf34d4c4009bfb59ea4ded0f7f023177647f0df0e584e548bfe8808c0e978113f4ffd75cea8153f6a035770de
+  checksum: 10c0/a8f2550ba5bc02e2a8acc73e73cd746b0edc32ec6da6c088bc872eb47456389ade9eb855589effda57426e2b290c1730d71b3bc990b9ba09a06582e82eb65f14
   languageName: node
   linkType: hard
 

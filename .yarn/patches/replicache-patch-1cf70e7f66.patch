@@ -1,0 +1,28 @@
+diff --git a/out/replicache.d.ts b/out/replicache.d.ts
+index fba8ce1c8fb96636a6ea14673e5d1b682d586c99..54b47c89676d22741cd3328b222cd45a21e0cf87 100644
+--- a/out/replicache.d.ts
++++ b/out/replicache.d.ts
+@@ -12,7 +12,7 @@ type JSONValue =
+   | string
+   | boolean
+   | number
+-  | Array<JSONValue>
++  | Array<unknown>
+   | JSONObject;
+ 
+ /**
+@@ -37,12 +37,12 @@ type ReadonlyJSONValue =
+   | string
+   | boolean
+   | number
+-  | ReadonlyArray<ReadonlyJSONValue>
++  | ReadonlyArray<unknown>
+   | ReadonlyJSONObject;
+ 
+ /** Like {@link JSONObject} but deeply readonly */
+ type ReadonlyJSONObject = {
+-  readonly [key: string]: ReadonlyJSONValue | undefined;
++  readonly [key: string]: unknown | undefined;
+ };
+ 
+ /**
