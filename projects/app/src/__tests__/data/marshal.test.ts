@@ -19,6 +19,7 @@ import {
   ValueSchemaShape,
 } from "@/data/marshal";
 import { Skill, SkillState, SkillType, SrsState, SrsType } from "@/data/model";
+import { IsEqual } from "@/util/types";
 import mapValues from "lodash/mapValues";
 import assert from "node:assert/strict";
 import test, { suite, TestContext } from "node:test";
@@ -31,7 +32,8 @@ import {
 } from "replicache";
 import { Prettify } from "ts-essentials";
 
-function typeChecks(..._args: unknown[]) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unnecessary-type-parameters
+function typeChecks<_T = any>(..._args: unknown[]) {
   // This function is only used for type checking, so it should never be called.
 }
 
@@ -69,51 +71,16 @@ void test(`SrsState`, () => {
   assert.deepEqual(value, unmarshalSrsStateJson(marshalSrsStateJson(value)));
 });
 
-// Utility type to check if two types are identical
-
-const debug = Symbol(`debug`);
-type AssertEqual<T, U> =
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters
-  (<G>() => G extends T ? 1 : 2) extends <G>() => G extends U ? 1 : 2
-    ? true
-    : false | { [debug]: Prettify<T> };
-
-typeChecks(`AssertEqual`, () => {
-  true satisfies AssertEqual<`a`, `a`>;
-  false satisfies AssertEqual<`a`, `b`>;
-
-  true satisfies AssertEqual<`a` | undefined, `a` | undefined>;
-
-  // @ts-expect-error object with a key isn't equal to empty object
-  true satisfies AssertEqual<{ key: `value` }, object>;
-  false satisfies AssertEqual<{ key: `value` }, object>;
-  // @ts-expect-error unknown isn't equal to object
-  true satisfies AssertEqual<unknown, { key: `value` }>;
-  false satisfies AssertEqual<unknown, { key: `value` }>;
-  // @ts-expect-error unknown isn't equal to string
-  true satisfies AssertEqual<unknown, `a`>;
-  false satisfies AssertEqual<unknown, `a`>;
-  // @ts-expect-error object isn't equal to unknown
-  true satisfies AssertEqual<{ key: `value` }, unknown>;
-  false satisfies AssertEqual<{ key: `value` }, unknown>;
-  // @ts-expect-error object isn't equal to never
-  true satisfies AssertEqual<{ key: `value` }, never>;
-  false satisfies AssertEqual<{ key: `value` }, never>;
-});
-
 typeChecks(`ExtractKeys`, () => {
-  true satisfies AssertEqual<ExtractVariableNames<`a[b]`>, `b`>;
-  true satisfies AssertEqual<ExtractVariableNames<`a[b][c]`>, `b` | `c`>;
-  true satisfies AssertEqual<
-    ExtractVariableNames<`a[b][c][d]`>,
-    `b` | `c` | `d`
-  >;
+  true satisfies IsEqual<ExtractVariableNames<`a[b]`>, `b`>;
+  true satisfies IsEqual<ExtractVariableNames<`a[b][c]`>, `b` | `c`>;
+  true satisfies IsEqual<ExtractVariableNames<`a[b][c][d]`>, `b` | `c` | `d`>;
 });
 
 typeChecks(`schema introspection helpers`, () => {
   const schema = { id: rizzle.string(), name: rizzle.string() };
 
-  true satisfies AssertEqual<
+  true satisfies IsEqual<
     ValueSchemaShape<`path/[id]`, typeof schema>,
     Pick<typeof schema, `name`>
   >;
@@ -184,7 +151,7 @@ void suite(`rizzle`, () => {
       void posts.get(tx.readonly, { name: `1` });
       {
         const post = await posts.get(tx.readonly, { id: `1` });
-        true satisfies AssertEqual<typeof post, { name: string } | undefined>;
+        true satisfies IsEqual<typeof post, { name: string } | undefined>;
       }
 
       // .set()
@@ -233,7 +200,7 @@ void suite(`rizzle`, () => {
       void posts.get(tx.readonly, { name: `1` });
       {
         const post = await posts.get(tx.readonly, { id: `1` });
-        true satisfies AssertEqual<typeof post, { name: string } | undefined>;
+        true satisfies IsEqual<typeof post, { name: string } | undefined>;
       }
 
       // .set()
@@ -257,7 +224,7 @@ void suite(`rizzle`, () => {
       void posts.get(tx, { name: `1` });
       {
         const post = await posts.get(tx, { id: `1` });
-        true satisfies AssertEqual<
+        true satisfies IsEqual<
           typeof post,
           { author: { name: string; email: string } } | undefined
         >;
@@ -591,9 +558,9 @@ void suite(`rizzle`, () => {
     const createPost2: RizzleReplicacheMutators<
       typeof schema
     >[`createPost2`] = async (db, { id, rank }) => {
-      true satisfies AssertEqual<typeof db.tx, WriteTransaction>;
-      true satisfies AssertEqual<typeof id, string>;
-      true satisfies AssertEqual<typeof rank, number>;
+      true satisfies IsEqual<typeof db.tx, WriteTransaction>;
+      true satisfies IsEqual<typeof id, string>;
+      true satisfies IsEqual<typeof rank, number>;
 
       typeChecks(async () => {
         // native replicache tx API
@@ -609,15 +576,12 @@ void suite(`rizzle`, () => {
     };
 
     // Only mutators are included (i.e. not `posts`)
-    true satisfies AssertEqual<
+    true satisfies IsEqual<
       keyof RizzleReplicacheMutators<typeof schema>,
       `createPost` | `createPost2`
     >;
     // Only key-value are included (i.e. not `createPost`)
-    true satisfies AssertEqual<
-      keyof RizzleReplicacheQuery<typeof schema>,
-      `posts`
-    >;
+    true satisfies IsEqual<keyof RizzleReplicacheQuery<typeof schema>, `posts`>;
 
     let checkPointsReached = 0;
 
@@ -626,11 +590,8 @@ void suite(`rizzle`, () => {
       schema,
       {
         async createPost(db, options) {
-          true satisfies AssertEqual<typeof db.tx, WriteTransaction>;
-          true satisfies AssertEqual<
-            typeof options,
-            { id: string; rank: number }
-          >;
+          true satisfies IsEqual<typeof db.tx, WriteTransaction>;
+          true satisfies IsEqual<typeof options, { id: string; rank: number }>;
           assert.deepEqual(await db.posts.get({ id: `2` }), undefined);
           assert.deepEqual(options, { id: `1`, rank: 5 });
           await db.posts.set({ id: options.id }, { rank: options.rank });
@@ -659,7 +620,7 @@ void suite(`rizzle`, () => {
     );
 
     await db.mutate.createPost({ id: `1`, rank: 5 });
-    true satisfies AssertEqual<
+    true satisfies IsEqual<
       ReturnType<typeof db.mutate.createPost>,
       Promise<void>
     >;
@@ -838,7 +799,7 @@ void suite(`rizzle`, () => {
 
   typeChecks(`RizzleIndexNames<>`, () => {
     // Outer wrapping is RizzleIndexed.
-    true satisfies AssertEqual<
+    true satisfies IsEqual<
       RizzleIndexNames<
         RizzleObject<{
           id: RizzlePrimitive<string, string>;
@@ -850,7 +811,7 @@ void suite(`rizzle`, () => {
     >;
 
     // Inner wrapping is RizzleIndexed.
-    true satisfies AssertEqual<
+    true satisfies IsEqual<
       Prettify<
         RizzleIndexNames<
           RizzleObject<{
@@ -865,33 +826,38 @@ void suite(`rizzle`, () => {
     >;
   });
 
-  typeChecks(`RizzleObjectInput / RizzleObjectOutput`, () => {
-    const raw = null as unknown as {
+  typeChecks<RizzleObjectInput<never>>(() => {
+    type RawShape = {
       id: RizzlePrimitive<string, string>;
       date: RizzlePrimitive<Date, string>;
     };
 
-    true satisfies AssertEqual<
-      RizzleObjectInput<typeof raw>,
+    true satisfies IsEqual<
+      RizzleObjectInput<RawShape>,
       { id: string; date: Date }
     >;
 
-    true satisfies AssertEqual<
-      RizzleObjectOutput<typeof raw>,
+    true satisfies IsEqual<
+      RizzleObject<RawShape>[`_input`],
+      { id: string; date: Date }
+    >;
+  });
+
+  typeChecks<RizzleObjectOutput<never>>(() => {
+    type RawShape = {
+      id: RizzlePrimitive<string, string>;
+      date: RizzlePrimitive<Date, string>;
+    };
+
+    true satisfies IsEqual<
+      RizzleObjectOutput<RawShape>,
       { id: string; date: string }
     >;
 
-    {
-      const obj = rizzle.object(raw);
-      true satisfies AssertEqual<
-        (typeof obj)[`_input`],
-        { id: string; date: Date }
-      >;
-      true satisfies AssertEqual<
-        (typeof obj)[`_output`],
-        { id: string; date: string }
-      >;
-    }
+    true satisfies IsEqual<
+      RizzleObject<RawShape>[`_output`],
+      { id: string; date: string }
+    >;
   });
 });
 

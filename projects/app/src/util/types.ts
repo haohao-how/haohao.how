@@ -1,6 +1,6 @@
-import { PropsOf } from "@/components/types";
-import { TypedNavigator } from "@react-navigation/native";
-import { AnyFunction } from "ts-essentials";
+import type { PropsOf } from "@/components/types";
+import type { TypedNavigator } from "@react-navigation/native";
+import type { AnyFunction, Prettify } from "ts-essentials";
 
 type MaximumAllowedBoundary = 50;
 
@@ -28,3 +28,16 @@ export type StackNavigationFor<
 > = ScreenListenersFn extends AnyFunction
   ? Parameters<ScreenListenersFn>[0][`navigation`]
   : never;
+
+// This is used to make more helpful type errors, by showing a preview of the
+// mismatch type in the error. But it's critical that it doesn't accidentally
+// make the type compatible with another type, so using a unique symbol
+// essentially "brands" the type.
+const debug = Symbol(`debug`);
+
+// Utility type to check if two types are identical
+export type IsEqual<T, U> =
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters
+  (<G>() => G extends T ? 1 : 2) extends <G>() => G extends U ? 1 : 2
+    ? true
+    : false | { [debug]: Prettify<T> };

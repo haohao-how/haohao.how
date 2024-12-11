@@ -186,6 +186,8 @@ export default tseslint.config(
       // A bit buggy when vars are only used as types, sticking with
       // noUnusedLocals and noUnusedParameters.
       "@typescript-eslint/no-unused-vars": `off`,
+      // Messes up things where the difference between a type and interface is significant.
+      "@typescript-eslint/consistent-type-definitions": `off`,
 
       //
       // @stylistic
