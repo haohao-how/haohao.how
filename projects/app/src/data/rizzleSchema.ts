@@ -119,22 +119,38 @@ const rSrsType = memoize(() =>
     [SrsType.FsrsFourPointFive]: `1`,
   }),
 );
-// eslint-disable-next-line @typescript-eslint/no-unused-expressions
-rSrsType;
+
+const rSrsState = memoize(
+  () =>
+    // r.discriminatedUnion(`type`, [
+    //   r.object({
+    //     type: r.literal(SrsType.Null),
+    //   }),
+    r.object({
+      type: r.literal(SrsType.FsrsFourPointFive, rSrsType()),
+      stability: r.number(),
+      difficulty: r.number(),
+    }),
+  // ]),
+);
 
 // export const counter = keyValue(`counter`, {
 // TODO: doesn't support non-object keys.
 // });
 
-export const skillReview = r.keyValue(`sr/[skill]/[timestamp]`, {
+export const skillReview = r.keyValue(`sr/[skill]/[when]`, {
   skill: rSkillId(),
-  timestamp: r.timestamp(),
+  when: r.datetime(),
 
   rating: rFsrsRating.alias(`r`),
 });
 
 export const skillState = r.keyValue(`s/[skill]`, {
   skill: rSkillId(),
+
+  created: r.timestamp().alias(`c`),
+  srs: rSrsState().nullable().alias(`s`),
+  due: r.timestamp().alias(`d`).indexed(`byDue`),
 });
 
 export const addSkillState = r.mutator({

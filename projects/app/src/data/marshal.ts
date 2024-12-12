@@ -133,7 +133,7 @@ const MarshaledSkillStateValue = z.object({
   c: z.string().datetime(),
   /** srs */
   s: MarshaledSrsState,
-  /** difficulty */
+  /** due */
   d: z.string().datetime(),
 });
 export type MarshaledSkillStateValue = z.infer<typeof MarshaledSkillStateValue>;

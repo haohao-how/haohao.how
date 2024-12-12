@@ -19,10 +19,9 @@ import {
 } from "replicache-react";
 import { kvStore } from "./replicacheOptions";
 
-const ReplicacheContext = createContext<RizzleReplicache<
-  typeof schema,
-  typeof mutators
-> | null>(null);
+export type Rizzle = RizzleReplicache<typeof schema, typeof mutators>;
+
+const ReplicacheContext = createContext<Rizzle | null>(null);
 
 export function ReplicacheProvider({ children }: React.PropsWithChildren) {
   const rizzle = useMemo(
@@ -65,7 +64,10 @@ export function ReplicacheProvider({ children }: React.PropsWithChildren) {
           async addSkillState(db, { skill, now }) {
             const exists = await db.skillState.has({ skill });
             if (!exists) {
-              await db.skillState.set({ skill }, { due: now });
+              await db.skillState.set(
+                { skill },
+                { due: now, created: now, srs: null },
+              );
             }
           },
         },
