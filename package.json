@@ -39,6 +39,10 @@
     "react-native-css-interop@npm:~0.0.21": "0.1.15",
     "metro-runtime@npm:^0.80.3": "patch:metro-runtime@npm%3A0.80.12#~/.yarn/patches/metro-runtime-npm-0.80.12-8e7410ce37.patch",
     "metro-runtime@npm:0.80.9": "patch:metro-runtime@npm%3A0.80.12#~/.yarn/patches/metro-runtime-npm-0.80.12-8e7410ce37.patch",
-    "@expo/cli@npm:0.21.8": "patch:@expo/cli@npm%3A0.21.8#~/.yarn/patches/@expo-cli-npm-0.21.8-5950619da9.patch"
+    "@expo/cli@npm:0.21.8": "patch:@expo/cli@npm%3A0.21.8#~/.yarn/patches/@expo-cli-npm-0.21.8-5950619da9.patch",
+    "@types/node@npm:*": "patch:@types/node@npm%3A22.10.2#~/.yarn/patches/@types-node-npm-22.10.2-572466b048.patch",
+    "@types/node@npm:^18.17.15": "patch:@types/node@npm%3A22.10.2#~/.yarn/patches/@types-node-npm-22.10.2-572466b048.patch",
+    "@types/node@npm:>=10.0.0": "patch:@types/node@npm%3A22.10.2#~/.yarn/patches/@types-node-npm-22.10.2-572466b048.patch",
+    "@types/node@npm:^18.11.18": "patch:@types/node@npm%3A22.10.2#~/.yarn/patches/@types-node-npm-22.10.2-572466b048.patch"
   }
 }

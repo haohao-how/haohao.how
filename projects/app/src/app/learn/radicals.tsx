@@ -21,7 +21,7 @@ export default function RadicalsPage() {
     queryFn: async () => {
       const limit = 10;
       const questions: Question[] = (
-        await r.query((tx) =>
+        await r.replicache.query((tx) =>
           questionsForReview(tx, {
             limit,
             sampleSize: 50,
@@ -57,7 +57,7 @@ export default function RadicalsPage() {
           }
         }
 
-        await r.query(async (tx) => {
+        await r.replicache.query(async (tx) => {
           for (const skill of allRadicalSkills) {
             if (!(await tx.has(marshalSkillStateKey(skill)))) {
               try {

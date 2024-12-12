@@ -2,7 +2,7 @@
   "name": "@haohaohow/static",
   "private": true,
   "devDependencies": {
-    "@types/node": "^22.8.0",
+    "@types/node": "patch:@types/node@npm%3A22.10.2#~/.yarn/patches/@types-node-npm-22.10.2-572466b048.patch",
     "@types/yargs": "^17 <=17.7.x",
     "prettier": "^3.4.2",
     "ts-node": "^10.9.2",

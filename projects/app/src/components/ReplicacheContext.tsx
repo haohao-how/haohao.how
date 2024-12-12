@@ -1,5 +1,7 @@
 import { indexes } from "@/data/marshal";
 import { mutators } from "@/data/mutators";
+import { rizzle, RizzleReplicache } from "@/data/rizzle";
+import { schema } from "@/data/rizzleSchema";
 import { replicacheLicenseKey } from "@/env";
 import { invariant } from "@haohaohow/lib/invariant";
 import {
@@ -17,47 +19,69 @@ import {
 } from "replicache-react";
 import { kvStore } from "./replicacheOptions";
 
-const ReplicacheContext = createContext<Replicache<typeof mutators> | null>(
-  null,
-);
+const ReplicacheContext = createContext<RizzleReplicache<
+  typeof schema,
+  typeof mutators
+> | null>(null);
 
 export function ReplicacheProvider({ children }: React.PropsWithChildren) {
-  const rep: Replicache<typeof mutators> = useMemo(
+  const rep = useMemo(
     () =>
-      new Replicache({
-        name: `hao`,
-        schemaVersion: `3`,
-        licenseKey: replicacheLicenseKey,
-        // pusher(requestBody, requestID) {
-        //   // eslint-disable-next-line no-console
-        //   console.log(`pusher(${JSON.stringify({ requestBody, requestID })})`);
-        //   throw new Error(`pushing not implemented`);
-        // },
-        // puller(req, requestID) {
-        //   invariant(req.pullVersion === 1);
+      rizzle.replicache(
+        {
+          name: `hao`,
+          schemaVersion: `3`,
+          licenseKey: replicacheLicenseKey,
+          kvStore,
+        },
+        schema,
+        {
+          async addSkillState(db, { skill, now }) {
+            const exists = await db.skillState.has({ skill });
+            if (!exists) {
+              await db.skillState.set({ skill }, { due: now });
+            }
+          },
+        },
+        (options) => {
+          return new Replicache({
+            ...options,
+            mutators: { ...mutators, ...options.mutators },
+            indexes: { ...indexes, ...options.indexes },
+          });
+        },
+      ),
+    // new Replicache({
 
-        //   // eslint-disable-next-line no-console
-        //   console.log(`puller: rep.clientID =`, rep.clientID);
+    //   // pusher(requestBody, requestID) {
+    //   //   // eslint-disable-next-line no-console
+    //   //   console.log(`pusher(${JSON.stringify({ requestBody, requestID })})`);
+    //   //   throw new Error(`pushing not implemented`);
+    //   // },
+    //   // puller(req, requestID) {
+    //   //   invariant(req.pullVersion === 1);
 
-        //   // eslint-disable-next-line no-console
-        //   console.log(`puller: puller(…) requestId=${requestID} req=`, req);
+    //   //   // eslint-disable-next-line no-console
+    //   //   console.log(`puller: rep.clientID =`, rep.clientID);
 
-        //   return Promise.resolve({
-        //     response: {
-        //       cookie: req.cookie,
-        //       lastMutationIDChanges: { [rep.clientID]: 0 },
-        //       patch: [],
-        //     },
-        //     httpRequestInfo: {
-        //       errorMessage: ``,
-        //       httpStatusCode: 200,
-        //     },
-        //   } satisfies PullerResultV1);
-        // },
-        kvStore,
-        mutators,
-        indexes,
-      }),
+    //   //   // eslint-disable-next-line no-console
+    //   //   console.log(`puller: puller(…) requestId=${requestID} req=`, req);
+
+    //   //   return Promise.resolve({
+    //   //     response: {
+    //   //       cookie: req.cookie,
+    //   //       lastMutationIDChanges: { [rep.clientID]: 0 },
+    //   //       patch: [],
+    //   //     },
+    //   //     httpRequestInfo: {
+    //   //       errorMessage: ``,
+    //   //       httpStatusCode: 200,
+    //   //     },
+    //   //   } satisfies PullerResultV1);
+    //   // },
+    //   mutators,
+    //   indexes,
+    // }),
     [],
   );
 
@@ -82,7 +106,7 @@ export function useReplicacheSubscribe<QueryRet, Default = undefined>(
   // The types of replicache-react seem wonky and don't support passing in a
   // replicache instance.
   return replicacheReactUseSubscribe<ReadTransaction, QueryRet, Default>(
-    r,
+    r.replicache,
     query,
     options,
   );
@@ -111,7 +135,7 @@ export function useQueryOnce<QueryRet>(
   const queryRef = useRef(query);
 
   useEffect(() => {
-    r.query(queryRef.current).then(
+    r.replicache.query(queryRef.current).then(
       (data) => {
         setResult({ loading: false, data, error: false });
       },
