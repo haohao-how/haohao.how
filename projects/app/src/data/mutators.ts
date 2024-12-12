@@ -19,6 +19,7 @@ import { HanziSkill, Skill, SrsType } from "./model";
 // Schema v2
 //
 // Skill Review: sr/<skillId>/<timestamp> { r: Rating }
+// Skill State: s/<skillId> { … }
 
 // Schema v1
 //

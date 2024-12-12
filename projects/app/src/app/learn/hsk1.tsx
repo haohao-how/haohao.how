@@ -23,7 +23,7 @@ export default function LearnHsk1Page() {
 
       // Start with practicing skills that are due
       const questions: Question[] = (
-        await r.query((tx) =>
+        await r.replicache.query((tx) =>
           questionsForReview(tx, {
             limit: quizSize,
             sampleSize: 50,
@@ -44,7 +44,7 @@ export default function LearnHsk1Page() {
           });
         }
 
-        await r.query(async (tx) => {
+        await r.replicache.query(async (tx) => {
           for (const skill of hsk1Skills) {
             if (
               // Don't add skills that are already used as answers in the quiz.

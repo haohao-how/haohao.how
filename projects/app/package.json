@@ -76,7 +76,7 @@
     "@types/eslint": "^9 <=9.13.x",
     "@types/eslint__js": "^8.42.3",
     "@types/lodash": "4.17.x",
-    "@types/node": "^22.8.0",
+    "@types/node": "patch:@types/node@npm%3A22.10.2#~/.yarn/patches/@types-node-npm-22.10.2-572466b048.patch",
     "@types/pg": "^8 <=8.12.x",
     "@types/react-dom": "18.3.x",
     "@types/ws": "^8 <=8.17.x",

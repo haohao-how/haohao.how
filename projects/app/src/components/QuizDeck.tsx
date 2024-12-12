@@ -109,7 +109,9 @@ export const QuizDeck = ({ questions }: { questions: readonly Question[] }) => {
       const success = ratings.every(({ rating }) => rating !== Rating.Again);
 
       for (const { skill, rating } of ratings) {
-        saveSkillRating(r, skill, rating).catch(sentryCaptureException);
+        saveSkillRating(r.replicache, skill, rating).catch(
+          sentryCaptureException,
+        );
       }
 
       setStreakCount((prev) => (success ? prev + 1 : 0));
