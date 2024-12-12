@@ -1,12 +1,13 @@
+import { Rizzle } from "@/components/ReplicacheContext";
 import { sentryCaptureException } from "@/components/util";
 import shuffle from "lodash/shuffle";
 import take from "lodash/take";
 import { ReadTransaction } from "replicache";
 import { generateQuestionForSkillOrThrow } from "./generator";
-import { IndexName, legacyIndexScanIter } from "./marshal";
 import { Question, Skill, SkillState, SkillType } from "./model";
 
 export async function questionsForReview(
+  r: Rizzle,
   tx: ReadTransaction,
   options?: {
     skillTypes?: readonly SkillType[];
@@ -20,10 +21,7 @@ export async function questionsForReview(
   const now = new Date();
   const skillTypesFilter =
     options?.skillTypes != null ? new Set(options.skillTypes) : null;
-  for await (const [skill, skillState] of legacyIndexScanIter(
-    tx,
-    IndexName.SkillStateByDue,
-  )) {
+  for await (const [{ skill }, skillState] of r.query.skillState.byDue(tx)) {
     // Only consider skills that are due for review.
     if (options?.dueBeforeNow === true && skillState.due > now) {
       continue;

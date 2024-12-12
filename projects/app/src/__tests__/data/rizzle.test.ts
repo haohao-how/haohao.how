@@ -3,13 +3,15 @@ import {
   keyPathVariableNames,
   parseKeyPath,
   r,
-  rizzle,
   RizzleIndexed,
   RizzleIndexNames,
+  RizzleNullable,
   RizzleObject,
   RizzleObjectInput,
+  RizzleObjectMarshaled,
   RizzleObjectOutput,
   RizzlePrimitive,
+  RizzleReplicache,
   RizzleReplicacheMutators,
   RizzleReplicacheQuery,
   RizzleTypeAlias,
@@ -26,7 +28,6 @@ import {
   TEST_LICENSE_KEY,
   WriteTransaction,
 } from "replicache";
-import { Prettify } from "ts-essentials";
 import { z } from "zod";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unnecessary-type-parameters
@@ -110,6 +111,73 @@ void test(`string() key and value`, async (t) => {
     void posts.set(tx, { id: `1` }, { name: `foo` });
     // @ts-expect-error `id` is the key, not `name`
     void posts.set(tx, { name: `1` }, { name: `foo` });
+  });
+});
+
+void test(`string() .nullable()`, async (t) => {
+  const posts = r.keyValue(`foo/[id]`, {
+    id: r.string(),
+    name: r.string().nullable().alias(`n`),
+  });
+
+  using tx = makeMockTx(t);
+
+  tx.get.mock.mockImplementationOnce(async () => ({ n: `foo` }));
+  assert.deepEqual(await posts.get(tx, { id: `1` }), { name: `foo` });
+
+  tx.get.mock.mockImplementationOnce(async () => ({ n: null }));
+  assert.deepEqual(await posts.get(tx, { id: `1` }), { name: null });
+
+  typeChecks(async () => {
+    // .get()
+    {
+      const x = await posts.get(tx, { id: `1` });
+      true satisfies IsEqual<typeof x, { name: string | null } | undefined>;
+    }
+
+    // .set()
+    void posts.set(tx, { id: `1` }, { name: `foo` });
+    void posts.set(tx, { id: `1` }, { name: null });
+  });
+});
+
+void test(`object() .nullable()`, async (t) => {
+  const posts = r.keyValue(`foo/[id]`, {
+    id: r.string(),
+    name: r
+      .object({
+        first: r.string(),
+        last: r.string(),
+      })
+      .nullable()
+      .alias(`n`),
+  });
+
+  using tx = makeMockTx(t);
+
+  tx.get.mock.mockImplementationOnce(async () => ({
+    n: { first: `a`, last: `b` },
+  }));
+  assert.deepEqual(await posts.get(tx, { id: `1` }), {
+    name: { first: `a`, last: `b` },
+  });
+
+  tx.get.mock.mockImplementationOnce(async () => ({ n: null }));
+  assert.deepEqual(await posts.get(tx, { id: `1` }), { name: null });
+
+  typeChecks(async () => {
+    // .get()
+    {
+      const x = await posts.get(tx, { id: `1` });
+      true satisfies IsEqual<
+        typeof x,
+        { name: { first: string; last: string } | null } | undefined
+      >;
+    }
+
+    // .set()
+    void posts.set(tx, { id: `1` }, { name: { first: `a`, last: `b` } });
+    void posts.set(tx, { id: `1` }, { name: null });
   });
 });
 
@@ -257,6 +325,15 @@ void test(`keyValue() one variable`, async (t) => {
   assert.deepEqual(tx.get.mock.calls[0]?.arguments, [`foo/1`]);
 });
 
+void test(`keyValue() variables requires string marshaler`, async () => {
+  typeChecks(() => {
+    r.keyValue(`foo/[id]`, { id: r.string() });
+    r.keyValue(`foo/[id]`, { id: r.literal(`foo`, r.string()) });
+    // @ts-expect-error number() doesn't marshal to a string
+    r.keyValue(`foo/[id]`, { id: r.number() });
+  });
+});
+
 void test(`keyValue() two variables`, async (t) => {
   const posts = r.keyValue(`foo/[id1]/[id2]`, {
     id1: r.string(),
@@ -276,35 +353,8 @@ void test(`keyValue() two variables`, async (t) => {
   assert.deepEqual(tx.get.mock.calls[0]?.arguments, [`foo/1/2`]);
 });
 
-typeChecks(`keyValue() requires variables to be declared`, () => {
-  r.keyValue(
-    `foo/[id]`,
-    // @ts-expect-error `id` is missing
-    { text: r.string() },
-  );
-});
-
-void test(`number()`, async (t) => {
-  const posts = r.keyValue(`foo/[id]`, {
-    id: r.string(),
-    count: r.number(`c`),
-  });
-
-  using tx = makeMockTx(t);
-
-  // Marshal and unmarshal round tripping
-  await posts.set(tx, { id: `1` }, { count: 5 });
-  const [, marshaledData] = tx.set.mock.calls[0]!.arguments;
-  assert.deepEqual(marshaledData, { c: 5 });
-
-  tx.get.mock.mockImplementationOnce(async () => marshaledData);
-  assert.deepEqual(await posts.get(tx, { id: `1` }), {
-    count: 5,
-  });
-});
-
 void test(`keyValue() non-string key codec`, async (t) => {
-  const rComplex = r.zod(
+  const rComplex = r.primitive(
     z
       .tuple([z.string(), z.number()])
       .readonly()
@@ -353,6 +403,79 @@ void test(`keyValue() .has()`, async (t) => {
   assert.deepEqual(await posts.has(tx, { id: `2` }), false);
 });
 
+void test(`keyValue() distinguishing between input/output types`, async (t) => {
+  const rCoerciveString = () =>
+    r.primitive(
+      // takes in a number or string
+      z
+        .union([z.number(), z.string()])
+        .transform((v) => (typeof v === `string` ? v : v.toString())),
+      // but always returns back to a string
+      z.string(),
+    );
+
+  const posts = r.keyValue(`foo/[id]`, {
+    id: rCoerciveString(),
+    text: rCoerciveString().indexed(`byText`),
+  });
+
+  using tx = makeMockTx(t);
+
+  // .get()
+  {
+    const x1 = await posts.get(tx, { id: `1` });
+    true satisfies IsEqual<typeof x1, { text: string } | undefined>;
+    const x2 = await posts.get(tx, { id: 1 });
+    true satisfies IsEqual<typeof x2, { text: string } | undefined>;
+  }
+
+  // .has()
+  await posts.has(tx, { id: `1` });
+  await posts.has(tx, { id: 1 });
+
+  // .set()
+  await posts.set(tx, { id: `1` }, { text: `1` });
+  await posts.set(tx, { id: 1 }, { text: 1 });
+
+  // index scan
+  typeChecks(async () => {
+    const schema = { posts };
+    const r = null as unknown as RizzleReplicache<typeof schema>;
+    for await (const [key, value] of r.query.posts.byText(tx)) {
+      true satisfies IsEqual<typeof key, { id: string }>;
+      true satisfies IsEqual<typeof value, { text: string }>;
+    }
+  });
+});
+
+void test(`keyValue() requires variables to be declared`, () => {
+  typeChecks(() => {
+    r.keyValue(
+      `foo/[id]`,
+      // @ts-expect-error `id` is missing
+      { text: r.string() },
+    );
+  });
+});
+
+void test(`number()`, async (t) => {
+  const posts = r.keyValue(`foo/[id]`, {
+    id: r.string(),
+    count: r.number(`c`),
+  });
+
+  using tx = makeMockTx(t);
+
+  // Marshal and unmarshal round tripping
+  await posts.set(tx, { id: `1` }, { count: 5 });
+  const [, marshaledData] = tx.set.mock.calls[0]!.arguments;
+  assert.deepEqual(marshaledData, { c: 5 });
+
+  tx.get.mock.mockImplementationOnce(async () => marshaledData);
+  assert.deepEqual(await posts.get(tx, { id: `1` }), {
+    count: 5,
+  });
+});
 void test(`enum()`, async (t) => {
   enum Colors {
     RED,
@@ -434,9 +557,27 @@ void test(`object()`, async (t) => {
   });
 });
 
-void test(`object indexes`, () => {
+void test(`.getIndexes()`, () => {
+  // no key path variables
   {
-    const posts = r.keyValue(`foo/[id]`, {
+    const posts = r.keyValue(`foo`, {
+      id: r.string(),
+      author: r.object({
+        name: r.string().indexed(`byAuthorName`),
+      }),
+    });
+    assert.deepEqual(posts.getIndexes(), {
+      byAuthorName: {
+        allowEmpty: false,
+        prefix: `foo`,
+        jsonPointer: `/author/name`,
+      },
+    });
+  }
+
+  // object(.string().indexed())
+  {
+    const posts = r.keyValue(`foo/`, {
       id: r.string(),
       author: r.object({
         name: r.string().indexed(`byAuthorName`),
@@ -457,9 +598,57 @@ void test(`object indexes`, () => {
       },
     });
   }
+
+  // .string().indexed().nullable()
+  {
+    const posts = r.keyValue(`foo/[id]`, {
+      id: r.string(),
+      name: r.string().indexed(`byAuthorName`).nullable(),
+    });
+
+    assert.deepEqual(posts.getIndexes(), {
+      byAuthorName: {
+        allowEmpty: false,
+        prefix: `foo/`,
+        jsonPointer: `/name`,
+      },
+    });
+  }
+
+  // .string().alias().indexed().nullable()
+  {
+    const posts = r.keyValue(`foo/[id]`, {
+      id: r.string(),
+      name: r.string().alias(`n`).indexed(`byAuthorName`).nullable(),
+    });
+
+    assert.deepEqual(posts.getIndexes(), {
+      byAuthorName: {
+        allowEmpty: false,
+        prefix: `foo/`,
+        jsonPointer: `/n`,
+      },
+    });
+  }
+
+  // .string().indexed().alias()
+  {
+    const posts = r.keyValue(`foo/[id]`, {
+      id: r.string(),
+      name: r.string().indexed(`byAuthorName`).alias(`n`),
+    });
+
+    assert.deepEqual(posts.getIndexes(), {
+      byAuthorName: {
+        allowEmpty: false,
+        prefix: `foo/`,
+        jsonPointer: `/n`,
+      },
+    });
+  }
 });
 
-void test(`parseKeyPath`, () => {
+void test(`${parseKeyPath.name}()`, () => {
   assert.deepEqual(parseKeyPath(`foo/$[id]`, `foo/$1`), { id: `1` });
   assert.deepEqual(parseKeyPath(`^foo/$[id]`, `^foo/$1`), { id: `1` });
   assert.deepEqual(parseKeyPath(`foo/[id]`, `foo/1`), { id: `1` });
@@ -480,6 +669,70 @@ void test(`mutator()`, async () => {
   assert.deepEqual(fn._def.alias, `cp`);
 });
 
+typeChecks<RizzleReplicacheMutators<never>>(
+  `allows writing mutator implementations separately`,
+  async () => {
+    const schema = {
+      posts: r.keyValue(`p/[id]`, {
+        id: r.string(),
+        rank: r.number(`r`).indexed(`byRank`),
+      }),
+      createPost: r
+        .mutator({
+          id: r.string(),
+          rank: r.number(`r`),
+        })
+        .alias(`cp`),
+    };
+
+    const createPost: RizzleReplicacheMutators<
+      typeof schema
+    >[`createPost`] = async (db, options) => {
+      true satisfies IsEqual<typeof db.tx, WriteTransaction>;
+      true satisfies IsEqual<typeof options, { id: string; rank: number }>;
+
+      typeChecks(async () => {
+        const { id, rank } = options;
+        // native replicache tx API
+        await db.tx.set(`p/${id}`, { r: rank });
+
+        // rizzle convenience API
+        await db.posts.get({ id });
+        await db.posts.set({ id }, { rank });
+
+        // @ts-expect-error there's no rank2 in the schema
+        await db.posts.set({ id }, { rank2: 2 });
+      });
+    };
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+    createPost;
+  },
+);
+
+typeChecks<RizzleReplicacheMutators<never>>(async () => {
+  const schema = {
+    posts: r.keyValue(`p/[id]`, { id: r.string() }),
+    createPost: r.mutator({ id: r.string() }),
+  };
+
+  // Only mutators are included
+  true satisfies IsEqual<
+    keyof RizzleReplicacheMutators<typeof schema>,
+    `createPost`
+  >;
+});
+
+typeChecks<RizzleReplicacheQuery<never>>(async () => {
+  const schema = {
+    posts: r.keyValue(`p/[id]`, { id: r.string() }),
+    createPost: r.mutator({ id: r.string() }),
+  };
+
+  // Only key-value are included
+  true satisfies IsEqual<keyof RizzleReplicacheQuery<typeof schema>, `posts`>;
+});
+
 void test(`replicache()`, async (t) => {
   const schema = {
     posts: r.keyValue(`p/[id]`, {
@@ -492,45 +745,11 @@ void test(`replicache()`, async (t) => {
         rank: r.number(`r`),
       })
       .alias(`cp`),
-    createPost2: r
-      .mutator({
-        id: r.string(),
-        rank: r.number(`r`),
-      })
-      .alias(`cp2`),
   };
-
-  const createPost2: RizzleReplicacheMutators<
-    typeof schema
-  >[`createPost2`] = async (db, { id, rank }) => {
-    true satisfies IsEqual<typeof db.tx, WriteTransaction>;
-    true satisfies IsEqual<typeof id, string>;
-    true satisfies IsEqual<typeof rank, number>;
-
-    typeChecks(async () => {
-      // native replicache tx API
-      await db.tx.set(`p/${id}`, { r: rank });
-
-      // rizzle convenience API
-      await db.posts.get({ id });
-      await db.posts.set({ id }, { rank });
-
-      // @ts-expect-error there's no rank2 in the schema
-      await db.posts.set({ id }, { rank2: 2 });
-    });
-  };
-
-  // Only mutators are included (i.e. not `posts`)
-  true satisfies IsEqual<
-    keyof RizzleReplicacheMutators<typeof schema>,
-    `createPost` | `createPost2`
-  >;
-  // Only key-value are included (i.e. not `createPost`)
-  true satisfies IsEqual<keyof RizzleReplicacheQuery<typeof schema>, `posts`>;
 
   let checkPointsReached = 0;
 
-  await using db = rizzle.replicache(
+  await using db = r.replicache(
     testReplicacheOptions,
     schema,
     {
@@ -542,14 +761,11 @@ void test(`replicache()`, async (t) => {
         await db.posts.set({ id: options.id }, { rank: options.rank });
         checkPointsReached++;
       },
-      createPost2,
-      // @ts-expect-error there's no createPost3 in the schema
-      createPost3: createPost2,
     },
     (options) => {
       assert.deepEqual(
         mapValues(options.mutators, (v) => typeof v),
-        { cp: `function`, cp2: `function` },
+        { cp: `function` },
       );
       assert.deepEqual(options.indexes, {
         "posts.byRank": {
@@ -657,6 +873,33 @@ void test(`replicache()`, async (t) => {
   assert.equal(checkPointsReached, 4);
 });
 
+void test(`replicache() disallows unknown mutator implementations`, async () => {
+  const schema = {
+    posts: r.keyValue(`p/[id]`, { id: r.string() }),
+    createPost: r.mutator({ id: r.string() }),
+  };
+
+  // Only mutators are included (i.e. not `posts`)
+  true satisfies IsEqual<
+    keyof RizzleReplicacheMutators<typeof schema>,
+    `createPost`
+  >;
+  // Only key-value are included (i.e. not `createPost`)
+  true satisfies IsEqual<keyof RizzleReplicacheQuery<typeof schema>, `posts`>;
+
+  typeChecks(async () => {
+    r.replicache(testReplicacheOptions, schema, {
+      async createPost() {
+        // stub
+      },
+      // @ts-expect-error there's no createPost2 in the schema
+      async createPost2() {
+        // stub
+      },
+    });
+  });
+});
+
 void test(`replicache() mutator tx`, async () => {
   const schema = {
     counter: r.keyValue(`counter/[id]`, {
@@ -670,7 +913,7 @@ void test(`replicache() mutator tx`, async () => {
       .alias(`ic`),
   };
 
-  await using db = rizzle.replicache(testReplicacheOptions, schema, {
+  await using db = r.replicache(testReplicacheOptions, schema, {
     async incrementCounter(db, options) {
       const { id } = options;
       const existingCount = await db.counter.get({ id });
@@ -705,7 +948,7 @@ void test(`replicache() index scan`, async () => {
       .alias(`at`),
   };
 
-  await using db = rizzle.replicache(testReplicacheOptions, schema, {
+  await using db = r.replicache(testReplicacheOptions, schema, {
     async appendText(db, options) {
       const { id } = options;
       const existing = await db.text.get({ id });
@@ -751,8 +994,62 @@ void test(`number()`, async (t) => {
   });
 });
 
-typeChecks(`RizzleIndexNames<>`, () => {
-  // Outer wrapping is RizzleIndexed.
+void test(`literal()`, async (t) => {
+  typeChecks(async () => {
+    r.literal(1, r.number());
+    r.literal(``, r.string());
+    // @ts-expect-error string isn't compatible with number
+    r.literal(`abc`, r.number());
+
+    using tx = makeMockTx(t);
+
+    {
+      const kv = r.keyValue(`foo`, { number: r.literal(1, r.number()) });
+
+      // .set()
+      await kv.set(tx, { id: `1` }, { number: 1 });
+      // @ts-expect-error 2 isn't literally 1
+      await kv.set(tx, { id: `1` }, { number: 2 });
+
+      // .get()
+      const v1 = await kv.get(tx, { id: `1` });
+      true satisfies IsEqual<typeof v1, { number: 1 } | undefined>;
+    }
+
+    {
+      const kv = r.keyValue(`foo`, { string: r.literal(`1`, r.string()) });
+
+      // .set()
+      await kv.set(tx, { id: `1` }, { string: `1` });
+      // @ts-expect-error '2' isn't literally '1'
+      await kv.set(tx, { id: `1` }, { string: `2` });
+
+      // .get()
+      const v1 = await kv.get(tx, { id: `1` });
+      true satisfies IsEqual<typeof v1, { string: `1` } | undefined>;
+    }
+  });
+
+  const posts = r.keyValue(`foo/[id]`, {
+    id: r.string(),
+    count: r.literal(5, r.number()).alias(`c`),
+  });
+
+  using tx = makeMockTx(t);
+
+  // Marshal and unmarshal round tripping
+  await posts.set(tx, { id: `1` }, { count: 5 });
+  const [, marshaledData] = tx.set.mock.calls[0]!.arguments;
+  assert.deepEqual(marshaledData, { c: 5 });
+
+  tx.get.mock.mockImplementationOnce(async () => marshaledData);
+  assert.deepEqual(await posts.get(tx, { id: `1` }), {
+    count: 5,
+  });
+});
+
+typeChecks<RizzleIndexNames<never>>(() => {
+  // .string().indexed(…)
   true satisfies IsEqual<
     RizzleIndexNames<
       RizzleObject<{
@@ -764,17 +1061,28 @@ typeChecks(`RizzleIndexNames<>`, () => {
     `byDate` | `byName`
   >;
 
-  // Inner wrapping is RizzleIndexed.
+  // .string().indexed(…).alias()
   true satisfies IsEqual<
-    Prettify<
-      RizzleIndexNames<
-        RizzleObject<{
-          id: RizzlePrimitive<string, string>;
-          date: RizzleTypeAlias<
-            RizzleIndexed<RizzlePrimitive<Date, string>, `byDate`>
-          >;
-        }>
-      >
+    RizzleIndexNames<
+      RizzleObject<{
+        id: RizzlePrimitive<string, string>;
+        date: RizzleTypeAlias<
+          RizzleIndexed<RizzlePrimitive<Date, string>, `byDate`>
+        >;
+      }>
+    >,
+    `byDate`
+  >;
+
+  // .string().indexed(…).nullable()
+  true satisfies IsEqual<
+    RizzleIndexNames<
+      RizzleObject<{
+        id: RizzlePrimitive<string, string>;
+        date: RizzleNullable<
+          RizzleIndexed<RizzlePrimitive<Date, string>, `byDate`>
+        >;
+      }>
     >,
     `byDate`
   >;
@@ -797,10 +1105,27 @@ typeChecks<RizzleObjectInput<never>>(() => {
   >;
 });
 
+typeChecks<RizzleObjectMarshaled<never>>(() => {
+  type RawShape = {
+    id: RizzlePrimitive<string, number, string>;
+    date: RizzlePrimitive<Date, number, string>;
+  };
+
+  true satisfies IsEqual<
+    RizzleObjectMarshaled<RawShape>,
+    { id: number; date: number }
+  >;
+
+  true satisfies IsEqual<
+    RizzleObject<RawShape>[`_marshaled`],
+    { id: number; date: number }
+  >;
+});
+
 typeChecks<RizzleObjectOutput<never>>(() => {
   type RawShape = {
-    id: RizzlePrimitive<string, string>;
-    date: RizzlePrimitive<Date, string>;
+    id: RizzlePrimitive<string, number, string>;
+    date: RizzlePrimitive<Date, number, string>;
   };
 
   true satisfies IsEqual<
@@ -814,7 +1139,7 @@ typeChecks<RizzleObjectOutput<never>>(() => {
   >;
 });
 
-void test(keyPathVariableNames.name, () => {
+void test(`${keyPathVariableNames.name}()`, () => {
   assert.deepEqual(keyPathVariableNames(`foo/[id]`), [`id`]);
   assert.deepEqual(keyPathVariableNames(`foo/[id]/[bar]`), [`id`, `bar`]);
 });

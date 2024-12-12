@@ -2,7 +2,6 @@ import { QuizDeck } from "@/components/QuizDeck";
 import { useReplicache } from "@/components/ReplicacheContext";
 import { sentryCaptureException } from "@/components/util";
 import { generateQuestionForSkillOrThrow } from "@/data/generator";
-import { marshalSkillStateKey } from "@/data/marshal";
 import { HanziSkill, Question, QuestionType, SkillType } from "@/data/model";
 import { questionsForReview } from "@/data/query";
 import { allHsk1Words } from "@/dictionary/dictionary";
@@ -24,7 +23,7 @@ export default function LearnHsk1Page() {
       // Start with practicing skills that are due
       const questions: Question[] = (
         await r.replicache.query((tx) =>
-          questionsForReview(tx, {
+          questionsForReview(r, tx, {
             limit: quizSize,
             sampleSize: 50,
             filter: (skill) => hsk1Words.includes(skill.hanzi),
@@ -55,7 +54,7 @@ export default function LearnHsk1Page() {
                     isEqual(q.answer.b.skill, skill.hanzi)),
               ) &&
               // Don't include skills that are already practiced
-              !(await tx.has(marshalSkillStateKey(skill)))
+              !(await r.query.skillState.has(tx, { skill }))
             ) {
               try {
                 questions.push(await generateQuestionForSkillOrThrow(skill));

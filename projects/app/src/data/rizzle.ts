@@ -23,16 +23,21 @@ interface RizzleTypeDef {
 }
 
 abstract class RizzleType<
-  Input = unknown,
   Def extends RizzleTypeDef = RizzleTypeDef,
-  Output = unknown,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  Input = any,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  Marshaled = any,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  Output = any,
 > {
-  readonly _output!: Output;
   readonly _input!: Input;
+  readonly _output!: Output;
+  readonly _marshaled!: Marshaled;
   readonly _def!: Def;
 
-  abstract getMarshal(): z.ZodType<Output, z.ZodTypeDef, Input>;
-  abstract getUnmarshal(): z.ZodType<Input, z.ZodTypeDef, Output>;
+  abstract getMarshal(): z.ZodType<Marshaled, z.ZodTypeDef, Input>;
+  abstract getUnmarshal(): z.ZodType<Output, z.ZodTypeDef, Marshaled>;
 
   _getIndexes(): IndexDefinitions {
     return {};
@@ -50,6 +55,10 @@ abstract class RizzleType<
     return RizzleTypeAlias.create(this, alias);
   }
 
+  nullable(): RizzleNullable<this> {
+    return RizzleNullable.create(this);
+  }
+
   indexed<IndexName extends string>(
     indexName: IndexName,
   ): RizzleIndexed<this, IndexName> {
@@ -57,16 +66,45 @@ abstract class RizzleType<
   }
 }
 
-interface RizzleTypeAliasDef<T extends RizzleType = RizzleType>
-  extends RizzleTypeDef {
+interface RizzleNullableDef<T extends RizzleType> extends RizzleTypeDef {
+  innerType: T;
+  typeName: `nullable`;
+}
+
+export class RizzleNullable<T extends RizzleType> extends RizzleType<
+  RizzleNullableDef<T>,
+  T[`_input`] | null,
+  T[`_marshaled`] | null,
+  T[`_output`] | null
+> {
+  getMarshal() {
+    return this._def.innerType.getMarshal().nullable();
+  }
+  getUnmarshal() {
+    return this._def.innerType.getUnmarshal().nullable();
+  }
+  _getIndexes() {
+    return this._def.innerType._getIndexes();
+  }
+  _getAlias(): string | undefined {
+    return this._def.innerType._getAlias();
+  }
+
+  static create = <T extends RizzleType>(type: T): RizzleNullable<T> => {
+    return new RizzleNullable({ innerType: type, typeName: `nullable` });
+  };
+}
+
+interface RizzleTypeAliasDef<T extends RizzleType> extends RizzleTypeDef {
   innerType: T;
   alias?: string | undefined;
   typeName: `alias`;
 }
 
 export class RizzleTypeAlias<T extends RizzleType> extends RizzleType<
-  T[`_input`],
   RizzleTypeAliasDef<T>,
+  T[`_input`],
+  T[`_marshaled`],
   T[`_output`]
 > {
   getMarshal() {
@@ -101,8 +139,9 @@ export class RizzleIndexed<
   T extends RizzleType,
   IndexName extends string,
 > extends RizzleType<
-  T[`_input`],
   RizzleIndexedDef<T, IndexName>,
+  T[`_input`],
+  T[`_marshaled`],
   T[`_output`]
 > {
   getMarshal() {
@@ -143,8 +182,9 @@ interface RizzleObjectDef<T extends RizzleRawObject = RizzleRawObject>
 }
 
 export class RizzleObject<T extends RizzleRawObject> extends RizzleType<
-  RizzleObjectInput<T>,
   RizzleObjectDef<T>,
+  RizzleObjectInput<T>,
+  RizzleObjectMarshaled<T>,
   RizzleObjectOutput<T>
 > {
   #keyToAlias: Record<string, string>;
@@ -162,7 +202,11 @@ export class RizzleObject<T extends RizzleRawObject> extends RizzleType<
       .object(mapValues(this._def.shape, (v) => v.getMarshal()))
       .transform((x) =>
         mapKeys(x, (_v, k) => this.#keyToAlias[k]),
-      ) as unknown as z.ZodType<this[`_output`], z.ZodAnyDef, this[`_input`]>;
+      ) as unknown as z.ZodType<
+      this[`_marshaled`],
+      z.ZodAnyDef,
+      this[`_input`]
+    >;
   }
 
   getUnmarshal() {
@@ -175,7 +219,11 @@ export class RizzleObject<T extends RizzleRawObject> extends RizzleType<
       )
       .transform((x) =>
         mapKeys(x, (_v, k) => this.#aliasToKey[k]),
-      ) as unknown as z.ZodType<this[`_input`], z.ZodAnyDef, this[`_output`]>;
+      ) as unknown as z.ZodType<
+      this[`_output`],
+      z.ZodAnyDef,
+      this[`_marshaled`]
+    >;
   }
 
   _getIndexes() {
@@ -196,18 +244,19 @@ export class RizzleObject<T extends RizzleRawObject> extends RizzleType<
   };
 }
 
-interface RizzlePrimitiveDef<I, O> extends RizzleTypeDef {
-  marshal: z.ZodType<O, z.ZodTypeDef, I>;
-  unmarshal: z.ZodType<I, z.ZodTypeDef, O>;
+interface RizzlePrimitiveDef<I, M, O> extends RizzleTypeDef {
+  marshal: z.ZodType<M, z.ZodTypeDef, I>;
+  unmarshal: z.ZodType<O, z.ZodTypeDef, M>;
   typeName: `primitive`;
 }
 
 /**
  * A simple type that can be marshaled and unmarshaled.
  */
-export class RizzlePrimitive<I, O> extends RizzleType<
+export class RizzlePrimitive<I, M, O = I> extends RizzleType<
+  RizzlePrimitiveDef<I, M, O>,
   I,
-  RizzlePrimitiveDef<I, O>,
+  M,
   O
 > {
   getMarshal() {
@@ -226,10 +275,10 @@ export class RizzlePrimitive<I, O> extends RizzleType<
     return;
   }
 
-  static create = <I, O>(
-    marshal: z.ZodType<O, z.ZodTypeDef, I>,
-    unmarshal: z.ZodType<I, z.ZodTypeDef, O>,
-  ): RizzlePrimitive<I, O> => {
+  static create = <I, M, O>(
+    marshal: z.ZodType<M, z.ZodTypeDef, I>,
+    unmarshal: z.ZodType<O, z.ZodTypeDef, M>,
+  ): RizzlePrimitive<I, M, O> => {
     return new RizzlePrimitive({ marshal, unmarshal, typeName: `primitive` });
   };
 }
@@ -244,33 +293,28 @@ abstract class RizzleRoot<Def extends RizzleTypeDef = RizzleTypeDef> {
 
 type RizzleRawSchemaForKeyPath<KeyPath extends string> = Record<
   ExtractVariableNames<KeyPath>,
-  RizzleType
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  RizzleType<RizzleTypeDef, any, string>
 >;
 
 type KVKeyType<
   S extends RizzleRawObject,
   KeyPath extends string,
 > = RizzleObject<Pick<S, ExtractVariableNames<KeyPath>>>;
-type KVKeyInput<S extends RizzleRawObject, KeyPath extends string> = KVKeyType<
-  S,
-  KeyPath
->[`_input`];
 type KVValueType<
   S extends RizzleRawObject,
   KeyPath extends string,
 > = RizzleObject<Omit<S, ExtractVariableNames<KeyPath>>>;
-type KVValueInput<
-  S extends RizzleRawObject,
-  KeyPath extends string,
-> = KVValueType<S, KeyPath>[`_input`];
 
 interface RizzleKVDef<KeyPath extends string, S extends RizzleRawObject>
   extends RizzleTypeDef {
   keyPath: KeyPath;
   keyType: KVKeyType<S, KeyPath>;
   valueType: KVValueType<S, KeyPath>;
-  interpolateKey: (key: KVKeyInput<S, KeyPath>) => string;
-  uninterpolateKey: (key: string) => KVKeyInput<S, KeyPath> | undefined;
+  interpolateKey: (key: KVKeyType<S, KeyPath>[`_input`]) => string;
+  uninterpolateKey: (
+    key: string,
+  ) => KVKeyType<S, KeyPath>[`_output`] | undefined;
   typeName: `keyValue`;
 }
 
@@ -280,15 +324,15 @@ export class RizzleKV<
 > extends RizzleRoot<RizzleKVDef<KeyPath, S>> {
   async has(
     tx: ReadTransaction,
-    key: KVKeyInput<S, KeyPath>,
+    key: KVKeyType<S, KeyPath>[`_input`],
   ): Promise<boolean> {
     return await tx.has(this._def.interpolateKey(key));
   }
 
   async get(
     tx: ReadTransaction,
-    key: KVKeyInput<S, KeyPath>,
-  ): Promise<KVValueInput<S, KeyPath> | undefined> {
+    key: KVKeyType<S, KeyPath>[`_input`],
+  ): Promise<KVValueType<S, KeyPath>[`_output`] | undefined> {
     const valueData = await tx.get(this._def.interpolateKey(key));
     if (valueData === undefined) {
       return valueData;
@@ -298,8 +342,8 @@ export class RizzleKV<
 
   async set(
     tx: WriteTransaction,
-    key: KVKeyInput<S, KeyPath>,
-    value: KVValueInput<S, KeyPath>,
+    key: KVKeyType<S, KeyPath>[`_input`],
+    value: KVValueType<S, KeyPath>[`_input`],
   ) {
     await tx.set(
       this._def.interpolateKey(key),
@@ -308,10 +352,16 @@ export class RizzleKV<
   }
 
   getIndexes() {
-    return mapValues(this._def.valueType._getIndexes(), (v) => ({
-      ...v,
-      prefix: this._def.keyPath.slice(0, this._def.keyPath.indexOf(`[`)),
-    })) as Record<RizzleIndexNames<KVValueType<S, KeyPath>>, IndexDefinition>;
+    return mapValues(this._def.valueType._getIndexes(), (v) => {
+      const firstVarIndex = this._def.keyPath.indexOf(`[`);
+      return {
+        ...v,
+        prefix:
+          firstVarIndex > 0
+            ? this._def.keyPath.slice(0, firstVarIndex)
+            : this._def.keyPath,
+      };
+    }) as Record<RizzleIndexNames<KVValueType<S, KeyPath>>, IndexDefinition>;
   }
 
   static create = <
@@ -382,8 +432,12 @@ export type RizzleObjectInput<T extends RizzleRawObject> = {
   [K in keyof T]: T[K][`_input`];
 };
 
-export type RizzleObjectOutput<T extends RizzleRawObject> = {
+export type RizzleObjectMarshaled<T extends RizzleRawObject> = {
   // TODO: this is missing key aliases
+  [K in keyof T]: T[K][`_marshaled`];
+};
+
+export type RizzleObjectOutput<T extends RizzleRawObject> = {
   [K in keyof T]: T[K][`_output`];
 };
 
@@ -393,11 +447,13 @@ export type RizzleIndexNames<T extends RizzleType> =
     ? IndexName
     : T extends RizzleTypeAlias<infer Wrapped>
       ? RizzleIndexNames<Wrapped>
-      : T extends RizzleObject<infer Shape>
-        ? {
-            [K in keyof Shape]: RizzleIndexNames<Shape[K]>;
-          }[keyof Shape]
-        : never;
+      : T extends RizzleNullable<infer Wrapped>
+        ? RizzleIndexNames<Wrapped>
+        : T extends RizzleObject<infer Shape>
+          ? {
+              [K in keyof Shape]: RizzleIndexNames<Shape[K]>;
+            }[keyof Shape]
+          : never;
 
 type WithoutFirstArgument<T> = T extends (
   arg1: never,
@@ -446,8 +502,8 @@ export type RizzleReplicacheQuery<S extends RizzleRawSchema> = {
           tx: ReadTransaction,
         ) => AsyncGenerator<
           [
-            S[K][`_def`][`keyType`][`_input`],
-            S[K][`_def`][`valueType`][`_input`],
+            S[K][`_def`][`keyType`][`_output`],
+            S[K][`_def`][`valueType`][`_output`],
           ]
         >
       > &
@@ -465,6 +521,13 @@ const number = (alias?: string) => {
   return alias != null ? result.alias(alias) : result;
 };
 
+/**
+ * A UNIX timestamp number.
+ *
+ * Be careful using this for storage (`r.keyValue`) because it can't be indexed
+ * and if it's used in a key path it isn't a stable length so it's not
+ * guaranteed to sort correctly. For storage use {@link datetime} instead.
+ */
 const timestamp = memoize(() =>
   RizzlePrimitive.create(
     z.union([z.number(), z.date().transform((x) => x.getTime())]),
@@ -479,13 +542,26 @@ const timestamp = memoize(() =>
   ),
 );
 
-const enum_ = <
-  T extends Record<string, string | number>,
-  U extends string = string,
->(
+/**
+ * Stores as ISO-8601 so that it can be indexed and sorted reliably. (numbers
+ * can't be indexed in replicache).
+ */
+const datetime = memoize(() =>
+  RizzlePrimitive.create(
+    z.date().transform((x) => x.toISOString()),
+    z
+      .string()
+      .refine((x) => x.endsWith(`Z`))
+      .transform((x) => new Date(x)), // ISO8601
+  ),
+);
+
+type EnumType = Record<string, string | number>;
+
+const enum_ = <T extends EnumType, U extends string = string>(
   e: T,
   mapping: Record<T[keyof T], U>,
-): RizzlePrimitive<T[keyof T], string> => {
+): RizzlePrimitive<T[keyof T], string, T[keyof T]> => {
   const marshalMap = new Map<T[keyof T], U>(
     Object.entries(mapping).map(([kStr, v]) => {
       const k = Object.entries(e).find(
@@ -518,6 +594,18 @@ const enum_ = <
     }),
   );
 };
+
+const literal = <T extends RizzleType, const V extends T[`_input`]>(
+  value: V,
+  type: T,
+) =>
+  RizzlePrimitive.create(
+    z.literal(value).pipe(type.getMarshal()),
+    type
+      .getUnmarshal()
+      .pipe(z.literal(value))
+      .refine((x): x is V => x === value),
+  );
 
 const object = <S extends RizzleRawObject>(shape: S) => {
   return RizzleObject.create(shape);
@@ -696,15 +784,14 @@ export const r = {
   string,
   number,
   timestamp,
+  datetime,
   enum: enum_,
   object,
   keyValue,
   mutator,
-  zod: RizzlePrimitive.create,
-};
-
-export const rizzle = {
+  primitive: RizzlePrimitive.create,
   replicache,
+  literal,
 };
 
 export function invalid(ctx: z.RefinementCtx, message: string): typeof z.NEVER {

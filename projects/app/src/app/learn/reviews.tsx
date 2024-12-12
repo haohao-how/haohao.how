@@ -1,6 +1,6 @@
 import { QuizDeck } from "@/components/QuizDeck";
 import { RectButton } from "@/components/RectButton";
-import { useQueryOnce } from "@/components/ReplicacheContext";
+import { useQueryOnce, useReplicache } from "@/components/ReplicacheContext";
 import { generateQuestionForSkillOrThrow } from "@/data/generator";
 import { IndexName, legacyIndexScanIter } from "@/data/marshal";
 import { questionsForReview } from "@/data/query";
@@ -11,8 +11,10 @@ import { router } from "expo-router";
 import { Text, View } from "react-native";
 
 export default function ReviewsPage() {
+  const r = useReplicache();
+
   const questions = useQueryOnce(async (tx) => {
-    const result = await questionsForReview(tx, {
+    const result = await questionsForReview(r, tx, {
       limit: 10,
       dueBeforeNow: true,
       // Look ahead at the next 50 skills, shuffle them and take 10. This way

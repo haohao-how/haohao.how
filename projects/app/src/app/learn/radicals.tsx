@@ -22,7 +22,7 @@ export default function RadicalsPage() {
       const limit = 10;
       const questions: Question[] = (
         await r.replicache.query((tx) =>
-          questionsForReview(tx, {
+          questionsForReview(r, tx, {
             limit,
             sampleSize: 50,
             skillTypes: [
