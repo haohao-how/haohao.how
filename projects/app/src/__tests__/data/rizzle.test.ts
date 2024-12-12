@@ -3,7 +3,6 @@ import {
   keyPathVariableNames,
   parseKeyPath,
   r,
-  rizzle,
   RizzleIndexed,
   RizzleIndexNames,
   RizzleObject,
@@ -530,7 +529,7 @@ void test(`replicache()`, async (t) => {
 
   let checkPointsReached = 0;
 
-  await using db = rizzle.replicache(
+  await using db = r.replicache(
     testReplicacheOptions,
     schema,
     {
@@ -670,7 +669,7 @@ void test(`replicache() mutator tx`, async () => {
       .alias(`ic`),
   };
 
-  await using db = rizzle.replicache(testReplicacheOptions, schema, {
+  await using db = r.replicache(testReplicacheOptions, schema, {
     async incrementCounter(db, options) {
       const { id } = options;
       const existingCount = await db.counter.get({ id });
@@ -705,7 +704,7 @@ void test(`replicache() index scan`, async () => {
       .alias(`at`),
   };
 
-  await using db = rizzle.replicache(testReplicacheOptions, schema, {
+  await using db = r.replicache(testReplicacheOptions, schema, {
     async appendText(db, options) {
       const { id } = options;
       const existing = await db.text.get({ id });

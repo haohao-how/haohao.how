@@ -1,6 +1,6 @@
 import { indexes } from "@/data/marshal";
 import { mutators } from "@/data/mutators";
-import { rizzle, RizzleReplicache } from "@/data/rizzle";
+import { r, RizzleReplicache } from "@/data/rizzle";
 import { schema } from "@/data/rizzleSchema";
 import { replicacheLicenseKey } from "@/env";
 import { invariant } from "@haohaohow/lib/invariant";
@@ -25,14 +25,40 @@ const ReplicacheContext = createContext<RizzleReplicache<
 > | null>(null);
 
 export function ReplicacheProvider({ children }: React.PropsWithChildren) {
-  const rep = useMemo(
+  const rizzle = useMemo(
     () =>
-      rizzle.replicache(
+      r.replicache(
         {
           name: `hao`,
           schemaVersion: `3`,
           licenseKey: replicacheLicenseKey,
           kvStore,
+          // pusher(requestBody, requestID) {
+          //   // eslint-disable-next-line no-console
+          //   console.log(`pusher(${JSON.stringify({ requestBody, requestID })})`);
+          //   throw new Error(`pushing not implemented`);
+          // },
+          // puller(req, requestID) {
+          //   invariant(req.pullVersion === 1);
+
+          //   // eslint-disable-next-line no-console
+          //   console.log(`puller: rep.clientID =`, rep.clientID);
+
+          //   // eslint-disable-next-line no-console
+          //   console.log(`puller: puller(…) requestId=${requestID} req=`, req);
+
+          //   return Promise.resolve({
+          //     response: {
+          //       cookie: req.cookie,
+          //       lastMutationIDChanges: { [rep.clientID]: 0 },
+          //       patch: [],
+          //     },
+          //     httpRequestInfo: {
+          //       errorMessage: ``,
+          //       httpStatusCode: 200,
+          //     },
+          //   } satisfies PullerResultV1);
+          // },
         },
         schema,
         {
@@ -51,42 +77,11 @@ export function ReplicacheProvider({ children }: React.PropsWithChildren) {
           });
         },
       ),
-    // new Replicache({
-
-    //   // pusher(requestBody, requestID) {
-    //   //   // eslint-disable-next-line no-console
-    //   //   console.log(`pusher(${JSON.stringify({ requestBody, requestID })})`);
-    //   //   throw new Error(`pushing not implemented`);
-    //   // },
-    //   // puller(req, requestID) {
-    //   //   invariant(req.pullVersion === 1);
-
-    //   //   // eslint-disable-next-line no-console
-    //   //   console.log(`puller: rep.clientID =`, rep.clientID);
-
-    //   //   // eslint-disable-next-line no-console
-    //   //   console.log(`puller: puller(…) requestId=${requestID} req=`, req);
-
-    //   //   return Promise.resolve({
-    //   //     response: {
-    //   //       cookie: req.cookie,
-    //   //       lastMutationIDChanges: { [rep.clientID]: 0 },
-    //   //       patch: [],
-    //   //     },
-    //   //     httpRequestInfo: {
-    //   //       errorMessage: ``,
-    //   //       httpStatusCode: 200,
-    //   //     },
-    //   //   } satisfies PullerResultV1);
-    //   // },
-    //   mutators,
-    //   indexes,
-    // }),
     [],
   );
 
   return (
-    <ReplicacheContext.Provider value={rep}>
+    <ReplicacheContext.Provider value={rizzle}>
       {children}
     </ReplicacheContext.Provider>
   );

@@ -701,9 +701,6 @@ export const r = {
   keyValue,
   mutator,
   zod: RizzlePrimitive.create,
-};
-
-export const rizzle = {
   replicache,
 };
 
