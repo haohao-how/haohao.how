@@ -2718,7 +2718,7 @@ __metadata:
     color: "npm:^4.2.3"
     date-fns: "npm:^3.6.0"
     debug: "npm:^4.3.7"
-    drizzle-kit: "npm:^0.29.0"
+    drizzle-kit: "npm:^0.30.0"
     drizzle-orm: "npm:^0.33.0"
     eslint: "npm:^9.13.0"
     eslint-plugin-import: "npm:^2.31.0"
@@ -9023,9 +9023,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"drizzle-kit@npm:^0.29.0":
-  version: 0.29.1
-  resolution: "drizzle-kit@npm:0.29.1"
+"drizzle-kit@npm:^0.30.0":
+  version: 0.30.0
+  resolution: "drizzle-kit@npm:0.30.0"
   dependencies:
     "@drizzle-team/brocli": "npm:^0.10.2"
     "@esbuild-kit/esm-loader": "npm:^2.5.5"
@@ -9033,7 +9033,7 @@ __metadata:
     esbuild-register: "npm:^3.5.0"
   bin:
     drizzle-kit: bin.cjs
-  checksum: 10c0/98e3472f33f984c96ba5593160709af277ebce94bc4ac1455ce71ce60757779e905df872489a1b97fae5d8a5708224ea4f94ba1d6f8a4a8f1f4d16cac8f5fe49
+  checksum: 10c0/8d990b72a616029d260ce420c678d73a33a76560146144dd75f4a457e429a18f50019932ceda358ff283fb13128caa678420f0cad8aa1c68528539678ffbfce6
   languageName: node
   linkType: hard
 
