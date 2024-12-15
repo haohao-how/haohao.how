@@ -32,9 +32,18 @@ export function ReplicacheProvider({ children }: React.PropsWithChildren) {
           schemaVersion: `3`,
           licenseKey: replicacheLicenseKey,
           kvStore,
-          // pusher(requestBody, requestID) {
+          // async pusher(requestBody, requestID) {
+          //   const postResult = await fetch(`/api/replicache/push`, {
+          //     method: `POST`,
+          //     body: JSON.stringify(requestBody),
+          //     // TODO: send JWT with user ID
+          //   });
+
+          //   console.log(`postResult=`, postResult);
           //   // eslint-disable-next-line no-console
-          //   console.log(`pusher(${JSON.stringify({ requestBody, requestID })})`);
+          //   console.log(
+          //     `pusher(${JSON.stringify({ requestBody, requestID })})`,
+          //   );
           //   throw new Error(`pushing not implemented`);
           // },
           // puller(req, requestID) {

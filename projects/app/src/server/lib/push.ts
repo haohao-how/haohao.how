@@ -1,82 +1,82 @@
-/* eslint-disable no-console */
+import {
+  makeDrizzleMutationHandler,
+  Mutation,
+  mutationSchema,
+} from "@/data/rizzle";
+import { rSkillId, schema } from "@/data/rizzleSchema";
+import { invariant } from "@haohaohow/lib/invariant";
+import makeDebug from "debug";
+import { basename } from "node:path";
 import { z } from "zod";
+import { replicacheClient, replicacheClientGroup, skillState } from "../schema";
+import type { Drizzle } from "./db";
 
-import { replicacheClient, replicacheClientGroup } from "../schema.js";
-import { Drizzle, transact } from "./db.js";
+const debug = makeDebug(basename(import.meta.filename));
 
-const mutationSchema = z.object({
-  id: z.number(),
-  clientID: z.string(),
-  name: z.string(),
-  args: z.any(), // TODO: change from any
-});
+const pushRequestSchema = z
+  .object({
+    profileID: z.string(),
+    clientGroupID: z.string(),
+    pushVersion: z.literal(1),
+    schemaVersion: z.string(),
+    mutations: z.array(mutationSchema),
+  })
+  .strict();
 
-type Mutation = z.infer<typeof mutationSchema>;
-
-const pushRequestSchema = z.object({
-  clientGroupID: z.string(),
-  mutations: z.array(mutationSchema),
-});
-
-export async function push(userID: string, requestBody: unknown) {
-  console.log(`Processing push`, JSON.stringify(requestBody, null, ``));
-
+export async function push(tx: Drizzle, userId: string, requestBody: unknown) {
   const push = pushRequestSchema.parse(requestBody);
 
-  const t0 = Date.now();
+  invariant(push.schemaVersion === `3`);
 
   for (const mutation of push.mutations) {
     try {
-      await processMutation(userID, push.clientGroupID, mutation, false);
+      await processMutation(tx, userId, push.clientGroupID, mutation, false);
     } catch {
-      await processMutation(userID, push.clientGroupID, mutation, true);
+      await processMutation(tx, userId, push.clientGroupID, mutation, true);
     }
   }
-
-  console.log(`Processed all mutations in`, Date.now() - t0);
 }
 
 // Implements the push algorithm from
 // https://doc.replicache.dev/strategies/row-version#push
 async function processMutation(
-  userID: string,
-  clientGroupID: string,
+  tx: Drizzle,
+  userId: string,
+  clientGroupId: string,
   mutation: Mutation,
   // 1: `let errorMode = false`. In JS, we implement this step naturally
   // as a param. In case of failure, caller will call us again with `true`.
   errorMode: boolean,
 ): Promise<void> {
   // 2: beginTransaction
-  await transact(async (db) => {
+  await tx.transaction(async (tx) => {
     // let affected: Affected = {listIDs: [], userIDs: []};
 
-    console.log(
-      `Processing mutation`,
-      errorMode ? `errorMode` : ``,
+    debug(
+      `Processing mutation errorMode=%o %o`,
+      errorMode,
       JSON.stringify(mutation, null, ``),
     );
 
     // 3: `getClientGroup(body.clientGroupID)`
     // 4: Verify requesting user owns cg (in function)
-    const clientGroup = await getClientGroup(db, clientGroupID, userID);
+    const clientGroup = await getClientGroup(tx, clientGroupId, userId);
     // 5: `getClient(mutation.clientID)`
     // 6: Verify requesting client group owns requested client
-    const baseClient = await getClient(db, mutation.clientID, clientGroupID);
+    const baseClient = await getClient(tx, mutation.clientID, clientGroupId);
 
     // 7: init nextMutationID
-    const nextMutationID = baseClient.lastMutationID + 1;
+    const nextMutationId = baseClient.lastMutationId + 1;
 
     // 8: rollback and skip if already processed.
-    if (mutation.id < nextMutationID) {
-      console.log(
-        `Mutation ${mutation.id} has already been processed - skipping`,
-      );
+    if (mutation.id < nextMutationId) {
+      debug(`Mutation ${mutation.id} has already been processed - skipping`);
       return;
       // return affected;
     }
 
     // 9: Rollback and error if from future.
-    if (mutation.id > nextMutationID) {
+    if (mutation.id > nextMutationId) {
       throw new Error(`Mutation ${mutation.id} is from the future - aborting`);
     }
 
@@ -88,13 +88,10 @@ async function processMutation(
         // 10(i)(a): xmin column is automatically updated by Postgres for any
         //   affected rows.
         // affected =
-        await mutate(db, userID, mutation);
+        await mutate(tx, userId, mutation);
       } catch (e) {
         // 10(ii)(a-c): log error, abort, and retry
-        console.error(
-          `Error executing mutation: ${JSON.stringify(mutation)}`,
-          e,
-        );
+        debug(`Error executing mutation: ${JSON.stringify(mutation)}`, e);
         throw e;
       }
     }
@@ -102,43 +99,47 @@ async function processMutation(
     // 11-12: put client and client group
     const nextClient = {
       id: mutation.clientID,
-      clientGroupID,
-      lastMutationID: nextMutationID,
+      clientGroupId,
+      lastMutationId: nextMutationId,
     };
 
-    await putClientGroup(db, clientGroup);
-    await putClient(db, nextClient);
+    await putClientGroup(tx, clientGroup);
+    await putClient(tx, nextClient);
 
-    console.log(`Processed mutation in`, Date.now() - t1);
+    debug(`Processed mutation in`, Date.now() - t1);
     // return affected;
   });
 }
 
 export interface ClientRecord {
   id: string;
-  clientGroupID: string;
-  lastMutationID: number;
+  clientGroupId: string;
+  lastMutationId: number;
 }
 
 export interface ClientGroupRecord {
   id: string;
-  userID: string;
+  userId: string;
   cvrVersion: number;
 }
 
 export async function putClient(db: Drizzle, client: ClientRecord) {
-  const { id, clientGroupID, lastMutationID } = client;
+  const {
+    id,
+    clientGroupId: clientGroupId,
+    lastMutationId: lastMutationId,
+  } = client;
 
   await db
     .insert(replicacheClient)
     .values({
       id,
-      clientGroupId: clientGroupID,
-      lastMutationId: lastMutationID,
+      clientGroupId,
+      lastMutationId,
     })
     .onConflictDoUpdate({
       target: replicacheClient.id,
-      set: { lastMutationId: lastMutationID, updatedAt: new Date() },
+      set: { lastMutationId, updatedAt: new Date() },
     });
 }
 
@@ -146,41 +147,41 @@ export async function putClientGroup(
   db: Drizzle,
   clientGroup: ClientGroupRecord,
 ) {
-  const { id, userID, cvrVersion } = clientGroup;
+  const { id, userId, cvrVersion } = clientGroup;
 
   await db
     .insert(replicacheClientGroup)
-    .values({ id, userId: userID, cvrVersion })
+    .values({ id, userId, cvrVersion })
     .onConflictDoUpdate({
       target: replicacheClientGroup.id,
-      set: { userId: userID, cvrVersion, updatedAt: new Date() },
+      set: { userId, cvrVersion, updatedAt: new Date() },
     });
 }
 
 export async function getClientGroup(
   db: Drizzle,
-  clientGroupID: string,
-  userID: string,
+  clientGroupId: string,
+  userId: string,
 ): Promise<ClientGroupRecord> {
   const r = await db.query.replicacheClientGroup.findFirst({
-    where: (p, { eq }) => eq(p.id, clientGroupID),
+    where: (p, { eq }) => eq(p.id, clientGroupId),
   });
 
   if (!r) {
     return {
-      id: clientGroupID,
-      userID,
+      id: clientGroupId,
+      userId,
       cvrVersion: 0,
     };
   }
 
-  if (r.userId !== userID) {
+  if (r.userId !== userId) {
     throw new Error(`Authorization error - user does not own client group`);
   }
 
   return {
-    id: clientGroupID,
-    userID: r.userId,
+    id: clientGroupId,
+    userId: r.userId,
     cvrVersion: r.cvrVersion,
   };
 }
@@ -197,8 +198,8 @@ export async function getClient(
   if (!r) {
     return {
       id: clientId,
-      clientGroupID: ``,
-      lastMutationID: 0,
+      clientGroupId: ``,
+      lastMutationId: 0,
     };
   }
 
@@ -210,22 +211,35 @@ export async function getClient(
 
   return {
     id: r.id,
-    clientGroupID: r.clientGroupId,
-    lastMutationID: r.lastMutationId,
+    clientGroupId: r.clientGroupId,
+    lastMutationId: r.lastMutationId,
   };
 }
 
-// eslint-disable-next-line @typescript-eslint/require-await
+const handleMutation = makeDrizzleMutationHandler<typeof schema, Drizzle>(
+  schema,
+  {
+    async addSkillState(tx, userId, { skill, now }) {
+      const skillId = rSkillId().getMarshal().parse(skill);
+      await tx
+        .insert(skillState)
+        .values({
+          userId,
+          skillId,
+          srs: null,
+          dueAt: now,
+          createdAt: now,
+        })
+        .onConflictDoNothing();
+    },
+  },
+);
+
 async function mutate(
   db: Drizzle,
   userID: string,
   mutation: Mutation,
 ): Promise<unknown> {
-  // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-  db;
-  // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-  userID;
-  // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-  mutation;
-  throw new Error(`not yet implemented`);
+  await handleMutation(db, userID, mutation);
+  return;
 }

@@ -63,6 +63,12 @@ tasks:
     outputs:
       - "@group(buildVercelExpoSentryOutdir)"
 
+  dbCheck:
+    command: yarn run drizzle-kit check
+    description: |
+      Check the database schema for consistency, also makes sure the version of
+      `drizzle-kit` and `drizzle-orm` are compatible.
+
   dbGenerate:
     command: yarn run drizzle-kit generate
     options:

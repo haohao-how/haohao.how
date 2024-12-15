@@ -412,6 +412,10 @@ export class RizzleMutator<P extends RizzleRawObject> extends RizzleRoot<
     });
   }
 
+  marshal(options: RizzleObjectInput<P>): RizzleObjectMarshaled<P> {
+    return this._def.parameters.getMarshal().parse(options);
+  }
+
   static create = <P extends RizzleRawObject>(
     parameters: RizzleObject<P>,
   ): RizzleMutator<P> => {
@@ -477,6 +481,18 @@ export type RizzleReplicacheMutators<S extends RizzleRawSchema> = {
     ? (
         tx: RizzleReplicacheMutatorTx<S>,
         options: RizzleObject<P>[`_input`],
+      ) => Promise<void>
+    : never;
+};
+
+export type RizzleDrizzleMutators<S extends RizzleRawSchema, Tx> = {
+  [K in keyof S as S[K] extends RizzleMutator<infer _>
+    ? K
+    : never]: S[K] extends RizzleMutator<infer P>
+    ? (
+        tx: Tx,
+        userId: string,
+        options: RizzleObject<P>[`_output`],
       ) => Promise<void>
     : never;
 };
@@ -633,7 +649,6 @@ export type RizzleReplicache<
   query: RizzleReplicacheQuery<S>;
   [Symbol.asyncDispose]: () => Promise<void>;
 };
-// Replicache<RizzleReplicacheMutators<S>>
 
 const replicache = <
   S extends RizzleRawSchema,
@@ -780,6 +795,52 @@ const replicache = <
   };
 };
 
+export const mutationSchema = z
+  .object({
+    id: z.number(),
+    clientID: z.string(),
+    name: z.string(),
+    args: z.unknown(),
+    timestamp: z.number(),
+  })
+  .strict();
+
+export type Mutation = z.infer<typeof mutationSchema>;
+
+export const makeDrizzleMutationHandler = <S extends RizzleRawSchema, Tx>(
+  schema: S,
+  mutators: RizzleDrizzleMutators<S, Tx>,
+) => {
+  const handlersWithUnmarshaling = Object.fromEntries(
+    Object.entries(schema).flatMap(([k, v]) =>
+      v instanceof RizzleMutator
+        ? [
+            [
+              v._def.alias ?? k,
+              (tx: Tx, userId: string, mutation: Mutation) => {
+                const mutator =
+                  k in mutators ? mutators[k as keyof typeof mutators] : null;
+                invariant(mutator != null, `mutator ${k} not found`);
+
+                return mutator(
+                  tx,
+                  userId,
+                  v._def.parameters.getUnmarshal().parse(mutation.args),
+                );
+              },
+            ],
+          ]
+        : [],
+    ),
+  );
+
+  return async (tx: Tx, userId: string, mutation: Mutation): Promise<void> => {
+    const mutator = handlersWithUnmarshaling[mutation.name];
+    invariant(mutator != null);
+    await mutator(tx, userId, mutation);
+  };
+};
+
 export const r = {
   string,
   number,
@@ -806,11 +867,6 @@ export type ExtractVariableNames<T extends string> =
   T extends `${string}[${infer Key}]${infer Rest}`
     ? Key | ExtractVariableNames<Rest>
     : never;
-
-export type ValueSchemaShape<
-  Prefix extends string,
-  T extends Record<string, unknown>,
-> = Omit<T, ExtractVariableNames<Prefix>>;
 
 export const keyPathVariableNames = <T extends string>(
   key: T,

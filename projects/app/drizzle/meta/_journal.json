@@ -15,6 +15,13 @@
       "when": 1726314164221,
       "tag": "0001_bored_psynapse",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1734301156274,
+      "tag": "0002_wooden_bloodstorm",
+      "breakpoints": true
     }
   ]
 }

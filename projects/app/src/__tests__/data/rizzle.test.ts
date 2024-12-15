@@ -15,7 +15,6 @@ import {
   RizzleReplicacheMutators,
   RizzleReplicacheQuery,
   RizzleTypeAlias,
-  ValueSchemaShape,
 } from "@/data/rizzle";
 import { IsEqual } from "@/util/types";
 import mapValues from "lodash/mapValues";
@@ -1148,13 +1147,4 @@ typeChecks<ExtractVariableNames<never>>(() => {
   true satisfies IsEqual<ExtractVariableNames<`a[b]`>, `b`>;
   true satisfies IsEqual<ExtractVariableNames<`a[b][c]`>, `b` | `c`>;
   true satisfies IsEqual<ExtractVariableNames<`a[b][c][d]`>, `b` | `c` | `d`>;
-});
-
-typeChecks(`schema introspection helpers`, () => {
-  const schema = { id: r.string(), name: r.string() };
-
-  true satisfies IsEqual<
-    ValueSchemaShape<`path/[id]`, typeof schema>,
-    Pick<typeof schema, `name`>
-  >;
 });
