@@ -1,10 +1,4 @@
-import {
-  integer,
-  pgSchema,
-  text,
-  timestamp,
-  unique,
-} from "drizzle-orm/pg-core";
+import * as p from "drizzle-orm/pg-core";
 import { customAlphabet } from "nanoid";
 
 const alphabet = `0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz`;
@@ -12,72 +6,93 @@ const length = 12;
 
 const nanoid = customAlphabet(alphabet, length);
 
-export const schema = pgSchema(`haohaohow`);
+export const schema = p.pgSchema(`haohaohow`);
 
 export const user = schema.table(`user`, {
-  id: text(`id`).primaryKey().$defaultFn(nanoid),
+  id: p.text(`id`).primaryKey().$defaultFn(nanoid),
 });
 
 export const authSession = schema.table(`authSession`, {
-  id: text(`id`).primaryKey(),
-  userId: text(`userId`)
+  id: p.text(`id`).primaryKey(),
+  userId: p
+    .text(`userId`)
     .notNull()
     .references(() => user.id),
-  expiresAt: timestamp(`expiresAt`, {
-    mode: `date`,
-    withTimezone: true,
-  }).notNull(),
+  expiresAt: p
+    .timestamp(`expiresAt`, {
+      mode: `date`,
+      withTimezone: true,
+    })
+    .notNull(),
 });
 
 export const authOAuth2 = schema.table(
   `authOAuth2`,
   {
-    id: text(`id`).primaryKey().$defaultFn(nanoid),
-    userId: text(`userId`)
+    id: p.text(`id`).primaryKey().$defaultFn(nanoid),
+    userId: p
+      .text(`userId`)
       .references(() => user.id)
       .notNull(),
-    provider: text(`provider`).notNull(),
+    provider: p.text(`provider`).notNull(),
     /**
      * The ID that the provider uses to identify the user.
      */
-    providerUserId: text(`providerUserId`).notNull(),
-    createdAt: timestamp(`timestamp`).defaultNow().notNull(),
+    providerUserId: p.text(`providerUserId`).notNull(),
+    createdAt: p.timestamp(`timestamp`).defaultNow().notNull(),
   },
-  (t) => ({
-    oneUserPerProviderUser: unique().on(t.provider, t.providerUserId),
-  }),
+  (t) => [p.unique().on(t.provider, t.providerUserId)],
 );
 
 export const skillRating = schema.table(`skillRating`, {
-  id: text(`id`).primaryKey(),
-  userId: text(`userId`)
+  id: p.text(`id`).primaryKey(),
+  userId: p
+    .text(`userId`)
     .references(() => user.id)
     .notNull(),
-  skillId: text(`skillId`).notNull(),
-  rating: integer(`rating`).notNull(),
-  createdAt: timestamp(`timestamp`).defaultNow().notNull(),
+  skillId: p.text(`skillId`).notNull(),
+  rating: p.integer(`rating`).notNull(),
+  createdAt: p.timestamp(`timestamp`).defaultNow().notNull(),
 });
+
+export const skillState = schema.table(
+  `skillState`,
+  {
+    id: p.text(`id`).primaryKey().$defaultFn(nanoid),
+    userId: p
+      .text(`userId`)
+      .references(() => user.id)
+      .notNull(),
+    skillId: p.text(`skillId`).notNull(),
+    srs: p.json(`srs`),
+    dueAt: p.timestamp(`dueAt`).notNull(),
+    createdAt: p.timestamp(`createdAt`).defaultNow().notNull(),
+  },
+  (t) => [p.unique().on(t.userId, t.skillId)],
+);
 
 export const replicacheClientGroup = schema.table(`replicacheClientGroup`, {
   // The CVRs are stored keyed under a random unique ID which becomes the cookie
   // sent to Replicache.
-  id: text(`id`).primaryKey(),
-  userId: text(`userId`)
+  id: p.text(`id`).primaryKey(),
+  userId: p
+    .text(`userId`)
     .references(() => user.id)
     .notNull(),
   // Replicache requires that cookies are ordered within a client group.
   // To establish this order we simply keep a counter.
-  cvrVersion: integer(`cvrVersion`).notNull(),
-  updatedAt: timestamp(`timestamp`).defaultNow().notNull(),
+  cvrVersion: p.integer(`cvrVersion`).notNull(),
+  updatedAt: p.timestamp(`timestamp`).defaultNow().notNull(),
 });
 
 export const replicacheClient = schema.table(`replicacheClient`, {
   // The CVRs are stored keyed under a random unique ID which becomes the cookie
   // sent to Replicache.
-  id: text(`id`).primaryKey(),
-  clientGroupId: text(`clientGroupId`)
+  id: p.text(`id`).primaryKey(),
+  clientGroupId: p
+    .text(`clientGroupId`)
     .references(() => replicacheClientGroup.id)
     .notNull(),
-  lastMutationId: integer(`lastMutationId`).notNull(),
-  updatedAt: timestamp(`timestamp`).defaultNow().notNull(),
+  lastMutationId: p.integer(`lastMutationId`).notNull(),
+  updatedAt: p.timestamp(`timestamp`).defaultNow().notNull(),
 });

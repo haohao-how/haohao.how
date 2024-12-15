@@ -1,4 +1,3 @@
-import { sql } from "drizzle-orm";
 import { drizzle, NodePgDatabase } from "drizzle-orm/node-postgres";
 import type { Pool as PgPool } from "pg";
 import z from "zod";
@@ -8,7 +7,8 @@ const env = z.object({ DATABASE_URL: z.string() }).parse(process.env);
 const IS_NEON = env.DATABASE_URL.includes(`neon.tech`);
 
 export type Drizzle = NodePgDatabase<typeof schema>;
-export type TransactionBodyFn<R> = (db: Drizzle) => Promise<R>;
+export type Transaction = Parameters<Parameters<Drizzle[`transaction`]>[0]>[0];
+export type TransactionBodyFn<R> = (tx: Transaction) => Promise<R>;
 
 export async function createPool(): Promise<PgPool> {
   let Pool: typeof PgPool;
@@ -59,33 +59,26 @@ export async function withDrizzle<R>(f: (db: Drizzle) => Promise<R>) {
   }
 }
 
-async function transactWithExecutor<R>(
-  db: Drizzle,
+export async function transactWithExecutor<R>(
+  tx: Transaction | Drizzle,
   body: TransactionBodyFn<R>,
 ) {
-  for (let i = 0; i < 10; i++) {
+  let retries = 3;
+  do {
     try {
-      await db.execute(sql`begin`);
-      try {
-        const r = await body(db);
-        await db.execute(sql`commit`);
-        return r;
-      } catch (e) {
-        // eslint-disable-next-line no-console
-        console.log(`caught error - rolling back`, e);
-        await db.execute(sql`rollback`);
-        throw e;
-      }
+      return await tx.transaction(body);
     } catch (e) {
-      if (shouldRetryTransaction(e)) {
+      if (retries > 0 && shouldRetryTransaction(e)) {
         // eslint-disable-next-line no-console
-        console.log(`Retrying transaction due to error (attempt ${i})`, e);
+        console.log(
+          `Retrying transaction due to SERIALIZABLE isolation error (attempt ${retries})`,
+          e,
+        );
         continue;
       }
       throw e;
     }
-  }
-  throw new Error(`Tried to execute transaction too many times. Giving up.`);
+  } while (retries-- > 0);
 }
 
 // Because we are using SERIALIZABLE isolation level, we need to be prepared to retry transactions.

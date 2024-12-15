@@ -9,13 +9,17 @@ curl -fsSL https://moonrepo.dev/install/proto.sh | bash
 proto use
 ```
 
-## Running scripts with moon
+Now you can start the app:
 
-```sh
-moon app:dev
-```
+1. `moon run app:dev`.
+1. Scan the QR code on your phone.
 
 # Cookbook
+
+## Writing a backend database migration
+
+1. Edit the Drizzle schema.
+1. Run `moon run app:dbGenerate`
 
 ## Debugging Expo server
 
@@ -114,3 +118,18 @@ Example: to write `hǎo` type <kbd>h</kbd> <kbd>a</kbd> <kbd>o</kbd> <kbd>Tab</k
    (replace `<EXPO_TUNNEL_SUBDOMAIN>` with the value you chose).
 1. Save the changes.
 1. Start Expo via `moon run app:dev`.
+
+## iOS Device Enrolment
+
+Add the iPhone (https://docs.expo.dev/build/internal-distribution/#configure-app-signing):
+
+```sh
+npx -y eas-cli device:create
+npx -y eas-cli device:rename
+```
+
+Add the device to the provisioning profile:
+
+```
+npx -y eas-cli build --profile=preview --platform=ios
+```
