@@ -26,7 +26,9 @@ async function enforceMoonToolchainVersion(ctx) {
     encoding: "utf-8",
   });
   const toolchainNodeVersion =
-    /"(.+?)" # renovate: datasource=npm depName=node/.exec(toolchainYaml)?.[1];
+    /"(.+?)" # renovate: datasource=node-version depName=node versioning=node/.exec(
+      toolchainYaml,
+    )?.[1];
   const toolchainYarnVersion =
     /"(.+?)" # renovate: datasource=npm depName=@yarnpkg\/cli/.exec(
       toolchainYaml,
