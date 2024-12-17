@@ -77,7 +77,7 @@
     "@types/eslint": "^9 <=9.13.x",
     "@types/eslint__js": "^8.42.3",
     "@types/lodash": "4.17.x",
-    "@types/node": "patch:@types/node@npm%3A22.10.2#~/.yarn/patches/@types-node-npm-22.10.2-572466b048.patch",
+    "@types/node": "patch:@types/node@patch%3A@types/node@npm%253A22.10.2%23~/.yarn/patches/@types-node-npm-22.10.2-572466b048.patch%3A%3Aversion=22.10.2&hash=819d81#~/.yarn/patches/@types-node-patch-8935673d40.patch",
     "@types/pg": "^8 <=8.12.x",
     "@types/react-dom": "18.3.x",
     "@types/ws": "^8 <=8.17.x",

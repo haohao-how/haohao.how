@@ -188,6 +188,9 @@ export default tseslint.config(
       "@typescript-eslint/no-unused-vars": `off`,
       // Messes up things where the difference between a type and interface is significant.
       "@typescript-eslint/consistent-type-definitions": `off`,
+      // Often only having one usage of a type parameter is fine because it's
+      // the only way to use "_ extends _".
+      "@typescript-eslint/no-unnecessary-type-parameters": `off`,
 
       //
       // @stylistic

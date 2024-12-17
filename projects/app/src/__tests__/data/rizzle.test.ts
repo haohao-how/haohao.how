@@ -29,8 +29,7 @@ import {
 } from "replicache";
 import { z } from "zod";
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unnecessary-type-parameters
-function typeChecks<_T = any>(..._args: unknown[]) {
+function typeChecks<_T>(..._args: unknown[]) {
   // This function is only used for type checking, so it should never be called.
 }
 

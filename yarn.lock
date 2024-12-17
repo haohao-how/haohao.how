@@ -2718,7 +2718,7 @@ __metadata:
     "@types/eslint": "npm:^9 <=9.13.x"
     "@types/eslint__js": "npm:^8.42.3"
     "@types/lodash": "npm:4.17.x"
-    "@types/node": "patch:@types/node@npm%3A22.10.2#~/.yarn/patches/@types-node-npm-22.10.2-572466b048.patch"
+    "@types/node": "patch:@types/node@patch%3A@types/node@npm%253A22.10.2%23~/.yarn/patches/@types-node-npm-22.10.2-572466b048.patch%3A%3Aversion=22.10.2&hash=819d81#~/.yarn/patches/@types-node-patch-8935673d40.patch"
     "@types/pg": "npm:^8 <=8.12.x"
     "@types/react-dom": "npm:18.3.x"
     "@types/ws": "npm:^8 <=8.17.x"
@@ -2821,7 +2821,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@haohaohow/static@workspace:projects/static"
   dependencies:
-    "@types/node": "patch:@types/node@npm%3A22.10.2#~/.yarn/patches/@types-node-npm-22.10.2-572466b048.patch"
+    "@types/node": "patch:@types/node@patch%3A@types/node@npm%253A22.10.2%23~/.yarn/patches/@types-node-npm-22.10.2-572466b048.patch%3A%3Aversion=22.10.2&hash=819d81#~/.yarn/patches/@types-node-patch-8935673d40.patch"
     "@types/yargs": "npm:^17 <=17.7.x"
     prettier: "npm:^3.4.2"
     ts-node: "npm:^10.9.2"
@@ -5928,12 +5928,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@patch:@types/node@npm%3A22.10.2#~/.yarn/patches/@types-node-npm-22.10.2-572466b048.patch":
+"@types/node@patch:@types/node@npm%3A22.10.2#~/.yarn/patches/@types-node-npm-22.10.2-572466b048.patch::version=22.10.2&hash=819d81":
   version: 22.10.2
   resolution: "@types/node@patch:@types/node@npm%3A22.10.2#~/.yarn/patches/@types-node-npm-22.10.2-572466b048.patch::version=22.10.2&hash=819d81"
   dependencies:
     undici-types: "npm:~6.20.0"
   checksum: 10c0/05b99192c40486317f4e20c89236f313ee3f40cecccf649dd3e09bc49784ebfd022fa644e7d297de5abaa38913cc25ea945d2e86de759bcbf3facd9dd51ae779
+  languageName: node
+  linkType: hard
+
+"@types/node@patch:@types/node@patch%3A@types/node@npm%253A22.10.2%23~/.yarn/patches/@types-node-npm-22.10.2-572466b048.patch%3A%3Aversion=22.10.2&hash=819d81#~/.yarn/patches/@types-node-patch-8935673d40.patch":
+  version: 22.10.2
+  resolution: "@types/node@patch:@types/node@patch%3A@types/node@npm%253A22.10.2%23~/.yarn/patches/@types-node-npm-22.10.2-572466b048.patch%3A%3Aversion=22.10.2&hash=819d81#~/.yarn/patches/@types-node-patch-8935673d40.patch::version=22.10.2&hash=06fa62"
+  dependencies:
+    undici-types: "npm:~6.20.0"
+  checksum: 10c0/6c0acabb5e7d5e7ebdcf860712e8bd94b94bc1e381ee56bbc4f59691ce073fe530981e5eb026e5429089669e8653a059d1deaa0e5f0173073d94fcdf1174ed8f
   languageName: node
   linkType: hard
 
