@@ -33,7 +33,7 @@ export const rSkillId = memoize(() =>
         return x;
       }
 
-      const skillTypeM = rSkillType.getMarshal().parse(x.type);
+      const skillTypeM = rSkillType.marshal(x.type);
       switch (x.type) {
         // Radical skills
         case SkillType.RadicalToEnglish:

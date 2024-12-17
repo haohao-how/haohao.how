@@ -37,7 +37,6 @@ const debug = Symbol(`debug`);
 
 // Utility type to check if two types are identical
 export type IsEqual<T, U> =
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters
   (<G>() => G extends T ? 1 : 2) extends <G>() => G extends U ? 1 : 2
     ? true
     : false | { [debug]: Prettify<T> };

@@ -72,22 +72,20 @@ export const skillState = schema.table(
 );
 
 export const replicacheClientGroup = schema.table(`replicacheClientGroup`, {
-  // The CVRs are stored keyed under a random unique ID which becomes the cookie
-  // sent to Replicache.
   id: p.text(`id`).primaryKey(),
   userId: p
     .text(`userId`)
     .references(() => user.id)
     .notNull(),
-  // Replicache requires that cookies are ordered within a client group.
-  // To establish this order we simply keep a counter.
+  /**
+   * Replicache requires that cookies are ordered within a client group. To
+   * establish this order we simply keep a counter.
+   */
   cvrVersion: p.integer(`cvrVersion`).notNull(),
   updatedAt: p.timestamp(`timestamp`).defaultNow().notNull(),
 });
 
 export const replicacheClient = schema.table(`replicacheClient`, {
-  // The CVRs are stored keyed under a random unique ID which becomes the cookie
-  // sent to Replicache.
   id: p.text(`id`).primaryKey(),
   clientGroupId: p
     .text(`clientGroupId`)
@@ -95,4 +93,31 @@ export const replicacheClient = schema.table(`replicacheClient`, {
     .notNull(),
   lastMutationId: p.integer(`lastMutationId`).notNull(),
   updatedAt: p.timestamp(`timestamp`).defaultNow().notNull(),
+});
+
+/**
+ * CVRs are stored keyed under a random unique ID which becomes the cookie
+ * sent to Replicache.
+ */
+export const replicacheCvr = schema.table(`replicacheCvr`, {
+  id: p.text(`id`).primaryKey().$defaultFn(nanoid),
+  /**
+   * Map of clientID->lastMutationID pairs, one for each client in the client
+   * group.
+   *
+   * ```json
+   * { <clientId>: <lastMutationId> }
+   * ```
+   */
+  lastMutationIds: p.json(`lastMutationIds`).notNull(),
+  /**
+   * For each entity visible to the user, map of key->version pairs, grouped by
+   * table name.
+   *
+   * ```json
+   * { <tableName>: { <primaryKey>: <version> } }
+   * ```
+   */
+  entities: p.json(`entities`).notNull(),
+  createdAt: p.timestamp(`createdAt`).defaultNow().notNull(),
 });

@@ -275,6 +275,14 @@ export class RizzlePrimitive<I, M, O = I> extends RizzleType<
     return;
   }
 
+  marshal(options: this[`_input`]): this[`_marshaled`] {
+    return this._def.marshal.parse(options);
+  }
+
+  unmarshal(options: this[`_marshaled`]): this[`_output`] {
+    return this._def.unmarshal.parse(options);
+  }
+
   static create = <I, M, O>(
     marshal: z.ZodType<M, z.ZodTypeDef, I>,
     unmarshal: z.ZodType<O, z.ZodTypeDef, M>,
@@ -326,14 +334,14 @@ export class RizzleKV<
     tx: ReadTransaction,
     key: KVKeyType<S, KeyPath>[`_input`],
   ): Promise<boolean> {
-    return await tx.has(this._def.interpolateKey(key));
+    return await tx.has(this.marshalKey(key));
   }
 
   async get(
     tx: ReadTransaction,
     key: KVKeyType<S, KeyPath>[`_input`],
   ): Promise<KVValueType<S, KeyPath>[`_output`] | undefined> {
-    const valueData = await tx.get(this._def.interpolateKey(key));
+    const valueData = await tx.get(this.marshalKey(key));
     if (valueData === undefined) {
       return valueData;
     }
@@ -346,8 +354,8 @@ export class RizzleKV<
     value: KVValueType<S, KeyPath>[`_input`],
   ) {
     await tx.set(
-      this._def.interpolateKey(key),
-      this._def.valueType.getMarshal().parse(value) as ReadonlyJSONValue,
+      this.marshalKey(key),
+      this.marshalValue(value) as ReadonlyJSONValue,
     );
   }
 
@@ -362,6 +370,16 @@ export class RizzleKV<
             : this._def.keyPath,
       };
     }) as Record<RizzleIndexNames<KVValueType<S, KeyPath>>, IndexDefinition>;
+  }
+
+  marshalKey(options: KVKeyType<S, KeyPath>[`_input`]) {
+    return this._def.interpolateKey(options);
+  }
+
+  marshalValue(
+    options: KVValueType<S, KeyPath>[`_input`],
+  ): KVValueType<S, KeyPath>[`_marshaled`] {
+    return this._def.valueType.getMarshal().parse(options);
   }
 
   static create = <
@@ -397,7 +415,7 @@ export class RizzleKV<
 }
 
 interface RizzleMutatorDef<P extends RizzleRawObject> extends RizzleTypeDef {
-  parameters: RizzleObject<P>;
+  args: RizzleObject<P>;
   alias?: string;
   typeName: `mutator`;
 }
@@ -412,14 +430,14 @@ export class RizzleMutator<P extends RizzleRawObject> extends RizzleRoot<
     });
   }
 
-  marshal(options: RizzleObjectInput<P>): RizzleObjectMarshaled<P> {
-    return this._def.parameters.getMarshal().parse(options);
+  marshalArgs(options: RizzleObjectInput<P>): RizzleObjectMarshaled<P> {
+    return this._def.args.getMarshal().parse(options);
   }
 
   static create = <P extends RizzleRawObject>(
     parameters: RizzleObject<P>,
   ): RizzleMutator<P> => {
-    return new RizzleMutator({ parameters, typeName: `mutator` });
+    return new RizzleMutator({ args: parameters, typeName: `mutator` });
   };
 }
 
@@ -675,10 +693,10 @@ const replicache = <
         ? [
             [
               k,
-              (options: typeof v._def.parameters._input) => {
+              (options: typeof v._def.args._input) => {
                 const mutator = replicache.mutate[v._def.alias ?? k];
                 invariant(mutator != null, `mutator ${k} not found`);
-                return mutator(v._def.parameters.getMarshal().parse(options));
+                return mutator(v._def.args.getMarshal().parse(options));
               },
             ],
           ]
@@ -692,10 +710,7 @@ const replicache = <
         ? [
             [
               v._def.alias ?? k,
-              (
-                tx: WriteTransaction,
-                options: typeof v._def.parameters._input,
-              ) => {
+              (tx: WriteTransaction, options: typeof v._def.args._input) => {
                 const mutator = mutators[k as keyof typeof mutators];
                 invariant(
                   (mutator as unknown) != null,
@@ -740,10 +755,7 @@ const replicache = <
                   ),
                 ) as unknown as RizzleReplicacheMutatorTx<S>;
 
-                return mutator(
-                  tx2,
-                  v._def.parameters.getUnmarshal().parse(options),
-                );
+                return mutator(tx2, v._def.args.getUnmarshal().parse(options));
               },
             ],
           ]
@@ -803,9 +815,70 @@ export const mutationSchema = z
     args: z.unknown(),
     timestamp: z.number(),
   })
-  .strict();
+  .strict()
+  .transform((x) =>
+    // Translate convention of initialisms, e.g. `ID` to `Id`
+    ({
+      id: x.id,
+      clientId: x.clientID,
+      name: x.name,
+      args: x.args,
+      timestamp: x.timestamp,
+    }),
+  );
 
 export type Mutation = z.infer<typeof mutationSchema>;
+
+export const pushRequestSchema = z
+  .object({
+    profileID: z.string(),
+    clientGroupID: z.string(),
+    pushVersion: z.literal(1),
+    schemaVersion: z.string(),
+    mutations: z.array(mutationSchema),
+  })
+  .strict()
+  .transform((v) =>
+    // Translate convention of initialisms, e.g. `ID` to `Id`
+    ({
+      profileId: v.profileID,
+      clientGroupId: v.clientGroupID,
+      pushVersion: v.pushVersion,
+      schemaVersion: v.schemaVersion,
+      mutations: v.mutations,
+    }),
+  );
+
+export type PushRequest = z.infer<typeof pushRequestSchema>;
+
+export const cookieSchema = z.object({
+  order: z.number(),
+  cvrID: z.string(),
+});
+
+export type Cookie = z.infer<typeof cookieSchema>;
+
+export const pullRequestSchema = z
+  .object({
+    pullVersion: z.literal(1),
+    clientGroupID: z.string(),
+    cookie: cookieSchema.nullable(),
+    profileID: z.string(),
+    schemaVersion: z.string(),
+  })
+  .strict()
+  .transform((v) =>
+    // Translate convention of initialisms, e.g. `ID` to `Id`
+    ({
+      pullVersion: v.pullVersion,
+      clientGroupId: v.clientGroupID,
+      cookie: v.cookie,
+      profileId: v.profileID,
+      schemaVersion: v.schemaVersion,
+    }),
+  );
+
+export type PullRequest = z.infer<typeof pullRequestSchema>;
 
 export const makeDrizzleMutationHandler = <S extends RizzleRawSchema, Tx>(
   schema: S,
@@ -825,7 +898,7 @@ export const makeDrizzleMutationHandler = <S extends RizzleRawSchema, Tx>(
                 return mutator(
                   tx,
                   userId,
-                  v._def.parameters.getUnmarshal().parse(mutation.args),
+                  v._def.args.getUnmarshal().parse(mutation.args),
                 );
               },
             ],
