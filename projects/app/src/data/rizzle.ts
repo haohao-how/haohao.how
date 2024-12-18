@@ -833,7 +833,7 @@ export const pushRequestSchema = z
   .object({
     profileID: z.string(),
     clientGroupID: z.string(),
-    pushVersion: z.literal(1),
+    pushVersion: z.number(),
     schemaVersion: z.string(),
     mutations: z.array(mutationSchema),
   })
@@ -853,7 +853,7 @@ export type PushRequest = z.infer<typeof pushRequestSchema>;
 
 export const cookieSchema = z.object({
   order: z.number(),
-  cvrID: z.string(),
+  cvrId: z.string(),
 });
 
 export type Cookie = z.infer<typeof cookieSchema>;

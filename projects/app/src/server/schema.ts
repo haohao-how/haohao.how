@@ -72,7 +72,7 @@ export const skillState = schema.table(
 );
 
 export const replicacheClientGroup = schema.table(`replicacheClientGroup`, {
-  id: p.text(`id`).primaryKey(),
+  id: p.text(`id`).primaryKey().$defaultFn(nanoid),
   userId: p
     .text(`userId`)
     .references(() => user.id)
@@ -81,12 +81,12 @@ export const replicacheClientGroup = schema.table(`replicacheClientGroup`, {
    * Replicache requires that cookies are ordered within a client group. To
    * establish this order we simply keep a counter.
    */
-  cvrVersion: p.integer(`cvrVersion`).notNull(),
+  cvrVersion: p.integer(`cvrVersion`).notNull().default(0),
   updatedAt: p.timestamp(`timestamp`).defaultNow().notNull(),
 });
 
 export const replicacheClient = schema.table(`replicacheClient`, {
-  id: p.text(`id`).primaryKey(),
+  id: p.text(`id`).primaryKey().$defaultFn(nanoid),
   clientGroupId: p
     .text(`clientGroupId`)
     .references(() => replicacheClientGroup.id)

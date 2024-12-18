@@ -10,5 +10,5 @@ export async function POST(request: Request) {
     return await pull(db, userId, pullRequest);
   });
 
-  return new Response(JSON.stringify(result));
+  return Response.json(result);
 }
