@@ -23,18 +23,6 @@ void test(`push()`, async (t) => {
     });
   });
 
-  await txTest(`rejects unknown schema version`, async (tx) => {
-    await assert.rejects(
-      push(tx, `1`, {
-        profileId: ``,
-        clientGroupId: ``,
-        pushVersion: 1,
-        schemaVersion: `2`,
-        mutations: [],
-      }),
-    );
-  });
-
   await txTest(
     `only allows a client group if it matches the user`,
     async (tx) => {
@@ -180,17 +168,283 @@ void test(`push()`, async (t) => {
     );
   });
 
-  await txTest.todo(`skips already processed mutations`);
-  await txTest.todo(`does not process mutations from the future`);
+  await txTest(`skips already processed mutations`, async (tx) => {
+    // Create a user
+    const [user] = await tx
+      .insert(schema.user)
+      .values([{ id: `1` }])
+      .returning();
+    invariant(user != null);
+
+    // Create a client group
+    const [clientGroup] = await tx
+      .insert(schema.replicacheClientGroup)
+      .values([{ userId: user.id }])
+      .returning();
+    invariant(clientGroup != null);
+
+    // Create a client
+    const [client] = await tx
+      .insert(schema.replicacheClient)
+      .values([{ clientGroupId: clientGroup.id, lastMutationId: 1 }])
+      .returning();
+    invariant(client != null);
+
+    const mut = {
+      id: client.lastMutationId, // use the same ID
+      name: `addSkillState`,
+      args: r.addSkillState.marshalArgs({
+        skill: {
+          type: SkillType.EnglishToHanzi,
+          hanzi: `我`,
+        },
+        now: new Date(),
+      }),
+      timestamp: 1,
+      clientId: client.id,
+    };
+
+    await push(tx, user.id, {
+      profileId: ``,
+      clientGroupId: clientGroup.id,
+      pushVersion: 1,
+      schemaVersion: `3`,
+      mutations: [mut],
+    });
+
+    assert.deepEqual(
+      await tx.query.skillState.findMany({
+        where: (t, { eq }) => eq(t.userId, user.id),
+      }),
+      // The mutation SHOULDN'T have done anything, it should be skipped.
+      [],
+    );
+  });
+
+  await txTest(`does not process mutations from the future`, async (tx) => {
+    // Create a user
+    const [user] = await tx
+      .insert(schema.user)
+      .values([{ id: `1` }])
+      .returning();
+    invariant(user != null);
+
+    // Create a client group
+    const [clientGroup] = await tx
+      .insert(schema.replicacheClientGroup)
+      .values([{ userId: user.id }])
+      .returning();
+    invariant(clientGroup != null);
+
+    // Create a client
+    const [client] = await tx
+      .insert(schema.replicacheClient)
+      .values([{ clientGroupId: clientGroup.id, lastMutationId: 1 }])
+      .returning();
+    invariant(client != null);
+
+    const mut = {
+      id: client.lastMutationId + 2,
+      name: ``,
+      args: {},
+      timestamp: 1,
+      clientId: client.id,
+    };
+
+    await assert.rejects(
+      push(tx, user.id, {
+        profileId: ``,
+        clientGroupId: clientGroup.id,
+        pushVersion: 1,
+        schemaVersion: `3`,
+        mutations: [mut],
+      }),
+    );
+  });
+
   await txTest.todo(`mutations return affected row IDs for CVR`);
-  await txTest.todo(`invalid mutations must still increment lastMutationID`);
-  await txTest.todo(`returns correct error for invalid schema version`);
+
+  await txTest(
+    `invalid mutations must still increment client.lastMutationID`,
+    async (tx) => {
+      // Create a user
+      const [user] = await tx
+        .insert(schema.user)
+        .values([{ id: `1` }])
+        .returning();
+      invariant(user != null);
+
+      // Create a client group
+      const [clientGroup] = await tx
+        .insert(schema.replicacheClientGroup)
+        .values([{ userId: user.id }])
+        .returning();
+      invariant(clientGroup != null);
+
+      // Create a client
+      const [client] = await tx
+        .insert(schema.replicacheClient)
+        .values([{ clientGroupId: clientGroup.id, lastMutationId: 1 }])
+        .returning();
+      invariant(client != null);
+
+      const mut = {
+        id: client.lastMutationId + 1,
+        name: `invalidMutation`,
+        args: {},
+        timestamp: 1,
+        clientId: client.id,
+      };
+
+      await push(tx, user.id, {
+        profileId: ``,
+        clientGroupId: clientGroup.id,
+        pushVersion: 1,
+        schemaVersion: `3`,
+        mutations: [mut],
+      });
+
+      assert.partialDeepStrictEqual(
+        await tx.query.replicacheClient.findFirst({
+          where: (t, { eq }) => eq(t.id, client.id),
+        }),
+        { lastMutationId: mut.id },
+      );
+    },
+  );
+
+  await txTest(
+    `returns correct error for invalid schema version`,
+    async (tx) => {
+      const result = await push(tx, `1`, {
+        profileId: ``,
+        clientGroupId: ``,
+        pushVersion: 1,
+        schemaVersion: `666`,
+        mutations: [],
+      });
+
+      assert.deepEqual(result, {
+        error: `VersionNotSupported`,
+        versionType: `schema`,
+      });
+    },
+  );
+
+  await txTest(`returns correct error for invalid push version`, async (tx) => {
+    const result = await push(tx, `1`, {
+      profileId: ``,
+      clientGroupId: ``,
+      pushVersion: 666,
+      schemaVersion: `3`,
+      mutations: [],
+    });
+
+    assert.deepEqual(result, {
+      error: `VersionNotSupported`,
+      versionType: `push`,
+    });
+  });
 });
 
 void test(`pull()`, async (t) => {
   const txTest = withTxTest(t);
 
-  await txTest.todo(`doesn't create non-existant client or client group`);
+  await txTest(`creates a CVR with lastMutationIds`, async (tx) => {
+    const clientGroupId = nanoid();
+
+    // Create a user
+    const [user] = await tx
+      .insert(schema.user)
+      .values([{ id: `1` }])
+      .returning();
+    invariant(user != null);
+
+    await pull(tx, user.id, {
+      profileId: ``,
+      clientGroupId,
+      pullVersion: 1,
+      schemaVersion: `3`,
+      cookie: null,
+    });
+
+    const clientGroup = await tx.query.replicacheClientGroup.findFirst({
+      where: (t, { eq }) => eq(t.userId, user.id),
+    });
+
+    assert.partialDeepStrictEqual(clientGroup, { cvrVersion: 1 });
+  });
+
+  await txTest(
+    `non-existant client group creates one and stores cvrVersion`,
+    async (tx) => {
+      // Create a user
+      const [user] = await tx
+        .insert(schema.user)
+        .values([{ id: `1` }])
+        .returning();
+      invariant(user != null);
+
+      // Create a client group
+      const [clientGroup] = await tx
+        .insert(schema.replicacheClientGroup)
+        .values([{ userId: user.id }])
+        .returning();
+      invariant(clientGroup != null);
+
+      // Create a client with a specific lastMutationId
+      const [client] = await tx
+        .insert(schema.replicacheClient)
+        .values([{ clientGroupId: clientGroup.id, lastMutationId: 66 }])
+        .returning();
+      invariant(client != null);
+
+      const [skillState] = await tx
+        .insert(schema.skillState)
+        .values([
+          {
+            userId: user.id,
+            dueAt: new Date(),
+            srs: null,
+            skillId: r.rSkillId().marshal({
+              type: SkillType.EnglishToHanzi,
+              hanzi: `我`,
+            }),
+          },
+        ])
+        .returning();
+      invariant(skillState != null);
+
+      const result = await pull(tx, user.id, {
+        profileId: ``,
+        clientGroupId: clientGroup.id,
+        pullVersion: 1,
+        schemaVersion: `3`,
+        cookie: null,
+      });
+
+      const cookie = `cookie` in result ? result.cookie : null;
+      assert.ok(cookie != null);
+
+      const cvr = await tx.query.replicacheCvr.findFirst({
+        where: (t, { eq }) => eq(t.id, cookie.cvrId),
+      });
+
+      const expectedEntities = await computeCvrEntities(
+        tx,
+        user.id,
+        clientGroup.id,
+      );
+
+      // The CVR should have the lastMutationIds for the clients in the group
+      assert.partialDeepStrictEqual(cvr, {
+        lastMutationIds: { [client.id]: 66 },
+        entities: expectedEntities,
+      });
+    },
+  );
+
+  await txTest.todo(`returns lastMutationIDChanges only for changed clients`);
 
   await txTest(`null cookie, returns skillState patches`, async (tx) => {
     const clientGroupId = nanoid();

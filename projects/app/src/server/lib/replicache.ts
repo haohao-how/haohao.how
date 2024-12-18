@@ -11,7 +11,12 @@ import { invariant } from "@haohaohow/lib/invariant";
 import makeDebug from "debug";
 import { eq, inArray, sql } from "drizzle-orm";
 import { basename } from "node:path";
-import { PatchOperation, PullResponseV1 } from "replicache";
+import {
+  ClientStateNotFoundResponse,
+  PatchOperation,
+  PushResponse,
+  VersionNotSupportedResponse,
+} from "replicache";
 import { z } from "zod";
 import {
   replicacheClient,
@@ -24,8 +29,24 @@ import { json_object_agg } from "./db";
 
 const debug = makeDebug(basename(import.meta.filename));
 
-export async function push(tx: Drizzle, userId: string, push: PushRequest) {
-  invariant(push.schemaVersion === `3`);
+export async function push(
+  tx: Drizzle,
+  userId: string,
+  push: PushRequest,
+): Promise<PushResponse | undefined> {
+  if (push.schemaVersion !== `3`) {
+    return {
+      error: `VersionNotSupported`,
+      versionType: `schema`,
+    } satisfies VersionNotSupportedResponse;
+  }
+
+  if (push.pushVersion !== 1) {
+    return {
+      error: `VersionNotSupported`,
+      versionType: `push`,
+    } satisfies VersionNotSupportedResponse;
+  }
 
   for (const mutation of push.mutations) {
     try {
@@ -81,11 +102,20 @@ function isCvrDiffEmpty(diff: CvrEntitiesDiff) {
   );
 }
 
+type PullResponse =
+  | {
+      cookie: Cookie | null;
+      lastMutationIDChanges: Record<string, number>;
+      patch: PatchOperation[];
+    }
+  | ClientStateNotFoundResponse
+  | VersionNotSupportedResponse;
+
 export async function pull(
   tx: Drizzle,
   userId: string,
   pull: PullRequest,
-): Promise<PullResponseV1> {
+): Promise<PullResponse> {
   invariant(pull.schemaVersion === `3`);
 
   const { clientGroupId, cookie } = pull;
@@ -94,7 +124,7 @@ export async function pull(
     ? ((
         await tx.query.replicacheCvr.findFirst({
           columns: { entities: true },
-          where: (p, { eq }) => eq(p.id, cookie.cvrID),
+          where: (p, { eq }) => eq(p.id, cookie.cvrId),
         })
       )?.entities as CvrEntities)
     : undefined;
@@ -122,15 +152,6 @@ export async function pull(
       clientMeta,
       nextCvrEntities,
     });
-
-    // 6: Read all domain data, just ids and versions
-    // nextCvrEntities;
-    // const listIDs = listMeta.map((l) => l.id);
-    // const [todoMeta, shareMeta] = await Promise.all([
-    //   searchTodos(executor, { listIDs }),
-    //   searchShares(executor, { listIDs }),
-    // ]);
-    // debug(`%o`, { todoMeta, shareMeta });
 
     // 8: Build nextCVR
     // const nextCVR: CVR = {
@@ -179,8 +200,8 @@ export async function pull(
 
     return {
       entities: {
-        skillState: { dels: diff.skillState?.dels, puts: skillStates },
-        client: { dels: diff.client?.dels, puts: clients },
+        skillState: { dels: diff.skillState?.dels ?? [], puts: skillStates },
+        client: { dels: diff.client?.dels ?? [], puts: clients },
       },
       nextCvrEntities,
       nextCvrVersion,
@@ -201,7 +222,14 @@ export async function pull(
   // 16-17: store cvr
   const [cvr] = await tx
     .insert(replicacheCvr)
-    .values([{ lastMutationIds: [] /* todo */, entities: nextCvrEntities }])
+    .values([
+      {
+        lastMutationIds: Object.fromEntries(
+          entities.client.puts.map((p) => [p.id, p.lastMutationId]),
+        ),
+        entities: nextCvrEntities,
+      },
+    ])
     .returning({ id: replicacheCvr.id });
   invariant(cvr != null);
 
@@ -223,7 +251,7 @@ export async function pull(
     });
   }
 
-  for (const id of entities.skillState.dels ?? []) {
+  for (const id of entities.skillState.dels) {
     patch.push({
       op: `del`,
       key: r.skillState.marshalKey({ skill: id as MarshaledSkillId }),
@@ -233,7 +261,7 @@ export async function pull(
   // 18(ii): construct cookie
   const nextCookie: Cookie = {
     order: nextCvrVersion,
-    cvrID: cvr.id,
+    cvrId: cvr.id,
   };
 
   // 17(iii): lastMutationIDChanges
@@ -262,13 +290,7 @@ async function processMutation(
 ): Promise<void> {
   // 2: beginTransaction
   await tx.transaction(async (tx) => {
-    // let affected: Affected = {listIDs: [], userIDs: []};
-
-    debug(
-      `Processing mutation errorMode=%o %o`,
-      errorMode,
-      JSON.stringify(mutation, null, ``),
-    );
+    debug(`Processing mutation errorMode=%o %o`, errorMode, mutation);
 
     // 3: `getClientGroup(body.clientGroupID)`
     // 4: Verify requesting user owns cg (in function)
@@ -282,9 +304,8 @@ async function processMutation(
 
     // 8: rollback and skip if already processed.
     if (mutation.id < nextMutationId) {
-      debug(`Mutation ${mutation.id} has already been processed - skipping`);
+      debug(`Mutation %s has already been processed - skipping`, mutation.id);
       return;
-      // return affected;
     }
 
     // 9: Rollback and error if from future.
@@ -297,13 +318,11 @@ async function processMutation(
     if (!errorMode) {
       try {
         // 10(i): Run business logic
-        // 10(i)(a): xmin column is automatically updated by Postgres for any
-        //   affected rows.
-        // affected =
+        // 10(i)(a): xmin column is automatically updated by Postgres for any affected rows.
         await mutate(tx, userId, mutation);
       } catch (e) {
         // 10(ii)(a-c): log error, abort, and retry
-        debug(`Error executing mutation: ${JSON.stringify(mutation)}`, e);
+        debug(`Error executing mutation: %o %o`, mutation, e);
         throw e;
       }
     }
@@ -318,8 +337,7 @@ async function processMutation(
     await putClientGroup(tx, clientGroup);
     await putClient(tx, nextClient);
 
-    debug(`Processed mutation in`, Date.now() - t1);
-    // return affected;
+    debug(`Processed mutation in %s`, Date.now() - t1);
   });
 }
 

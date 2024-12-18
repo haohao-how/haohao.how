@@ -6,7 +6,9 @@ export async function POST(request: Request) {
   const userId = null as unknown as string; // TODO
   const pushRequest = pushRequestSchema.parse(await request.json());
 
-  await withDrizzle(async (db) => {
-    await push(db, userId, pushRequest);
+  const response = await withDrizzle(async (db) => {
+    return await push(db, userId, pushRequest);
   });
+
+  return Response.json(response);
 }
