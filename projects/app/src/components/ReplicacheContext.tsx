@@ -1,8 +1,8 @@
-import { indexes } from "@/data/marshal";
-import { mutators } from "@/data/mutators";
+import { SrsType } from "@/data/model";
 import { r, RizzleReplicache } from "@/data/rizzle";
 import { schema } from "@/data/rizzleSchema";
 import { replicacheLicenseKey } from "@/env";
+import { nextReview, UpcomingReview } from "@/util/fsrs";
 import { invariant } from "@haohaohow/lib/invariant";
 import {
   createContext,
@@ -12,14 +12,14 @@ import {
   useRef,
   useState,
 } from "react";
-import { ReadTransaction, Replicache } from "replicache";
+import { ReadTransaction } from "replicache";
 import {
   useSubscribe as replicacheReactUseSubscribe,
   UseSubscribeOptions,
 } from "replicache-react";
 import { kvStore } from "./replicacheOptions";
 
-export type Rizzle = RizzleReplicache<typeof schema, typeof mutators>;
+export type Rizzle = RizzleReplicache<typeof schema>;
 
 const ReplicacheContext = createContext<Rizzle | null>(null);
 
@@ -79,13 +79,32 @@ export function ReplicacheProvider({ children }: React.PropsWithChildren) {
               );
             }
           },
-        },
-        (options) => {
-          return new Replicache({
-            ...options,
-            mutators: { ...mutators, ...options.mutators },
-            indexes: { ...indexes, ...options.indexes },
-          });
+          async reviewSkill(tx, { skill, rating, now }) {
+            // Save a record of the review.
+            await tx.skillReview.set({ skill, when: now }, { rating });
+
+            let state: UpcomingReview | null = null;
+            for await (const [{ when }, { rating }] of tx.skillReview.scan({
+              skill,
+            })) {
+              state = nextReview(state, rating, when);
+            }
+
+            invariant(state !== null);
+
+            await tx.skillState.set(
+              { skill },
+              {
+                created: state.created,
+                srs: {
+                  type: SrsType.FsrsFourPointFive,
+                  stability: state.stability,
+                  difficulty: state.difficulty,
+                },
+                due: state.due,
+              },
+            );
+          },
         },
       ),
     [],

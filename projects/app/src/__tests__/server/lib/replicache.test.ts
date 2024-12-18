@@ -1,6 +1,6 @@
-import { MarshaledSkillId } from "@/data/marshal";
 import { SkillType } from "@/data/model";
 import * as r from "@/data/rizzleSchema";
+import { MarshaledSkillId } from "@/data/rizzleSchema";
 import { computeCvrEntities, pull, push } from "@/server/lib/replicache";
 import * as schema from "@/server/schema";
 import { invariant } from "@haohaohow/lib/invariant";

@@ -3,7 +3,6 @@ import { RectButton } from "@/components/RectButton";
 import { useReplicache } from "@/components/ReplicacheContext";
 import { sentryCaptureException } from "@/components/util";
 import { generateQuestionForSkillOrThrow } from "@/data/generator";
-import { marshalSkillStateKey } from "@/data/marshal";
 import { Question, RadicalSkill, SkillType } from "@/data/model";
 import { questionsForReview } from "@/data/query";
 import { allRadicals } from "@/dictionary/dictionary";
@@ -59,7 +58,7 @@ export default function RadicalsPage() {
 
         await r.replicache.query(async (tx) => {
           for (const skill of allRadicalSkills) {
-            if (!(await tx.has(marshalSkillStateKey(skill)))) {
+            if (!(await r.query.skillState.has(tx, { skill }))) {
               try {
                 questions.push(await generateQuestionForSkillOrThrow(skill));
               } catch (e) {

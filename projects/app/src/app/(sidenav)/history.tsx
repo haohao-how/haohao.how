@@ -1,5 +1,7 @@
-import { useReplicacheSubscribe } from "@/components/ReplicacheContext";
-import { IndexName, indexScan, unmarshalSkillReviewJson } from "@/data/marshal";
+import {
+  useReplicache,
+  useReplicacheSubscribe,
+} from "@/components/ReplicacheContext";
 import { Rating } from "@/util/fsrs";
 import reverse from "lodash/reverse";
 import sortBy from "lodash/sortBy";
@@ -7,18 +9,23 @@ import { ScrollView, Text, View } from "react-native";
 
 export default function HistoryPage() {
   const start = Date.now();
+  const db = useReplicache();
 
-  const data = useReplicacheSubscribe((tx) =>
-    indexScan(tx, IndexName.SkillStateByDue, 50),
-  );
+  const data = useReplicacheSubscribe(async (tx) => {
+    const result = [];
+    for await (const [key, value] of db.query.skillState.byDue(tx)) {
+      result.push([key, value] as const);
+      if (result.length >= 50) {
+        break;
+      }
+    }
+    return result;
+  });
 
-  const skillReviews = useReplicacheSubscribe((tx) =>
-    tx
-      .scan({ prefix: `sr/` })
-      .entries()
-      .toArray()
-      .then((entries) => entries.map(unmarshalSkillReviewJson))
-      .then((reviews) => reverse(sortBy(reviews, (x) => x[0][1]))),
+  const skillReviews = useReplicacheSubscribe(async (tx) =>
+    Array.fromAsync(db.query.skillReview.scan(tx)).then((reviews) =>
+      reverse(sortBy(reviews, (x) => x[0].when.getTime())),
+    ),
   );
 
   const renderTime = Date.now() - start;
@@ -40,7 +47,7 @@ export default function HistoryPage() {
           {data?.map(([key, value], i) => (
             <View key={i}>
               <Text className="text-text">
-                {key.hanzi}: {value.due.toISOString()}
+                {key.skill.hanzi}: {value.due.toISOString()}
               </Text>
             </View>
           ))}
@@ -58,7 +65,7 @@ export default function HistoryPage() {
                     ? `✅`
                     : value.rating}
                 {` `}
-                {key[0].hanzi}: {key[1].toISOString()}
+                {key.skill.hanzi}: {key.when.toISOString()}
               </Text>
             </View>
           ))}
