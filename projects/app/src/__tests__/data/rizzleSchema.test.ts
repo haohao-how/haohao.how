@@ -39,7 +39,7 @@ function makeMockTx(t: TestContext) {
 }
 
 void test(`skillId as key`, async (t) => {
-  const posts = r.keyValue(`foo/[skill]`, {
+  const posts = r.entity(`foo/[skill]`, {
     skill: rSkillId(),
     text: r.string(),
   });
@@ -69,7 +69,7 @@ void test(`skillId as key`, async (t) => {
 });
 
 void test(`skillType()`, async (t) => {
-  const posts = r.keyValue(`foo/[id]`, {
+  const posts = r.entity(`foo/[id]`, {
     id: r.string(),
     skill: rSkillType,
   });
@@ -100,7 +100,7 @@ void test(`skillType()`, async (t) => {
 });
 
 void test(`skillId()`, async (t) => {
-  const posts = r.keyValue(`foo/[id]`, {
+  const posts = r.entity(`foo/[id]`, {
     id: r.string(),
     skill: rSkillId(),
   });

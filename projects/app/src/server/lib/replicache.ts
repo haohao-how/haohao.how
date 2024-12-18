@@ -1,4 +1,3 @@
-import { MarshaledSkillId } from "@/data/marshal";
 import {
   Cookie,
   makeDrizzleMutationHandler,
@@ -7,6 +6,7 @@ import {
   PushRequest,
 } from "@/data/rizzle";
 import * as r from "@/data/rizzleSchema";
+import { MarshaledSkillId } from "@/data/rizzleSchema";
 import { invariant } from "@haohaohow/lib/invariant";
 import makeDebug from "debug";
 import { eq, inArray, sql } from "drizzle-orm";
@@ -104,7 +104,7 @@ function isCvrDiffEmpty(diff: CvrEntitiesDiff) {
 
 type PullResponse =
   | {
-      cookie: Cookie | null;
+      cookie: Cookie;
       lastMutationIDChanges: Record<string, number>;
       patch: PatchOperation[];
     }
@@ -459,6 +459,9 @@ const mutate = makeDrizzleMutationHandler<typeof r.schema, Drizzle>(r.schema, {
         createdAt: now,
       })
       .onConflictDoNothing();
+  },
+  reviewSkill() {
+    throw new Error(`Not implemented`);
   },
 });
 

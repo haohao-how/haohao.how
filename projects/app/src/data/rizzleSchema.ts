@@ -1,9 +1,8 @@
 import { Rating } from "@/util/fsrs";
 import memoize from "lodash/memoize";
 import { z } from "zod";
-import { MarshaledSkillId } from "./marshal";
 import { Skill, SkillType, SrsType } from "./model";
-import { invalid, r, RizzlePrimitive } from "./rizzle";
+import { invalid, r, RizzleCustom } from "./rizzle";
 
 export const rSkillType = r.enum(SkillType, {
   [SkillType.RadicalToEnglish]: `re`,
@@ -26,8 +25,11 @@ export const rFsrsRating = r.enum(Rating, {
   [Rating.Easy]: `4`,
 });
 
+// Skill ID e.g. `he:好`
+export type MarshaledSkillId = string & z.BRAND<`SkillId`>;
+
 export const rSkillId = memoize(() =>
-  RizzlePrimitive.create(
+  RizzleCustom.create(
     z.custom<Skill | MarshaledSkillId>().transform((x) => {
       if (typeof x === `string`) {
         return x;
@@ -138,14 +140,14 @@ const rSrsState = memoize(
 // TODO: doesn't support non-object keys.
 // });
 
-export const skillReview = r.keyValue(`sr/[skill]/[when]`, {
+export const skillReview = r.entity(`sr/[skill]/[when]`, {
   skill: rSkillId(),
   when: r.datetime(),
 
   rating: rFsrsRating.alias(`r`),
 });
 
-export const skillState = r.keyValue(`s/[skill]`, {
+export const skillState = r.entity(`s/[skill]`, {
   skill: rSkillId(),
 
   created: r.timestamp().alias(`c`),
@@ -158,7 +160,13 @@ export const addSkillState = r.mutator({
   now: r.timestamp().alias(`n`),
 });
 
-export const schema = { skillReview, skillState, addSkillState };
+export const reviewSkill = r.mutator({
+  skill: rSkillId().alias(`s`),
+  rating: rFsrsRating.alias(`r`),
+  now: r.timestamp().alias(`n`),
+});
+
+export const schema = { skillReview, skillState, addSkillState, reviewSkill };
 
 // export const pinyinInitialAssociation = rizzle.keyValue(`pi/[initial]`, {
 //   initial: rizzle.string(),

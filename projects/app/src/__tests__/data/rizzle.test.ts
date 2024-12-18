@@ -3,6 +3,7 @@ import {
   keyPathVariableNames,
   parseKeyPath,
   r,
+  RizzleCustom,
   RizzleIndexed,
   RizzleIndexNames,
   RizzleNullable,
@@ -10,7 +11,6 @@ import {
   RizzleObjectInput,
   RizzleObjectMarshaled,
   RizzleObjectOutput,
-  RizzlePrimitive,
   RizzleReplicache,
   RizzleReplicacheMutators,
   RizzleReplicacheQuery,
@@ -75,7 +75,7 @@ const testReplicacheOptions = {
 } satisfies ReplicacheOptions<never>;
 
 void test(`string() key and value`, async (t) => {
-  const posts = r.keyValue(`foo/[id]`, {
+  const posts = r.entity(`foo/[id]`, {
     id: r.string(),
     name: r.string(),
   });
@@ -113,7 +113,7 @@ void test(`string() key and value`, async (t) => {
 });
 
 void test(`string() .nullable()`, async (t) => {
-  const posts = r.keyValue(`foo/[id]`, {
+  const posts = r.entity(`foo/[id]`, {
     id: r.string(),
     name: r.string().nullable().alias(`n`),
   });
@@ -140,7 +140,7 @@ void test(`string() .nullable()`, async (t) => {
 });
 
 void test(`object() .nullable()`, async (t) => {
-  const posts = r.keyValue(`foo/[id]`, {
+  const posts = r.entity(`foo/[id]`, {
     id: r.string(),
     name: r
       .object({
@@ -184,7 +184,7 @@ void test(`object()`, async (t) => {
 
   {
     // key alias
-    const posts = r.keyValue(`foo/[id]`, {
+    const posts = r.entity(`foo/[id]`, {
       id: r.string(),
       name: r.string(`n`),
     });
@@ -204,7 +204,7 @@ void test(`object()`, async (t) => {
   }
 
   typeChecks(`simple, no aliases`, async () => {
-    const posts = r.keyValue(`foo/[id]`, {
+    const posts = r.entity(`foo/[id]`, {
       id: r.string(),
       name: r.string(),
     });
@@ -225,7 +225,7 @@ void test(`object()`, async (t) => {
   });
 
   typeChecks(`nested with aliases`, async () => {
-    const posts = r.keyValue(`foo/[id]`, {
+    const posts = r.entity(`foo/[id]`, {
       id: r.string(),
       author: r.object({
         name: r.string(),
@@ -255,7 +255,7 @@ void test(`object()`, async (t) => {
 });
 
 void test(`timestamp()`, async (t) => {
-  const posts = r.keyValue(`foo/[id]`, {
+  const posts = r.entity(`foo/[id]`, {
     id: r.string(),
     due: r.timestamp(),
   });
@@ -305,8 +305,8 @@ void test(`timestamp()`, async (t) => {
   }
 });
 
-void test(`keyValue() one variable`, async (t) => {
-  const posts = r.keyValue(`foo/[id1]`, {
+void test(`entity() one variable`, async (t) => {
+  const posts = r.entity(`foo/[id1]`, {
     id1: r.string(),
     text: r.string(),
   });
@@ -323,17 +323,17 @@ void test(`keyValue() one variable`, async (t) => {
   assert.deepEqual(tx.get.mock.calls[0]?.arguments, [`foo/1`]);
 });
 
-void test(`keyValue() variables requires string marshaler`, async () => {
+void test(`entity() variables requires string marshaler`, async () => {
   typeChecks(() => {
-    r.keyValue(`foo/[id]`, { id: r.string() });
-    r.keyValue(`foo/[id]`, { id: r.literal(`foo`, r.string()) });
+    r.entity(`foo/[id]`, { id: r.string() });
+    r.entity(`foo/[id]`, { id: r.literal(`foo`, r.string()) });
     // @ts-expect-error number() doesn't marshal to a string
-    r.keyValue(`foo/[id]`, { id: r.number() });
+    r.entity(`foo/[id]`, { id: r.number() });
   });
 });
 
-void test(`keyValue() two variables`, async (t) => {
-  const posts = r.keyValue(`foo/[id1]/[id2]`, {
+void test(`entity() two variables`, async (t) => {
+  const posts = r.entity(`foo/[id1]/[id2]`, {
     id1: r.string(),
     id2: r.string(),
     text: r.string(),
@@ -351,8 +351,8 @@ void test(`keyValue() two variables`, async (t) => {
   assert.deepEqual(tx.get.mock.calls[0]?.arguments, [`foo/1/2`]);
 });
 
-void test(`keyValue() non-string key codec`, async (t) => {
-  const rComplex = r.primitive(
+void test(`entity() non-string key codec`, async (t) => {
+  const rComplex = r.custom(
     z
       .tuple([z.string(), z.number()])
       .readonly()
@@ -363,7 +363,7 @@ void test(`keyValue() non-string key codec`, async (t) => {
     }),
   );
 
-  const posts = r.keyValue(`foo/[complex]`, {
+  const posts = r.entity(`foo/[complex]`, {
     complex: rComplex,
     text: r.string(),
   });
@@ -385,8 +385,8 @@ void test(`keyValue() non-string key codec`, async (t) => {
   }
 });
 
-void test(`keyValue() .has()`, async (t) => {
-  const posts = r.keyValue(`foo/[id]`, { id: r.string() });
+void test(`entity() .has()`, async (t) => {
+  const posts = r.entity(`foo/[id]`, { id: r.string() });
 
   using tx = makeMockTx(t);
 
@@ -401,9 +401,9 @@ void test(`keyValue() .has()`, async (t) => {
   assert.deepEqual(await posts.has(tx, { id: `2` }), false);
 });
 
-void test(`keyValue() distinguishing between input/output types`, async (t) => {
+void test(`entity() distinguishing between input/output types`, async (t) => {
   const rCoerciveString = () =>
-    r.primitive(
+    r.custom(
       // takes in a number or string
       z
         .union([z.number(), z.string()])
@@ -412,7 +412,7 @@ void test(`keyValue() distinguishing between input/output types`, async (t) => {
       z.string(),
     );
 
-  const posts = r.keyValue(`foo/[id]`, {
+  const posts = r.entity(`foo/[id]`, {
     id: rCoerciveString(),
     text: rCoerciveString().indexed(`byText`),
   });
@@ -446,9 +446,9 @@ void test(`keyValue() distinguishing between input/output types`, async (t) => {
   });
 });
 
-void test(`keyValue() requires variables to be declared`, () => {
+void test(`entity() requires variables to be declared`, () => {
   typeChecks(() => {
-    r.keyValue(
+    r.entity(
       `foo/[id]`,
       // @ts-expect-error `id` is missing
       { text: r.string() },
@@ -457,7 +457,7 @@ void test(`keyValue() requires variables to be declared`, () => {
 });
 
 void test(`number()`, async (t) => {
-  const posts = r.keyValue(`foo/[id]`, {
+  const posts = r.entity(`foo/[id]`, {
     id: r.string(),
     count: r.number(`c`),
   });
@@ -480,7 +480,7 @@ void test(`enum()`, async (t) => {
     BLUE,
   }
 
-  const posts = r.keyValue(`foo/[id]`, {
+  const posts = r.entity(`foo/[id]`, {
     id: r.string(),
     color: r.enum(Colors, {
       [Colors.RED]: `r`,
@@ -506,7 +506,7 @@ void test(`enum()`, async (t) => {
 });
 
 void test(`object() with alias`, async (t) => {
-  const posts = r.keyValue(`foo/[id]`, {
+  const posts = r.entity(`foo/[id]`, {
     id: r.string(),
     author: r.object({
       name: r.string(),
@@ -535,7 +535,7 @@ void test(`object() with alias`, async (t) => {
 });
 
 void test(`object()`, async (t) => {
-  const posts = r.keyValue(`foo/[id]`, {
+  const posts = r.entity(`foo/[id]`, {
     id: r.string(),
     author: r.object({
       name: r.string(),
@@ -558,7 +558,7 @@ void test(`object()`, async (t) => {
 void test(`.getIndexes()`, () => {
   // no key path variables
   {
-    const posts = r.keyValue(`foo`, {
+    const posts = r.entity(`foo`, {
       id: r.string(),
       author: r.object({
         name: r.string().indexed(`byAuthorName`),
@@ -575,7 +575,7 @@ void test(`.getIndexes()`, () => {
 
   // object(.string().indexed())
   {
-    const posts = r.keyValue(`foo/`, {
+    const posts = r.entity(`foo/`, {
       id: r.string(),
       author: r.object({
         name: r.string().indexed(`byAuthorName`),
@@ -599,7 +599,7 @@ void test(`.getIndexes()`, () => {
 
   // .string().indexed().nullable()
   {
-    const posts = r.keyValue(`foo/[id]`, {
+    const posts = r.entity(`foo/[id]`, {
       id: r.string(),
       name: r.string().indexed(`byAuthorName`).nullable(),
     });
@@ -615,7 +615,7 @@ void test(`.getIndexes()`, () => {
 
   // .string().alias().indexed().nullable()
   {
-    const posts = r.keyValue(`foo/[id]`, {
+    const posts = r.entity(`foo/[id]`, {
       id: r.string(),
       name: r.string().alias(`n`).indexed(`byAuthorName`).nullable(),
     });
@@ -631,7 +631,7 @@ void test(`.getIndexes()`, () => {
 
   // .string().indexed().alias()
   {
-    const posts = r.keyValue(`foo/[id]`, {
+    const posts = r.entity(`foo/[id]`, {
       id: r.string(),
       name: r.string().indexed(`byAuthorName`).alias(`n`),
     });
@@ -671,7 +671,7 @@ typeChecks<RizzleReplicacheMutators<never>>(
   `allows writing mutator implementations separately`,
   async () => {
     const schema = {
-      posts: r.keyValue(`p/[id]`, {
+      posts: r.entity(`p/[id]`, {
         id: r.string(),
         rank: r.number(`r`).indexed(`byRank`),
       }),
@@ -710,7 +710,7 @@ typeChecks<RizzleReplicacheMutators<never>>(
 
 typeChecks<RizzleReplicacheMutators<never>>(async () => {
   const schema = {
-    posts: r.keyValue(`p/[id]`, { id: r.string() }),
+    posts: r.entity(`p/[id]`, { id: r.string() }),
     createPost: r.mutator({ id: r.string() }),
   };
 
@@ -723,7 +723,7 @@ typeChecks<RizzleReplicacheMutators<never>>(async () => {
 
 typeChecks<RizzleReplicacheQuery<never>>(async () => {
   const schema = {
-    posts: r.keyValue(`p/[id]`, { id: r.string() }),
+    posts: r.entity(`p/[id]`, { id: r.string() }),
     createPost: r.mutator({ id: r.string() }),
   };
 
@@ -733,7 +733,7 @@ typeChecks<RizzleReplicacheQuery<never>>(async () => {
 
 void test(`replicache()`, async (t) => {
   const schema = {
-    posts: r.keyValue(`p/[id]`, {
+    posts: r.entity(`p/[id]`, {
       id: r.string(),
       rank: r.number(`r`).indexed(`byRank`),
     }),
@@ -830,7 +830,7 @@ void test(`replicache()`, async (t) => {
 
   {
     //
-    // keyValue() .has()
+    // entity() .has()
     //
     using tx = makeMockTx(t);
 
@@ -842,7 +842,7 @@ void test(`replicache()`, async (t) => {
 
   {
     //
-    // keyValue() .get()
+    // entity() .get()
     //
     using tx = makeMockTx(t);
 
@@ -856,7 +856,7 @@ void test(`replicache()`, async (t) => {
 
   {
     //
-    // keyValue() .set()
+    // entity() .set()
     //
     using tx = makeMockTx(t);
 
@@ -871,9 +871,11 @@ void test(`replicache()`, async (t) => {
   assert.equal(checkPointsReached, 4);
 });
 
+void test.todo(`replicache() errors if two mutators have the same alias`);
+
 void test(`replicache() disallows unknown mutator implementations`, async () => {
   const schema = {
-    posts: r.keyValue(`p/[id]`, { id: r.string() }),
+    posts: r.entity(`p/[id]`, { id: r.string() }),
     createPost: r.mutator({ id: r.string() }),
   };
 
@@ -900,7 +902,7 @@ void test(`replicache() disallows unknown mutator implementations`, async () => 
 
 void test(`replicache() mutator tx`, async () => {
   const schema = {
-    counter: r.keyValue(`counter/[id]`, {
+    counter: r.entity(`counter/[id]`, {
       id: r.string(),
       count: r.number(`c`),
     }),
@@ -932,9 +934,161 @@ void test(`replicache() mutator tx`, async () => {
   );
 });
 
+void test(`replicache() entity()`, async (t) => {
+  const schema = {
+    text: r.entity(`text/[id]:[id2].`, {
+      id: r.string(),
+      id2: r.string(),
+      body: r.string(`b`).indexed(`byCount`),
+    }),
+    appendText: r
+      .mutator({
+        id: r.string(),
+        text: r.string(),
+      })
+      .alias(`at`),
+  };
+
+  await t.test(`.set() only exposed to mutators`, async () => {
+    await using db = r.replicache(testReplicacheOptions, schema, {
+      async appendText(db) {
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+        db.text.set;
+      },
+    });
+
+    // @ts-expect-error set() is not exposed on the query object
+    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+    db.query.text.set;
+  });
+
+  await t.test(`.scan() supports empty partial key`, async () => {
+    await using db = r.replicache(testReplicacheOptions, schema, {
+      async appendText() {
+        // noop
+      },
+    });
+
+    using tx = makeMockTx(t);
+
+    let checkPointsReached = 0;
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    tx.scan.mock.mockImplementationOnce((options: any): any => {
+      checkPointsReached++;
+      assert.deepEqual(options, {
+        prefix: `text/`,
+        start: undefined,
+      });
+      return {
+        async *entries() {
+          const value = [`text/1:2.`, { b: `hello world` }];
+          yield await Promise.resolve(value);
+        },
+      };
+    }, 0);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    tx.scan.mock.mockImplementationOnce((options: any): any => {
+      checkPointsReached++;
+      assert.deepEqual(options, {
+        prefix: `text/`,
+        start: {
+          exclusive: true,
+          key: `text/1:2.`,
+        },
+      });
+      return {
+        async *entries() {
+          return;
+        },
+      };
+    }, 1);
+
+    for await (const result of db.query.text.scan(tx)) {
+      checkPointsReached++;
+      assert.deepEqual(result, [
+        { id: `1`, id2: `2` },
+        { body: `hello world` },
+      ]);
+    }
+
+    assert.equal(checkPointsReached, 3);
+  });
+
+  await t.test(`.scan() supports non-empty partial key`, async () => {
+    await using db = r.replicache(testReplicacheOptions, schema, {
+      async appendText() {
+        // noop
+      },
+    });
+
+    using tx = makeMockTx(t);
+
+    let checkPointsReached = 0;
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    tx.scan.mock.mockImplementationOnce((options: any): any => {
+      checkPointsReached++;
+      assert.deepEqual(options, {
+        prefix: `text/abc:`,
+        start: undefined,
+      });
+      return {
+        async *entries() {
+          const value = [`text/abc:1.`, { b: `hello world` }];
+          yield await Promise.resolve(value);
+        },
+      };
+    }, 0);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    tx.scan.mock.mockImplementationOnce((options: any): any => {
+      checkPointsReached++;
+      assert.deepEqual(options, {
+        prefix: `text/abc:`,
+        start: {
+          exclusive: true,
+          key: `text/abc:1.`,
+        },
+      });
+      return {
+        async *entries() {
+          return;
+        },
+      };
+    }, 1);
+
+    for await (const result of db.query.text.scan(tx, { id: `abc` })) {
+      checkPointsReached++;
+      assert.deepEqual(result, [
+        { id: `abc`, id2: `1` },
+        { body: `hello world` },
+      ]);
+    }
+
+    assert.equal(checkPointsReached, 3);
+  });
+
+  await t.test(`.scan() works inside mutator`, async () => {
+    let checkPointsReached = 0;
+
+    await using db = r.replicache(testReplicacheOptions, schema, {
+      async appendText(db) {
+        checkPointsReached++;
+        for await (const _ of db.text.scan({ id: `abc` })) {
+          checkPointsReached++;
+        }
+      },
+    });
+
+    await db.mutate.appendText({ id: `1`, text: `hello world` });
+
+    assert.equal(checkPointsReached, 1);
+  });
+});
+
 void test(`replicache() index scan`, async () => {
   const schema = {
-    text: r.keyValue(`text/[id]`, {
+    text: r.entity(`text/[id]`, {
       id: r.string(),
       body: r.string(`b`).indexed(`byCount`),
     }),
@@ -974,7 +1128,7 @@ void test(`replicache() index scan`, async () => {
 });
 
 void test(`number()`, async (t) => {
-  const posts = r.keyValue(`foo/[id]`, {
+  const posts = r.entity(`foo/[id]`, {
     id: r.string(),
     count: r.number(`c`),
   });
@@ -1002,33 +1156,33 @@ void test(`literal()`, async (t) => {
     using tx = makeMockTx(t);
 
     {
-      const kv = r.keyValue(`foo`, { number: r.literal(1, r.number()) });
+      const e = r.entity(`foo`, { number: r.literal(1, r.number()) });
 
       // .set()
-      await kv.set(tx, { id: `1` }, { number: 1 });
+      await e.set(tx, { id: `1` }, { number: 1 });
       // @ts-expect-error 2 isn't literally 1
-      await kv.set(tx, { id: `1` }, { number: 2 });
+      await e.set(tx, { id: `1` }, { number: 2 });
 
       // .get()
-      const v1 = await kv.get(tx, { id: `1` });
+      const v1 = await e.get(tx, { id: `1` });
       true satisfies IsEqual<typeof v1, { number: 1 } | undefined>;
     }
 
     {
-      const kv = r.keyValue(`foo`, { string: r.literal(`1`, r.string()) });
+      const e = r.entity(`foo`, { string: r.literal(`1`, r.string()) });
 
       // .set()
-      await kv.set(tx, { id: `1` }, { string: `1` });
+      await e.set(tx, { id: `1` }, { string: `1` });
       // @ts-expect-error '2' isn't literally '1'
-      await kv.set(tx, { id: `1` }, { string: `2` });
+      await e.set(tx, { id: `1` }, { string: `2` });
 
       // .get()
-      const v1 = await kv.get(tx, { id: `1` });
+      const v1 = await e.get(tx, { id: `1` });
       true satisfies IsEqual<typeof v1, { string: `1` } | undefined>;
     }
   });
 
-  const posts = r.keyValue(`foo/[id]`, {
+  const posts = r.entity(`foo/[id]`, {
     id: r.string(),
     count: r.literal(5, r.number()).alias(`c`),
   });
@@ -1051,9 +1205,9 @@ typeChecks<RizzleIndexNames<never>>(() => {
   true satisfies IsEqual<
     RizzleIndexNames<
       RizzleObject<{
-        id: RizzlePrimitive<string, string>;
-        date: RizzleIndexed<RizzlePrimitive<Date, string>, `byDate`>;
-        name: RizzleIndexed<RizzlePrimitive<Date, string>, `byName`>;
+        id: RizzleCustom<string, string>;
+        date: RizzleIndexed<RizzleCustom<Date, string>, `byDate`>;
+        name: RizzleIndexed<RizzleCustom<Date, string>, `byName`>;
       }>
     >,
     `byDate` | `byName`
@@ -1063,9 +1217,9 @@ typeChecks<RizzleIndexNames<never>>(() => {
   true satisfies IsEqual<
     RizzleIndexNames<
       RizzleObject<{
-        id: RizzlePrimitive<string, string>;
+        id: RizzleCustom<string, string>;
         date: RizzleTypeAlias<
-          RizzleIndexed<RizzlePrimitive<Date, string>, `byDate`>
+          RizzleIndexed<RizzleCustom<Date, string>, `byDate`>
         >;
       }>
     >,
@@ -1076,9 +1230,9 @@ typeChecks<RizzleIndexNames<never>>(() => {
   true satisfies IsEqual<
     RizzleIndexNames<
       RizzleObject<{
-        id: RizzlePrimitive<string, string>;
+        id: RizzleCustom<string, string>;
         date: RizzleNullable<
-          RizzleIndexed<RizzlePrimitive<Date, string>, `byDate`>
+          RizzleIndexed<RizzleCustom<Date, string>, `byDate`>
         >;
       }>
     >,
@@ -1088,8 +1242,8 @@ typeChecks<RizzleIndexNames<never>>(() => {
 
 typeChecks<RizzleObjectInput<never>>(() => {
   type RawShape = {
-    id: RizzlePrimitive<string, string>;
-    date: RizzlePrimitive<Date, string>;
+    id: RizzleCustom<string, string>;
+    date: RizzleCustom<Date, string>;
   };
 
   true satisfies IsEqual<
@@ -1105,8 +1259,8 @@ typeChecks<RizzleObjectInput<never>>(() => {
 
 typeChecks<RizzleObjectMarshaled<never>>(() => {
   type RawShape = {
-    id: RizzlePrimitive<string, number, string>;
-    date: RizzlePrimitive<Date, number, string>;
+    id: RizzleCustom<string, number, string>;
+    date: RizzleCustom<Date, number, string>;
   };
 
   true satisfies IsEqual<
@@ -1122,8 +1276,8 @@ typeChecks<RizzleObjectMarshaled<never>>(() => {
 
 typeChecks<RizzleObjectOutput<never>>(() => {
   type RawShape = {
-    id: RizzlePrimitive<string, number, string>;
-    date: RizzlePrimitive<Date, number, string>;
+    id: RizzleCustom<string, number, string>;
+    date: RizzleCustom<Date, number, string>;
   };
 
   true satisfies IsEqual<
